@@ -69,18 +69,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Logic\BuildingMaterialUtil.cs" />
+    <Compile Include="Logic\PendingRebuildManager.cs" />
     <Compile Include="Logic\RebuildApply.cs" />
     <Compile Include="Logic\RebuildBridge.cs" />
-    <None Include="mod_info.yaml" />
+    <None Include="mod_info.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Compile Include="Logic\SideScreenButtonPatch.cs" />
     <Compile Include="Tools\CopyMaterialsTool.cs" />
-    <Compile Include="CopyMaterialsTool.cs" />
+    <Compile Include="CopyMaterialsToolMod.cs" />
     <Compile Include="Logic\MaterialClipboard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tools\CopyMaterialsToolSingleton.cs" />
     <Compile Include="Tools\ToolActivator.cs" />
-    <Compile Include="Tools\ToolMenuPatch.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="mod.yaml" />
+    <None Include="mod.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
