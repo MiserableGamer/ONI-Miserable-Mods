@@ -1,2 +1,3 @@
 title: 'BonbonTreeBoost'
-description: 'Boosts Bonbon Tree yield, growth, and fertilizer usage. Configurable via PLib.'
+description: "Configurable boost to Bonbon Tree Nectar production, growth speed, and fertilizer use."
+staticID: MiserableGamer.BonbonTreeBoost
