@@ -1,0 +1,3 @@
+title: 'CopyMaterialsTool'
+description: "A tool to allow the copying of an existing buildings materials to another an invoke a rebuild"
+staticID: MiserableGamer.CopyMaterialsTool

@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="BonbonTreeBoost/BonbonTreeBoost.csproj" Id="573ce697-fd53-48de-98fe-0c0eb4ca8f04" />
+  <Project Path="CopyMaterials/CopyMaterialsTool.csproj" Id="ae6fe0c2-fa12-42c8-909a-5fea7b5aecdf" />
 </Solution>
