@@ -33,8 +33,7 @@ namespace CopyMaterialsTool
                 return ApplyResult.NotRebuildable;
 
             string prefabId = null;
-            try { prefabId = bc.Def.PrefabID; } catch { }
-
+            try { prefabId = bc.Def.PrefabID; } catch { prefabId = null; }
             if (string.IsNullOrEmpty(prefabId))
                 return ApplyResult.NotRebuildable;
 
@@ -42,30 +41,19 @@ namespace CopyMaterialsTool
             if (!Grid.IsValidCell(cell))
                 return ApplyResult.NotRebuildable;
 
-            Tag[] selected = (Tag[])copiedMaterialTags.Clone();
-            object orientation = TryGetOrientationEnum(target);
-
-            // 1) Queue deconstruct
             if (!TryQueueDeconstruct(target))
                 return ApplyResult.NotRebuildable;
 
-            // 2) Place after cleanup
             PendingRebuildManager.Queue(
                 target.GetInstanceID(),
                 new PendingRebuildManager.Pending
                 {
                     prefabId = prefabId,
                     cell = cell,
-                    elements = null,                // legacy slot unused
-                    orientationEnum = orientation,
-                    // We'll stash tags via a static temp map in PendingRebuildManager? No — simplest: serialize tags to ints.
-                    // But Pending struct currently has int[] only. We'll encode tags as hashes.
+                    materialTags = (Tag[])copiedMaterialTags.Clone(),
+                    orientationEnum = TryGetOrientationEnum(target)
                 }
             );
-
-            // We must pass tags through PendingRebuildManager. It currently holds int[].
-            // Encode Tag -> int hash, decode later.
-            PendingRebuildManager_Compat.StoreTagsForInstance(target.GetInstanceID(), selected);
 
             return ApplyResult.Applied;
         }
@@ -95,34 +83,26 @@ namespace CopyMaterialsTool
                 MethodInfo mi0 = AccessTools.Method(t, methodNames[i], Type.EmptyTypes);
                 if (mi0 != null)
                 {
-                    try { mi0.Invoke(decon, null); Log("Deconstruct via " + methodNames[i] + "()"); return true; }
-                    catch { }
+                    try { mi0.Invoke(decon, null); return true; } catch { }
                 }
 
                 MethodInfo mi1 = AccessTools.Method(t, methodNames[i], new[] { typeof(bool) });
                 if (mi1 != null)
                 {
-                    try { mi1.Invoke(decon, new object[] { true }); Log("Deconstruct via " + methodNames[i] + "(bool)"); return true; }
-                    catch { }
+                    try { mi1.Invoke(decon, new object[] { true }); return true; } catch { }
                 }
             }
 
             return false;
         }
 
-        /// <summary>
-        /// Called by PendingRebuildManager after the old building is gone.
-        /// </summary>
-        internal static bool TryPlacePlanByPrefabId(string prefabId, int cell, int[] legacyElements, object orientationEnum, bool debug)
+        // Called from PendingRebuildManager on cleanup
+        internal static bool TryPlaceReplacementPlan(string prefabId, int cell, Tag[] materialTags, object orientationEnum, bool debug)
         {
             DEBUG_LOGS = debug;
 
-            Tag[] tags = PendingRebuildManager_Compat.TryConsumeTagsForCellPlacement();
-            if (tags == null || tags.Length == 0)
-            {
-                Log("No stored tags for placement");
+            if (string.IsNullOrEmpty(prefabId) || !Grid.IsValidCell(cell) || materialTags == null || materialTags.Length == 0)
                 return false;
-            }
 
             BuildingDef def = TryGetBuildingDef(prefabId);
             if (def == null)
@@ -131,47 +111,74 @@ namespace CopyMaterialsTool
                 return false;
             }
 
-            // Verify cell is clear-ish
-            // (If something is already there, Create may fail)
-            try
-            {
-                GameObject existing = Grid.Objects[cell, (int)ObjectLayer.Building];
-                if (existing != null)
-                    Log("Warning: building still in cell at placement time: " + existing.name);
-            }
-            catch { }
+            int beforeSig = GetCellSignature(cell);
 
-            Type bucType = AccessTools.TypeByName("BuildingUnderConstruction");
-            if (bucType == null)
+            // ✅ Correct subsystem: BuildQueueManager (does not depend on active UI tools)
+            bool ok = TryPlaceViaBuildQueueManager(def, prefabId, cell, materialTags, orientationEnum);
+            if (ok && CellNowHasPlanOrConstructable(cell, beforeSig))
             {
-                Log("BuildingUnderConstruction type not found");
+                Log("Placed via BuildQueueManager");
+                return true;
+            }
+
+            Log("No compatible BuildQueueManager placer found / no plan detected");
+            return false;
+        }
+
+        private static bool TryPlaceViaBuildQueueManager(BuildingDef def, string prefabId, int cell, Tag[] materialTags, object orientationEnum)
+        {
+            Type bqmType = AccessTools.TypeByName("BuildQueueManager");
+            if (bqmType == null)
+            {
+                Log("BuildQueueManager type not found");
                 return false;
             }
 
-            // Find a static Create-like method
-            MethodInfo[] methods = bucType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+            object inst = null;
+            PropertyInfo pInst = AccessTools.Property(bqmType, "Instance");
+            if (pInst != null) inst = pInst.GetValue(null, null);
+
+            if (inst == null)
+            {
+                FieldInfo fInst = AccessTools.Field(bqmType, "Instance");
+                if (fInst != null) inst = fInst.GetValue(null);
+            }
+
+            if (inst == null)
+            {
+                Log("BuildQueueManager.Instance not found");
+                return false;
+            }
+
+            MethodInfo[] methods = bqmType.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
             for (int i = 0; i < methods.Length; i++)
             {
                 MethodInfo m = methods[i];
                 if (m == null) continue;
+                if (m.IsSpecialName) continue;
 
-                string lower = (m.Name ?? "").ToLowerInvariant();
-                if (!(lower.Contains("create") || lower.Contains("place")))
+                ParameterInfo[] ps = m.GetParameters();
+                if (ps == null || ps.Length == 0) continue;
+
+                // Only consider methods that can possibly enqueue a build:
+                // must accept either BuildingDef or prefabId AND a cell-ish arg.
+                if (!HasParam(ps, typeof(BuildingDef)) && !HasParam(ps, typeof(string)))
+                    continue;
+                if (!HasParam(ps, typeof(int)) && !HasParam(ps, typeof(Vector3)))
                     continue;
 
-                object[] args = BuildBUCArgs(m.GetParameters(), def, cell, tags, orientationEnum);
+                object[] args = BuildArgs(ps, def, prefabId, cell, materialTags, orientationEnum);
                 if (args == null) continue;
 
                 try
                 {
-                    object ret = m.Invoke(null, args);
+                    object ret = m.Invoke(inst, args);
+                    if (m.ReturnType == typeof(bool) && ret is bool && !(bool)ret)
+                        continue;
 
-                    // Success check: constructable/under construction exists in cell
-                    if (CellHasUnderConstruction(cell))
-                    {
-                        Log("Placed via BuildingUnderConstruction." + m.Name);
-                        return true;
-                    }
+                    // If it didn't throw, assume it queued something; outer verification will confirm.
+                    return true;
                 }
                 catch
                 {
@@ -179,46 +186,40 @@ namespace CopyMaterialsTool
                 }
             }
 
-            Log("No compatible BuildingUnderConstruction.Create found");
             return false;
         }
 
-        private static object[] BuildBUCArgs(ParameterInfo[] ps, BuildingDef def, int cell, Tag[] tags, object orientationEnum)
+        private static bool HasParam(ParameterInfo[] ps, Type t)
         {
-            if (ps == null) return null;
+            for (int i = 0; i < ps.Length; i++)
+                if (ps[i].ParameterType == t)
+                    return true;
+            return false;
+        }
 
+        private static object[] BuildArgs(ParameterInfo[] ps, BuildingDef def, string prefabId, int cell, Tag[] materialTags, object orientationEnum)
+        {
             object[] args = new object[ps.Length];
+            bool usedCellInt = false;
 
             for (int i = 0; i < ps.Length; i++)
             {
                 Type pt = ps[i].ParameterType;
-                string pn = (ps[i].Name ?? "").ToLowerInvariant();
 
                 if (pt == typeof(BuildingDef))
-                {
                     args[i] = def;
-                }
+                else if (pt == typeof(string))
+                    args[i] = prefabId;
                 else if (pt == typeof(int))
-                {
-                    // cell or something else; best effort: if name says cell, use cell, else 0
-                    args[i] = pn.Contains("cell") ? cell : cell;
-                }
+                    args[i] = (!usedCellInt) ? (usedCellInt = true, cell).Item2 : 0;
                 else if (pt == typeof(Vector3))
-                {
                     args[i] = Grid.CellToPos(cell);
-                }
                 else if (pt == typeof(Tag[]))
-                {
-                    args[i] = (Tag[])tags.Clone();
-                }
+                    args[i] = (Tag[])materialTags.Clone();
                 else if (pt.IsEnum && orientationEnum != null && pt == orientationEnum.GetType())
-                {
                     args[i] = orientationEnum;
-                }
                 else if (pt == typeof(bool))
-                {
                     args[i] = true;
-                }
                 else
                 {
                     if (pt.IsValueType) return null;
@@ -229,49 +230,73 @@ namespace CopyMaterialsTool
             return args;
         }
 
-        private static bool CellHasUnderConstruction(int cell)
+        private static int GetCellSignature(int cell)
         {
             try
             {
+                int sig = 17;
+                foreach (ObjectLayer layer in Enum.GetValues(typeof(ObjectLayer)))
+                {
+                    GameObject go = Grid.Objects[cell, (int)layer];
+                    int id = go != null ? go.GetInstanceID() : 0;
+                    sig = (sig * 31) ^ id;
+                }
+                return sig;
+            }
+            catch { return 0; }
+        }
+
+        private static bool CellNowHasPlanOrConstructable(int cell, int beforeSig)
+        {
+            try
+            {
+                int afterSig = GetCellSignature(cell);
+                bool changed = afterSig != beforeSig;
+
                 foreach (ObjectLayer layer in Enum.GetValues(typeof(ObjectLayer)))
                 {
                     GameObject go = Grid.Objects[cell, (int)layer];
                     if (go == null) continue;
-                    if (go.GetComponent("BuildingUnderConstruction") != null) return true;
+
                     if (go.GetComponent("Constructable") != null) return true;
+                    if (go.GetComponent("BuildingUnderConstruction") != null) return true;
+
+                    string n = go.name;
+                    if (!string.IsNullOrEmpty(n))
+                    {
+                        string l = n.ToLowerInvariant();
+                        if (l.Contains("construction") || l.Contains("underconstruction") || l.Contains("plan"))
+                            return true;
+                    }
                 }
+
+                return changed;
             }
-            catch { }
-            return false;
+            catch { return false; }
         }
 
         private static BuildingDef TryGetBuildingDef(string prefabId)
         {
             try
             {
-                // Preferred: Assets.GetBuildingDef(string)
                 MethodInfo mi = AccessTools.Method(typeof(Assets), "GetBuildingDef", new[] { typeof(string) });
                 if (mi != null)
-                {
-                    var def = mi.Invoke(null, new object[] { prefabId }) as BuildingDef;
-                    if (def != null) return def;
-                }
+                    return mi.Invoke(null, new object[] { prefabId }) as BuildingDef;
             }
             catch { }
 
             try
             {
-                // Fallback: BuildingConfigManager.Instance.GetBuildingDef(string)
                 Type bcmType = AccessTools.TypeByName("BuildingConfigManager");
                 if (bcmType != null)
                 {
                     object inst = null;
-                    var pInst = AccessTools.Property(bcmType, "Instance");
-                    if (pInst != null) inst = pInst.GetValue(null, null);
+                    PropertyInfo p = AccessTools.Property(bcmType, "Instance");
+                    if (p != null) inst = p.GetValue(null, null);
                     if (inst == null)
                     {
-                        var fInst = AccessTools.Field(bcmType, "Instance");
-                        if (fInst != null) inst = fInst.GetValue(null);
+                        FieldInfo f = AccessTools.Field(bcmType, "Instance");
+                        if (f != null) inst = f.GetValue(null);
                     }
 
                     if (inst != null)
@@ -294,13 +319,13 @@ namespace CopyMaterialsTool
                 Component rot = target.GetComponent("Rotatable");
                 if (rot == null) return null;
 
-                var t = rot.GetType();
+                Type t = rot.GetType();
 
-                var p = AccessTools.Property(t, "Orientation");
+                PropertyInfo p = AccessTools.Property(t, "Orientation");
                 if (p != null && p.CanRead)
                     return p.GetValue(rot, null);
 
-                var f = AccessTools.Field(t, "orientation");
+                FieldInfo f = AccessTools.Field(t, "orientation");
                 if (f != null)
                     return f.GetValue(rot);
             }
@@ -313,28 +338,6 @@ namespace CopyMaterialsTool
         {
             if (DEBUG_LOGS)
                 Debug.Log("[CopyMaterialsTool] " + msg);
-        }
-    }
-
-    /// <summary>
-    /// Tiny bridge because PendingRebuildManager.Pending only had int[].
-    /// We store Tag[] for the *most recent* pending placement.
-    /// This is safe because placements happen one-at-a-time on OnCleanUp.
-    /// </summary>
-    internal static class PendingRebuildManager_Compat
-    {
-        private static Tag[] _nextTags;
-
-        internal static void StoreTagsForInstance(int instanceId, Tag[] tags)
-        {
-            _nextTags = tags;
-        }
-
-        internal static Tag[] TryConsumeTagsForCellPlacement()
-        {
-            var t = _nextTags;
-            _nextTags = null;
-            return t;
         }
     }
 }

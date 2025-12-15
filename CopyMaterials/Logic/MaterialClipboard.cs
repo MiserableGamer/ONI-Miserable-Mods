@@ -26,6 +26,7 @@ namespace CopyMaterialsTool
                 return;
             }
 
+            // PrefabID for "exact building type only"
             SourcePrefabID = null;
             try
             {
@@ -35,26 +36,40 @@ namespace CopyMaterialsTool
             }
             catch { SourcePrefabID = null; }
 
-            // For a completed building, PrimaryElement.Element.tag is the material tag.
-            // This is what Build/UnderConstruction systems tend to accept.
-            Tag matTag = Tag.Invalid;
-            try
-            {
-                var pe = source.GetComponent<PrimaryElement>();
-                if (pe != null && pe.Element != null)
-                    matTag = pe.Element.tag;
-            }
-            catch { matTag = Tag.Invalid; }
-
-            if (matTag == Tag.Invalid)
+            // Materials: use your proven element-id path, then convert to element tags.
+            int[] elementIds = BuildingMaterialUtil.TryGetConstructionElementIds(source);
+            if (elementIds == null || elementIds.Length == 0)
             {
                 Clear();
                 return;
             }
 
-            // Most buildings are 1-slot. Doors are 1-slot.
-            // If you later want multi-slot, we can expand this by reading selected elements from a Constructable.
-            CopiedMaterialTags = new[] { matTag };
+            Tag[] tags = new Tag[elementIds.Length];
+            for (int i = 0; i < elementIds.Length; i++)
+            {
+                try
+                {
+                    // ONI construction element IDs are typically SimHashes. ElementLoader can map them.
+                    var el = ElementLoader.FindElementByHash((SimHashes)elementIds[i]);
+                    tags[i] = el != null ? el.tag : Tag.Invalid;
+                }
+                catch
+                {
+                    tags[i] = Tag.Invalid;
+                }
+            }
+
+            // Validate
+            for (int i = 0; i < tags.Length; i++)
+            {
+                if (tags[i] == Tag.Invalid)
+                {
+                    Clear();
+                    return;
+                }
+            }
+
+            CopiedMaterialTags = tags;
         }
     }
 }

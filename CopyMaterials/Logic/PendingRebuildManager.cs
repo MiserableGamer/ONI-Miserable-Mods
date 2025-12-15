@@ -12,7 +12,7 @@ namespace CopyMaterialsTool
         {
             public string prefabId;
             public int cell;
-            public int[] elements;
+            public Tag[] materialTags;
             public object orientationEnum;
         }
 
@@ -24,14 +24,9 @@ namespace CopyMaterialsTool
             Log("Queued pending rebuild instanceId=" + instanceId + " prefabId=" + p.prefabId + " cell=" + p.cell);
         }
 
-        internal static bool TryConsume(int instanceId, out Pending p)
+        private static bool TryConsume(int instanceId, out Pending p)
         {
-            if (pendingByInstanceId.TryGetValue(instanceId, out p))
-            {
-                pendingByInstanceId.Remove(instanceId);
-                return true;
-            }
-            return false;
+            return pendingByInstanceId.TryGetValue(instanceId, out p) && pendingByInstanceId.Remove(instanceId);
         }
 
         private static void Log(string msg)
@@ -39,29 +34,32 @@ namespace CopyMaterialsTool
             if (DEBUG_LOGS)
                 Debug.Log("[CopyMaterialsTool] " + msg);
         }
-    }
 
-    [HarmonyPatch(typeof(BuildingComplete), "OnCleanUp")]
-    internal static class BuildingComplete_OnCleanUp_PlacePending_Patch
-    {
-        private static void Postfix(BuildingComplete __instance)
+        [HarmonyPatch(typeof(BuildingComplete), "OnCleanUp")]
+        private static class BuildingComplete_OnCleanUp_PlacePending_Patch
         {
-            if (__instance == null) return;
+            private static void Postfix(BuildingComplete __instance)
+            {
+                if (__instance == null)
+                    return;
 
-            int id = __instance.gameObject.GetInstanceID();
-            if (!PendingRebuildManager.TryConsume(id, out var pending))
-                return;
+                int id = __instance.gameObject.GetInstanceID();
 
-            bool placed = RebuildApply.TryPlacePlanByPrefabId(
-                pending.prefabId,
-                pending.cell,
-                pending.elements,
-                pending.orientationEnum,
-                PendingRebuildManager.DEBUG_LOGS
-            );
+                Pending pending;
+                if (!TryConsume(id, out pending))
+                    return;
 
-            if (PendingRebuildManager.DEBUG_LOGS)
-                Debug.Log("[CopyMaterialsTool] OnCleanUp placed=" + placed + " prefabId=" + pending.prefabId + " cell=" + pending.cell);
+                bool placed = RebuildApply.TryPlaceReplacementPlan(
+                    pending.prefabId,
+                    pending.cell,
+                    pending.materialTags,
+                    pending.orientationEnum,
+                    DEBUG_LOGS
+                );
+
+                if (DEBUG_LOGS)
+                    Debug.Log("[CopyMaterialsTool] OnCleanUp placed=" + placed + " prefabId=" + pending.prefabId + " cell=" + pending.cell);
+            }
         }
     }
 }

@@ -15,8 +15,6 @@ namespace CopyMaterialsTool
         private GameObject dragBoxGO;
         private LineRenderer line;
 
-        // We only apply on mouse-up, so we don't need visited-per-frame;
-        // but we still avoid duplicates when a building spans multiple cells.
         private readonly HashSet<int> visited = new HashSet<int>();
 
         protected override void OnActivateTool()
@@ -52,7 +50,7 @@ namespace CopyMaterialsTool
 
         public override void OnLeftClickDown(Vector3 cursor_pos)
         {
-            // COPY PHASE
+            // COPY if clipboard empty
             if (!MaterialClipboard.HasData)
             {
                 GameObject src = GetBuildingUnderCursor(cursor_pos);
@@ -62,29 +60,36 @@ namespace CopyMaterialsTool
                 MaterialClipboard.SetFromSource(src);
                 if (!MaterialClipboard.HasData)
                 {
-                    PopFXManager.Instance.SpawnFX(PopFXManager.Instance.sprite_Negative, "No materials to copy", src.transform, Vector3.zero);
+                    PopFXManager.Instance.SpawnFX(
+                        PopFXManager.Instance.sprite_Negative,
+                        "No materials to copy",
+                        src.transform,
+                        Vector3.zero);
                     return;
                 }
 
-                Log("Copied PrefabID=" + MaterialClipboard.SourcePrefabID + " Tag=" + MaterialClipboard.CopiedMaterialTags[0]);
+                Log("Copied PrefabID=" + MaterialClipboard.SourcePrefabID + " mats=" + MaterialClipboard.CopiedMaterialTags.Length);
 
-                PopFXManager.Instance.SpawnFX(PopFXManager.Instance.sprite_Plus, "Materials copied", src.transform, Vector3.zero);
+                PopFXManager.Instance.SpawnFX(
+                    PopFXManager.Instance.sprite_Plus,
+                    "Materials copied",
+                    src.transform,
+                    Vector3.zero);
                 return;
             }
 
-            // APPLY PHASE (start drag)
+            // APPLY: start selection
             isDragging = true;
             visited.Clear();
 
             originCell = Grid.PosToCell(cursor_pos);
-            currentCell = originCell;
-
             if (!Grid.IsValidCell(originCell))
             {
                 originCell = Grid.InvalidCell;
-                currentCell = Grid.InvalidCell;
                 return;
             }
+
+            currentCell = originCell;
 
             EnsureDragBox();
             ShowDragBox();
@@ -98,8 +103,6 @@ namespace CopyMaterialsTool
 
             int cell = Grid.PosToCell(cursor_pos);
             if (!Grid.IsValidCell(cell)) return;
-
-            // Only update visuals when cell changes (reduces flicker + work)
             if (cell == currentCell) return;
 
             currentCell = cell;
@@ -116,23 +119,19 @@ namespace CopyMaterialsTool
 
             isDragging = false;
 
-            if (originCell != Grid.InvalidCell)
-            {
-                // Apply once, here.
-                int endCell = Grid.PosToCell(cursor_pos);
-                if (!Grid.IsValidCell(endCell))
-                    endCell = currentCell;
+            int endCell = Grid.PosToCell(cursor_pos);
+            if (!Grid.IsValidCell(endCell))
+                endCell = currentCell;
+            if (!Grid.IsValidCell(endCell))
+                endCell = originCell;
 
-                if (!Grid.IsValidCell(endCell))
-                    endCell = originCell;
-
+            if (originCell != Grid.InvalidCell && Grid.IsValidCell(endCell))
                 ApplyRect(originCell, endCell);
-            }
 
             originCell = Grid.InvalidCell;
             currentCell = Grid.InvalidCell;
-            HideDragBox();
 
+            HideDragBox();
             base.OnLeftClickUp(cursor_pos);
         }
 
@@ -144,13 +143,8 @@ namespace CopyMaterialsTool
             visited.Clear();
 
             for (int y = minY; y <= maxY; y++)
-            {
                 for (int x = minX; x <= maxX; x++)
-                {
-                    int cell = Grid.XYToCell(x, y);
-                    ApplyAtCell(cell);
-                }
-            }
+                    ApplyAtCell(Grid.XYToCell(x, y));
         }
 
         private void ApplyAtCell(int cell)
@@ -166,11 +160,11 @@ namespace CopyMaterialsTool
             if (!visited.Add(id))
                 return;
 
-            // strict exact type filter
             string targetPrefabId = TryGetPrefabId(go);
             if (string.IsNullOrEmpty(targetPrefabId))
                 return;
 
+            // exact building type only
             if (!string.Equals(targetPrefabId, MaterialClipboard.SourcePrefabID, StringComparison.Ordinal))
                 return;
 
@@ -193,7 +187,7 @@ namespace CopyMaterialsTool
         }
 
         // ---------------------------
-        // Drag box visuals
+        // Drag box visuals (cell-edge aligned)
         // ---------------------------
 
         private void EnsureDragBox()
@@ -208,8 +202,8 @@ namespace CopyMaterialsTool
             line.useWorldSpace = true;
             line.loop = true;
             line.positionCount = 4;
-            line.startWidth = 0.06f;
-            line.endWidth = 0.06f;
+            line.startWidth = 0.04f;
+            line.endWidth = 0.04f;
             line.sortingOrder = 999;
 
             line.material = new Material(Shader.Find("Sprites/Default"));
@@ -231,18 +225,18 @@ namespace CopyMaterialsTool
 
         private void UpdateDragBox(int a, int b)
         {
-            if (line == null)
-                return;
+            if (line == null) return;
 
             int minX, maxX, minY, maxY;
             GetRectBounds(a, b, out minX, out maxX, out minY, out maxY);
 
+            float half = Grid.CellSizeInMeters * 0.5f;
             float z = -0.1f;
 
-            Vector3 bl = Grid.CellToPos(Grid.XYToCell(minX, minY)) + new Vector3(-0.5f, -0.5f, z);
-            Vector3 br = Grid.CellToPos(Grid.XYToCell(maxX, minY)) + new Vector3(0.5f, -0.5f, z);
-            Vector3 tr = Grid.CellToPos(Grid.XYToCell(maxX, maxY)) + new Vector3(0.5f, 0.5f, z);
-            Vector3 tl = Grid.CellToPos(Grid.XYToCell(minX, maxY)) + new Vector3(-0.5f, 0.5f, z);
+            Vector3 bl = Grid.CellToPos(Grid.XYToCell(minX, minY)) + new Vector3(-half, -half, z);
+            Vector3 br = Grid.CellToPos(Grid.XYToCell(maxX, minY)) + new Vector3(half, -half, z);
+            Vector3 tr = Grid.CellToPos(Grid.XYToCell(maxX, maxY)) + new Vector3(half, half, z);
+            Vector3 tl = Grid.CellToPos(Grid.XYToCell(minX, maxY)) + new Vector3(-half, half, z);
 
             line.SetPosition(0, bl);
             line.SetPosition(1, br);
