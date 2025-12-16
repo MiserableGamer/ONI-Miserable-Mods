@@ -68,20 +68,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Logic\BuildingMaterialUtil.cs" />
-    <Compile Include="Logic\PendingRebuildManager.cs" />
-    <Compile Include="Logic\RebuildApply.cs" />
-    <Compile Include="Logic\RebuildBridge.cs" />
+    <Compile Include="CopyMaterialsStrings.cs" />
+    <Compile Include="Logic\ApplySettingsHelper.cs" />
+    <Compile Include="Logic\CleanupUtils.cs" />
+    <Compile Include="Logic\ConstructableCleanup.cs" />
+    <Compile Include="Logic\CopyMaterialsManager.cs" />
+    <Compile Include="CopyMaterialsOptions.cs" />
+    <Compile Include="Logic\CopyMaterialsWatcher.cs" />
+    <Compile Include="Logic\PlacementHelpers.cs" />
+    <Compile Include="Logic\TypesAndConstants.cs" />
+    <Compile Include="Patches\CopySettingsToolPatches.cs" />
+    <Compile Include="UI\UserMenu_AppendToScreen_Patch.cs" />
     <None Include="mod_info.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Compile Include="Logic\SideScreenButtonPatch.cs" />
-    <Compile Include="Tools\CopyMaterialsTool.cs" />
-    <Compile Include="CopyMaterialsToolMod.cs" />
-    <Compile Include="Logic\MaterialClipboard.cs" />
+    <Compile Include="CopyMaterialsMod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tools\CopyMaterialsToolSingleton.cs" />
-    <Compile Include="Tools\ToolActivator.cs" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <None Include="mod.yaml">
@@ -89,5 +92,11 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /Y /R "$(TargetPath)" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyMaterialsTool\CopyMaterialsTool.dll"
+
+xcopy /Y /R "$(TargetPath)" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterials\CopyMaterialsTool.dll"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
