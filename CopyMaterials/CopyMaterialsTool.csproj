@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>C:\Users\leomo\Documents\Klei\OxygenNotIncluded\mods\local\CopyMaterialsTool\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -33,12 +33,15 @@
   <ItemGroup>
     <Reference Include="0Harmony">
       <HintPath>..\lib\0Harmony.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\lib\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>..\lib\Assembly-CSharp-firstpass.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="PLib, Version=4.19.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\PLib.4.19.0\lib\net471\PLib.dll</HintPath>
@@ -53,50 +56,63 @@
     <Reference Include="System.Xml" />
     <Reference Include="Unity.TextMeshPro">
       <HintPath>..\lib\Unity.TextMeshPro.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\lib\UnityEngine.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\lib\UnityEngine.CoreModule.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.ImageConversionModule">
       <HintPath>..\lib\UnityEngine.ImageConversionModule.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>..\lib\UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CopyMaterialsMod.cs" />
+    <Compile Include="CopyMaterialsOptions.cs" />
     <Compile Include="CopyMaterialsStrings.cs" />
     <Compile Include="Logic\ApplySettingsHelper.cs" />
     <Compile Include="Logic\CleanupUtils.cs" />
     <Compile Include="Logic\ConstructableCleanup.cs" />
     <Compile Include="Logic\CopyMaterialsManager.cs" />
-    <Compile Include="CopyMaterialsOptions.cs" />
     <Compile Include="Logic\CopyMaterialsWatcher.cs" />
     <Compile Include="Logic\PlacementHelpers.cs" />
+    <Compile Include="Logic\RebuildSettingsStorage.cs" />
     <Compile Include="Logic\TypesAndConstants.cs" />
-    <Compile Include="Patches\CopySettingsToolPatches.cs" />
-    <Compile Include="UI\UserMenu_AppendToScreen_Patch.cs" />
-    <None Include="mod_info.yaml">
+    <Content Include="mod_info.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <Compile Include="CopyMaterialsMod.cs" />
+    </Content>
+    <Compile Include="Patches\CopySettingsToolPatches.cs" />
+    <Compile Include="Patches\UserMenu_AppendToScreen_Patch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="mod.yaml">
+    <Content Include="mod.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="UI\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /Y /R "$(TargetPath)" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyMaterialsTool\CopyMaterialsTool.dll"
+    <PostBuildEvent>xcopy /Y /R "$(ProjectDir)mod.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyMaterialsTool\"
+xcopy /Y /R "$(ProjectDir)mod_info.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyMaterialsTool\"
 
-xcopy /Y /R "$(TargetPath)" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterials\CopyMaterialsTool.dll"</PostBuildEvent>
+xcopy /Y /R "$(ProjectDir)mod.yaml" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterials\"
+xcopy /Y /R "$(ProjectDir)mod_info.yaml" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterials\"
+
+xcopy /Y /R "$(TargetPath)" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyMaterialsTool\"
+xcopy /Y /R "$(TargetPath)" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterials\"</PostBuildEvent>
   </PropertyGroup>
 </Project>

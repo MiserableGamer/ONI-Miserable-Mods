@@ -1,3 +1,11 @@
-title: 'CopyMaterialsTool'
-description: "A tool to allow the copying of an existing buildings materials to another an invoke a rebuild"
-staticID: MiserableGamer.CopyMaterialsTool
+title: Copy Materials Tool
+description: |
+  Click a building (right-click menu) to copy its material/priority/facade, then drag a box over other buildings of the **same type** to mass-replace them.
+  
+  • Auto deconstructs old ones
+  • Instantly blueprints new ones with copied material
+  • Preserves priorities, facades, copy groups
+  • Works on tiles, pipes, wires, doors, insulated variants!
+  
+  Toggle in Mod Options. Source: Klei Forums + community mods.
+supportedContent: ALL

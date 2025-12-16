@@ -12,6 +12,8 @@ namespace CopyMaterials
                 public const string BUTTON_TOOLTIP = "Copy building material settings to other structures.";
                 public const string MODE_ACTIVE = "Copy mode active";
                 public const string APPLIED_SUCCESS = "Materials applied successfully";
+                public const string MATERIALS_COPIED = "Materials copied";
+                public const string MATERIALS_APPLIED = "Materials applied";
             }
         }
 

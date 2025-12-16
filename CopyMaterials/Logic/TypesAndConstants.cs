@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CopyMaterialsTool.Logic
+﻿// Placeholder — remove if not needed
+namespace CopyMaterials.Logic
 {
-    internal class TypesAndConstants
+    internal static class TypesAndConstants
     {
+        // Constants here if needed
     }
 }

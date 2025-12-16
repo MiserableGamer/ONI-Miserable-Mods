@@ -1,72 +1,72 @@
 ﻿using HarmonyLib;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Reflection;
+using CopyMaterials.Logic;
 
 namespace CopyMaterials.Patches
 {
-    [HarmonyPatch(typeof(CopySettingsTool), "OnDragTool")]
-    public static class CopySettingsTool_OnDragTool_Patch
+    [HarmonyPatch(typeof(CopySettingsTool))]
+    public static class CopySettingsToolPatches
     {
-        private static HashSet<int> processedThisDrag = new HashSet<int>();
+        private static HashSet<int> processedCells = new HashSet<int>();
 
-        public static void Postfix(int cell, int distFromOrigin, CopySettingsTool __instance)
+        private static readonly FieldInfo sourceField = AccessTools.Field(typeof(CopySettingsTool), "sourceGameObject");
+
+        [HarmonyPatch("OnDragTool")]
+        [HarmonyPostfix]
+        public static void OnDragTool_Postfix(CopySettingsTool __instance, int cell, int distFromOrigin)
         {
-            if (__instance == null) return;
+            GameObject sourceGO = (GameObject)sourceField.GetValue(__instance);
+            if (sourceGO == null) return;
 
-            GameObject targetObj = Grid.Objects[cell, (int)ObjectLayer.Building];
-            if (targetObj == null) return;
+            GameObject obj = Grid.Objects[cell, (int)ObjectLayer.Building];
+            if (obj == null) return;
 
-            Building targetBuilding = targetObj.GetComponent<Building>();
-            if (targetBuilding == null) return;
+            Building target = obj.GetComponent<Building>();
+            if (target == null) return;
 
-            var sourceBuilding = CopyMaterials.Logic.CopyMaterialsManager.GetSourceBuilding();
-            if (sourceBuilding == null) return;
+            Building source = sourceGO.GetComponent<Building>();
+            if (source == null || target == source) return;
 
-            // Skip source building
-            if (targetBuilding == sourceBuilding)
+            if (target.Def.PrefabID != source.Def.PrefabID) return;
+
+            if (processedCells.Add(cell))
             {
-                Debug.Log($"[CopyMaterials] Skipped source building {targetBuilding.name}");
-                return;
-            }
+                var deconstructable = target.GetComponent<Deconstructable>();
+                if (deconstructable != null)
+                {
+                    deconstructable.QueueDeconstruction(true);
+                }
 
-            // Skip if prefab mismatch
-            if (targetBuilding.Def.PrefabID != sourceBuilding.Def.PrefabID)
-            {
-                Debug.Log($"[CopyMaterials] Skipped {targetBuilding.name} (prefab mismatch: {targetBuilding.Def.PrefabID} vs {sourceBuilding.Def.PrefabID})");
-                return;
-            }
+                PrioritySetting targetPriority = default(PrioritySetting);
+                string targetFacadeID = null;
+                Tag targetCopyGroupTag = Tag.Invalid;
 
-            // Only process once per building per drag
-            int id = targetBuilding.GetInstanceID();
-            if (!processedThisDrag.Add(id))
-            {
-                Debug.Log($"[CopyMaterials] Skipped {targetBuilding.name} (already processed this drag)");
-                return;
-            }
+                var p = target.GetComponent<Prioritizable>();
+                if (p != null) targetPriority = p.GetMasterPriority();
 
-            // Apply materials once (ApplyTo handles popup)
-            Debug.Log($"[CopyMaterials] Applying to {targetBuilding.name} (prefab {targetBuilding.Def.PrefabID})");
-            CopyMaterials.Logic.CopyMaterialsManager.ApplyTo(targetBuilding);
+                var facade = target.GetComponent<BuildingFacade>();
+                if (facade != null) targetFacadeID = facade.CurrentFacade;
+
+                var cbs = target.GetComponent<CopyBuildingSettings>();
+                if (cbs != null) targetCopyGroupTag = cbs.copyGroupTag;
+
+                CopyMaterialsWatcher.Attach(
+                    target,
+                    target.Def.PrefabID,
+                    source.GetComponent<PrimaryElement>().ElementID,
+                    target.GetComponent<Rotatable>()?.GetOrientation() ?? Orientation.Neutral
+                );
+            }
         }
 
-        [HarmonyPatch(typeof(CopySettingsTool), "OnActivateTool")]
-        public static class CopySettingsTool_OnActivateTool_Patch
+        [HarmonyPatch("OnDeactivateTool")]
+        [HarmonyPostfix]
+        public static void OnDeactivateTool_Postfix(CopySettingsTool __instance)
         {
-            public static void Postfix()
-            {
-                processedThisDrag.Clear();
-                Debug.Log("[CopyMaterials] Drag session started, cleared processed set");
-            }
-        }
-
-        [HarmonyPatch(typeof(CopySettingsTool), "OnDeactivateTool")]
-        public static class CopySettingsTool_OnDeactivateTool_Patch
-        {
-            public static void Postfix()
-            {
-                processedThisDrag.Clear();
-                Debug.Log("[CopyMaterials] Drag session ended, cleared processed set");
-            }
+            processedCells.Clear();
+            sourceField.SetValue(__instance, null);
         }
     }
 }
