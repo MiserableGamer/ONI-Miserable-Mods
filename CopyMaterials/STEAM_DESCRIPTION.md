@@ -1,8 +1,10 @@
-﻿# Copy Materials Tool
+# Copy Materials Tool
 
 **⚠️ WARNING: This is a testing/work-in-progress mod. There WILL be issues, crashes, and incompatibilities. Use at your own risk. Do not use on save files you are not willing to lose.**
 
-A Quality of Life mod for Oxygen Not Included that extends the "Copy Settings" tool to also copy construction materials between buildings of the same type.
+**🐛 Found a bug or have a suggestion? Report it on [GitHub Issues](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues)**
+
+A Quality of Life mod that extends the "Copy Settings" tool to also copy construction materials between buildings of the same type.
 
 ## Features
 
@@ -30,29 +32,11 @@ A Quality of Life mod for Oxygen Not Included that extends the "Copy Settings" t
 - For conduits, connections to neighboring conduits are automatically preserved
 - Extended bridges maintain their width when copying materials
 
-## Installation
-
-### Steam Workshop (Recommended)
-1. Subscribe to the mod on the Steam Workshop
-2. Launch Oxygen Not Included
-3. Enable the mod in the Mods menu
-
-### Manual Installation
-1. Download the latest release
-2. Extract to: `%USERPROFILE%\Documents\Klei\OxygenNotIncluded\mods\Local\CopyMaterialsTool\`
-3. Ensure the folder contains:
-   - `CopyMaterialsTool.dll`
-   - `mod_info.yaml`
-   - `mod.yaml`
-4. Launch the game and enable the mod in the Mods menu
-
 ## Requirements
 
 - **Oxygen Not Included**: Build 700386 or later
 - **Mod API**: Version 2
-- **Dependencies**: 
-  - PLib (automatically included)
-  - Harmony (automatically included)
+- **Dependencies**: Automatically included (PLib, Harmony)
 
 ## Compatibility
 
@@ -69,33 +53,6 @@ The mod has **minimal performance impact**:
 - **Event-Driven**: Uses Harmony patches that only trigger on specific game events
 
 The mod is designed to be efficient and should not impact game performance, even in large colonies.
-
-## Building from Source
-
-### Prerequisites
-- Visual Studio 2019 or later
-- .NET Framework 4.8
-- Oxygen Not Included game files (for references)
-
-### Required References
-- `0Harmony.dll` (Harmony library)
-- `Assembly-CSharp.dll` (from ONI installation)
-- `Assembly-CSharp-firstpass.dll` (from ONI installation)
-- `PLib.dll` (PLib library)
-- `UnityEngine.dll` and related modules (from ONI installation)
-- `KMod.dll` (from ONI installation)
-
-### Build Steps
-1. Clone or download this repository
-2. Open `CopyMaterialsTool.csproj` in Visual Studio
-3. Ensure all references point to valid ONI DLLs
-4. Build the project (version will auto-increment in `mod_info.yaml`)
-5. Copy the output DLL and mod files to your mods directory
-
-## Configuration
-
-### Debug Mode
-Debug logging can be toggled by setting `CopyMaterialsManager.DebugMode = true` in code. By default, debug logs are disabled to prevent log spam.
 
 ## Known Limitations
 
@@ -124,21 +81,13 @@ Debug logging can be toggled by setting `CopyMaterialsManager.DebugMode = true` 
 - **Blueprint Issues**: Fix blueprint placement timing issues
 - **Port Overlap Errors**: Resolve temporary overlapping ports error that can occur with bridges
 
-## License
-
-[Specify your license here]
-
 ## Credits
 
 - Built using [PLib](https://github.com/peterhaneve/ONIMods) by Peter Han
 - Uses [Harmony](https://github.com/pardeike/Harmony) for runtime patching
 - Inspired by the game's built-in Copy Settings tool
 
-## Version History
-
-- **0.1.8**: Current version (auto-increments on build)
-- See git history for detailed changelog
-
 ---
 
-**Note**: This mod is a work in progress. Report bugs and suggestions on [GitHub Issues](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues).
+**Note**: This mod is a work in progress. Report bugs and suggestions on [GitHub Issues](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues) or through Steam Workshop comments.
+
