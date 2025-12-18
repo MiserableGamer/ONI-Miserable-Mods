@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace CopyMaterials.Logic
@@ -11,9 +12,34 @@ namespace CopyMaterials.Logic
         public static PrioritySetting sourcePriority = default;
         public static string sourceFacadeID = null;
         public static Tag sourceCopyGroupTag = Tag.Invalid;
+        public static int? sourceBridgeWidth = null;
 
-        public static bool DebugMode = true;
-        public static float WatcherTimeoutSeconds = 3f;
+        public static bool DebugMode = false;
+
+        private static Dictionary<(int cell, int layer), UtilityConnections> storedConnections = new Dictionary<(int, int), UtilityConnections>();
+
+        public static void StoreConnections(int cell, int layer, UtilityConnections connections)
+        {
+            if (connections != (UtilityConnections)0)
+            {
+                storedConnections[(cell, layer)] = connections;
+                Log($"Stored connections {connections} for cell {cell}, layer {layer}");
+            }
+        }
+
+        public static UtilityConnections GetStoredConnections(int cell, int layer)
+        {
+            if (storedConnections.TryGetValue((cell, layer), out var connections))
+            {
+                return connections;
+            }
+            return (UtilityConnections)0;
+        }
+
+        public static void ClearStoredConnections(int cell, int layer)
+        {
+            storedConnections.Remove((cell, layer));
+        }
 
         public static void SetSource(Building building, SimHashes material)
         {
@@ -29,7 +55,9 @@ namespace CopyMaterials.Logic
             var cbs = building?.GetComponent<CopyBuildingSettings>();
             sourceCopyGroupTag = cbs != null ? cbs.copyGroupTag : Tag.Invalid;
 
-            Log($"Source set: {building?.Def?.PrefabID} with material {material}");
+            sourceBridgeWidth = GetBridgeWidth(building);
+
+            Log($"Source set: {building?.Def?.PrefabID} with material {material}, bridge width: {sourceBridgeWidth}");
         }
 
         public static Building GetSourceBuilding()
@@ -42,13 +70,107 @@ namespace CopyMaterials.Logic
             return sourceMaterial;
         }
 
-        public static void ClearSource()  // New: Clear on deactivate
+        public static void ClearSource()
         {
             sourceBuilding = null;
             sourceMaterial = SimHashes.Vacuum;
             sourcePriority = default;
             sourceFacadeID = null;
             sourceCopyGroupTag = Tag.Invalid;
+            sourceBridgeWidth = null;
+        }
+
+        public static int? GetBridgeWidth(Building building)
+        {
+            if (building == null || !building.Def.PrefabID.Contains("Bridge")) return null;
+
+            try
+            {
+                var buildingType = building.GetType();
+                
+                var widthField = buildingType.GetField("width", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
+                if (widthField != null)
+                {
+                    var widthValue = widthField.GetValue(building);
+                    if (widthValue is int intWidth) return intWidth;
+                }
+
+                var widthProperty = buildingType.GetProperty("Width", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
+                if (widthProperty != null)
+                {
+                    var widthValue = widthProperty.GetValue(building);
+                    if (widthValue is int intWidth) return intWidth;
+                }
+
+                widthField = buildingType.GetField("extendedWidth", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
+                if (widthField != null)
+                {
+                    var widthValue = widthField.GetValue(building);
+                    if (widthValue is int intWidth) return intWidth;
+                }
+
+                var defWidth = building.Def.WidthInCells;
+                if (defWidth > 0) return defWidth;
+            }
+            catch (System.Exception e)
+            {
+                Warn($"Error getting bridge width: {e.Message}");
+            }
+
+            return null;
+        }
+
+        public static bool ApplyBridgeWidth(GameObject buildingGO, int? width)
+        {
+            if (buildingGO == null || !width.HasValue) return false;
+
+            var building = buildingGO.GetComponent<Building>();
+            if (building == null || !building.Def.PrefabID.Contains("Bridge")) return false;
+
+            try
+            {
+                var buildingType = building.GetType();
+                int targetWidth = width.Value;
+
+                var widthField = buildingType.GetField("width", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
+                if (widthField != null)
+                {
+                    widthField.SetValue(building, targetWidth);
+                    return true;
+                }
+
+                var widthProperty = buildingType.GetProperty("Width", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
+                if (widthProperty != null && widthProperty.CanWrite)
+                {
+                    widthProperty.SetValue(building, targetWidth);
+                    return true;
+                }
+
+                widthField = buildingType.GetField("extendedWidth", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
+                if (widthField != null)
+                {
+                    widthField.SetValue(building, targetWidth);
+                    return true;
+                }
+
+                var setWidthMethod = buildingType.GetMethod("SetWidth", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
+                if (setWidthMethod != null)
+                {
+                    setWidthMethod.Invoke(building, new object[] { targetWidth });
+                    return true;
+                }
+            }
+            catch (System.Exception e)
+            {
+                Warn($"Error applying bridge width: {e.Message}");
+            }
+
+            return false;
+        }
+
+        public static void ClearAllStoredConnections()
+        {
+            storedConnections.Clear();
         }
 
         public static void ShowGlobalMessage(string message)

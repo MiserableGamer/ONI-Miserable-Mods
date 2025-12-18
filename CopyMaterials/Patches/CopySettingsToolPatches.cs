@@ -10,19 +10,15 @@ namespace CopyMaterials.Patches
     public static class CopySettingsToolPatches
     {
         private static HashSet<int> processedCells = new HashSet<int>();
-
+        private static HashSet<Building> processedBuildings = new HashSet<Building>();
         private static readonly FieldInfo sourceField = AccessTools.Field(typeof(CopySettingsTool), "sourceGameObject");
-
-        public static bool isMaterialCopyMode = false;  // Changed to public
+        public static bool isMaterialCopyMode = false;
 
         [HarmonyPrefix]
         [HarmonyPatch("OnDragTool")]
         public static bool Prefix(CopySettingsTool __instance)
         {
-            if (isMaterialCopyMode)
-            {
-                return false;  // Skip base OnDragTool (no settings apply, no "Settings Applied" popup)
-            }
+            if (isMaterialCopyMode) return false;
             return true;
         }
 
@@ -36,7 +32,7 @@ namespace CopyMaterials.Patches
             Building source = sourceGO.GetComponent<Building>();
             if (source == null) return;
 
-            int layer = (int)source.Def.ObjectLayer;  // Use source's layer (same as target's since prefabID matches)
+            int layer = (int)source.Def.ObjectLayer;
 
             GameObject obj = Grid.Objects[cell, layer];
             if (obj == null) return;
@@ -48,15 +44,26 @@ namespace CopyMaterials.Patches
 
             if (target.Def.PrefabID != source.Def.PrefabID) return;
 
+            if (processedBuildings.Contains(target)) return;
+            processedBuildings.Add(target);
+            
             if (processedCells.Add(cell))
             {
                 var sourcePE = source.GetComponent<PrimaryElement>();
                 var targetPE = target.GetComponent<PrimaryElement>();
                 if (sourcePE == null || targetPE == null) return;
 
-                if (sourcePE.ElementID == targetPE.ElementID)
+                bool isBridge = target.Def.PrefabID.Contains("Bridge");
+                bool widthsMatch = true;
+                if (isBridge)
                 {
-                    // Apply settings directly if materials match
+                    int? sourceWidth = CopyMaterialsManager.GetBridgeWidth(source);
+                    int? targetWidth = CopyMaterialsManager.GetBridgeWidth(target);
+                    widthsMatch = sourceWidth.HasValue && targetWidth.HasValue && sourceWidth.Value == targetWidth.Value;
+                }
+
+                if (sourcePE.ElementID == targetPE.ElementID && widthsMatch)
+                {
                     CopyMaterialsManager.ApplyPriorityToObject(obj, CopyMaterialsManager.sourcePriority);
 
                     if (!string.IsNullOrEmpty(CopyMaterialsManager.sourceFacadeID))
@@ -79,7 +86,6 @@ namespace CopyMaterials.Patches
                         }
                     }
 
-                    // Popup for settings applied (no material change)
                     Vector3 pos = obj.transform.position;
                     PopFXManager.Instance.SpawnFX(
                         PopFXManager.Instance.sprite_Plus,
@@ -88,11 +94,9 @@ namespace CopyMaterials.Patches
                         pos,
                         2f
                     );
-
-                    return;  // Skip deconstruct
+                    return;
                 }
 
-                // New: Store connections if network item
                 UtilityConnections storedConnections = default(UtilityConnections);
                 var networkItem = target.GetComponent<IHaveUtilityNetworkMgr>();
                 if (networkItem != null)
@@ -101,6 +105,23 @@ namespace CopyMaterials.Patches
                     if (mgr != null)
                     {
                         storedConnections = mgr.GetConnections(cell, false);
+                        
+                        var getConnectionsMethod = target.GetType().GetMethod("GetConnections", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                        if (getConnectionsMethod != null)
+                        {
+                            try
+                            {
+                                var directConnections = (UtilityConnections)getConnectionsMethod.Invoke(target, null);
+                                if (directConnections != (UtilityConnections)0)
+                                {
+                                    storedConnections = directConnections;
+                                }
+                            }
+                            catch (System.Exception e)
+                            {
+                                CopyMaterialsManager.Warn($"Error getting connections from building: {e.Message}");
+                            }
+                        }
                     }
                 }
 
@@ -110,12 +131,14 @@ namespace CopyMaterials.Patches
                     deconstructable.QueueDeconstruction(true);
                 }
 
+                CopyMaterialsManager.StoreConnections(cell, layer, storedConnections);
+
                 CopyMaterialsWatcher.Attach(
                     target,
                     target.Def.PrefabID,
                     source.GetComponent<PrimaryElement>().ElementID,
                     target.GetComponent<Rotatable>()?.GetOrientation() ?? Orientation.Neutral,
-                    storedConnections  // New parameter
+                    storedConnections
                 );
             }
         }
@@ -125,9 +148,10 @@ namespace CopyMaterials.Patches
         public static void OnDeactivateTool_Postfix(CopySettingsTool __instance)
         {
             processedCells.Clear();
+            processedBuildings.Clear();
             sourceField.SetValue(__instance, null);
-            isMaterialCopyMode = false;  // Reset flag
-            CopyMaterialsManager.ClearSource();  // New: Clear source data
+            isMaterialCopyMode = false;
+            CopyMaterialsManager.ClearSource();
         }
     }
 }
