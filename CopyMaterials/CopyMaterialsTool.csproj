@@ -96,6 +96,8 @@
     <Compile Include="Patches\UserMenu_AppendToScreen_Patch.cs" />
     <Compile Include="Patches\WireOnSpawnPatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="screenshots\sidescreen.png" />
+    <Content Include="screenshots\thumbnail.png" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
@@ -104,11 +106,10 @@
     </Content>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UI\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
+    <PreBuildEvent>powershell -ExecutionPolicy Bypass -File "$(ProjectDir)increment_version.ps1"</PreBuildEvent>
     <PostBuildEvent>xcopy /Y /R "$(ProjectDir)mod.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyMaterialsTool\"
 xcopy /Y /R "$(ProjectDir)mod_info.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyMaterialsTool\"
 

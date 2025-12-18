@@ -13,7 +13,7 @@ namespace CopyMaterials.Logic
         private Orientation orientation = Orientation.Neutral;
         private ObjectLayer objectLayer;
         private UtilityConnections storedConnections;
-        private int? bridgeWidth = null;
+        private int? bridgeWidth = null; // Store bridge width for ExtendedBuildingWidth support
 
         public static CopyMaterialsWatcher Attach(Building target, string prefabID, SimHashes material, Orientation orientation = Orientation.Neutral, UtilityConnections connections = default(UtilityConnections))
         {
@@ -33,10 +33,10 @@ namespace CopyMaterials.Logic
             watcher.orientation = orientation;
             watcher.objectLayer = target.Def.ObjectLayer;
             watcher.storedConnections = connections;
-            watcher.bridgeWidth = CopyMaterialsManager.sourceBridgeWidth;
+            watcher.bridgeWidth = CopyMaterialsManager.sourceBridgeWidth; // Capture bridge width from source
             watcher.blueprintCreated = false;
 
-            CopyMaterialsManager.Log($"Watcher attached for {prefabID} at cell {watcher.originalCell}");
+            CopyMaterialsManager.Log($"Watcher attached for {prefabID} at cell {watcher.originalCell}, bridge width: {watcher.bridgeWidth}");
             return watcher;
         }
 
@@ -48,7 +48,15 @@ namespace CopyMaterials.Logic
                 return;
             }
 
-            if (!IsCellCompletelyEmpty()) return;
+            // Check if the cell is completely empty - no building, no blueprint, nothing
+            if (!IsCellCompletelyEmpty())
+            {
+                // Cell is not empty, wait
+                return;
+            }
+
+            // Cell is empty - try to place blueprint
+            // If placement fails (e.g., port overlap), we'll retry next frame
             if (TryCreateBlueprint())
             {
                 blueprintCreated = true;
@@ -60,10 +68,24 @@ namespace CopyMaterials.Logic
             var def = Assets.GetBuildingDef(prefabID);
             if (def == null) return false;
 
+            // For bridges (especially extended bridges), we need to check ALL cells the building occupies
+            // not just the origin cell
+            bool allCellsEmpty = true;
             HashSet<int> cellsToCheck = new HashSet<int>();
-            def.RunOnArea(originalCell, orientation, (int cell) => { cellsToCheck.Add(cell); });
-            if (cellsToCheck.Count == 0) cellsToCheck.Add(originalCell);
 
+            // Get all cells this building occupies
+            def.RunOnArea(originalCell, orientation, (int cell) =>
+            {
+                cellsToCheck.Add(cell);
+            });
+
+            // If RunOnArea didn't work or returned no cells, at least check the origin cell
+            if (cellsToCheck.Count == 0)
+            {
+                cellsToCheck.Add(originalCell);
+            }
+
+            // Check each cell the building will occupy
             foreach (int cell in cellsToCheck)
             {
                 if (!IsSingleCellEmpty(cell))
