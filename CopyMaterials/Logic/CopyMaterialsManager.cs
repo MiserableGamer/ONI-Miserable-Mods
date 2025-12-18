@@ -8,6 +8,10 @@ namespace CopyMaterials.Logic
         private static Building sourceBuilding;
         private static SimHashes sourceMaterial = SimHashes.Vacuum;
 
+        public static PrioritySetting sourcePriority = default;
+        public static string sourceFacadeID = null;
+        public static Tag sourceCopyGroupTag = Tag.Invalid;
+
         public static bool DebugMode = true;
         public static float WatcherTimeoutSeconds = 3f;
 
@@ -15,6 +19,16 @@ namespace CopyMaterials.Logic
         {
             sourceBuilding = building;
             sourceMaterial = material;
+
+            var p = building?.GetComponent<Prioritizable>();
+            sourcePriority = p != null ? p.GetMasterPriority() : default;
+
+            var facade = building?.GetComponent<BuildingFacade>();
+            sourceFacadeID = facade?.CurrentFacade;
+
+            var cbs = building?.GetComponent<CopyBuildingSettings>();
+            sourceCopyGroupTag = cbs != null ? cbs.copyGroupTag : Tag.Invalid;
+
             Log($"Source set: {building?.Def?.PrefabID} with material {material}");
         }
 
@@ -26,6 +40,15 @@ namespace CopyMaterials.Logic
         public static SimHashes GetSourceMaterial()
         {
             return sourceMaterial;
+        }
+
+        public static void ClearSource()  // New: Clear on deactivate
+        {
+            sourceBuilding = null;
+            sourceMaterial = SimHashes.Vacuum;
+            sourcePriority = default;
+            sourceFacadeID = null;
+            sourceCopyGroupTag = Tag.Invalid;
         }
 
         public static void ShowGlobalMessage(string message)

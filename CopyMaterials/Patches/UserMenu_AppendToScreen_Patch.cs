@@ -1,7 +1,8 @@
-﻿using HarmonyLib;
-using UnityEngine;
+﻿using CopyMaterials.Logic;
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
+using UnityEngine;
 
 namespace CopyMaterials.Patches
 {
@@ -33,6 +34,11 @@ namespace CopyMaterials.Patches
                 () =>
                 {
                     sourceField.SetValue(CopySettingsTool.Instance, go);
+                    CopyMaterialsManager.SetSource(  // New: Capture source building/material/settings
+                        go.GetComponent<Building>(),
+                        go.GetComponent<PrimaryElement>()?.ElementID ?? SimHashes.Vacuum
+                    );
+                    CopySettingsToolPatches.isMaterialCopyMode = true;  // New: Set flag
                     PlayerController.Instance.ActivateTool(CopySettingsTool.Instance);
 
                     Vector3 pos = go.transform.position;
