@@ -16,18 +16,39 @@ namespace RomenH.Thresholds
 		internal static string ModFolder
 		{ get; private set; }
 
-		public override void OnLoad(Harmony harmony)
-		{
-			ModCommon.Init("Threshold Walls", harmony);
-			PUtil.InitLibrary();
+	public override void OnLoad(Harmony harmony)
+	{
+		ModCommon.Init("Threshold Walls", harmony);
+		PUtil.InitLibrary();
 
-			var options = new POptions();
-			options.RegisterOptions(this, typeof(ModSettings));
+		var options = new POptions();
+		options.RegisterOptions(this, typeof(ModSettings));
 
-			ModFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+		ModFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-			base.OnLoad(harmony);
-		}
+		// Force initialization of static LocString fields in config classes
+		// This ensures they're registered before buildings are created
+		_ = CautionThresholdWallConfig.Name;
+		_ = CautionThresholdWallConfig.Desc;
+		_ = CautionThresholdWallConfig.Effect;
+		_ = LogicThresholdWallConfig.Name;
+		_ = LogicThresholdWallConfig.Desc;
+		_ = LogicThresholdWallConfig.Effect;
+		_ = MetalThresholdWallConfig.Name;
+		_ = MetalThresholdWallConfig.Desc;
+		_ = MetalThresholdWallConfig.Effect;
+		_ = PlasticThresholdWallConfig.Name;
+		_ = PlasticThresholdWallConfig.Desc;
+		_ = PlasticThresholdWallConfig.Effect;
+		_ = ThresholdWallConfig.Name;
+		_ = ThresholdWallConfig.Desc;
+		_ = ThresholdWallConfig.Effect;
+
+		// Re-register strings now that static fields are initialized
+		StringUtils.RegisterAllLocStrings();
+
+		base.OnLoad(harmony);
+	}
 
 		public override void OnAllModsLoaded(Harmony harmony, IReadOnlyList<KMod.Mod> mods)
 		{

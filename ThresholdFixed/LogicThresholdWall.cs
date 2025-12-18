@@ -205,10 +205,12 @@ namespace RomenH.Thresholds
         private bool doScroll = false;
         private bool altScroll = false;
 
-        private static Color GetColor(bool foundation, bool blocking)
+        private Color GetColor(bool foundation, bool blocking)
         {
             Color color;
-            switch (Grid.GetCellRange(Grid.PosToCell(Grid.ScenePosToCell(this.transform.GetPosition()))))
+            Rotatable rotatable = building.GetComponent<Rotatable>();
+            int rotation = rotatable != null ? (int)rotatable.GetOrientation() : 0;
+            switch (rotation)
             {
                 case 0:
                     color = GetColor0(foundation, blocking);
@@ -237,7 +239,7 @@ namespace RomenH.Thresholds
         private void SetLED(int index, bool on, Color color)
         {
             string symbolName = $"led{index.ToString("D2")}";
-            kanim.GetSymbol(symbolName).tintColour = on ? color : Color.clear;
+            kanim.SetSymbolTint(new HashedString(symbolName), on ? color : Color.clear);
         }
 
         private void UpdateFunction(bool foundation, bool blocking)
@@ -264,14 +266,24 @@ namespace RomenH.Thresholds
 
                 if (blocking)
                 {
-                    Grid.HasTile[cell] = true;
-                    Grid.Solid[cell] = true;
+                    SimCellOccupier occupier = gameObject.GetComponent<SimCellOccupier>();
+                    if (occupier == null)
+                    {
+                        occupier = gameObject.AddComponent<SimCellOccupier>();
+                    }
+                    occupier.doReplaceElement = false;
+                    occupier.notifyOnMelt = false;
+                    Grid.SetSolid(cell, true, default(CellSolidEvent));
                     Pathfinding.Instance.AddDirtyNavGridCell(cell);
                 }
                 else
                 {
-                    Grid.HasTile[cell] = false;
-                    Grid.Solid[cell] = false;
+                    SimCellOccupier occupier = gameObject.GetComponent<SimCellOccupier>();
+                    if (occupier != null)
+                    {
+                        UnityEngine.Object.Destroy(occupier);
+                    }
+                    Grid.SetSolid(cell, false, default(CellSolidEvent));
                     Pathfinding.Instance.AddDirtyNavGridCell(cell);
                 }
             }

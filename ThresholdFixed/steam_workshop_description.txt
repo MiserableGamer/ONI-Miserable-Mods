@@ -1,0 +1,34 @@
+Threshold Walls (Fixed)
+
+Summary
+
+Adds new backwall buildings that can be used to divide spaces into rooms like a door. Also acts as a backwall against space like drywall.
+
+This is a fixed/updated version of Romen's Threshold Walls mod, created to restore compatibility with the latest version of Oxygen Not Included after the original mod became incompatible.
+
+⚠️ IMPORTANT NOTICE ⚠️
+
+This mod is created without permission from the original author (RomenH). This is a community-maintained fix to restore functionality to an otherwise abandoned mod. If the original author requests removal, or if the original mod is updated and becomes compatible again, this version will be removed from the Workshop.
+
+Original Mod: https://steamcommunity.com/sharedfiles/filedetails/?id=2610275728
+Original Author: RomenH
+© 2021 RomenH
+
+Bug Reports / Suggestions
+
+Please post any feedback or issues on GitHub: https://github.com/MiserableGamer/ONI-Miserable-Mods/issues
+
+Alternatively, you can post on the original mod's GitHub (if available) or contact the mod maintainer.
+
+Compatibility
+
+- Base Game
+- Spaced Out! DLC
+- Latest ONI version (U57+)
+
+Changes from Original
+
+- Fixed compatibility with ONI U57+
+- Updated API calls to match current game version
+- Fixed Harmony patching for creature confinement detection
+

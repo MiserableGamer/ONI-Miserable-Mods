@@ -110,28 +110,45 @@ namespace RomenH.Common
 			return new LocString(value, "STRINGS.UI." + ID.ToUpperInvariant() + ".NAME");
 		}
 
-		internal static void RegisterAllLocStrings()
+		public static void RegisterAllLocStrings()
 		{
 			try
 			{
 				ModCommon.Log.Debug("Searching for translatable strings...");
-				foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
+				// Search in all loaded assemblies, not just the executing assembly
+				foreach (Assembly asm in AppDomain.CurrentDomain.GetAssemblies())
 				{
-					if (type?.FullName?.StartsWith("RomenH.") ?? false)
+					try
 					{
-						foreach (FieldInfo field in type.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly))
+						foreach (Type type in asm.GetTypes())
 						{
-							if (field.FieldType == typeof(LocString))
+							if (type?.FullName?.StartsWith("RomenH.") ?? false)
 							{
-								LocString ls = (LocString)field.GetValue(null);
-								if (ls.key.IsValid())
+								foreach (FieldInfo field in type.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly))
 								{
-									ModCommon.Log.Debug($"Found string: {ls.key.String}");
-									Strings.Add(ls.key.String, ls.text);
-									registeredStrings.Add(ls.key.String, ls);
+									if (field.FieldType == typeof(LocString))
+									{
+										LocString ls = (LocString)field.GetValue(null);
+										if (ls.key.IsValid())
+										{
+											ModCommon.Log.Debug($"Found string: {ls.key.String}");
+											Strings.Add(ls.key.String, ls.text);
+											registeredStrings.Add(ls.key.String, ls);
+										}
+									}
 								}
 							}
 						}
+					}
+					catch (ReflectionTypeLoadException ex)
+					{
+						// Some assemblies may fail to load all types, skip them
+						ModCommon.Log.Debug($"Could not load all types from assembly {asm.FullName}: {ex.Message}");
+					}
+					catch (Exception ex)
+					{
+						// Skip assemblies that can't be processed
+						ModCommon.Log.Debug($"Error processing assembly {asm.FullName}: {ex.Message}");
 					}
 				}
 			}

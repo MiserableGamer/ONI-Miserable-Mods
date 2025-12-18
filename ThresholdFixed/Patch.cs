@@ -1,6 +1,7 @@
 
 using Epic.OnlineServices.Ecom;
 using HarmonyLib;
+using System.Reflection;
 
 using RomenH.Common;
 
@@ -34,17 +35,24 @@ namespace RomenH.Thresholds
 		}
 	}
 
-	[HarmonyPatch(typeof(OvercrowdingMonitor), "IsConfined")]
+	[HarmonyPatch(typeof(OvercrowdingMonitor), "AlignTagsAndEffects")]
 	public class OvercrowdingMonitor_IsConfined_Patch
 	{
-		public static void Postfix(ref bool __result, OvercrowdingMonitor.Instance smi)
+		public static void Postfix(OvercrowdingMonitor.Instance smi)
 		{
 			if (smi.cavity == null)
 			{
 				int cell = Grid.PosToCell(smi.gameObject);
 				if (!Grid.IsSolidCell(cell) && !Grid.HasDoor[cell])
 				{
-					__result = false;
+					// Override the Confined tag that was just set
+					smi.kpid.SetTag(GameTags.Creatures.Confined, false);
+					// Also remove the confined effect if it was added
+					if (smi.confined.instance != null)
+					{
+						smi.effects.Remove(smi.confined.Effect);
+						smi.confined.instance = null;
+					}
 				}
 			}
 		}

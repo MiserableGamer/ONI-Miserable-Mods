@@ -84,26 +84,65 @@
     <Compile Include="ThresholdWallConfig.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\anim\assets\caution_threshold_walls\walls_0.png" />
-    <Content Include="Assets\anim\assets\ledmatrix\walls_0.png" />
-    <Content Include="Assets\anim\assets\metal_threshold_walls\walls_0.png" />
-    <Content Include="Assets\anim\assets\plastic_threshold_walls\plastic_threshold_walls_0.png" />
-    <Content Include="Assets\anim\assets\threshold_walls\walls_0.png" />
-    <Content Include="Assets\preview.png" />
+    <Content Include="anim\assets\caution_threshold_walls\walls_0.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="anim\assets\ledmatrix\walls_0.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="anim\assets\metal_threshold_walls\walls_0.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="anim\assets\plastic_threshold_walls\plastic_threshold_walls_0.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="anim\assets\threshold_walls\walls_0.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="anim\preview.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="mod_info.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="steam_workshop_description.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Assets\anim\assets\caution_threshold_walls\walls_anim.bytes" />
-    <None Include="Assets\anim\assets\caution_threshold_walls\walls_build.bytes" />
-    <None Include="Assets\anim\assets\ledmatrix\walls_anim.bytes" />
-    <None Include="Assets\anim\assets\ledmatrix\walls_build.bytes" />
-    <None Include="Assets\anim\assets\metal_threshold_walls\walls_anim.bytes" />
-    <None Include="Assets\anim\assets\metal_threshold_walls\walls_build.bytes" />
-    <None Include="Assets\anim\assets\plastic_threshold_walls\plastic_threshold_walls_anim.bytes" />
-    <None Include="Assets\anim\assets\plastic_threshold_walls\plastic_threshold_walls_build.bytes" />
-    <None Include="Assets\anim\assets\threshold_walls\walls_anim.bytes" />
-    <None Include="Assets\anim\assets\threshold_walls\walls_build.bytes" />
+    <None Include="mod.yaml" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="anim\assets\caution_threshold_walls\walls_anim.bytes">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="anim\assets\caution_threshold_walls\walls_build.bytes">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="anim\assets\ledmatrix\walls_anim.bytes">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="anim\assets\ledmatrix\walls_build.bytes">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="anim\assets\metal_threshold_walls\walls_anim.bytes">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="anim\assets\metal_threshold_walls\walls_build.bytes">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="anim\assets\plastic_threshold_walls\plastic_threshold_walls_anim.bytes">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="anim\assets\plastic_threshold_walls\plastic_threshold_walls_build.bytes">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="anim\assets\threshold_walls\walls_anim.bytes">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="anim\assets\threshold_walls\walls_build.bytes">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CommonLib\CommonLib.csproj">
@@ -112,4 +151,17 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>powershell -ExecutionPolicy Bypass -File "$(ProjectDir)increment_version.ps1"</PreBuildEvent>
+    <PostBuildEvent>if not exist "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ThresholdFixed\" mkdir "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ThresholdFixed\"
+
+xcopy /Y /R "$(ProjectDir)mod.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ThresholdFixed\"
+xcopy /Y /R "$(ProjectDir)mod_info.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ThresholdFixed\"
+
+xcopy /Y /R "$(TargetPath)" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ThresholdFixed\"
+
+xcopy /Y /R "$(TargetDir)CommonLib.dll" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ThresholdFixed\"
+
+if exist "$(ProjectDir)anim" xcopy /Y /E /I "$(ProjectDir)anim" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ThresholdFixed\anim"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

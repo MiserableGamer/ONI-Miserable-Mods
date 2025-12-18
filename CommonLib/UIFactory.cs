@@ -100,10 +100,9 @@ namespace RomenH.Common
 			Toggle itemToggle = itemObj.GetComponent<Toggle>();
 			itemToggle.targetGraphic = (Graphic)itemBackgroundImage;
 			//itemToggle.graphic = (Graphic)itemCheckmarkImage;
-			itemToggle.colors = itemToggle.colors with
-			{
-				highlightedColor = LightBlue
-			};
+			var colors = itemToggle.colors;
+			colors.highlightedColor = LightBlue;
+			itemToggle.colors = colors;
 			itemToggle.isOn = true;
 
 			Image templateImage = templateObj.GetComponent<Image>();

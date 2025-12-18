@@ -1,3 +1,5 @@
+using KMod;
+
 namespace RomenH.Common
 {
 	/// <summary>
@@ -5,7 +7,7 @@ namespace RomenH.Common
 	/// </summary>
 	public class StringListOption : IListableOption
 	{
-		public static implicit operator StringListOption(LocString name) => new StringListOption(name);
+		public static implicit operator StringListOption(LocString name) => new StringListOption(name?.text ?? string.Empty);
 
 		public static bool operator ==(StringListOption one, StringListOption two) => one.Equals(two);
 
