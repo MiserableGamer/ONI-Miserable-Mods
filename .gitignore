@@ -364,6 +364,7 @@ FodyWeavers.xsd
 
 bin/
 obj/
+lib/
 
 # Chrome extension (not part of ONI mods)
 cursor-cost-summary/
