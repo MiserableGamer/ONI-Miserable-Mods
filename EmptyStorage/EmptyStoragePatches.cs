@@ -85,19 +85,22 @@ namespace EmptyStorage
 							}
 						}
 						
-						if (isGasStorage || isLiquidStorage)
+						// Check if skills are required (only if not immediate emptying)
+						var options = POptions.ReadSettings<EmptyStorageOptions>() ?? new EmptyStorageOptions();
+						if (!options.ImmediateEmptying && options.RequireSkills)
 						{
-							// Gas or Liquid storage -> Plumbing skill
-							var plumbingSkillId = Db.Get().SkillPerks.CanDoPlumbing.Id;
-							requiredSkillPerk = plumbingSkillId.ToString();
-							UnityEngine.Debug.Log($"[EmptyStorage] Storage type: {(isGasStorage ? "Gas" : "Liquid")}, skill: Plumbing");
-						}
-						else
-						{
-							// Solid storage -> Tidy skill
-							var tidySkillId = Db.Get().SkillPerks.IncreaseStrengthGroundskeeper.Id;
-							requiredSkillPerk = tidySkillId.ToString();
-							UnityEngine.Debug.Log($"[EmptyStorage] Storage type: Solid, skill: Tidy");
+							if (isGasStorage || isLiquidStorage)
+							{
+								// Gas or Liquid storage -> Plumbing skill
+								var plumbingSkillId = Db.Get().SkillPerks.CanDoPlumbing.Id;
+								requiredSkillPerk = plumbingSkillId.ToString();
+							}
+							else
+							{
+								// Solid storage -> Tidy skill
+								var tidySkillId = Db.Get().SkillPerks.IncreaseStrengthGroundskeeper.Id;
+								requiredSkillPerk = tidySkillId.ToString();
+							}
 						}
 						
 						workable.requiredSkillPerk = requiredSkillPerk;
@@ -209,7 +212,6 @@ namespace EmptyStorage
 		}
 
 		// Patch OnStorageChange to keep showCmd false when our component exists
-		// Also check if chore was cancelled and clean up shouldShowSkillPerkStatusItem
 		[HarmonyPatch(typeof(DropAllWorkable), "OnStorageChange")]
 		public static class DropAllWorkable_OnStorageChange_Patch
 		{
@@ -223,25 +225,6 @@ namespace EmptyStorage
 					if (showCmdField != null)
 					{
 						showCmdField.SetValue(__instance, false);
-					}
-					
-					// Check if chore was cancelled (chore is null but shouldShowSkillPerkStatusItem is still true)
-					// This handles the case where the cancel tool cancels the chore
-					var choreProperty = typeof(DropAllWorkable).GetProperty("Chore", BindingFlags.NonPublic | BindingFlags.Instance);
-					var chore = choreProperty?.GetValue(__instance);
-					if (chore == null)
-					{
-						var shouldShowField = typeof(DropAllWorkable).GetField("shouldShowSkillPerkStatusItem", bindingAttr);
-						if (shouldShowField != null)
-						{
-							var shouldShow = (bool)(shouldShowField.GetValue(__instance) ?? false);
-							if (shouldShow)
-							{
-								// Chore is null but shouldShow is still true - disable it
-								__instance.SetShouldShowSkillPerkStatusItem(false);
-								UnityEngine.Debug.Log($"[EmptyStorage] OnStorageChange - Chore is null, disabled shouldShowSkillPerkStatusItem");
-							}
-						}
 					}
 				}
 			}
@@ -287,30 +270,43 @@ namespace EmptyStorage
 				
 				try
 				{
-					// Calculate work time based on storage mass (like EmptyTheStorageErrand mod)
-					// Use GetStorages() method to ensure storages are initialized
-					BindingFlags bindingAttr = BindingFlags.Instance | BindingFlags.NonPublic;
-					var getStoragesMethod = typeof(DropAllWorkable).GetMethod("GetStorages", bindingAttr);
-					Storage[] storages = null;
+					// Check options for work time
+					var options = POptions.ReadSettings<EmptyStorageOptions>() ?? new EmptyStorageOptions();
 					
-					if (getStoragesMethod != null)
+					// Only calculate work time if UseWorkTime is enabled
+					if (options.UseWorkTime && !options.ImmediateEmptying)
 					{
-						storages = getStoragesMethod.Invoke(__instance, null) as Storage[];
+						// Calculate work time based on storage mass and option setting
+						// Use GetStorages() method to ensure storages are initialized
+						BindingFlags bindingAttr = BindingFlags.Instance | BindingFlags.NonPublic;
+						var getStoragesMethod = typeof(DropAllWorkable).GetMethod("GetStorages", bindingAttr);
+						Storage[] storages = null;
+						
+						if (getStoragesMethod != null)
+						{
+							storages = getStoragesMethod.Invoke(__instance, null) as Storage[];
+						}
+						else
+						{
+							// Fallback to direct component access
+							storages = __instance.GetComponents<Storage>();
+						}
+						
+						if (storages != null && storages.Length > 0 && storages[0] != null)
+						{
+							float massStored = storages[0].MassStored();
+							// Use the slider value: workTimePer100kg seconds per 100kg
+							float workTime = (massStored / 100f) * options.WorkTimePer100kg;
+							if (workTime < 0.1f) workTime = 0.1f; // Minimum work time
+							__instance.dropWorkTime = workTime;
+							__instance.SetWorkTime(workTime);
+						}
 					}
 					else
 					{
-						// Fallback to direct component access
-						storages = __instance.GetComponents<Storage>();
-					}
-					
-					if (storages != null && storages.Length > 0 && storages[0] != null)
-					{
-						float massStored = storages[0].MassStored();
-						float workTime = massStored / 100f; // Same calculation as EmptyTheStorageErrand
-						if (workTime < 0.1f) workTime = 0.1f; // Minimum work time
-						__instance.dropWorkTime = workTime;
-						__instance.SetWorkTime(workTime);
-						UnityEngine.Debug.Log($"[EmptyStorage] DropAll Prefix - Calculated work time: {workTime}s based on mass: {massStored}kg");
+						// Instant work time
+						__instance.dropWorkTime = 0.1f; // Minimum work time
+						__instance.SetWorkTime(0.1f);
 					}
 				}
 				catch (System.Exception ex)
@@ -330,68 +326,72 @@ namespace EmptyStorage
 					if (emptyStorageSetting == null)
 						return;
 					
-					UnityEngine.Debug.Log($"[EmptyStorage] DropAll Postfix - Starting");
-					
 					// Check if a chore was created (not cancelled)
 					var choreProperty = typeof(DropAllWorkable).GetProperty("Chore", BindingFlags.NonPublic | BindingFlags.Instance);
 					var chore = choreProperty?.GetValue(__instance);
-					
-					UnityEngine.Debug.Log($"[EmptyStorage] DropAll Postfix - Chore: {(chore != null ? "exists" : "null")}");
 					
 					if (chore != null)
 					{
 						// Chore exists - set work time again in case it wasn't set correctly in Prefix
 						// This ensures the work time is correct even if storages weren't initialized in Prefix
-						BindingFlags bindingAttr = BindingFlags.Instance | BindingFlags.NonPublic;
-						var getStoragesMethod = typeof(DropAllWorkable).GetMethod("GetStorages", bindingAttr);
-						Storage[] storages = null;
+						var options = POptions.ReadSettings<EmptyStorageOptions>() ?? new EmptyStorageOptions();
 						
-						if (getStoragesMethod != null)
+						if (options.UseWorkTime && !options.ImmediateEmptying)
 						{
-							storages = getStoragesMethod.Invoke(__instance, null) as Storage[];
+							BindingFlags bindingAttr = BindingFlags.Instance | BindingFlags.NonPublic;
+							var getStoragesMethod = typeof(DropAllWorkable).GetMethod("GetStorages", bindingAttr);
+							Storage[] storages = null;
+							
+							if (getStoragesMethod != null)
+							{
+								storages = getStoragesMethod.Invoke(__instance, null) as Storage[];
+							}
+							else
+							{
+								// Fallback to direct component access
+								storages = __instance.GetComponents<Storage>();
+							}
+							
+							if (storages != null && storages.Length > 0 && storages[0] != null)
+							{
+								float massStored = storages[0].MassStored();
+								// Use the slider value: workTimePer100kg seconds per 100kg
+								float workTime = (massStored / 100f) * options.WorkTimePer100kg;
+								if (workTime < 0.1f) workTime = 0.1f; // Minimum work time
+								if (workTime > 0f)
+								{
+									__instance.dropWorkTime = workTime;
+									__instance.SetWorkTime(workTime);
+								}
+							}
 						}
 						else
 						{
-							// Fallback to direct component access
-							storages = __instance.GetComponents<Storage>();
+							// Instant work time
+							__instance.dropWorkTime = 0.1f;
+							__instance.SetWorkTime(0.1f);
 						}
 						
-						if (storages != null && storages.Length > 0 && storages[0] != null)
+						// Enable skill perk status item so it shows if no qualified worker (only if skills are required)
+						if (options.RequireSkills && !options.ImmediateEmptying)
 						{
-							float massStored = storages[0].MassStored();
-							float workTime = massStored / 100f;
-							if (workTime < 0.1f) workTime = 0.1f; // Minimum work time
-							if (workTime > 0f)
-							{
-								__instance.dropWorkTime = workTime;
-								__instance.SetWorkTime(workTime);
-								UnityEngine.Debug.Log($"[EmptyStorage] DropAll Postfix - Set work time: {workTime}s based on mass: {massStored}kg");
-							}
+							// Use SetShouldShowSkillPerkStatusItem which properly subscribes to skill updates and calls UpdateStatusItem
+							__instance.SetShouldShowSkillPerkStatusItem(true);
 						}
-						
-						// Enable skill perk status item so it shows if no qualified worker
-						// Use SetShouldShowSkillPerkStatusItem which properly subscribes to skill updates and calls UpdateStatusItem
-						UnityEngine.Debug.Log($"[EmptyStorage] DropAll Postfix - Enabling skill perk status item");
-						__instance.SetShouldShowSkillPerkStatusItem(true);
+						else
+						{
+							__instance.SetShouldShowSkillPerkStatusItem(false);
+						}
 						
 						// Ensure workable is enabled (required for status item to show)
 						__instance.enabled = true;
-						
-						// Verify requiredSkillPerk is set
-						var requiredSkillPerk = __instance.requiredSkillPerk;
-						UnityEngine.Debug.Log($"[EmptyStorage] DropAll - Chore created, enabled skill perk status item. requiredSkillPerk: {requiredSkillPerk}, enabled: {__instance.enabled}");
 					}
 					else
 					{
 						// Chore was cancelled - disable skill perk status item
 						// Use SetShouldShowSkillPerkStatusItem which properly unsubscribes and calls UpdateStatusItem
-						UnityEngine.Debug.Log($"[EmptyStorage] DropAll Postfix - Disabling skill perk status item");
 						__instance.SetShouldShowSkillPerkStatusItem(false);
-						
-						UnityEngine.Debug.Log($"[EmptyStorage] DropAll - Chore cancelled, disabled skill perk status item");
 					}
-					
-					UnityEngine.Debug.Log($"[EmptyStorage] DropAll Postfix - Completed");
 				}
 				catch (System.Exception ex)
 				{
@@ -400,6 +400,67 @@ namespace EmptyStorage
 			}
 		}
 
+
+		// Patch MinionResume.HasPerk to allow bionic dupes with Tidying Booster for solid storage
+		// This allows bionic dupes with Tidying Booster to do solid storage emptying work
+		// We patch HasPerk to return true for Groundskeeper perk when the dupe is bionic
+		// Note: This assumes bionic dupes with Tidying Booster should have access to the perk
+		// We need to specify the exact method signature to avoid ambiguous match
+		[HarmonyPatch(typeof(MinionResume), "HasPerk", new System.Type[] { typeof(HashedString) })]
+		public static class MinionResume_HasPerk_Patch
+		{
+			internal static void Postfix(MinionResume __instance, HashedString perkId, ref bool __result)
+			{
+				try
+				{
+					// If they already have the perk, no need to check further
+					if (__result)
+						return;
+					
+					// Only check for Groundskeeper perk (Tidy skill for solid storage)
+					var tidySkillId = Db.Get().SkillPerks.IncreaseStrengthGroundskeeper.Id;
+					
+					// Compare HashedString values
+					if (perkId != tidySkillId)
+						return;
+					
+					// Check if skills are required for our mod
+					var options = POptions.ReadSettings<EmptyStorageOptions>() ?? new EmptyStorageOptions();
+					if (options.ImmediateEmptying || !options.RequireSkills)
+						return;
+					
+					// Check if worker is a bionic dupe - bionic dupes have MinionModifiers component
+					var workerGameObject = __instance.gameObject;
+					if (workerGameObject == null)
+						return;
+					
+					var minionModifiers = workerGameObject.GetComponent<MinionModifiers>();
+					if (minionModifiers == null)
+						return;
+					
+					// Check if bionic dupe has Tidying Booster installed
+					// The Tidying Booster is "Booster_Tidy1" and grants CanDoPlumbing and CanMakeMissiles
+					// It doesn't grant IncreaseStrengthGroundskeeper, but we allow it for solid storage emptying
+					var bionicUpgradesMonitor = workerGameObject.GetSMI<BionicUpgradesMonitor.Instance>();
+					if (bionicUpgradesMonitor == null)
+						return;
+					
+					// Check if they have the Tidying Booster assigned
+					Tag tidyingBoosterTag = new Tag("Booster_Tidy1");
+					int boosterCount = bionicUpgradesMonitor.CountBoosterAssignments(tidyingBoosterTag);
+					if (boosterCount > 0)
+					{
+						// Bionic dupe has Tidying Booster - allow them to have the Groundskeeper perk
+						// This allows them to do solid storage emptying
+						__result = true;
+					}
+				}
+				catch (System.Exception ex)
+				{
+					UnityEngine.Debug.LogError($"[EmptyStorage] MinionResume.HasPerk Postfix error: {ex.Message}\n{ex.StackTrace}");
+				}
+			}
+		}
 
 		// Patch DropAllWorkable.OnCompleteWork to handle null references
 		[HarmonyPatch(typeof(DropAllWorkable), "OnCompleteWork")]
@@ -424,7 +485,6 @@ namespace EmptyStorage
 					// Safe null check
 					if (array == null || array.Length == 0)
 					{
-						UnityEngine.Debug.Log($"[EmptyStorage] OnCompleteWork: No Storage components found");
 						CleanupChore(__instance);
 						return false; // Skip original method
 					}
@@ -495,7 +555,6 @@ namespace EmptyStorage
 					
 					__instance.Trigger(-1957399615, null);
 					
-					UnityEngine.Debug.Log($"[EmptyStorage] OnCompleteWork: Completed safely");
 					return false; // Skip original method, we've done the work
 				}
 				catch (System.Exception ex)
@@ -526,139 +585,7 @@ namespace EmptyStorage
 			}
 		}
 
-		// Patch the Chore property setter to detect when chore is cancelled
-		// This is the most reliable way to detect cancellation - we hook directly into when Chore is set to null
-		[HarmonyPatch(typeof(Workable), "set_Chore")]
-		public static class Workable_set_Chore_Patch
-		{
-			internal static void Postfix(Workable __instance, Chore value)
-			{
-				try
-				{
-					// Only handle DropAllWorkable instances with our component
-					var dropAllWorkable = __instance as DropAllWorkable;
-					if (dropAllWorkable == null)
-						return;
-					
-					var emptyStorageSetting = dropAllWorkable.gameObject.GetComponent<EmptyStorageSetting>();
-					if (emptyStorageSetting == null)
-						return;
-					
-					// If Chore is being set to null, the chore was cancelled
-					if (value == null)
-					{
-						BindingFlags bindingAttr = BindingFlags.Instance | BindingFlags.NonPublic;
-						var shouldShowField = typeof(DropAllWorkable).GetField("shouldShowSkillPerkStatusItem", bindingAttr);
-						if (shouldShowField != null)
-						{
-							var shouldShow = (bool)(shouldShowField.GetValue(dropAllWorkable) ?? false);
-							if (shouldShow)
-							{
-								// Chore is being set to null but shouldShow is still true - disable it immediately
-								dropAllWorkable.SetShouldShowSkillPerkStatusItem(false);
-								
-								// Call RefreshStatusItem to update the status item display
-								var refreshMethod = typeof(DropAllWorkable).GetMethod("RefreshStatusItem", BindingFlags.NonPublic | BindingFlags.Instance);
-								refreshMethod?.Invoke(dropAllWorkable, null);
-								
-								UnityEngine.Debug.Log($"[EmptyStorage] Workable.set_Chore - Chore cancelled, disabled shouldShowSkillPerkStatusItem");
-							}
-						}
-					}
-				}
-				catch (System.Exception ex)
-				{
-					UnityEngine.Debug.LogError($"[EmptyStorage] Workable.set_Chore Postfix error: {ex.Message}\n{ex.StackTrace}");
-				}
-			}
-		}
 
-		// Patch RefreshStatusItem to handle cleanup when chore is cancelled
-		// This is a backup in case the Chore setter patch doesn't catch all cases
-		[HarmonyPatch(typeof(DropAllWorkable), "RefreshStatusItem")]
-		public static class DropAllWorkable_RefreshStatusItem_Patch
-		{
-			internal static void Postfix(DropAllWorkable __instance)
-			{
-				try
-				{
-					// Only handle this for storages with our component
-					var emptyStorageSetting = __instance.gameObject.GetComponent<EmptyStorageSetting>();
-					if (emptyStorageSetting == null)
-						return;
-					
-					// Check if chore is null
-					var choreProperty = typeof(DropAllWorkable).GetProperty("Chore", BindingFlags.NonPublic | BindingFlags.Instance);
-					var chore = choreProperty?.GetValue(__instance);
-					
-					// If chore is null, ensure shouldShowSkillPerkStatusItem is also false
-					// This handles the case where the cancel tool cancels the chore directly
-					if (chore == null)
-					{
-						var shouldShowField = typeof(DropAllWorkable).GetField("shouldShowSkillPerkStatusItem", BindingFlags.Instance | BindingFlags.NonPublic);
-						if (shouldShowField != null)
-						{
-							var shouldShow = (bool)(shouldShowField.GetValue(__instance) ?? false);
-							if (shouldShow)
-							{
-								// Chore is null but shouldShow is still true - disable it
-								__instance.SetShouldShowSkillPerkStatusItem(false);
-								UnityEngine.Debug.Log($"[EmptyStorage] RefreshStatusItem - Chore is null, disabled shouldShowSkillPerkStatusItem");
-							}
-						}
-					}
-				}
-				catch (System.Exception ex)
-				{
-					UnityEngine.Debug.LogError($"[EmptyStorage] RefreshStatusItem Postfix error: {ex.Message}\n{ex.StackTrace}");
-				}
-			}
-		}
-		
-		// Patch OnRefreshUserMenu to also check for cancelled chores and clean up
-		// This is called periodically and when the user menu is refreshed, so it's a good place
-		// to detect if a chore was cancelled by the cancel tool
-		// Note: This is a separate patch from the one that blocks the button (which uses Prefix)
-		// Harmony allows multiple patches on the same method, and Postfix runs after Prefix
-		[HarmonyPatch(typeof(DropAllWorkable), "OnRefreshUserMenu")]
-		public static class DropAllWorkable_OnRefreshUserMenu_Cleanup_Patch
-		{
-			internal static void Postfix(DropAllWorkable __instance, object data)
-			{
-				try
-				{
-					// Only handle this for storages with our component
-					var emptyStorageSetting = __instance.gameObject.GetComponent<EmptyStorageSetting>();
-					if (emptyStorageSetting == null)
-						return;
-					
-					// Check if chore is null
-					var choreProperty = typeof(DropAllWorkable).GetProperty("Chore", BindingFlags.NonPublic | BindingFlags.Instance);
-					var chore = choreProperty?.GetValue(__instance);
-					
-					BindingFlags bindingAttr = BindingFlags.Instance | BindingFlags.NonPublic;
-					var shouldShowField = typeof(DropAllWorkable).GetField("shouldShowSkillPerkStatusItem", bindingAttr);
-					var shouldShow = shouldShowField != null ? (bool)(shouldShowField.GetValue(__instance) ?? false) : false;
-					
-					UnityEngine.Debug.Log($"[EmptyStorage] OnRefreshUserMenu Cleanup - Chore: {(chore != null ? "exists" : "null")}, shouldShow: {shouldShow}");
-					
-					// If chore is null, ensure shouldShowSkillPerkStatusItem is also false
-					if (chore == null && shouldShow)
-					{
-						// Chore is null but shouldShow is still true - disable it
-						__instance.SetShouldShowSkillPerkStatusItem(false);
-						UnityEngine.Debug.Log($"[EmptyStorage] OnRefreshUserMenu - Chore is null, disabled shouldShowSkillPerkStatusItem");
-					}
-				}
-				catch (System.Exception ex)
-				{
-					UnityEngine.Debug.LogError($"[EmptyStorage] OnRefreshUserMenu Postfix error: {ex.Message}\n{ex.StackTrace}");
-				}
-			}
-		}
-
-		// Note: Cannot patch Chore.Cancel directly as it's abstract
-		// RefreshStatusItem patch above handles cleanup when chore is cancelled by any means
 
 		// Patch DropAllWorkable.OnSpawn to ensure showCmd stays false
 		[HarmonyPatch(typeof(DropAllWorkable), "OnSpawn")]
@@ -675,7 +602,6 @@ namespace EmptyStorage
 					if (showCmdField != null)
 					{
 						showCmdField.SetValue(__instance, false);
-						UnityEngine.Debug.Log($"[EmptyStorage] OnSpawn - Set showCmd to false");
 					}
 				}
 			}
@@ -704,7 +630,6 @@ namespace EmptyStorage
 								if (dropAllWorkable != null)
 								{
 									// This is DropAllWorkable's button - block it when dupe is selected
-									UnityEngine.Debug.Log($"[EmptyStorage] UserMenu.AddButton - Blocking DropAllWorkable button (dupe selected: {selectedObject.name})");
 									return false; // Skip adding the button
 								}
 							}
@@ -715,15 +640,6 @@ namespace EmptyStorage
 			}
 		}
 
-		// Patch DropAllWorkable to debug work creation
-		[HarmonyPatch(typeof(DropAllWorkable), "OnPrefabInit")]
-		public static class DropAllWorkable_OnPrefabInit_Patch
-		{
-			internal static void Postfix(DropAllWorkable __instance)
-			{
-				UnityEngine.Debug.Log($"[EmptyStorage] DropAllWorkable.OnPrefabInit - enabled: {__instance.enabled}");
-			}
-		}
 	}
 }
 

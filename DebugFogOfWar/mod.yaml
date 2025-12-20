@@ -1,0 +1,4 @@
+title: Debug Fog of War
+description: Prevents fog of war from being removed when debug mode is activated.
+supportedContent: ALL
+

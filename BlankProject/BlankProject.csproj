@@ -4,15 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{573CE697-FD53-48DE-98FE-0C0EB4CA8F04}</ProjectGuid>
+    <ProjectGuid>{7A836259-5127-4912-AD82-C9A62D8DE9DE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BonbonTreeBoost</RootNamespace>
-    <AssemblyName>BonbonTreeBoost</AssemblyName>
+    <RootNamespace>BlankProject</RootNamespace>
+    <AssemblyName>BlankProject</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,6 +21,9 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugType>pdbonly</DebugType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,19 +32,25 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
       <HintPath>..\lib\0Harmony.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\lib\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>..\lib\Assembly-CSharp-firstpass.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="PLib, Version=4.19.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\PLib.4.19.0\lib\net471\PLib.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -54,37 +62,66 @@
     <Reference Include="System.Xml" />
     <Reference Include="Unity.TextMeshPro">
       <HintPath>..\lib\Unity.TextMeshPro.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\lib\UnityEngine.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\lib\UnityEngine.CoreModule.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.ImageConversionModule">
       <HintPath>..\lib\UnityEngine.ImageConversionModule.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>..\lib\UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BonbonTreeBoost.cs" />
+    <Compile Include="BlankProjectOptions.cs" />
+    <Compile Include="BlankProjectPatches.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="mod_info.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="preview.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="mod.yaml" />
-    <None Include="mod_info.yaml" />
-    <None Include="packages.config" />
+    <Content Include="mod.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="increment_version.ps1" />
     <None Include="README.md" />
     <None Include="STEAM_WORKSHOP_DESCRIPTION.md" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="preview.png" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>powershell -ExecutionPolicy Bypass -File "$(ProjectDir)increment_version.ps1"</PreBuildEvent>
+    <PostBuildEvent>if not exist "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\BlankProject\" mkdir "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\BlankProject\"
+xcopy /Y /R "$(ProjectDir)mod.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\BlankProject\"
+xcopy /Y /R "$(ProjectDir)mod_info.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\BlankProject\"
+xcopy /Y /R "$(TargetPath)" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\BlankProject\"
+if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\BlankProject\"
+del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\BlankProject\*.xml" 2&gt;nul
+del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\BlankProject\*.pdb" 2&gt;nul
+del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\BlankProject\FMODUnity.dll" 2&gt;nul
+del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\BlankProject\UnityEngine.TextRenderingModule.dll" 2&gt;nul
+xcopy /Y /R "$(ProjectDir)mod.yaml" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\BlankProject\"
+xcopy /Y /R "$(ProjectDir)mod_info.yaml" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\BlankProject\"
+xcopy /Y /R "$(TargetPath)" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\BlankProject\"
+if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\BlankProject\"
+del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\BlankProject\*.xml" 2&gt;nul
+del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\BlankProject\*.pdb" 2&gt;nul
+del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\BlankProject\FMODUnity.dll" 2&gt;nul
+del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\BlankProject\UnityEngine.TextRenderingModule.dll" 2&gt;nul</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 </Project>
+

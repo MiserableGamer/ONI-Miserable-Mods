@@ -101,8 +101,6 @@ namespace EmptyStorage
 							// Cancel the existing chore
 							// The DropAll patch will disable shouldShowSkillPerkStatusItem and refresh the status item
 							workable.DropAll(); // DropAll() toggles - if chore exists, it cancels it
-							
-							Debug.Log($"[EmptyStorage] Cancelled existing chore");
 						}
 						else
 						{
@@ -127,10 +125,7 @@ namespace EmptyStorage
 								
 								// Create the work chore (DropAll() handles creating/canceling)
 								// The DropAll patch will enable shouldShowSkillPerkStatusItem and refresh the status item
-								// The RefreshStatusItem patch will handle cleanup when the cancel tool is used
 								workable.DropAll();
-								
-								Debug.Log($"[EmptyStorage] Created work chore (requires Plumbing skill)");
 							}
 						}
 					}

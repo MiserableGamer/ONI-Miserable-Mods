@@ -105,12 +105,14 @@
     <Content Include="mod_info.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="steam_workshop_description.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="mod.yaml" />
     <None Include="packages.config" />
+    <None Include="increment_version.ps1" />
+    <None Include="README.md" />
+    <None Include="STEAM_WORKSHOP_DESCRIPTION.md" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="anim\assets\caution_threshold_walls\walls_anim.bytes">
