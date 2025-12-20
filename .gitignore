@@ -367,3 +367,5 @@ obj/
 
 # Chrome extension (not part of ONI mods)
 cursor-cost-summary/
+/CommonLib/CommonLib.csproj
+/BlankProject/BlankProject.csproj
