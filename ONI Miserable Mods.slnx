@@ -6,4 +6,5 @@
   <Project Path="EmptyStorage/EmptyStorage.csproj" Id="f878a2e5-8d49-4761-95ff-0cf0da70cd2e" />
   <Project Path="ThresholdFixed/ThresholdFixed.csproj" Id="fe377519-31a0-4c07-9f63-a88d8a76b59a" />
   <Project Path="BlankProject/BlankProject.csproj" Id="7A836259-5127-4912-AD82-C9A62D8DE9DE" />
+  <Project Path="LongerArms/LongerArms.csproj" Id="A1B2C3D4-E5F6-7890-ABCD-EF1234567890" />
 </Solution>
