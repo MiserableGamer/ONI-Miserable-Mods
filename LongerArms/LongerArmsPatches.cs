@@ -28,12 +28,9 @@ namespace LongerArms
 			harmony.PatchAll();
 		}
 
-		/// <summary>
 		/// Generates vertical cell offset paths for additional reach beyond vanilla.
-		/// Based on CrackReacher's exact pattern: single path at horizontal offset 0.
-		/// CrackReacher uses: (0, -4), (0, -3), (0, -2), (0, -1) to reach cell 4.
+		/// uses: (0, -4), (0, -3), (0, -2), (0, -1) to reach cell 4.
 		/// The OffsetTable.Mirror call handles mirroring to all directions.
-		/// </summary>
 		private static List<CellOffset[]> GenerateVerticalReachOffsets(int additionalReach, int vanillaMax)
 		{
 			var paths = new List<CellOffset[]>();
@@ -42,17 +39,12 @@ namespace LongerArms
 				return paths;
 
 			// Generate a path for each additional cell we want to reach vertically
-			// EXACTLY like CrackReacher: only at horizontal offset 0
-			// Vanilla vertical reach is typically 3 cells (cells 1-3 from center at 0)
-			// So we add cells starting from 4 and going up
 			for (int i = 1; i <= additionalReach; i++)
 			{
 				int targetCell = vanillaMax + i;
 				var offsets = new List<CellOffset>();
 				
 				// Create path from target cell back to cell 1 (descending order)
-				// EXACTLY like CrackReacher: (0, -4), (0, -3), (0, -2), (0, -1) for targetCell=4
-				// Only at horizontal offset 0 - Mirror handles all directions
 				for (int cellNumber = targetCell; cellNumber >= 1; cellNumber--)
 				{
 					offsets.Add(new CellOffset(0, -cellNumber)); // Negative Y is upward, horizontal offset is always 0
@@ -64,13 +56,7 @@ namespace LongerArms
 			return paths;
 		}
 
-		/// <summary>
 		/// Generates horizontal cell offset paths for additional reach beyond vanilla.
-		/// The offset arrays represent PATHS from the target cell back to the origin.
-		/// Each cell in the path must be validated (not solid) by the game.
-		/// In vanilla, horizontal reach can extend to cells within the vertical limit,
-		/// so we generate horizontal paths at multiple vertical offsets.
-		/// </summary>
 		private static List<CellOffset[]> GenerateHorizontalReachOffsets(int additionalReach, int vanillaMax, int totalVerticalReach)
 		{
 			var paths = new List<CellOffset[]>();
@@ -78,22 +64,14 @@ namespace LongerArms
 			if (additionalReach <= 0)
 				return paths;
 
-			// Total vertical reach = vanilla (3) + additional vertical reach
-			// Horizontal reach should work at all vertical offsets from 0 to -totalVerticalReach
-			// Generate horizontal paths at each vertical offset level
 			for (int verticalOffset = 0; verticalOffset <= totalVerticalReach; verticalOffset++)
 			{
-				// Generate a path for each additional cell we want to reach horizontally at this vertical level
-				// Vanilla horizontal reach is typically 3 cells (cells 1-3 from center at 0)
-				// So we add cells starting from 4 and going up
+
 				for (int i = 1; i <= additionalReach; i++)
 				{
 					int targetCell = vanillaMax + i;
 					var offsets = new List<CellOffset>();
 					
-					// Create path from target cell back to cell 1 (descending order)
-					// For horizontal: positive X is right, negative X is left
-					// Include vertical offset: negative Y is upward
 					for (int cellNumber = targetCell; cellNumber >= 1; cellNumber--)
 					{
 						offsets.Add(new CellOffset(cellNumber, -verticalOffset)); // Positive X is right, negative Y is up
@@ -108,10 +86,6 @@ namespace LongerArms
 
 		// Diagonal reach functionality removed for v1.0 release
 		// Will be re-implemented in a future version
-
-		/// <summary>
-		/// Checks if two CellOffset arrays are equal.
-		/// </summary>
 		private static bool Equals(CellOffset[] a, CellOffset[] b)
 		{
 			if (a == null || b == null || a.Length != b.Length || a.Length == 0)
@@ -125,9 +99,7 @@ namespace LongerArms
 			return true;
 		}
 
-		/// <summary>
 		/// Checks if a table contains a specific CellOffset array.
-		/// </summary>
 		private static bool Contains(CellOffset[][] table, CellOffset[] array)
 		{
 			foreach (CellOffset[] a in table)
@@ -158,8 +130,7 @@ namespace LongerArms
 					// Debug logging
 					Debug.Log($"[LongerArms] ExpandTables called, verticalReach = {verticalReach}, horizontalReach = {horizontalReach}");
 
-					// Generate horizontal paths - use vanilla vertical reach (3) - this was working
-					int totalVerticalReach = 3; // Vanilla max is 3 - keep this for horizontal (was working)
+					int totalVerticalReach = 3;
 					List<CellOffset[]> horizontalPaths = GenerateHorizontalReachOffsets(horizontalReach, 3, totalVerticalReach);
 
 					// Generate vertical paths
@@ -174,8 +145,6 @@ namespace LongerArms
 					{
 						Debug.Log($"[LongerArms] Generated {horizontalPaths.Count} horizontal path(s) and {verticalPaths.Count} vertical path(s) for additional reach");
 						
-						// Add all paths to both tables - like CrackReacher does
-						// This is required for the paths to work correctly
 						ExpandTable(ref OffsetGroups.InvertedStandardTable, allPaths);
 						ExpandTable(ref OffsetGroups.InvertedStandardTableWithCorners, allPaths);
 						
@@ -190,10 +159,8 @@ namespace LongerArms
 				}
 			}
 
-			/// <summary>
 			/// Expands an offset table by adding multiple new reach offset paths at once.
 			/// This is more efficient than adding them one by one, as it only mirrors once.
-			/// </summary>
 			public static void ExpandTable(ref CellOffset[][] inputTable, List<CellOffset[]> newPaths)
 			{
 				if (newPaths == null || newPaths.Count == 0)
