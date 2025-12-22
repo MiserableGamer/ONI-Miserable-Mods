@@ -1,0 +1,4 @@
+title: 'MorningExercise'
+description: "Adds a Morning Exercise schedule block and Manual Exerciser building. Dupes will exercise on Manual Exercisers and gain a Warm Up buff granting an Athletics boost (or Morale for bionics)."
+staticID: MiserableGamer.MorningExercise
+

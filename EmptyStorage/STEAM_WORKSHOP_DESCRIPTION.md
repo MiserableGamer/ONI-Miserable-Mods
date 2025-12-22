@@ -1,80 +1,96 @@
-# Empty Storage
+[h1]Empty Storage[/h1]
 
 Adds an "Empty Storage" button to storage buildings, allowing you to quickly drop all contents either immediately or via duplicant labor.
 
-## Features
+[h2]Features[/h2]
 
-✅ **Empty Storage Button** - Adds a convenient "Empty Storage" button to all storage buildings (gas, liquid, and solid storage)
+[list]
+[*][b]Empty Storage Button[/b] - Adds a convenient "Empty Storage" button to all storage buildings (gas, liquid, and solid storage)
+[*][b]Flexible Emptying Options[/b]
+[list]
+[*][b]Immediate Emptying[/b]: Drop all contents instantly with a single click
+[*][b]Duplicant Labor[/b]: Create a task for duplicants to empty the storage over time
+[/list]
+[*][b]Skill Requirements[/b] - Optionally require duplicants to have the appropriate skills:
+[list]
+[*][b]Plumbing[/b] skill for gas and liquid storage
+[*][b]Tidy[/b] skill (Improved Strength) for solid storage
+[/list]
+[*][b]Configurable Work Time[/b]
+[list]
+[*]Option to make emptying instant or time-based
+[*]Adjustable work time per 100kg (0.1 to 10 seconds)
+[/list]
+[*][b]Bionic Dupe Support[/b] - Bionic dupes with the Tidying Booster can empty liquid, gas, and solid storage even without the required skills
+[/list]
 
-✅ **Flexible Emptying Options**
-- **Immediate Emptying**: Drop all contents instantly with a single click
-- **Duplicant Labor**: Create a task for duplicants to empty the storage over time
-
-✅ **Skill Requirements** - Optionally require duplicants to have the appropriate skills:
-- **Plumbing** skill for gas and liquid storage
-- **Tidy** skill (Improved Strength) for solid storage
-
-✅ **Configurable Work Time**
-- Option to make emptying instant or time-based
-- Adjustable work time per 100kg (0.1 to 10 seconds)
-
-✅ **Bionic Dupe Support** - Bionic dupes with the Tidying Booster can empty liquid, gas, and solid storage even without the required skills
-
-## Configuration Options
+[h2]Configuration Options[/h2]
 
 The mod includes several configurable options:
 
-1. **Immediate Emptying** (Default: Enabled)
-   - When enabled, storage contents are dropped immediately
-   - When disabled, a duplicant task is created to empty the storage
+[olist]
+[*][b]Immediate Emptying[/b] (Default: Enabled)
+[list]
+[*]When enabled, storage contents are dropped immediately
+[*]When disabled, a duplicant task is created to empty the storage
+[/list]
+[*][b]Require Skills[/b] (Default: Enabled)
+[list]
+[*]When enabled, duplicants need the appropriate skill to empty storage
+[*]Gas/Liquid storage requires Plumbing skill
+[*]Solid storage requires Tidy skill (Improved Strength)
+[/list]
+[*][b]Use Work Time[/b] (Default: Enabled)
+[list]
+[*]When enabled, emptying takes time based on the mass stored
+[*]When disabled, emptying is instant (but still requires duplicant labor)
+[/list]
+[*][b]Work Time per 100kg[/b] (Default: 1.0 seconds)
+[list]
+[*]The amount of time it takes to empty 100kg of stored material
+[*]Range: 0.1 to 10 seconds
+[/list]
+[/olist]
 
-2. **Require Skills** (Default: Enabled)
-   - When enabled, duplicants need the appropriate skill to empty storage
-   - Gas/Liquid storage requires Plumbing skill
-   - Solid storage requires Tidy skill (Improved Strength)
+[h2]How to Use[/h2]
 
-3. **Use Work Time** (Default: Enabled)
-   - When enabled, emptying takes time based on the mass stored
-   - When disabled, emptying is instant (but still requires duplicant labor)
+[olist]
+[*]Select any storage building (gas, liquid, or solid storage)
+[*]Click the "Empty Storage" button in the building's info panel
+[*]If Immediate Emptying is enabled, contents will drop instantly
+[*]If Immediate Emptying is disabled, a duplicant will be assigned to empty the storage
+[*]You can cancel the emptying task using the "Empty Storage" button again (toggles on/off)
+[/olist]
 
-4. **Work Time per 100kg** (Default: 1.0 seconds)
-   - The amount of time it takes to empty 100kg of stored material
-   - Range: 0.1 to 10 seconds
+[h2]Bionic Dupe Support[/h2]
 
-## How to Use
+Bionic dupes with the [b]Tidying Booster[/b] installed can empty liquid, gas, and solid storage even without the required skills. This allows bionic dupes to perform storage emptying tasks that would normally require the Plumbing skill (for gas/liquid storage) or the Tidy skill (for solid storage).
 
-1. Select any storage building (gas, liquid, or solid storage)
-2. Click the "Empty Storage" button in the building's info panel
-3. If Immediate Emptying is enabled, contents will drop instantly
-4. If Immediate Emptying is disabled, a duplicant will be assigned to empty the storage
-5. You can cancel the emptying task using the "Empty Storage" button again (toggles on/off)
+[h2]Future Features[/h2]
 
-## Bionic Dupe Support
+[b]Universal Cancel Tool Support[/b] - Integration with the game's built-in cancel tool to allow canceling emptying tasks using the standard cancel tool, in addition to the mod's own cancel button.
 
-Bionic dupes with the **Tidying Booster** installed can empty liquid, gas, and solid storage even without the required skills. This allows bionic dupes to perform storage emptying tasks that would normally require the Plumbing skill (for gas/liquid storage) or the Tidy skill (for solid storage).
+[h2]Compatibility[/h2]
 
-## Future Features
+[list]
+[*]All DLCs supported
+[*]Minimum Build: 700386
+[*]API Version: 2
+[/list]
 
-🔮 **Universal Cancel Tool Support** - Integration with the game's built-in cancel tool to allow canceling emptying tasks using the standard cancel tool, in addition to the mod's own cancel button.
-
-## Compatibility
-
-- ✅ All DLCs supported
-- ✅ Minimum Build: 700386
-- ✅ API Version: 2
-
-## Support & Issues
+[h2]Support & Issues[/h2]
 
 Found a bug or have a feature request? Please report it on GitHub:
 
-🔗 **Issues**: https://github.com/MiserableGamer/ONI-Miserable-Mods/issues
+[url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues]Issues[/url]
 
 Please mention "Empty Storage" in your issue title or description.
 
-## Notes
+[h2]Notes[/h2]
 
-- Uses PLib for options management
-- Fully configurable through mod options menu
+[list]
+[*]Uses PLib for options management
+[*]Fully configurable through mod options menu
+[/list]
 
 Enjoy easier storage management! 🎮
-

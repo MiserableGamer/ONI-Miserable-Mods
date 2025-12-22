@@ -74,7 +74,7 @@ The following features are planned for future releases:
 
 ## Version History
 
-- **0.1.54**: Current version
+- **0.1.55**: Current version
   - Separate vertical and horizontal reach sliders
   - Vertical reach: extends upward and downward reach
   - Horizontal reach: allows reaching over chasms and gaps

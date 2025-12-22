@@ -1,0 +1,114 @@
+# Animation configuration for Manual Exerciser
+# Adjust frame numbers to match your actual frame count in build.yaml
+
+anim_file_name: manualexerciser_kanim
+build: manualexerciser_build
+anims:
+  # Off/Idle state - uses frame 0
+  - name: off
+    default: true
+    symbols:
+      - symbol: body
+        frame: 0
+  
+  # Working/Spinning animation - loops through frames 1 to N
+  # Adjust frame numbers to match your build.yaml frame count
+  - name: working
+    symbols:
+      - symbol: body
+        frame: 0
+        time: 0.0
+      - symbol: body
+        frame: 1
+        time: 0.0333333
+      - symbol: body
+        frame: 2
+        time: 0.0666666
+      - symbol: body
+        frame: 3
+        time: 0.1
+      - symbol: body
+        frame: 4
+        time: 0.133333
+      - symbol: body
+        frame: 5
+        time: 0.166667
+      - symbol: body
+        frame: 6
+        time: 0.2
+      - symbol: body
+        frame: 7
+        time: 0.233333
+      - symbol: body
+        frame: 8
+        time: 0.266667
+      - symbol: body
+        frame: 9
+        time: 0.3
+      - symbol: body
+        frame: 10
+        time: 0.333333
+      - symbol: body
+        frame: 11
+        time: 0.366667
+      - symbol: body
+        frame: 12
+        time: 0.4
+      - symbol: body
+        frame: 13
+        time: 0.433333
+      - symbol: body
+        frame: 14
+        time: 0.466667
+      - symbol: body
+        frame: 15
+        time: 0.5
+      - symbol: body
+        frame: 16
+        time: 0.533333
+      - symbol: body
+        frame: 17
+        time: 0.566667
+      - symbol: body
+        frame: 18
+        time: 0.6
+      - symbol: body
+        frame: 19
+        time: 0.633333
+      - symbol: body
+        frame: 20
+        time: 0.666667
+      - symbol: body
+        frame: 21
+        time: 0.7
+      - symbol: body
+        frame: 22
+        time: 0.733333
+      - symbol: body
+        frame: 23
+        time: 0.766667
+      - symbol: body
+        frame: 24
+        time: 0.8
+      - symbol: body
+        frame: 25
+        time: 0.833333
+      - symbol: body
+        frame: 26
+        time: 0.866667
+      - symbol: body
+        frame: 27
+        time: 0.9
+      - symbol: body
+        frame: 28
+        time: 0.933333
+      - symbol: body
+        frame: 29
+        time: 0.966667
+      - symbol: body
+        frame: 30
+        time: 1.0
+      # Add or remove frame entries to match your build.yaml
+      # Ensure frame numbers match the frames defined in build.yaml
+      # The last frame should be the last working frame (not frame 0)
+

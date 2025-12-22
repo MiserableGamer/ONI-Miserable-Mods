@@ -96,3 +96,7 @@ This mod is part of the [ONI 200+ Ultimate Mods collection](https://steamcommuni
   - Fixed Harmony patching for creature confinement detection
   - Improved mod initialization and string registration
 
+
+
+
+

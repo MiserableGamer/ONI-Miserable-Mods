@@ -7,4 +7,5 @@
   <Project Path="ThresholdFixed/ThresholdFixed.csproj" Id="fe377519-31a0-4c07-9f63-a88d8a76b59a" />
   <Project Path="BlankProject/BlankProject.csproj" Id="7A836259-5127-4912-AD82-C9A62D8DE9DE" />
   <Project Path="LongerArms/LongerArms.csproj" Id="A1B2C3D4-E5F6-7890-ABCD-EF1234567890" />
+  <Project Path="MorningExercise/MorningExercise.csproj" Id="E8F3B4C1-2D5A-4F8E-9C1B-3A7D6E9F0123" />
 </Solution>
