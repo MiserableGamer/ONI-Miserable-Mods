@@ -153,7 +153,7 @@ The following features are planned for future releases:
 
 [h2]Version History[/h2]
 [list]
-[*][b]0.1.87[/b]: Initial release
+[*][b]0.1.101[/b]: Initial release
 [/list]
 
 Get your Duplicants moving and boost their performance! 🏃‍♂️

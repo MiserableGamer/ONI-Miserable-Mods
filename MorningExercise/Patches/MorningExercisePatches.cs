@@ -3,6 +3,7 @@ using HarmonyLib;
 using Klei.AI;
 using PeterHan.PLib.Core;
 using PeterHan.PLib.Options;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -414,5 +415,70 @@ namespace MorningExercise
                 }
             }
         }
+
+        // Patch ScheduleBlock.get_allowed_types to handle case where ScheduleGroup doesn't exist yet
+        [HarmonyPatch(typeof(ScheduleBlock), "get_allowed_types")]
+        public static class ScheduleBlock_get_allowed_types_Patch
+        {
+            internal static void Finalizer(Exception __exception, ScheduleBlock __instance, ref List<ScheduleBlockType> __result)
+            {
+                // If an exception occurred and it's about MorningExercise ScheduleGroup not being found,
+                // return empty list instead of throwing - this happens during initialization
+                if (__exception != null && __exception.Message != null && __exception.Message.Contains("MorningExercise"))
+                {
+                    // Return empty list - will be populated later when ScheduleGroup is fully registered
+                    __result = new List<ScheduleBlockType>();
+                    // Suppress the exception by returning normally (don't rethrow)
+                    return;
+                }
+                // If it's not about MorningExercise or no exception, let the exception propagate
+            }
+        }
+
+        // Patch ChorePreconditions constructor to modify IsScheduledTime to allow Relax during Exercise block when buffed
+        [HarmonyPatch(typeof(ChorePreconditions), MethodType.Constructor)]
+        public static class ChorePreconditions_Constructor_Patch
+        {
+            internal static void Postfix(ChorePreconditions __instance)
+            {
+                // Store the original delegate function
+                var originalFn = __instance.IsScheduledTime.fn;
+                
+                // Replace with our modified version
+                __instance.IsScheduledTime.fn = delegate(ref Chore.Precondition.Context context, object data)
+                {
+                    // First run the original check
+                    bool originalResult = originalFn(ref context, data);
+                    
+                    // If original check passed, we're done
+                    if (originalResult) return true;
+                    
+                    // Only modify for Relax chores checking Recreation schedule block
+                    if (ExerciseBlock == null) return false;
+                    if (context.chore == null || context.chore.choreType != Db.Get().ChoreTypes.Relax) return false;
+                    
+                    ScheduleBlockType requestedType = data as ScheduleBlockType;
+                    if (requestedType != Db.Get().ScheduleBlockTypes.Recreation) return false;
+                    
+                    // Check if dupe is in Exercise block time
+                    var scheduleBlock = context.consumerState?.scheduleBlock;
+                    if (scheduleBlock == null || !scheduleBlock.IsAllowed(ExerciseBlock)) return false;
+                    
+                    // Check if dupe has the warm-up buff
+                    var dupe = context.consumerState?.gameObject;
+                    if (dupe == null) return false;
+                    
+                    var effects = dupe.GetComponent<Effects>();
+                    if (effects == null) return false;
+                    
+                    bool hasBuff = effects.HasEffect(WARMUP_EFFECT_ID) || effects.HasEffect(BIONIC_WARMUP_EFFECT_ID);
+                    if (!hasBuff) return false;
+                    
+                    // Allow Relax chore during Exercise block when they have the buff
+                    return true;
+                };
+            }
+        }
+
     }
 }

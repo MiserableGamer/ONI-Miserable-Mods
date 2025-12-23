@@ -175,4 +175,4 @@ The following features are planned for future releases:
 
 ## Version History
 
-- **0.1.87**: Initial release
+- **0.1.101**: Initial release

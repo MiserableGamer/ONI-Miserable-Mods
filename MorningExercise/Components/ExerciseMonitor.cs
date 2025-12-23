@@ -31,7 +31,23 @@ namespace MorningExercise
         private int cachedWorldId = -1;
         private bool lastEquipmentCheckResult = false;
         private float lastEquipmentCheckTime = -1f;
-        private const float EQUIPMENT_CHECK_CACHE_TIME = 0.5f;
+        private const float EQUIPMENT_CHECK_CACHE_TIME = 1.0f; // Increased from 0.5s to reduce checks
+        
+        // Track if we've already canceled idle chore for this recreation period
+        private bool hasCanceledIdleForRecreation = false;
+        private bool wasInRecreationTime = false;
+        private float lastIdleCancelTime = -1f;
+        private const float IDLE_CANCEL_COOLDOWN = 3f; // Increased from 2s to reduce jitter
+        
+        // Debounce waiting chore creation/cancellation to prevent rapid state changes
+        private bool lastEquipmentState = false;
+        private float lastEquipmentStateChangeTime = -1f;
+        private const float EQUIPMENT_STATE_DEBOUNCE_TIME = 1.5f; // Wait 1.5s before creating/cancelling waiting chore
+        
+        // Cache current chore state to avoid repeated lookups
+        private ChoreType cachedCurrentChoreType = null;
+        private float lastChoreCheckTime = -1f;
+        private const float CHORE_CHECK_CACHE_TIME = 0.4f; // Cache chore type for 400ms
 
         protected override void OnSpawn()
         {
@@ -47,6 +63,28 @@ namespace MorningExercise
         {
             CancelWaitingChore();
             base.OnCleanUp();
+        }
+
+        private ChoreType GetCurrentChoreTypeCached()
+        {
+            float currentTime = GameClock.Instance != null ? GameClock.Instance.GetTime() : 0f;
+            
+            // Refresh cache if needed
+            if (lastChoreCheckTime < 0f || (currentTime - lastChoreCheckTime) >= CHORE_CHECK_CACHE_TIME)
+            {
+                if (choreDriver != null)
+                {
+                    var currentChore = choreDriver.GetCurrentChore();
+                    cachedCurrentChoreType = currentChore?.choreType;
+                }
+                else
+                {
+                    cachedCurrentChoreType = null;
+                }
+                lastChoreCheckTime = currentTime;
+            }
+            
+            return cachedCurrentChoreType;
         }
 
         public void Sim200ms(float dt)
@@ -78,14 +116,34 @@ namespace MorningExercise
                 {
                     CancelWaitingChore();
                 }
-                // If they have the buff, let them go to relaxation instead of idling
-                AllowRelaxationChores();
-                // If not in exercise time, we're done - they should go to recreation
-                if (!IsInExerciseTime())
+                
+                // Use cached chore type to avoid repeated lookups
+                var currentChoreType = GetCurrentChoreTypeCached();
+                bool isCurrentlyRelaxing = currentChoreType == Db.Get().ChoreTypes.Relax;
+                bool isCurrentlyExercising = currentChoreType == MorningExercisePatches.ExerciseChoreType;
+                
+                // If they're currently relaxing, let them continue
+                if (isCurrentlyRelaxing)
                 {
                     return;
                 }
-                // If in exercise time but they have the buff, they don't need to exercise again
+                
+                // If they're currently exercising, let them continue
+                if (isCurrentlyExercising)
+                {
+                    return;
+                }
+                
+                // If in exercise time and they have the buff but aren't doing anything,
+                // allow them to go to relaxation (if available) or idle
+                if (IsInExerciseTime())
+                {
+                    AllowRelaxationChores();
+                    // If they're not going to relax, let them idle (they've already exercised)
+                    return;
+                }
+                
+                // If not in exercise time, we're done - they should go to recreation or idle naturally
                 return;
             }
 
@@ -97,19 +155,15 @@ namespace MorningExercise
                 {
                     CancelWaitingChore();
                 }
+                // Reset debounce state when not in exercise time
+                lastEquipmentState = false;
+                lastEquipmentStateChangeTime = -1f;
                 return;
             }
 
-            // Skip if already exercising
-            bool isExercising = false;
-            if (choreDriver != null)
-            {
-                var currentChore = choreDriver.GetCurrentChore();
-                if (currentChore != null && currentChore.choreType == MorningExercisePatches.ExerciseChoreType)
-                {
-                    isExercising = true;
-                }
-            }
+            // Use cached chore type
+            var choreType = GetCurrentChoreTypeCached();
+            bool isExercising = choreType == MorningExercisePatches.ExerciseChoreType;
 
             if (isExercising)
             {
@@ -117,38 +171,91 @@ namespace MorningExercise
                 {
                     CancelWaitingChore();
                 }
-                // After exercising, they'll get the buff and then we'll route them to relaxation
-                // But also check if they're in relaxation time now (in case they finished exercising)
-                AllowRelaxationChores();
+                // Reset debounce state when exercising
+                lastEquipmentState = false;
+                lastEquipmentStateChangeTime = -1f;
                 return;
             }
 
-            // Check if equipment is available
-            bool hasAvailableGenerator = HasAvailableExerciseEquipmentCached();
-
-            if (!hasAvailableGenerator)
+            // Don't create exercise chores if they already have the buff
+            // They've already exercised, so let them do other things (like relax or idle)
+            if (HasWarmUpBuff())
             {
-                // No equipment - create waiting chore
-                if (waitingChore == null || waitingChore.isComplete)
-                {
-                    CreateWaitingChore();
-                }
-            }
-            else
-            {
-                // Equipment available - cancel waiting chore and let them exercise
                 if (waitingChore != null && !waitingChore.isComplete)
                 {
                     CancelWaitingChore();
                 }
+                return;
+            }
+            
+            // Check if equipment is available (cached)
+            bool hasAvailableGenerator = HasAvailableExerciseEquipmentCached();
+            float currentTime = GameClock.Instance != null ? GameClock.Instance.GetTime() : 0f;
+            
+            // Debounce equipment state changes to prevent rapid chore creation/cancellation
+            if (hasAvailableGenerator != lastEquipmentState)
+            {
+                // State changed - start debounce timer
+                if (lastEquipmentStateChangeTime < 0f)
+                {
+                    lastEquipmentStateChangeTime = currentTime;
+                }
                 
-                // Cancel idle chore so they can pick up the exercise chore
+                // Only apply state change after debounce period
+                float timeSinceChange = currentTime - lastEquipmentStateChangeTime;
+                if (timeSinceChange >= EQUIPMENT_STATE_DEBOUNCE_TIME)
+                {
+                    lastEquipmentState = hasAvailableGenerator;
+                    lastEquipmentStateChangeTime = -1f;
+                }
+                else
+                {
+                    // Still in debounce - use previous state
+                    hasAvailableGenerator = lastEquipmentState;
+                }
+            }
+            else
+            {
+                // State hasn't changed - reset debounce timer
+                lastEquipmentStateChangeTime = -1f;
+            }
+
+            if (!hasAvailableGenerator)
+            {
+                // No equipment - create waiting chore (only if debounced)
+                if (waitingChore == null || waitingChore.isComplete)
+                {
+                    // Only create if we've confirmed no equipment for debounce period
+                    if (lastEquipmentStateChangeTime < 0f)
+                    {
+                        CreateWaitingChore();
+                    }
+                }
+            }
+            else
+            {
+                // Equipment available - cancel waiting chore (only if debounced)
+                if (waitingChore != null && !waitingChore.isComplete)
+                {
+                    // Only cancel if we've confirmed equipment available for debounce period
+                    if (lastEquipmentStateChangeTime < 0f)
+                    {
+                        CancelWaitingChore();
+                    }
+                }
+                
+                // Cancel idle chore so they can pick up the exercise chore (with cooldown)
                 if (choreDriver != null)
                 {
                     var currentChore = choreDriver.GetCurrentChore();
                     if (currentChore != null && currentChore.choreType == Db.Get().ChoreTypes.Idle)
                     {
-                        currentChore.Cancel("Equipment available for exercise");
+                        float timeSinceLastCancel = currentTime - lastIdleCancelTime;
+                        if (timeSinceLastCancel >= IDLE_CANCEL_COOLDOWN || lastIdleCancelTime < 0f)
+                        {
+                            currentChore.Cancel("Equipment available for exercise");
+                            lastIdleCancelTime = currentTime;
+                        }
                     }
                 }
             }
@@ -273,15 +380,54 @@ namespace MorningExercise
 
         private void AllowRelaxationChores()
         {
-            // Cancel any idle chore so they can pick up relaxation chores
-            // This works both during recreation time and when transitioning to it
-            if (choreDriver != null)
+            // Only act during the Morning Exercise block - don't interfere outside of it
+            if (!IsInExerciseTime())
             {
-                var currentChore = choreDriver.GetCurrentChore();
-                if (currentChore != null && currentChore.choreType == Db.Get().ChoreTypes.Idle)
-                {
-                    currentChore.Cancel("Allowing relaxation after exercise");
-                }
+                // Reset flags when not in exercise time
+                hasCanceledIdleForRecreation = false;
+                lastIdleCancelTime = -1f;
+                return;
+            }
+            
+            if (choreDriver == null) return;
+            
+            var currentChore = choreDriver.GetCurrentChore();
+            if (currentChore == null) return;
+            
+            // Check what they're doing
+            bool isIdle = currentChore.choreType == Db.Get().ChoreTypes.Idle;
+            bool isExercise = currentChore.choreType == MorningExercisePatches.ExerciseChoreType;
+            bool isRelax = currentChore.choreType == Db.Get().ChoreTypes.Relax;
+            
+            // If they're already relaxing, don't interfere - let them continue
+            if (isRelax)
+            {
+                hasCanceledIdleForRecreation = false;
+                lastIdleCancelTime = -1f;
+                return;
+            }
+            
+            // If they're doing something that's not idle or exercise, reset flags
+            if (!isIdle && !isExercise)
+            {
+                hasCanceledIdleForRecreation = false;
+                lastIdleCancelTime = -1f;
+                return;
+            }
+            
+            // If they're idle, they've likely finished relaxing
+            // Let them stay idle - they've already exercised and relaxed
+            if (isIdle)
+            {
+                hasCanceledIdleForRecreation = false;
+                lastIdleCancelTime = -1f;
+                return;
+            }
+            
+            // If they're exercising, let them continue
+            if (isExercise)
+            {
+                return;
             }
         }
     }
