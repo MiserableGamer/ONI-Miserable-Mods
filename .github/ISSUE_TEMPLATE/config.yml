@@ -1,6 +1,9 @@
 blank_issues_enabled: false
 contact_links:
-  - name: 💬 Community Discussions
+  - name: 💬 Discord Community
+    url: https://discord.com/channels/1452947938304200861/1452947939927392398
+    about: Join our Discord server for discussions, questions, and community support
+  - name: 📝 GitHub Discussions
     url: https://github.com/MiserableGamer/ONI-Miserable-Mods/discussions
     about: Have a general question or want to discuss the mods? Use Discussions instead!
 
