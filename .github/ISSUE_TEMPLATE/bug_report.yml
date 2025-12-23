@@ -73,6 +73,44 @@ body:
       placeholder: Paste logs here (use code blocks with ```)
       render: shell
 
+  - type: markdown
+    attributes:
+      value: |
+        ## Player.log File
+        
+        Please provide your `player.log` file, which contains important debugging information. You can find it at:
+        
+        **Windows:**
+        ```
+        %USERPROFILE%\AppData\LocalLow\Klei\Oxygen Not Included\player.log
+        ```
+        Or navigate to: `C:\Users\[YourUsername]\AppData\LocalLow\Klei\Oxygen Not Included\player.log`
+        
+        **macOS:**
+        ```
+        ~/Library/Logs/Unity/Player.log
+        ```
+        
+        **Linux:**
+        ```
+        ~/.config/unity3d/Klei/Oxygen Not Included/Player.log
+        ```
+        
+        **Note:** The log file can be large. Please either:
+        - Attach the file directly to this issue (drag and drop), or
+        - Paste the relevant sections in the field below (especially any error messages or stack traces)
+
+  - type: textarea
+    id: player_log
+    attributes:
+      label: Player.log Contents
+      description: Paste relevant sections from your player.log file here, or mention that you've attached the file above
+      placeholder: |
+        Paste relevant log sections here, especially any errors, exceptions, or stack traces related to the bug.
+        
+        If the file is too large, please attach it directly to this issue instead.
+      render: shell
+
   - type: dropdown
     id: severity
     attributes:
