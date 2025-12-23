@@ -1,0 +1,65 @@
+name: ❓ Question
+description: Ask a question about the mods
+title: "[Question]: "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for your question! Please provide as much detail as possible so we can help you.
+
+  - type: dropdown
+    id: mod
+    attributes:
+      label: Which mod is your question about?
+      description: Select the mod you have a question about
+      options:
+        - Morning Exercise
+        - Copy Materials Tool
+        - Empty Storage
+        - Longer Arms
+        - Debug Fog of War
+        - Bonbon Tree Boost
+        - Threshold Fixed
+        - General / Multiple
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your Question
+      description: What would you like to know?
+      placeholder: Ask your question here...
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Provide any relevant context about your question (what you're trying to do, what you've tried, etc.)
+      placeholder: Provide context about your question...
+
+  - type: input
+    id: game_version
+    attributes:
+      label: Game Version
+      description: What version of Oxygen Not Included are you running?
+      placeholder: e.g., Build 700386, DLC version, etc.
+
+  - type: input
+    id: mod_version
+    attributes:
+      label: Mod Version
+      description: What version of the mod are you using?
+      placeholder: e.g., 0.1.8, 0.1.86, etc.
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Information
+      description: Any other information that might be helpful
+      placeholder: Add any other relevant information here...
+

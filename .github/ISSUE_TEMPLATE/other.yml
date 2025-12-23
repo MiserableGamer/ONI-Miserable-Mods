@@ -1,0 +1,45 @@
+name: 📝 Other Issue
+description: Something else that doesn't fit the other categories
+title: ""
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reaching out! Please provide as much detail as possible.
+
+  - type: dropdown
+    id: mod
+    attributes:
+      label: Which mod is this related to?
+      description: Select the relevant mod(s)
+      options:
+        - Morning Exercise
+        - Copy Materials Tool
+        - Empty Storage
+        - Longer Arms
+        - Debug Fog of War
+        - Bonbon Tree Boost
+        - Threshold Fixed
+        - General / Multiple
+        - Not mod-specific
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Please describe your issue, suggestion, or question
+      placeholder: Describe what you'd like to discuss...
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other relevant information
+      placeholder: Add any other context here...
+

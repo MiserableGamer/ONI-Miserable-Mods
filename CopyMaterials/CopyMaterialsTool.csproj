@@ -99,7 +99,7 @@
     <Content Include="screenshots\preview.png" />
     <Content Include="screenshots\sidescreen.png" />
     <None Include="README.md" />
-    <None Include="STEAM_DESCRIPTION.md" />
+    <None Include="STEAM_WORKSHOP_DESCRIPTION.md" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="mod.yaml">

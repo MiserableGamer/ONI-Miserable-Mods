@@ -1,0 +1,93 @@
+name: 💡 Feature Request
+description: Suggest a new feature or enhancement for one of the mods
+title: "[Suggestion]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a feature! Please fill out the form below with as much detail as possible.
+
+  - type: dropdown
+    id: mod
+    attributes:
+      label: Which mod is this feature request for?
+      description: Select the mod you want to enhance
+      options:
+        - Morning Exercise
+        - Copy Materials Tool
+        - Empty Storage
+        - Longer Arms
+        - Debug Fog of War
+        - Bonbon Tree Boost
+        - Threshold Fixed
+        - Other / New Mod
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: feature
+    attributes:
+      label: Feature Description
+      description: A clear and concise description of the feature you'd like to see
+      placeholder: Describe the feature...
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem This Solves
+      description: What problem does this feature solve? What use case does it address?
+      placeholder: Explain the problem or use case...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: How would you like this feature to work?
+      placeholder: Describe your ideal solution...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Have you considered any alternative solutions or workarounds?
+      placeholder: Describe any alternatives you've thought about...
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this feature to you?
+      options:
+        - Critical (Blocking my gameplay)
+        - High (Would significantly improve my experience)
+        - Medium (Nice to have)
+        - Low (Minor improvement)
+      default: 2
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I have searched existing issues to make sure this hasn't been suggested already
+          required: true
+        - label: I have checked if this feature conflicts with any existing mods
+          required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other context, mockups, screenshots, or examples
+      placeholder: Add any other context, mockups, or examples here...
+
