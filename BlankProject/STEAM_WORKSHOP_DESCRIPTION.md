@@ -1,24 +1,32 @@
 [h1]BlankProject[/h1]
 
-Template mod project - replace this with your mod's description.
+This is a simple template mod project for creating Oxygen Not Included mods. It provides a minimal starting point with just the essential files.
 
-[h2]Features[/h2]
+[h2]Template Structure[/h2]
 
+This template includes:
 [list]
-[*]Add your mod features here
+[*]Main mod entry point (BlankProject.cs)
+[*]Basic project configuration files
+[*]No subfolders or placeholder files - keep it simple!
 [/list]
 
-[h2]How It Works[/h2]
+[h2]Getting Started[/h2]
 
 [olist]
-[*]Describe how your mod works
-[*]Add step-by-step instructions
+[*]Rename BlankProject to your mod name throughout all files
+[*]Update namespaces and project references
+[*]Add your code to the root .cs file or create new files as needed
+[*]See MorningExercise for an example of a more complex mod structure
 [/olist]
 
-[h2]Requirements[/h2]
+[h2]Notes[/h2]
 
 [list]
-[*]List any requirements here
+[*]This is a template - not meant to be published
+[*]Start simple with one root .cs file
+[*]Add folders and files as your mod grows in complexity
+[*]See MorningExercise mod for a full-featured example
 [/list]
 
 [h2]Compatibility[/h2]
@@ -29,16 +37,6 @@ Template mod project - replace this with your mod's description.
 [*]API Version: 2
 [/list]
 
-[h2]Support & Issues[/h2]
-
-Found a bug or have a feature request? Please report it on GitHub:
-
-[url=https://github.com/YourUsername/YourRepo/issues]Issues[/url]
-
-[h2]Mod Collection[/h2]
-
-This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156]ONI 200+ Ultimate Mods collection[/url] on Steam Workshop, featuring over 200 tested and compatible mods for Oxygen Not Included.
-
 [h2]Credits[/h2]
 
 [list]
@@ -48,13 +46,6 @@ This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/
 [/list]
 
 [h2]Version History[/h2]
-
 [list]
-[*][b]0.1.3[/b]: Current version
-[list]
-[*]Initial release
-[*]Template project
+[*][b]0.1.0[/b]: Initial release
 [/list]
-[/list]
-
-Replace this with your actual mod description! 📝

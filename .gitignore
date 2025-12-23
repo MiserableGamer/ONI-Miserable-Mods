@@ -370,4 +370,16 @@ lib/
 # Chrome extension (not part of ONI mods)
 cursor-cost-summary/
 /CommonLib/CommonLib.csproj
-/BlankProject/BlankProject.csproj
+# BlankProject is a template and should not be uploaded to GitHub
+/BlankProject/
+
+# PowerShell scripts (build and local operation scripts - not needed for mod functionality)
+*.ps1
+
+# Local operation markdown files (not user-facing documentation)
+UPLOAD_INSTRUCTIONS.md
+STEAM_UPLOAD_README.md
+**/ORGANIZE_FILES.md
+
+# Encrypted credential files (should never be committed)
+steam_credentials.encrypted

@@ -1,9 +1,7 @@
 [h1]Longer Arms[/h1]
-
 Extends duplicant reach distance, allowing them to reach over chasms and other areas that would normally be out of reach.
 
 [h2]Features[/h2]
-
 [list]
 [*][b]Configurable Vertical Reach[/b] - Set how many additional cells duplicants can reach upward and downward
 [*][b]Configurable Horizontal Reach[/b] - Set how many additional cells duplicants can reach left and right (allows reaching over chasms)
@@ -12,7 +10,6 @@ Extends duplicant reach distance, allowing them to reach over chasms and other a
 [/list]
 
 [h2]Configuration[/h2]
-
 [list]
 [*][b]Vertical Reach (cells)[/b] (Default: 1)
 [list]
@@ -32,9 +29,7 @@ Extends duplicant reach distance, allowing them to reach over chasms and other a
 [/list]
 
 [h2]Performance[/h2]
-
 [b]Minimal Performance Impact[/b]
-
 [list]
 [*][b]One-time initialization[/b]: Runs once during game startup
 [*][b]No runtime overhead[/b]: No ongoing processing during gameplay
@@ -45,7 +40,6 @@ Extends duplicant reach distance, allowing them to reach over chasms and other a
 The mod simply extends the game's existing reach tables, so there is no noticeable performance difference compared to vanilla gameplay.
 
 [h2]Compatibility[/h2]
-
 [list]
 [*]All DLCs supported
 [*]Minimum Build: 700386
@@ -53,19 +47,29 @@ The mod simply extends the game's existing reach tables, so there is no noticeab
 [/list]
 
 [h2]Support & Issues[/h2]
+Need help, found a bug, or have a suggestion? We're here to help!
 
-Found a bug or have a feature request? Please report it on GitHub:
+[h3]Community[/h3]
+[list]
+[*][b]💬 Discord[/b]: [url=https://discord.com/channels/1452947938304200861/1452947939927392398]Join our Discord server[/url] for discussions, questions, and community support
+[*][b]📝 GitHub Discussions[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/discussions]Discuss on GitHub[/url] - share ideas, ask questions, or get help with modding
+[/list]
 
-[url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues]Issues[/url]
+[h3]Reporting Issues[/h3]
+Found a bug or have a feature request? Please report it on GitHub using our issue templates:
+[list]
+[*][b]🐛 Bug Reports[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=bug_report.yml]Report a Bug[/url] - Use this for crashes, errors, or unexpected behavior
+[*][b]💡 Feature Requests[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=feature_request.yml]Suggest a Feature[/url] - Have an idea for a new feature or improvement?
+[*][b]❓ Questions[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=question.yml]Ask a Question[/url] - Need help understanding how something works?
+[*][b]📝 Other Issues[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=other.yml]Other Issue[/url] - Something else that doesn't fit the above categories
+[/list]
 
 Please mention "Longer Arms" in your issue title or description.
 
 [h2]Mod Collection[/h2]
-
 This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156]ONI 200+ Ultimate Mods collection[/url] on Steam Workshop, featuring over 200 tested and compatible mods for Oxygen Not Included.
 
 [h2]Credits[/h2]
-
 [list]
 [*]Developed for Oxygen Not Included
 [*]Uses PLib by Peter Han
@@ -73,23 +77,13 @@ This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/
 [/list]
 
 [h2]Future Functionality[/h2]
-
 The following features are planned for future releases:
-
 [list]
 [*][b]Diagonal Reach[/b] - Allow duplicants to reach cells that are diagonally positioned (both above/below and to the side). This would enable reaching corner cells that are currently unreachable even with extended vertical reach. This feature was partially implemented but removed for v1.0 to ensure stability and proper wall collision detection.
 [*][b]Linked Reach Sliders[/b] - A checkbox option to link the vertical and horizontal reach sliders, so that adjusting one automatically updates the other to match. The last value you set would be applied to both sliders when the link is enabled.
 [/list]
 
 [h2]Version History[/h2]
-
 [list]
-[*][b]0.1.55[/b]: Current version
-[list]
-[*]Separate vertical and horizontal reach sliders
-[*]Vertical reach: extends upward and downward reach
-[*]Horizontal reach: allows reaching over chasms and gaps
-[*]Both features fully working and configurable (0-10 cells each)
-[*]Proper path validation to prevent reaching through solid walls
-[/list]
+[*][b]0.1.55[/b]: Initial release
 [/list]

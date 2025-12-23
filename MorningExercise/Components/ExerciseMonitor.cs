@@ -62,23 +62,36 @@ namespace MorningExercise
                 {
                     CancelWaitingChore();
                 }
+                // Even if exercise is disabled, if they have the buff, allow them to go to recreation
+                if (HasWarmUpBuff())
+                {
+                    AllowRelaxationChores();
+                }
+                return;
+            }
+
+            // Check if they have the buff - if so, allow recreation (works even if not in exercise time)
+            bool hasWarmUp = HasWarmUpBuff();
+            if (hasWarmUp)
+            {
+                if (waitingChore != null && !waitingChore.isComplete)
+                {
+                    CancelWaitingChore();
+                }
+                // If they have the buff, let them go to relaxation instead of idling
+                AllowRelaxationChores();
+                // If not in exercise time, we're done - they should go to recreation
+                if (!IsInExerciseTime())
+                {
+                    return;
+                }
+                // If in exercise time but they have the buff, they don't need to exercise again
                 return;
             }
 
             // Check if it's exercise time
             bool isExerciseTime = IsInExerciseTime();
             if (!isExerciseTime)
-            {
-                if (waitingChore != null && !waitingChore.isComplete)
-                {
-                    CancelWaitingChore();
-                }
-                return;
-            }
-
-            // Skip if already has the buff
-            bool hasWarmUp = HasWarmUpBuff();
-            if (hasWarmUp)
             {
                 if (waitingChore != null && !waitingChore.isComplete)
                 {
@@ -104,6 +117,9 @@ namespace MorningExercise
                 {
                     CancelWaitingChore();
                 }
+                // After exercising, they'll get the buff and then we'll route them to relaxation
+                // But also check if they're in relaxation time now (in case they finished exercising)
+                AllowRelaxationChores();
                 return;
             }
 
@@ -246,6 +262,27 @@ namespace MorningExercise
             if (effects == null) return false;
             return effects.HasEffect(MorningExercisePatches.WARMUP_EFFECT_ID) ||
                    effects.HasEffect(MorningExercisePatches.BIONIC_WARMUP_EFFECT_ID);
+        }
+
+        private bool IsInRelaxationTime()
+        {
+            if (schedulable == null) return false;
+            var recreationBlock = Db.Get().ScheduleBlockTypes.Recreation;
+            return recreationBlock != null && schedulable.IsAllowed(recreationBlock);
+        }
+
+        private void AllowRelaxationChores()
+        {
+            // Cancel any idle chore so they can pick up relaxation chores
+            // This works both during recreation time and when transitioning to it
+            if (choreDriver != null)
+            {
+                var currentChore = choreDriver.GetCurrentChore();
+                if (currentChore != null && currentChore.choreType == Db.Get().ChoreTypes.Idle)
+                {
+                    currentChore.Cancel("Allowing relaxation after exercise");
+                }
+            }
         }
     }
 

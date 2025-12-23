@@ -1,4 +1,4 @@
 title: 'BlankProject'
-description: "Template mod project - replace this description with your mod's description."
+description: "Template mod project - replace this description with your mod's description. This is a simple template with just the root .cs file. See MorningExercise for an example of a more complex mod structure."
 staticID: YourModID.BlankProject
 

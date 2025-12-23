@@ -134,11 +134,26 @@ Debug logging can be toggled by setting `CopyMaterialsManager.DebugMode = true` 
 - Uses [Harmony](https://github.com/pardeike/Harmony) for runtime patching
 - Inspired by the game's built-in Copy Settings tool
 
+## Support & Issues
+
+Need help, found a bug, or have a suggestion? We're here to help!
+
+### Community
+
+- **💬 Discord**: [Join our Discord server](https://discord.com/channels/1452947938304200861/1452947939927392398) for discussions, questions, and community support
+- **📝 GitHub Discussions**: [Discuss on GitHub](https://github.com/MiserableGamer/ONI-Miserable-Mods/discussions) - share ideas, ask questions, or get help with modding
+
+### Reporting Issues
+
+Found a bug or have a feature request? Please report it on GitHub using our issue templates:
+
+- **🐛 Bug Reports**: [Report a Bug](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=bug_report.yml) - Use this for crashes, errors, or unexpected behavior
+- **💡 Feature Requests**: [Suggest a Feature](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=feature_request.yml) - Have an idea for a new feature or improvement?
+- **❓ Questions**: [Ask a Question](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=question.yml) - Need help understanding how something works?
+- **📝 Other Issues**: [Other Issue](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=other.yml) - Something else that doesn't fit the above categories
+
+Please mention "Copy Materials Tool" in your issue title or description so we can identify it easily.
+
 ## Version History
 
-- **0.1.8**: Current version (auto-increments on build)
-- See git history for detailed changelog
-
----
-
-**Note**: This mod is a work in progress. Report bugs and suggestions on [GitHub Issues](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues).
+- **0.1.10**: Test release

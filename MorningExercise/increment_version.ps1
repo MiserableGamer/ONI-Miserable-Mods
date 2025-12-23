@@ -43,9 +43,9 @@ if (Test-Path $yamlFile) {
         # Update README.md if it exists
         if (Test-Path $readmeFile) {
             $readmeContent = Get-Content $readmeFile -Raw
-            # Match pattern: - **X.Y.Z**: Current version
-            if ($readmeContent -match '- \*\*(\d+\.\d+\.\d+)\*\*:\s*Current version') {
-                $readmeContent = $readmeContent -replace '- \*\*\d+\.\d+\.\d+\*\*:\s*Current version', "- **$newVersion**: Current version"
+            # Match pattern: - **X.Y.Z**: Initial release
+            if ($readmeContent -match '- \*\*(\d+\.\d+\.\d+)\*\*:\s*Initial release') {
+                $readmeContent = $readmeContent -replace '- \*\*\d+\.\d+\.\d+\*\*:\s*Initial release', "- **$newVersion**: Initial release"
                 Set-Content -Path $readmeFile -Value $readmeContent -NoNewline
                 Write-Host "Updated version in README.md"
             }
@@ -54,9 +54,9 @@ if (Test-Path $yamlFile) {
         # Update STEAM_WORKSHOP_DESCRIPTION.md if it exists
         if (Test-Path $steamFile) {
             $steamContent = Get-Content $steamFile -Raw
-            # Match pattern: - **X.Y.Z**: Current version
-            if ($steamContent -match '- \*\*(\d+\.\d+\.\d+)\*\*:\s*Current version') {
-                $steamContent = $steamContent -replace '- \*\*\d+\.\d+\.\d+\*\*:\s*Current version', "- **$newVersion**: Current version"
+            # Match pattern: [*][b]X.Y.Z[/b]: Initial release
+            if ($steamContent -match '\[\*\]\[b\](\d+\.\d+\.\d+)\[/b\]:\s*Initial release') {
+                $steamContent = $steamContent -replace '\[\*\]\[b\]\d+\.\d+\.\d+\[/b\]:\s*Initial release', "[*][b]$newVersion[/b]: Initial release"
                 Set-Content -Path $steamFile -Value $steamContent -NoNewline
                 Write-Host "Updated version in STEAM_WORKSHOP_DESCRIPTION.md"
             }

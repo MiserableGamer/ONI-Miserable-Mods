@@ -1,9 +1,7 @@
 [h1]Morning Exercise[/h1]
-
 Adds a Morning Exercise schedule block and Manual Exerciser building, allowing Duplicants to work out and gain Athletics or Morale bonuses.
 
 [h2]Features[/h2]
-
 [list]
 [*][b]Morning Exercise Schedule Block[/b] - New schedule block type for exercise time
 [*][b]Manual Exerciser Building[/b] - Exercise-only building in the Medicine category (requires Medicine I research)
@@ -18,7 +16,6 @@ Adds a Morning Exercise schedule block and Manual Exerciser building, allowing D
 [/list]
 
 [h2]How It Works[/h2]
-
 [olist]
 [*]Research [b]Medicine I[/b] to unlock the Manual Exerciser
 [*]Build [b]Manual Exercisers[/b] in your base (Medicine category)
@@ -35,11 +32,9 @@ Adds a Morning Exercise schedule block and Manual Exerciser building, allowing D
 [/olist]
 
 [h2]Configuration[/h2]
-
 Options are organized into sections: [b]Dupes[/b], [b]Boops[/b], [b]Experience Settings[/b], and [b]Visual Settings[/b].
 
 [h3]Dupes (Standard Duplicants)[/h3]
-
 [list]
 [*][b]Enable Exercise[/b] (Default: Enabled) - Toggle to allow/prevent standard Duplicants from exercising
 [*][b]Exercise Duration (seconds)[/b] (Default: 20)
@@ -58,7 +53,6 @@ Options are organized into sections: [b]Dupes[/b], [b]Boops[/b], [b]Experience S
 [/list]
 
 [h3]Boops (Bionic Duplicants)[/h3]
-
 [list]
 [*][b]Enable Exercise[/b] (Default: Enabled) - Toggle to allow/prevent Bionic Duplicants from exercising
 [*][b]Buff Duration (seconds)[/b] (Default: 720)
@@ -73,7 +67,6 @@ Options are organized into sections: [b]Dupes[/b], [b]Boops[/b], [b]Experience S
 [/list]
 
 [h3]Experience Settings[/h3]
-
 [list]
 [*][b]Enable Experience Gain[/b] (Default: Enabled)
 [list]
@@ -87,7 +80,6 @@ Options are organized into sections: [b]Dupes[/b], [b]Boops[/b], [b]Experience S
 [/list]
 
 [h3]Visual Settings[/h3]
-
 [list]
 [*][b]Animation Variant[/b] (Default: Variant A)
 [list]
@@ -97,7 +89,6 @@ Options are organized into sections: [b]Dupes[/b], [b]Boops[/b], [b]Experience S
 [/list]
 
 [h2]Building Details[/h2]
-
 [b]Manual Exerciser[/b]
 [list]
 [*]Category: Medicine
@@ -109,9 +100,7 @@ Options are organized into sections: [b]Dupes[/b], [b]Boops[/b], [b]Experience S
 [/list]
 
 [h2]Performance[/h2]
-
 [b]Minimal Performance Impact[/b]
-
 [list]
 [*][b]Efficient lookups[/b]: Static registry for fast equipment searches
 [*][b]Cached checks[/b]: Equipment availability cached to avoid repeated lookups
@@ -121,7 +110,6 @@ Options are organized into sections: [b]Dupes[/b], [b]Boops[/b], [b]Experience S
 [/list]
 
 [h2]Compatibility[/h2]
-
 [list]
 [*]All DLCs supported (Base Game, Spaced Out!, The Frosty Planet Pack, The Bionic Booster Pack)
 [*]Minimum Build: 700386
@@ -129,19 +117,29 @@ Options are organized into sections: [b]Dupes[/b], [b]Boops[/b], [b]Experience S
 [/list]
 
 [h2]Support & Issues[/h2]
+Need help, found a bug, or have a suggestion? We're here to help!
 
-Found a bug or have a feature request? Please report it on GitHub:
+[h3]Community[/h3]
+[list]
+[*][b]💬 Discord[/b]: [url=https://discord.com/channels/1452947938304200861/1452947939927392398]Join our Discord server[/url] for discussions, questions, and community support
+[*][b]📝 GitHub Discussions[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/discussions]Discuss on GitHub[/url] - share ideas, ask questions, or get help with modding
+[/list]
 
-[url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues]Issues[/url]
+[h3]Reporting Issues[/h3]
+Found a bug or have a feature request? Please report it on GitHub using our issue templates:
+[list]
+[*][b]🐛 Bug Reports[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=bug_report.yml]Report a Bug[/url] - Use this for crashes, errors, or unexpected behavior
+[*][b]💡 Feature Requests[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=feature_request.yml]Suggest a Feature[/url] - Have an idea for a new feature or improvement?
+[*][b]❓ Questions[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=question.yml]Ask a Question[/url] - Need help understanding how something works?
+[*][b]📝 Other Issues[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=other.yml]Other Issue[/url] - Something else that doesn't fit the above categories
+[/list]
 
 Please mention "Morning Exercise" in your issue title or description.
 
 [h2]Mod Collection[/h2]
-
 This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156]ONI 200+ Ultimate Mods collection[/url] on Steam Workshop, featuring over 200 tested and compatible mods for Oxygen Not Included.
 
 [h2]Credits[/h2]
-
 [list]
 [*]Developed for Oxygen Not Included
 [*]Uses PLib by Peter Han
@@ -149,18 +147,13 @@ This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/
 [/list]
 
 [h2]Future Functionality[/h2]
-
 The following features are planned for future releases:
 
 [b]Custom Animation Variant[/b] - A dedicated custom animation for the Manual Exerciser building, providing a unique visual appearance distinct from the Manual Generator. This would include custom sprites and animations specifically designed for the exercise machine, making it visually distinct while maintaining the same functionality.
 
 [h2]Version History[/h2]
-
 [list]
-[*][b]0.1.86[/b]: Current version
-[list]
-[*]Initial Release
-[/list]
+[*][b]0.1.87[/b]: Initial release
 [/list]
 
 Get your Duplicants moving and boost their performance! 🏃‍♂️

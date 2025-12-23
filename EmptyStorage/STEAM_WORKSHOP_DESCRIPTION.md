@@ -1,9 +1,7 @@
 [h1]Empty Storage[/h1]
-
 Adds an "Empty Storage" button to storage buildings, allowing you to quickly drop all contents either immediately or via duplicant labor.
 
 [h2]Features[/h2]
-
 [list]
 [*][b]Empty Storage Button[/b] - Adds a convenient "Empty Storage" button to all storage buildings (gas, liquid, and solid storage)
 [*][b]Flexible Emptying Options[/b]
@@ -25,9 +23,7 @@ Adds an "Empty Storage" button to storage buildings, allowing you to quickly dro
 [/list]
 
 [h2]Configuration Options[/h2]
-
 The mod includes several configurable options:
-
 [olist]
 [*][b]Immediate Emptying[/b] (Default: Enabled)
 [list]
@@ -53,7 +49,6 @@ The mod includes several configurable options:
 [/olist]
 
 [h2]How to Use[/h2]
-
 [olist]
 [*]Select any storage building (gas, liquid, or solid storage)
 [*]Click the "Empty Storage" button in the building's info panel
@@ -63,15 +58,12 @@ The mod includes several configurable options:
 [/olist]
 
 [h2]Bionic Dupe Support[/h2]
-
 Bionic dupes with the [b]Tidying Booster[/b] installed can empty liquid, gas, and solid storage even without the required skills. This allows bionic dupes to perform storage emptying tasks that would normally require the Plumbing skill (for gas/liquid storage) or the Tidy skill (for solid storage).
 
 [h2]Future Features[/h2]
-
 [b]Universal Cancel Tool Support[/b] - Integration with the game's built-in cancel tool to allow canceling emptying tasks using the standard cancel tool, in addition to the mod's own cancel button.
 
 [h2]Compatibility[/h2]
-
 [list]
 [*]All DLCs supported
 [*]Minimum Build: 700386
@@ -79,18 +71,34 @@ Bionic dupes with the [b]Tidying Booster[/b] installed can empty liquid, gas, an
 [/list]
 
 [h2]Support & Issues[/h2]
+Need help, found a bug, or have a suggestion? We're here to help!
 
-Found a bug or have a feature request? Please report it on GitHub:
+[h3]Community[/h3]
+[list]
+[*][b]💬 Discord[/b]: [url=https://discord.com/channels/1452947938304200861/1452947939927392398]Join our Discord server[/url] for discussions, questions, and community support
+[*][b]📝 GitHub Discussions[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/discussions]Discuss on GitHub[/url] - share ideas, ask questions, or get help with modding
+[/list]
 
-[url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues]Issues[/url]
+[h3]Reporting Issues[/h3]
+Found a bug or have a feature request? Please report it on GitHub using our issue templates:
+[list]
+[*][b]🐛 Bug Reports[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=bug_report.yml]Report a Bug[/url] - Use this for crashes, errors, or unexpected behavior
+[*][b]💡 Feature Requests[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=feature_request.yml]Suggest a Feature[/url] - Have an idea for a new feature or improvement?
+[*][b]❓ Questions[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=question.yml]Ask a Question[/url] - Need help understanding how something works?
+[*][b]📝 Other Issues[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=other.yml]Other Issue[/url] - Something else that doesn't fit the above categories
+[/list]
 
 Please mention "Empty Storage" in your issue title or description.
 
 [h2]Notes[/h2]
-
 [list]
 [*]Uses PLib for options management
 [*]Fully configurable through mod options menu
 [/list]
 
 Enjoy easier storage management! 🎮
+
+[h2]Version History[/h2]
+[list]
+[*][b]0.1.82[/b]: Initial release
+[/list]

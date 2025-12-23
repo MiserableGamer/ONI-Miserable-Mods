@@ -46,11 +46,21 @@ The mod simply extends the game's existing reach tables, so duplicants use the s
 
 ## Support & Issues
 
-Found a bug or have a feature request? Please report it on GitHub:
+Need help, found a bug, or have a suggestion? We're here to help!
 
-- **Issues**: [Report an Issue](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues)
-- **Bug Reports**: [Create a Bug Report](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new)
-- **Feature Requests**: [Suggest a Feature](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new)
+### Community
+
+- **💬 Discord**: [Join our Discord server](https://discord.com/channels/1452947938304200861/1452947939927392398) for discussions, questions, and community support
+- **📝 GitHub Discussions**: [Discuss on GitHub](https://github.com/MiserableGamer/ONI-Miserable-Mods/discussions) - share ideas, ask questions, or get help with modding
+
+### Reporting Issues
+
+Found a bug or have a feature request? Please report it on GitHub using our issue templates:
+
+- **🐛 Bug Reports**: [Report a Bug](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=bug_report.yml) - Use this for crashes, errors, or unexpected behavior
+- **💡 Feature Requests**: [Suggest a Feature](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=feature_request.yml) - Have an idea for a new feature or improvement?
+- **❓ Questions**: [Ask a Question](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=question.yml) - Need help understanding how something works?
+- **📝 Other Issues**: [Other Issue](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=other.yml) - Something else that doesn't fit the above categories
 
 Please mention "Longer Arms" in your issue title or description so we can identify it easily.
 
@@ -74,10 +84,5 @@ The following features are planned for future releases:
 
 ## Version History
 
-- **0.1.55**: Current version
-  - Separate vertical and horizontal reach sliders
-  - Vertical reach: extends upward and downward reach
-  - Horizontal reach: allows reaching over chasms and gaps
-  - Both features fully working and configurable (0-10 cells each)
-  - Proper path validation to prevent reaching through solid walls
+- **0.1.55**: Initial release
 
