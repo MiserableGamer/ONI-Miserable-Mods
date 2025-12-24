@@ -104,6 +104,28 @@ jobs:
           Write-Host "Version: $version"
         shell: powershell
     
+      - name: Restore NuGet packages
+        run: |
+          $modFolder = "${{ steps.parse_tag.outputs.mod_folder }}"
+          $projectFile = "$modFolder\$modFolder.csproj"
+          
+          # Check if project file exists
+          if (-not (Test-Path $projectFile)) {
+            $foundProject = Get-ChildItem -Path $modFolder -Filter "*.csproj" -ErrorAction SilentlyContinue | Select-Object -First 1
+            if ($foundProject) {
+              $projectFile = $foundProject.FullName
+            }
+          }
+          
+          if (Test-Path $projectFile) {
+            Write-Host "Restoring NuGet packages for $projectFile"
+            nuget restore "$projectFile" -NonInteractive
+          } else {
+            Write-Warning "Project file not found, skipping NuGet restore"
+          }
+        shell: powershell
+        continue-on-error: true
+    
       - name: Build mod
         run: |
           $modFolder = "${{ steps.parse_tag.outputs.mod_folder }}"
@@ -123,20 +145,23 @@ jobs:
             exit 1
           }
           
-          # Set output path explicitly to avoid MSBuild errors
-          $outputPath = "$modFolder\bin\Release"
-          New-Item -ItemType Directory -Force -Path $outputPath | Out-Null
+          # Get absolute path for project file
+          $projectFile = Resolve-Path $projectFile
+          $outputPath = Join-Path (Split-Path $projectFile -Parent) "bin\Release"
           
-          Write-Host "Building $modFolder using $projectFile"
+          Write-Host "Building $modFolder"
+          Write-Host "Project file: $projectFile"
           Write-Host "Output path: $outputPath"
           
-          # Build with explicit output path and platform (AnyCPU without space)
+          # Build with explicit properties matching the .csproj file
+          # The .csproj uses 'Release|AnyCPU' condition, so we need to match that exactly
           msbuild "$projectFile" `
             /p:Configuration=Release `
             /p:Platform=AnyCPU `
             /p:OutputPath="$outputPath\" `
+            /p:BaseOutputPath="$outputPath\" `
             /t:Rebuild `
-            /v:minimal `
+            /v:normal `
             /nologo
           
           # Check if build succeeded
@@ -149,12 +174,12 @@ jobs:
           
           # Verify DLL was created
           $dllName = "$modFolder.dll"
-          $dllPath = "$outputPath\$dllName"
+          $dllPath = Join-Path $outputPath $dllName
           if (-not (Test-Path $dllPath)) {
             # Try alternative DLL names
-            $dllPath = "$outputPath\$modFolder.dll"
+            $dllPath = Join-Path $outputPath "$modFolder.dll"
             if ($modFolder -eq "CopyMaterials") {
-              $dllPath = "$outputPath\CopyMaterialsTool.dll"
+              $dllPath = Join-Path $outputPath "CopyMaterialsTool.dll"
             }
           }
           
@@ -162,6 +187,8 @@ jobs:
             Write-Host "Build output verified: $(Split-Path $dllPath -Leaf)"
           } else {
             Write-Warning "DLL not found in expected location, but build reported success"
+            Write-Host "Contents of $outputPath:"
+            Get-ChildItem $outputPath -ErrorAction SilentlyContinue | ForEach-Object { Write-Host "  $($_.Name)" }
           }
         shell: powershell
     
