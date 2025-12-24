@@ -123,8 +123,21 @@ jobs:
             exit 1
           }
           
+          # Set output path explicitly to avoid MSBuild errors
+          $outputPath = "$modFolder\bin\Release"
+          New-Item -ItemType Directory -Force -Path $outputPath | Out-Null
+          
           Write-Host "Building $modFolder using $projectFile"
-          msbuild "$projectFile" /p:Configuration=Release /p:Platform="Any CPU" /t:Rebuild /v:minimal /nologo
+          Write-Host "Output path: $outputPath"
+          
+          # Build with explicit output path and platform (AnyCPU without space)
+          msbuild "$projectFile" `
+            /p:Configuration=Release `
+            /p:Platform=AnyCPU `
+            /p:OutputPath="$outputPath\" `
+            /t:Rebuild `
+            /v:minimal `
+            /nologo
           
           # Check if build succeeded
           if ($LASTEXITCODE -ne 0) {
@@ -133,6 +146,23 @@ jobs:
           }
           
           Write-Host "Build completed successfully"
+          
+          # Verify DLL was created
+          $dllName = "$modFolder.dll"
+          $dllPath = "$outputPath\$dllName"
+          if (-not (Test-Path $dllPath)) {
+            # Try alternative DLL names
+            $dllPath = "$outputPath\$modFolder.dll"
+            if ($modFolder -eq "CopyMaterials") {
+              $dllPath = "$outputPath\CopyMaterialsTool.dll"
+            }
+          }
+          
+          if (Test-Path $dllPath) {
+            Write-Host "Build output verified: $(Split-Path $dllPath -Leaf)"
+          } else {
+            Write-Warning "DLL not found in expected location, but build reported success"
+          }
         shell: powershell
     
       - name: Package mod
