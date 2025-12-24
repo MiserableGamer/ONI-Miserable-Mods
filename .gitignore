@@ -365,7 +365,8 @@ FodyWeavers.xsd
 
 bin/
 obj/
-lib/
+# lib/ - DO NOT IGNORE - Required for GitHub Actions builds
+# The lib folder contains DLL references needed for compilation
 
 # Chrome extension (not part of ONI mods)
 cursor-cost-summary/
@@ -393,3 +394,4 @@ steam_credentials.encrypted
 
 # Note: .github/workflows/release.yml MUST be committed for GitHub Actions to work!
 # Do NOT ignore the workflow file - it needs to be in the repository.
+/.github/BUILD_REQUIREMENTS.md
