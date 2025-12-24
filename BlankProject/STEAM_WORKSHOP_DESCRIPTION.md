@@ -47,5 +47,5 @@ This template includes:
 
 [h2]Version History[/h2]
 [list]
-[*][b]0.1.0[/b]: Initial release
+[*][b]0.1.2[/b]: Initial release
 [/list]

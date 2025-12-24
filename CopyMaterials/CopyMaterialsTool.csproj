@@ -45,6 +45,7 @@
     </Reference>
     <Reference Include="PLib, Version=4.19.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\PLib.4.19.0\lib\net471\PLib.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -96,7 +97,7 @@
     <Compile Include="Patches\UserMenu_AppendToScreen_Patch.cs" />
     <Compile Include="Patches\WireOnSpawnPatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Content Include="screenshots\preview.png" />
+    <Content Include="preview.png" />
     <Content Include="screenshots\sidescreen.png" />
     <None Include="README.md" />
     <None Include="STEAM_WORKSHOP_DESCRIPTION.md" />
@@ -111,13 +112,27 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>powershell -ExecutionPolicy Bypass -File "$(ProjectDir)increment_version.ps1"</PreBuildEvent>
-    <PostBuildEvent>xcopy /Y /R "$(ProjectDir)mod.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyMaterialsTool\"
+    <PostBuildEvent>if not exist "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyMaterialsTool\" mkdir "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyMaterialsTool\"
+xcopy /Y /R "$(ProjectDir)mod.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyMaterialsTool\"
 xcopy /Y /R "$(ProjectDir)mod_info.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyMaterialsTool\"
-
+if exist "$(ProjectDir)preview.png" xcopy /Y /R "$(ProjectDir)preview.png" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyMaterialsTool\"
+xcopy /Y /R "$(TargetPath)" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyMaterialsTool\"
+if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyMaterialsTool\"
+del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyMaterialsTool\*.xml" 2&gt;nul
+del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyMaterialsTool\*.pdb" 2&gt;nul
+del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyMaterialsTool\FMODUnity.dll" 2&gt;nul
+del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyMaterialsTool\UnityEngine.TextRenderingModule.dll" 2&gt;nul
 xcopy /Y /R "$(ProjectDir)mod.yaml" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterials\"
 xcopy /Y /R "$(ProjectDir)mod_info.yaml" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterials\"
-
-xcopy /Y /R "$(TargetPath)" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyMaterialsTool\"
-xcopy /Y /R "$(TargetPath)" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterials\"</PostBuildEvent>
+if exist "$(ProjectDir)preview.png" xcopy /Y /R "$(ProjectDir)preview.png" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterials\"
+xcopy /Y /R "$(TargetPath)" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterials\"
+if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterials\"
+del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterials\*.xml" 2&gt;nul
+del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterials\*.pdb" 2&gt;nul
+del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterials\FMODUnity.dll" 2&gt;nul
+del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterials\UnityEngine.TextRenderingModule.dll" 2&gt;nul</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 </Project>

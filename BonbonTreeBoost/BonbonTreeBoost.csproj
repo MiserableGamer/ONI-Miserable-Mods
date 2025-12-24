@@ -43,6 +43,7 @@
     </Reference>
     <Reference Include="PLib, Version=4.19.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\PLib.4.19.0\lib\net471\PLib.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -86,5 +87,27 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>powershell -ExecutionPolicy Bypass -File "$(ProjectDir)increment_version.ps1"</PreBuildEvent>
+    <PostBuildEvent>if not exist "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\BonbonTreeBoost\" mkdir "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\BonbonTreeBoost\"
+xcopy /Y /R "$(ProjectDir)mod.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\BonbonTreeBoost\"
+xcopy /Y /R "$(ProjectDir)mod_info.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\BonbonTreeBoost\"
+if exist "$(ProjectDir)preview.png" xcopy /Y /R "$(ProjectDir)preview.png" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\BonbonTreeBoost\"
+xcopy /Y /R "$(TargetPath)" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\BonbonTreeBoost\"
+if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\BonbonTreeBoost\"
+del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\BonbonTreeBoost\*.xml" 2&gt;nul
+del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\BonbonTreeBoost\*.pdb" 2&gt;nul
+del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\BonbonTreeBoost\FMODUnity.dll" 2&gt;nul
+del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\BonbonTreeBoost\UnityEngine.TextRenderingModule.dll" 2&gt;nul
+xcopy /Y /R "$(ProjectDir)mod.yaml" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\BonbonTreeBoost\"
+xcopy /Y /R "$(ProjectDir)mod_info.yaml" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\BonbonTreeBoost\"
+if exist "$(ProjectDir)preview.png" xcopy /Y /R "$(ProjectDir)preview.png" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\BonbonTreeBoost\"
+xcopy /Y /R "$(TargetPath)" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\BonbonTreeBoost\"
+if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\BonbonTreeBoost\"
+del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\BonbonTreeBoost\*.xml" 2&gt;nul
+del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\BonbonTreeBoost\*.pdb" 2&gt;nul
+del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\BonbonTreeBoost\FMODUnity.dll" 2&gt;nul
+del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\BonbonTreeBoost\UnityEngine.TextRenderingModule.dll" 2&gt;nul</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 </Project>

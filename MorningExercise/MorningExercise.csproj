@@ -109,6 +109,7 @@
     <PostBuildEvent>if not exist "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\MorningExercise\" mkdir "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\MorningExercise\"
 xcopy /Y /R "$(ProjectDir)mod.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\MorningExercise\"
 xcopy /Y /R "$(ProjectDir)mod_info.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\MorningExercise\"
+if exist "$(ProjectDir)preview.png" xcopy /Y /R "$(ProjectDir)preview.png" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\MorningExercise\"
 xcopy /Y /R "$(TargetPath)" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\MorningExercise\"
 if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\MorningExercise\"
 if exist "$(ProjectDir)anim" xcopy /Y /E /I "$(ProjectDir)anim" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\MorningExercise\anim"
@@ -118,6 +119,7 @@ del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\MorningExerci
 del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\MorningExercise\UnityEngine.TextRenderingModule.dll" 2&gt;nul
 xcopy /Y /R "$(ProjectDir)mod.yaml" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\MorningExercise\"
 xcopy /Y /R "$(ProjectDir)mod_info.yaml" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\MorningExercise\"
+if exist "$(ProjectDir)preview.png" xcopy /Y /R "$(ProjectDir)preview.png" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\MorningExercise\"
 xcopy /Y /R "$(TargetPath)" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\MorningExercise\"
 if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\MorningExercise\"
 if exist "$(ProjectDir)anim" xcopy /Y /E /I "$(ProjectDir)anim" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\MorningExercise\anim"

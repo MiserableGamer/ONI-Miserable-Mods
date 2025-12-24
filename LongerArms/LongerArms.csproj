@@ -82,12 +82,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LongerArms.cs" />
     <Compile Include="LongerArmsOptions.cs" />
     <Compile Include="LongerArmsPatches.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="mod_info.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="preview.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="mod.yaml">
@@ -104,6 +106,7 @@
     <PostBuildEvent>if not exist "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\LongerArms\" mkdir "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\LongerArms\"
 xcopy /Y /R "$(ProjectDir)mod.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\LongerArms\"
 xcopy /Y /R "$(ProjectDir)mod_info.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\LongerArms\"
+if exist "$(ProjectDir)preview.png" xcopy /Y /R "$(ProjectDir)preview.png" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\LongerArms\"
 xcopy /Y /R "$(TargetPath)" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\LongerArms\"
 if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\LongerArms\"
 del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\LongerArms\*.xml" 2&gt;nul
@@ -112,6 +115,7 @@ del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\LongerArms\FM
 del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\LongerArms\UnityEngine.TextRenderingModule.dll" 2&gt;nul
 xcopy /Y /R "$(ProjectDir)mod.yaml" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\LongerArms\"
 xcopy /Y /R "$(ProjectDir)mod_info.yaml" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\LongerArms\"
+if exist "$(ProjectDir)preview.png" xcopy /Y /R "$(ProjectDir)preview.png" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\LongerArms\"
 xcopy /Y /R "$(TargetPath)" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\LongerArms\"
 if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\LongerArms\"
 del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\LongerArms\*.xml" 2&gt;nul

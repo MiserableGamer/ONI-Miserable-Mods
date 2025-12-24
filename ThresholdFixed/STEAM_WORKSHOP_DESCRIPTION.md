@@ -96,5 +96,6 @@ This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/
 
 [h2]Version History[/h2]
 [list]
-[*][b]0.1.12[/b]: Initial release
+[*][b]1.0.1.16[/b]: Initial release
+[*][b]1.0.1.13[/b]: Code cleaning
 [/list]

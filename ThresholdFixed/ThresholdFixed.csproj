@@ -105,13 +105,12 @@
     <Content Include="mod_info.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="preview.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="mod.yaml" />
     <None Include="packages.config" />
-    <None Include="increment_version.ps1" />
-    <None Include="README.md" />
     <None Include="STEAM_WORKSHOP_DESCRIPTION.md" />
   </ItemGroup>
   <ItemGroup>
@@ -159,7 +158,7 @@
 
 xcopy /Y /R "$(ProjectDir)mod.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ThresholdFixed\"
 xcopy /Y /R "$(ProjectDir)mod_info.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ThresholdFixed\"
-
+if exist "$(ProjectDir)preview.png" xcopy /Y /R "$(ProjectDir)preview.png" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ThresholdFixed\"
 xcopy /Y /R "$(TargetPath)" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ThresholdFixed\"
 
 xcopy /Y /R "$(TargetDir)CommonLib.dll" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ThresholdFixed\"

@@ -84,7 +84,6 @@ Options are organized into sections: [b]Dupes[/b], [b]Boops[/b], [b]Experience S
 [*][b]Animation Variant[/b] (Default: Variant A)
 [list]
 [*]Options: Standard, Variant A, or Variant B
-[*]Requires game restart to apply changes
 [/list]
 [/list]
 
@@ -101,12 +100,13 @@ Options are organized into sections: [b]Dupes[/b], [b]Boops[/b], [b]Experience S
 
 [h2]Performance[/h2]
 [b]Minimal Performance Impact[/b]
+
+[h2]⚠️ IMPORTANT WARNING ⚠️[/h2]
+[b]This mod is NOT game save safe![/b]
 [list]
-[*][b]Efficient lookups[/b]: Static registry for fast equipment searches
-[*][b]Cached checks[/b]: Equipment availability cached to avoid repeated lookups
-[*][b]Optimized updates[/b]: Monitor runs 5 times per second (not every frame)
-[*][b]Uses existing systems[/b]: Leverages game's chore and schedule systems
-[*][b]One-time initialization[/b]: All setup happens at game startup
+[*][b]If you delete this mod, your save games will NO LONGER LOAD[/b]
+[*][b]Before removing this mod, you MUST remove all Morning Exercise schedule blocks from all Duplicants' schedules[/b]
+[*][b]Failure to remove the schedule blocks before uninstalling will result in a crash when trying to load the save file[/b]
 [/list]
 
 [h2]Compatibility[/h2]
@@ -153,7 +153,7 @@ The following features are planned for future releases:
 
 [h2]Version History[/h2]
 [list]
-[*][b]0.1.101[/b]: Initial release
+[*][b]1.0.2.127[/b]: Initial release
+[*][b]1.0.1.103[/b]: Code cleaning
+[*][b]1.0.2.125[/b]: Dupes will now go to relax after exercising, or if they already are buffed, rather than just to idle
 [/list]
-
-Get your Duplicants moving and boost their performance! 🏃‍♂️

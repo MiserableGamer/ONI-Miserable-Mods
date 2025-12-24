@@ -105,6 +105,7 @@
     <PostBuildEvent>if not exist "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\DebugFogOfWar\" mkdir "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\DebugFogOfWar\"
 xcopy /Y /R "$(ProjectDir)mod.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\DebugFogOfWar\"
 xcopy /Y /R "$(ProjectDir)mod_info.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\DebugFogOfWar\"
+if exist "$(ProjectDir)preview.png" xcopy /Y /R "$(ProjectDir)preview.png" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\DebugFogOfWar\"
 xcopy /Y /R "$(TargetPath)" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\DebugFogOfWar\"
 if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\DebugFogOfWar\"
 del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\DebugFogOfWar\*.xml" 2&gt;nul
@@ -113,6 +114,7 @@ del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\DebugFogOfWar
 del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\DebugFogOfWar\UnityEngine.TextRenderingModule.dll" 2&gt;nul
 xcopy /Y /R "$(ProjectDir)mod.yaml" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\DebugFogOfWar\"
 xcopy /Y /R "$(ProjectDir)mod_info.yaml" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\DebugFogOfWar\"
+if exist "$(ProjectDir)preview.png" xcopy /Y /R "$(ProjectDir)preview.png" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\DebugFogOfWar\"
 xcopy /Y /R "$(TargetPath)" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\DebugFogOfWar\"
 if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\DebugFogOfWar\"
 del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\DebugFogOfWar\*.xml" 2&gt;nul

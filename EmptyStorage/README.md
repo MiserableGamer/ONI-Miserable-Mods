@@ -91,5 +91,6 @@ Please mention "Empty Storage" in your issue title or description so we can iden
 
 ## Version History
 
-- **0.1.82**: Initial release
+- **1.0.1.91**: Initial release
+- **1.0.1.83**: Code cleaning
 

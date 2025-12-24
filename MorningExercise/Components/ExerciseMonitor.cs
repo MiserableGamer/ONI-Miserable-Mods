@@ -465,7 +465,9 @@ namespace MorningExercise
                 default_state = waiting;
 
                 waiting
-                    .ToggleAnims("anim_idle_distracted_kanim")
+                    // Use Concern emote which shows a question mark/confused expression
+                    // This is more appropriate for "waiting for equipment" than the sleep emote
+                    .ToggleAnims("anim_react_concern_kanim")
                     .PlayAnim("idle_default", KAnim.PlayMode.Loop)
                     .Transition(complete, (smi) => !smi.IsInExerciseTime(), UpdateRate.SIM_1000ms)
                     .Transition(complete, (smi) => smi.HasWarmUpBuff(), UpdateRate.SIM_1000ms)

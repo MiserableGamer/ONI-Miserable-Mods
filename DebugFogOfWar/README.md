@@ -71,5 +71,6 @@ This mod is part of the [ONI 200+ Ultimate Mods collection](https://steamcommuni
 
 ## Version History
 
-- **0.1.15**: Initial release
+- **1.0.1.19**: Initial release
+- **1.0.1.17**: Code cleaning
 

@@ -100,7 +100,8 @@ This mod is part of the [ONI 200+ Ultimate Mods collection](https://steamcommuni
 
 ## Version History
 
-- **0.1.12**: Initial release
+- **1.0.1.16**: Initial release
+- **1.0.1.13**: Code cleaning
 
 
 

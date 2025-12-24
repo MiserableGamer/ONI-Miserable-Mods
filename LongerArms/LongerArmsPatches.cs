@@ -2,31 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
-using KMod;
-using PeterHan.PLib.Core;
 using PeterHan.PLib.Options;
 using UnityEngine;
 
 namespace LongerArms
 {
-	public class LongerArmsPatches : UserMod2
+	public static class LongerArmsPatches
 	{
 		private static bool OffsetsExpanded = false;
-
-		public override void OnLoad(Harmony harmony)
-		{
-			base.OnLoad(harmony);
-			
-			// Initialize PLib
-			PUtil.InitLibrary();
-			
-			// Register options
-			var options = new POptions();
-			options.RegisterOptions(this, typeof(LongerArmsOptions));
-			
-			// Apply Harmony patches
-			harmony.PatchAll();
-		}
 
 		/// Generates vertical cell offset paths for additional reach beyond vanilla.
 		/// uses: (0, -4), (0, -3), (0, -2), (0, -1) to reach cell 4.

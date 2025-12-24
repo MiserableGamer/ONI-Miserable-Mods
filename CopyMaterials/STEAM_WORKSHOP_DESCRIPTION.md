@@ -119,7 +119,8 @@ This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/
 
 [h2]Version History[/h2]
 [list]
-[*][b]0.1.10[/b]: Test release
+[*][b]0.1.0.10[/b]: Test release
+[*][b]0.1.1.11[/b]: Code cleaning
 [/list]
 
 [b]Note[/b]: This mod is a work in progress. Report bugs and suggestions on [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues]GitHub Issues[/url] or through Steam Workshop comments.

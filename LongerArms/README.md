@@ -84,5 +84,6 @@ The following features are planned for future releases:
 
 ## Version History
 
-- **0.1.55**: Initial release
+- **1.0.1.60**: Initial release
+- **1.0.1.56**: Code cleaning
 

@@ -2,34 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
-using KMod;
-using PeterHan.PLib.Core;
 using PeterHan.PLib.Options;
 using UnityEngine;
 
 namespace EmptyStorage
 {
-	public class EmptyStoragePatches : UserMod2
+	[HarmonyPatch(typeof(Storage), "OnPrefabInit")]
+	public static class Storage_OnPrefabInit_Patch
 	{
-		public override void OnLoad(Harmony harmony)
-		{
-			base.OnLoad(harmony);
-
-			// Initialize PLib
-			PUtil.InitLibrary();
-
-			// Register options with shared config location
-			// The [ConfigFile] attribute should use shared config location automatically
-			var options = new POptions();
-			options.RegisterOptions(this, typeof(EmptyStorageOptions));
-
-			// Apply Harmony patches
-			harmony.PatchAll();
-		}
-
-		[HarmonyPatch(typeof(Storage), "OnPrefabInit")]
-		public static class Storage_OnPrefabInit_Patch
-		{
 			internal static void Postfix(Storage __instance)
 			{
 				if (__instance.gameObject.GetComponent<CargoBay>() == null && __instance.gameObject.GetComponent<CargoBayCluster>() == null && __instance.gameObject.GetComponent<Dumpable>() == null && __instance.gameObject.GetComponent<DropAllWorkable>() == null && __instance.gameObject.GetComponent<HiveHarvestMonitor.Instance>() == null)
@@ -639,7 +619,4 @@ namespace EmptyStorage
 				return true; // Allow the button to be added
 			}
 		}
-
 	}
-}
-

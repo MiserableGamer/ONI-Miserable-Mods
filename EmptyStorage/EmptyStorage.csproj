@@ -82,6 +82,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EmptyStorage.cs" />
     <Compile Include="EmptyStorageOptions.cs" />
     <Compile Include="EmptyStoragePatches.cs" />
     <Compile Include="EmptyStorageSetting.cs" />
@@ -106,6 +107,7 @@
     <PostBuildEvent>if not exist "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\EmptyStorage\" mkdir "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\EmptyStorage\"
 xcopy /Y /R "$(ProjectDir)mod.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\EmptyStorage\"
 xcopy /Y /R "$(ProjectDir)mod_info.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\EmptyStorage\"
+if exist "$(ProjectDir)preview.png" xcopy /Y /R "$(ProjectDir)preview.png" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\EmptyStorage\"
 xcopy /Y /R "$(TargetPath)" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\EmptyStorage\"
 if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\EmptyStorage\"
 del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\EmptyStorage\*.xml" 2&gt;nul
@@ -114,6 +116,7 @@ del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\EmptyStorage\
 del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\EmptyStorage\UnityEngine.TextRenderingModule.dll" 2&gt;nul
 xcopy /Y /R "$(ProjectDir)mod.yaml" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\EmptyStorage\"
 xcopy /Y /R "$(ProjectDir)mod_info.yaml" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\EmptyStorage\"
+if exist "$(ProjectDir)preview.png" xcopy /Y /R "$(ProjectDir)preview.png" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\EmptyStorage\"
 xcopy /Y /R "$(TargetPath)" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\EmptyStorage\"
 if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\EmptyStorage\"
 del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\EmptyStorage\*.xml" 2&gt;nul

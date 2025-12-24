@@ -85,5 +85,6 @@ The following features are planned for future releases:
 
 [h2]Version History[/h2]
 [list]
-[*][b]0.1.55[/b]: Initial release
+[*][b]1.0.1.60[/b]: Initial release
+[*][b]1.0.1.56[/b]: Code cleaning
 [/list]

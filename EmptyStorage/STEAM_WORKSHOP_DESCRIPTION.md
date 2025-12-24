@@ -100,5 +100,6 @@ Enjoy easier storage management! 🎮
 
 [h2]Version History[/h2]
 [list]
-[*][b]0.1.82[/b]: Initial release
+[*][b]1.0.1.91[/b]: Initial release
+[*][b]1.0.1.83[/b]: Code cleaning
 [/list]

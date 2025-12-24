@@ -1,9 +1,4 @@
-﻿// BonbonTreeBoost for ONI U57 (U57-704096)
-// Correct approach: modify SpaceTreePlant.Def, which is the authoritative source
-// for Space Tree sugar water production in U57.
-// This affects existing trees, new trees, and all saves.
-
-using HarmonyLib;
+﻿using HarmonyLib;
 using UnityEngine;
 using PeterHan.PLib.Core;
 using PeterHan.PLib.Options;
@@ -12,7 +7,7 @@ using System.Reflection;
 namespace BonbonTreeBoost
 {
     [RestartRequired]
-    [ConfigFile]
+    [ConfigFile(SharedConfigLocation: true)]
     public class BonbonTreeBoostOptions
     {
         [Option("Nectar Production Multiplier", "Multiplier for Space Tree sugar water production")]
@@ -28,8 +23,6 @@ namespace BonbonTreeBoost
         public float FertilizerMultiplier { get; set; } = 1.0f;
     }
 
-    // Patch the prefab creation to modify the SpaceTreePlant.Def
-    // This is the ONLY reliable way to affect production in U57
     [HarmonyPatch(typeof(SpaceTreeConfig), "CreatePrefab")]
     public static class SpaceTree_DefPatch
     {
@@ -38,25 +31,29 @@ namespace BonbonTreeBoost
             if (__result == null)
                 return;
 
-            var options = POptions.ReadSettings<BonbonTreeBoostOptions>() ?? new BonbonTreeBoostOptions();
+            BonbonTreeBoostOptions options;
+            try
+            {
+                options = POptions.ReadSettings<BonbonTreeBoostOptions>() ?? new BonbonTreeBoostOptions();
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogWarning($"[BonbonTreeBoost] Failed to read config file, using defaults: {ex.Message}");
+                options = new BonbonTreeBoostOptions();
+            }
 
-            // --- Production tuning via Def ---
             var def = __result.GetDef<SpaceTreePlant.Def>();
             if (def != null)
             {
-                // Production rate is controlled by duration, not amount
-                // Lower duration = more production
+                // Lower duration means more frequent production cycles
                 def.OptimalProductionDuration /= options.YieldMultiplier;
-
-                // Adjust how quickly optimal production is reached
                 def.OptimalAmountOfBranches = Mathf.Max(1,
                     Mathf.RoundToInt(def.OptimalAmountOfBranches * options.GrowthMultiplier));
             }
-
-            // --- Fertilizer tuning (instance-based, still valid) ---
             var absorbers = __result.GetComponents<PlantElementAbsorber>();
             if (absorbers != null && absorbers.Length > 0)
             {
+                // Use reflection to access private consumedElements field
                 FieldInfo consumedField = typeof(PlantElementAbsorber)
                     .GetField("consumedElements", BindingFlags.NonPublic | BindingFlags.Instance);
 
@@ -84,7 +81,7 @@ namespace BonbonTreeBoost
             base.OnLoad(harmony);
             PUtil.InitLibrary();
             new POptions().RegisterOptions(this, typeof(BonbonTreeBoostOptions));
-            Debug.Log("[BonbonTreeBoost] Loaded successfully (U57 Def-based Space Tree tuning)");
+            Debug.Log("[BonbonTreeBoost] Loaded successfully");
         }
     }
 }
