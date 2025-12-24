@@ -390,6 +390,6 @@ steam_credentials.encrypted
 # Release zip files (created by GitHub Actions workflow)
 **/release/*.zip
 **/release/*/
-/.github/HOW_TO_RUN_WORKFLOW.md
-/.github/RELEASE_GUIDE.md
-/.github/VISUAL_STUDIO_TAGS.md
+
+# Note: .github/workflows/release.yml MUST be committed for GitHub Actions to work!
+# Do NOT ignore the workflow file - it needs to be in the repository.

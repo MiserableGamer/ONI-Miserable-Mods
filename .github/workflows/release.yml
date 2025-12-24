@@ -44,31 +44,42 @@ jobs:
           $modName = $null
           $version = $null
           
-          # Try pattern: ModName-vX.Y.Z or ModName-X.Y.Z
-          if ($tag -match '^([^-]+)-v?(\d+\.\d+\.\d+(?:\.\d+)?)$') {
+          # Try pattern: ModName-vX.Y.Z or ModName-X.Y.Z (supports 3 or 4 part versions)
+          # Pattern matches: ModName-v1.0.0 or ModName-v1.0.0.4
+          if ($tag -match '^([^-]+)-v?(\d+(?:\.\d+){2,3})$') {
             $potentialMod = $matches[1]
             $version = $matches[2]
+            
+            Write-Host "Matched pattern 1: Mod=$potentialMod, Version=$version"
             
             # Check if it's a known mod
             if ($modMap.ContainsKey($potentialMod)) {
               $modName = $potentialMod
+            } else {
+              Write-Warning "Mod name '$potentialMod' not in supported list"
             }
           }
-          # Try pattern: vModName-X.Y.Z
-          elseif ($tag -match '^v([^-]+)-(\d+\.\d+\.\d+(?:\.\d+)?)$') {
+          # Try pattern: vModName-X.Y.Z (supports 3 or 4 part versions)
+          elseif ($tag -match '^v([^-]+)-(\d+(?:\.\d+){2,3})$') {
             $potentialMod = $matches[1]
             $version = $matches[2]
             
+            Write-Host "Matched pattern 2: Mod=$potentialMod, Version=$version"
+            
             if ($modMap.ContainsKey($potentialMod)) {
               $modName = $potentialMod
+            } else {
+              Write-Warning "Mod name '$potentialMod' not in supported list"
             }
           }
           # Try pattern: vX.Y.Z (just version, need to detect mod from context)
-          elseif ($tag -match '^v?(\d+\.\d+\.\d+(?:\.\d+)?)$') {
+          elseif ($tag -match '^v?(\d+(?:\.\d+){2,3})$') {
             $version = $matches[1]
             Write-Warning "Tag contains only version ($version). Cannot determine mod name. Skipping release."
             exit 1
           }
+          
+          Write-Host "Tag parsing result: ModName=$modName, Version=$version"
           
           if (-not $modName) {
             Write-Error "Could not determine mod name from tag: $tag"
@@ -114,6 +125,14 @@ jobs:
           
           Write-Host "Building $modFolder using $projectFile"
           msbuild "$projectFile" /p:Configuration=Release /p:Platform="Any CPU" /t:Rebuild /v:minimal /nologo
+          
+          # Check if build succeeded
+          if ($LASTEXITCODE -ne 0) {
+            Write-Error "Build failed with exit code $LASTEXITCODE"
+            exit 1
+          }
+          
+          Write-Host "Build completed successfully"
         shell: powershell
     
       - name: Package mod
