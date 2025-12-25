@@ -125,7 +125,6 @@ jobs:
           name: ${{ steps.parse_tag.outputs.mod_name }} v${{ steps.parse_tag.outputs.release_version }}
           tag_name: ${{ github.ref_name }}
           generate_release_notes: false
-          make_latest: true
           body: |
             ## Installation Instructions
             
