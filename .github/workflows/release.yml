@@ -3,10 +3,10 @@ name: Create Release
 on:
   push:
     tags:
-      - '**'  # Trigger on any tag push
+      - '**'
 
 jobs:
-  build-and-release:
+  release:
     runs-on: windows-latest
     
     steps:
@@ -14,289 +14,93 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Fetch all history for tags
-    
-      - name: Setup .NET Framework
-        uses: microsoft/setup-msbuild@v1.1
-    
-      - name: Parse tag and extract mod info
+
+      - name: Parse tag
         id: parse_tag
         run: |
           $tag = "${{ github.ref_name }}"
+          Write-Host "Tag: $tag"
           
-          # Supported mods (excluding BlankProject, CommonLib, ResourceLimpet)
-          $modMap = @{
-            "BonbonTreeBoost" = "BonbonTreeBoost"
-            "CopyMaterials" = "CopyMaterials"
-            "DebugFogOfWar" = "DebugFogOfWar"
-            "EmptyStorage" = "EmptyStorage"
-            "LongerArms" = "LongerArms"
-            "MorningExercise" = "MorningExercise"
-            "ThresholdFixed" = "ThresholdFixed"
-          }
-          
-          # Try to extract mod name and version from tag
-          # Formats supported:
-          #   ModName-v1.0.0
-          #   vModName-1.0.0
-          #   ModName-1.0.0
-          #   v1.0.0 (will try to match based on folder structure)
-          
-          $modName = $null
-          $version = $null
-          
-          # Try pattern: ModName-vX.Y.Z or ModName-X.Y.Z (supports 3 or 4 part versions)
-          # Pattern matches: ModName-v1.0.0 or ModName-v1.0.0.4
-          if ($tag -match '^([^-]+)-v?(\d+(?:\.\d+){2,3})$') {
-            $potentialMod = $matches[1]
+          # Parse tag format: ModName-v1.2.3 or ModName-v1.2.3.4
+          if ($tag -match '^(.+?)-v(\d+\.\d+\.\d+(?:\.\d+)?)$') {
+            $modName = $matches[1]
             $version = $matches[2]
             
-            Write-Host "Matched pattern 1: Mod=$potentialMod, Version=$version"
-            
-            # Check if it's a known mod
-            if ($modMap.ContainsKey($potentialMod)) {
-              $modName = $potentialMod
-            } else {
-              Write-Warning "Mod name '$potentialMod' not in supported list"
+            # Extract release version without build number (e.g., "1.0.1.4" -> "1.0.1")
+            $releaseVersion = $version
+            if ($version -match '^(\d+\.\d+\.\d+)\.\d+$') {
+              $releaseVersion = $matches[1]
             }
-          }
-          # Try pattern: vModName-X.Y.Z (supports 3 or 4 part versions)
-          elseif ($tag -match '^v([^-]+)-(\d+(?:\.\d+){2,3})$') {
-            $potentialMod = $matches[1]
-            $version = $matches[2]
             
-            Write-Host "Matched pattern 2: Mod=$potentialMod, Version=$version"
-            
-            if ($modMap.ContainsKey($potentialMod)) {
-              $modName = $potentialMod
-            } else {
-              Write-Warning "Mod name '$potentialMod' not in supported list"
-            }
-          }
-          # Try pattern: vX.Y.Z (just version, need to detect mod from context)
-          elseif ($tag -match '^v?(\d+(?:\.\d+){2,3})$') {
-            $version = $matches[1]
-            Write-Warning "Tag contains only version ($version). Cannot determine mod name. Skipping release."
-            exit 1
-          }
-          
-          Write-Host "Tag parsing result: ModName=$modName, Version=$version"
-          
-          if (-not $modName) {
-            Write-Error "Could not determine mod name from tag: $tag"
-            Write-Host "Supported formats: ModName-v1.0.0, vModName-1.0.0, ModName-1.0.0"
-            Write-Host "Supported mods: $($modMap.Keys -join ', ')"
-            exit 1
-          }
-          
-          if (-not $version) {
-            Write-Error "Could not determine version from tag: $tag"
-            exit 1
-          }
-          
-          $modFolder = $modMap[$modName]
-          
-          echo "mod_name=$modName" >> $env:GITHUB_OUTPUT
-          echo "mod_folder=$modFolder" >> $env:GITHUB_OUTPUT
-          echo "version=$version" >> $env:GITHUB_OUTPUT
-          
-          Write-Host "Mod: $modName"
-          Write-Host "Folder: $modFolder"
-          Write-Host "Version: $version"
-        shell: powershell
-    
-      - name: Restore NuGet packages
-        run: |
-          $modFolder = "${{ steps.parse_tag.outputs.mod_folder }}"
-          $projectFile = "$modFolder\$modFolder.csproj"
-          
-          # Check if project file exists
-          if (-not (Test-Path $projectFile)) {
-            $foundProject = Get-ChildItem -Path $modFolder -Filter "*.csproj" -ErrorAction SilentlyContinue | Select-Object -First 1
-            if ($foundProject) {
-              $projectFile = $foundProject.FullName
-            }
-          }
-          
-          if (Test-Path $projectFile) {
-            Write-Host "Restoring NuGet packages for $projectFile"
-            nuget restore "$projectFile" -NonInteractive
+            Write-Host "Mod name: $modName"
+            Write-Host "Full version: $version"
+            Write-Host "Release version (without build): $releaseVersion"
+            Write-Output "mod_name=$modName" >> $env:GITHUB_OUTPUT
+            Write-Output "version=$version" >> $env:GITHUB_OUTPUT
+            Write-Output "release_version=$releaseVersion" >> $env:GITHUB_OUTPUT
           } else {
-            Write-Warning "Project file not found, skipping NuGet restore"
-          }
-        shell: powershell
-        continue-on-error: true
-    
-      - name: Build mod
-        run: |
-          $modFolder = "${{ steps.parse_tag.outputs.mod_folder }}"
-          $projectFile = "$modFolder\$modFolder.csproj"
-          
-          # Check if project file exists (some mods might have different names)
-          if (-not (Test-Path $projectFile)) {
-            # Try to find any .csproj in the folder
-            $foundProject = Get-ChildItem -Path $modFolder -Filter "*.csproj" -ErrorAction SilentlyContinue | Select-Object -First 1
-            if ($foundProject) {
-              $projectFile = $foundProject.FullName
-            }
-          }
-          
-          if (-not (Test-Path $projectFile)) {
-            Write-Error "No .csproj file found in $modFolder"
+            Write-Error "Invalid tag format. Expected: ModName-v1.2.3 or ModName-v1.2.3.4"
             exit 1
           }
-          
-          # Get absolute path for project file
-          $projectFile = Resolve-Path $projectFile
-          $outputPath = Join-Path (Split-Path $projectFile -Parent) "bin\Release"
-          
-          Write-Host "Building $modFolder"
-          Write-Host "Project file: $projectFile"
-          Write-Host "Output path: $outputPath"
-          
-          # Build with explicit properties matching the .csproj file
-          # The .csproj uses 'Release|AnyCPU' condition, so we need to match that exactly
-          msbuild "$projectFile" `
-            /p:Configuration=Release `
-            /p:Platform=AnyCPU `
-            /p:OutputPath="$outputPath\" `
-            /p:BaseOutputPath="$outputPath\" `
-            /t:Rebuild `
-            /v:normal `
-            /nologo
-          
-          # Check if build succeeded
-          if ($LASTEXITCODE -ne 0) {
-            Write-Error "Build failed with exit code $LASTEXITCODE"
-            exit 1
-          }
-          
-          Write-Host "Build completed successfully"
-          
-          # Verify DLL was created
-          $dllName = "$modFolder.dll"
-          $dllPath = Join-Path $outputPath $dllName
-          if (-not (Test-Path $dllPath)) {
-            # Try alternative DLL names
-            $dllPath = Join-Path $outputPath "$modFolder.dll"
-            if ($modFolder -eq "CopyMaterials") {
-              $dllPath = Join-Path $outputPath "CopyMaterialsTool.dll"
-            }
-          }
-          
-          if (Test-Path $dllPath) {
-            Write-Host "Build output verified: $(Split-Path $dllPath -Leaf)"
-          } else {
-            Write-Warning "DLL not found in expected location, but build reported success"
-            Write-Host "Contents of $outputPath:"
-            Get-ChildItem $outputPath -ErrorAction SilentlyContinue | ForEach-Object { Write-Host "  $($_.Name)" }
-          }
         shell: powershell
-    
-      - name: Package mod
-        id: package
+
+      - name: Check for pre-built zip
+        id: check_zip
         run: |
-          $modFolder = "${{ steps.parse_tag.outputs.mod_folder }}"
           $modName = "${{ steps.parse_tag.outputs.mod_name }}"
-          $version = "${{ steps.parse_tag.outputs.version }}"
+          $releaseVersion = "${{ steps.parse_tag.outputs.release_version }}"
+          # Zip file uses release version (without build number)
+          $zipPath = "release\$modName-v$releaseVersion.zip"
           
-          # Create output directory structure matching what users need
-          # Structure: ModName/ (all files go in a folder named after the mod)
-          # This matches Steam Workshop download structure
-          $outputDir = "$modFolder\release\$modName"
-          New-Item -ItemType Directory -Force -Path $outputDir | Out-Null
-          
-          Write-Host "Packaging $modName - creating folder structure: $modName/"
-          
-          # Copy required mod files
-          $filesToCopy = @(
-            "mod.yaml",
-            "mod_info.yaml",
-            "preview.png"
-          )
-          
-          foreach ($file in $filesToCopy) {
-            $sourcePath = "$modFolder\$file"
-            if (Test-Path $sourcePath) {
-              Copy-Item $sourcePath $outputDir -Force
-              Write-Host "  Copied $file"
-            }
-          }
-          
-          # Copy DLL from bin/Release
-          $dllName = "$modName.dll"
-          $dllPath = "$modFolder\bin\Release\$dllName"
-          
-          # Try alternative DLL names
-          if (-not (Test-Path $dllPath)) {
-            $dllPath = "$modFolder\bin\Release\$modFolder.dll"
-          }
-          if (-not (Test-Path $dllPath) -and $modName -eq "CopyMaterials") {
-            $dllPath = "$modFolder\bin\Release\CopyMaterialsTool.dll"
-          }
-          
-          if (Test-Path $dllPath) {
-            Copy-Item $dllPath $outputDir -Force
-            Write-Host "  Copied DLL: $(Split-Path $dllPath -Leaf)"
+          if (Test-Path $zipPath) {
+            Write-Host "Found pre-built zip file: $zipPath"
+            Write-Output "zip_exists=true" >> $env:GITHUB_OUTPUT
+            Write-Output "zip_path=$zipPath" >> $env:GITHUB_OUTPUT
           } else {
-            Write-Error "DLL not found for $modName"
-            exit 1
+            Write-Host "No pre-built zip found. You should build it locally using build-release.ps1 first."
+            Write-Host "Expected location: $zipPath"
+            Write-Output "zip_exists=false" >> $env:GITHUB_OUTPUT
           }
-          
-          # Copy PLib.dll if it exists in the output
-          $plibPath = "$modFolder\bin\Release\PLib.dll"
-          if (Test-Path $plibPath) {
-            Copy-Item $plibPath $outputDir -Force
-            Write-Host "  Copied PLib.dll"
-          }
-          
-          # Copy CommonLib.dll if it exists (for ThresholdFixed)
-          $commonLibPath = "$modFolder\bin\Release\CommonLib.dll"
-          if (Test-Path $commonLibPath) {
-            Copy-Item $commonLibPath $outputDir -Force
-            Write-Host "  Copied CommonLib.dll"
-          }
-          
-          # Copy anim folder if it exists (entire folder structure preserved)
-          $animPath = "$modFolder\anim"
-          if (Test-Path $animPath) {
-            Copy-Item $animPath $outputDir -Recurse -Force
-            Write-Host "  Copied anim folder"
-          }
-          
-          # Create zip file containing the ModName folder
-          # The zip structure will be: ModName-v1.0.0.zip -> ModName/ -> (all files)
-          # This matches Steam Workshop download structure
-          $zipPath = "$modFolder\release\$modName-v$version.zip"
-          Compress-Archive -Path "$outputDir" -DestinationPath $zipPath -Force
-          Write-Host "Created zip: $zipPath"
-          Write-Host "Zip structure: $modName-v$version.zip -> $modName/ -> (all mod files)"
-          
-          # Verify zip contents
-          $zipContents = [System.IO.Compression.ZipFile]::OpenRead($zipPath).Entries | Select-Object -First 5 FullName
-          Write-Host "Zip contains:"
-          $zipContents | ForEach-Object { Write-Host "  $_" }
-          
-          echo "zip_path=$zipPath" >> $env:GITHUB_OUTPUT
         shell: powershell
-    
-      - name: Create GitHub Release
+
+      - name: Create Release
+        if: steps.check_zip.outputs.zip_exists == 'true'
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ steps.package.outputs.zip_path }}
+          files: |
+            ${{ steps.check_zip.outputs.zip_path }}
+          name: ${{ steps.parse_tag.outputs.mod_name }} v${{ steps.parse_tag.outputs.release_version }}
           tag_name: ${{ github.ref_name }}
-          name: ${{ steps.parse_tag.outputs.mod_name }} ${{ steps.parse_tag.outputs.version }}
           body: |
-            ## ${{ steps.parse_tag.outputs.mod_name }} ${{ steps.parse_tag.outputs.version }}
+            ## Installation Instructions
             
-            See the [README](${{ github.repository }}/blob/main/${{ steps.parse_tag.outputs.mod_folder }}/README.md) for installation instructions and details.
+            1. Download the zip file below
+            2. Extract the zip file
+            3. Copy the extracted folder to your ONI mods directory:
+               - **Windows**: `%USERPROFILE%\Documents\Klei\OxygenNotIncluded\mods\Local\`
+               - **Linux**: `~/.config/unity3d/Klei/OxygenNotIncluded/mods/Local/`
+               - **Mac**: `~/Library/Application Support/unity3d/Klei/OxygenNotIncluded/mods/Local/`
+            4. The folder name should match the mod name (e.g., `${{ steps.parse_tag.outputs.mod_name }}`)
+            5. Restart Oxygen Not Included or reload mods
             
-            ### Installation
+            ## What's Included
             
-            1. Download the zip file
-            2. Extract to: `%USERPROFILE%\Documents\Klei\OxygenNotIncluded\mods\Local\${{ steps.parse_tag.outputs.mod_name }}\`
-            3. Launch the game and enable the mod in the Mods menu
+            - Mod DLL file
+            - PLib.dll (if required)
+            - CommonLib.dll (if required)
+            - mod.yaml
+            - mod_info.yaml
+            - preview.png
+            - anim folder (if applicable)
           draft: false
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Error if no zip found
+        if: steps.check_zip.outputs.zip_exists != 'true'
+        run: |
+          Write-Error "No pre-built zip file found. Please build the release locally first using: .\build-release.ps1 -ModName `"${{ steps.parse_tag.outputs.mod_name }}`" -Version `"${{ steps.parse_tag.outputs.version }}`""
+          exit 1
+        shell: powershell
 
