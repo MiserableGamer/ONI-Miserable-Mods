@@ -8,6 +8,8 @@ on:
 jobs:
   release:
     runs-on: windows-latest
+    permissions:
+      contents: write
     
     steps:
       - name: Checkout code
@@ -50,16 +52,30 @@ jobs:
           $modName = "${{ steps.parse_tag.outputs.mod_name }}"
           $releaseVersion = "${{ steps.parse_tag.outputs.release_version }}"
           # Zip file uses release version (without build number)
-          # Use forward slashes for cross-platform compatibility
-          $zipPath = "release/$modName-v$releaseVersion.zip"
+          # Try both path formats for Windows compatibility
+          $zipPathWindows = "release\$modName-v$releaseVersion.zip"
+          $zipPathUnix = "release/$modName-v$releaseVersion.zip"
+          
+          # Check which path exists
+          if (Test-Path $zipPathWindows) {
+            $zipPath = $zipPathWindows
+          } elseif (Test-Path $zipPathUnix) {
+            $zipPath = $zipPathUnix
+          } else {
+            $zipPath = $zipPathUnix
+          }
+          
+          # Normalize to forward slashes for the action (works on both Windows and Linux)
+          $zipPathNormalized = $zipPath -replace '\\', '/'
           
           if (Test-Path $zipPath) {
             Write-Host "Found pre-built zip file: $zipPath"
+            Write-Host "Normalized path: $zipPathNormalized"
             Write-Output "zip_exists=true" >> $env:GITHUB_OUTPUT
-            Write-Output "zip_path=$zipPath" >> $env:GITHUB_OUTPUT
+            Write-Output "zip_path=$zipPathNormalized" >> $env:GITHUB_OUTPUT
           } else {
             Write-Host "No pre-built zip found. You should build it locally using build-release.ps1 first."
-            Write-Host "Expected location: $zipPath"
+            Write-Host "Expected location: $zipPathWindows or $zipPathUnix"
             Write-Output "zip_exists=false" >> $env:GITHUB_OUTPUT
           }
         shell: powershell
@@ -68,7 +84,8 @@ jobs:
         if: steps.check_zip.outputs.zip_exists == 'true'
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ steps.check_zip.outputs.zip_path }}
+          files: |
+            ${{ steps.check_zip.outputs.zip_path }}
           name: ${{ steps.parse_tag.outputs.mod_name }} v${{ steps.parse_tag.outputs.release_version }}
           tag_name: ${{ github.ref_name }}
           body: |
