@@ -57,8 +57,15 @@ jobs:
           
           # Check if file exists (Test-Path works with forward slashes on Windows too)
           if (Test-Path $zipPathRelative) {
+            # Get absolute path for the action
+            $zipPathAbsolute = (Resolve-Path $zipPathRelative).Path
+            # Normalize to forward slashes for cross-platform
+            $zipPathNormalized = $zipPathAbsolute -replace '\\', '/'
+            
             Write-Host "Found pre-built zip file: $zipPathRelative"
+            Write-Host "Absolute path: $zipPathNormalized"
             Write-Output "zip_exists=true" >> $env:GITHUB_OUTPUT
+            # Use relative path for the action (it expects paths relative to workspace root)
             Write-Output "zip_path=$zipPathRelative" >> $env:GITHUB_OUTPUT
           } else {
             Write-Host "No pre-built zip found. You should build it locally using build-release.ps1 first."
@@ -72,10 +79,22 @@ jobs:
         run: |
           $zipPath = "${{ steps.check_zip.outputs.zip_path }}"
           Write-Host "Verifying zip file: $zipPath"
+          Write-Host "Current working directory: $(Get-Location)"
+          Write-Host "Listing release directory:"
+          Get-ChildItem -Path "release" -ErrorAction SilentlyContinue | ForEach-Object {
+            Write-Host "  - $($_.Name) ($($_.Length) bytes)"
+          }
           if (Test-Path $zipPath) {
             $fileInfo = Get-Item $zipPath
             Write-Host "File exists: $($fileInfo.FullName)"
             Write-Host "File size: $($fileInfo.Length) bytes"
+            Write-Host "File will be attached to release as: $zipPath"
+            # Verify it's not a source code archive by checking size (source archives are usually much larger)
+            if ($fileInfo.Length -lt 10MB) {
+              Write-Host "File size looks correct for a mod release (not a source code archive)"
+            } else {
+              Write-Warning "File size is large - this might be a source code archive!"
+            }
           } else {
             Write-Error "Zip file not found at: $zipPath"
             exit 1
@@ -86,9 +105,12 @@ jobs:
         if: steps.check_zip.outputs.zip_exists == 'true'
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ steps.check_zip.outputs.zip_path }}
+          files: |
+            ${{ steps.check_zip.outputs.zip_path }}
           name: ${{ steps.parse_tag.outputs.mod_name }} v${{ steps.parse_tag.outputs.release_version }}
           tag_name: ${{ github.ref_name }}
+          generate_release_notes: false
+          make_latest: true
           body: |
             ## Installation Instructions
             
