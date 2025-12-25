@@ -52,31 +52,33 @@ jobs:
           $modName = "${{ steps.parse_tag.outputs.mod_name }}"
           $releaseVersion = "${{ steps.parse_tag.outputs.release_version }}"
           # Zip file uses release version (without build number)
-          # Try both path formats for Windows compatibility
-          $zipPathWindows = "release\$modName-v$releaseVersion.zip"
-          $zipPathUnix = "release/$modName-v$releaseVersion.zip"
+          # Use forward slashes for cross-platform compatibility (works on both Windows and Linux)
+          $zipPathRelative = "release/$modName-v$releaseVersion.zip"
           
-          # Check which path exists
-          if (Test-Path $zipPathWindows) {
-            $zipPath = $zipPathWindows
-          } elseif (Test-Path $zipPathUnix) {
-            $zipPath = $zipPathUnix
-          } else {
-            $zipPath = $zipPathUnix
-          }
-          
-          # Normalize to forward slashes for the action (works on both Windows and Linux)
-          $zipPathNormalized = $zipPath -replace '\\', '/'
-          
-          if (Test-Path $zipPath) {
-            Write-Host "Found pre-built zip file: $zipPath"
-            Write-Host "Normalized path: $zipPathNormalized"
+          # Check if file exists (Test-Path works with forward slashes on Windows too)
+          if (Test-Path $zipPathRelative) {
+            Write-Host "Found pre-built zip file: $zipPathRelative"
             Write-Output "zip_exists=true" >> $env:GITHUB_OUTPUT
-            Write-Output "zip_path=$zipPathNormalized" >> $env:GITHUB_OUTPUT
+            Write-Output "zip_path=$zipPathRelative" >> $env:GITHUB_OUTPUT
           } else {
             Write-Host "No pre-built zip found. You should build it locally using build-release.ps1 first."
-            Write-Host "Expected location: $zipPathWindows or $zipPathUnix"
+            Write-Host "Expected location: $zipPathRelative"
             Write-Output "zip_exists=false" >> $env:GITHUB_OUTPUT
+          }
+        shell: powershell
+
+      - name: Verify zip file exists
+        if: steps.check_zip.outputs.zip_exists == 'true'
+        run: |
+          $zipPath = "${{ steps.check_zip.outputs.zip_path }}"
+          Write-Host "Verifying zip file: $zipPath"
+          if (Test-Path $zipPath) {
+            $fileInfo = Get-Item $zipPath
+            Write-Host "File exists: $($fileInfo.FullName)"
+            Write-Host "File size: $($fileInfo.Length) bytes"
+          } else {
+            Write-Error "Zip file not found at: $zipPath"
+            exit 1
           }
         shell: powershell
 
@@ -84,8 +86,7 @@ jobs:
         if: steps.check_zip.outputs.zip_exists == 'true'
         uses: softprops/action-gh-release@v1
         with:
-          files: |
-            ${{ steps.check_zip.outputs.zip_path }}
+          files: ${{ steps.check_zip.outputs.zip_path }}
           name: ${{ steps.parse_tag.outputs.mod_name }} v${{ steps.parse_tag.outputs.release_version }}
           tag_name: ${{ github.ref_name }}
           body: |
