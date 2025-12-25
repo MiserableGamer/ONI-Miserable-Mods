@@ -52,24 +52,30 @@ jobs:
           $modName = "${{ steps.parse_tag.outputs.mod_name }}"
           $releaseVersion = "${{ steps.parse_tag.outputs.release_version }}"
           # Zip file uses release version (without build number)
-          # Use forward slashes for cross-platform compatibility (works on both Windows and Linux)
-          $zipPathRelative = "release/$modName-v$releaseVersion.zip"
+          # Try both path formats to find the file
+          $zipPathWindows = "release\$modName-v$releaseVersion.zip"
+          $zipPathUnix = "release/$modName-v$releaseVersion.zip"
           
-          # Check if file exists (Test-Path works with forward slashes on Windows too)
-          if (Test-Path $zipPathRelative) {
-            # Get absolute path for the action
-            $zipPathAbsolute = (Resolve-Path $zipPathRelative).Path
-            # Normalize to forward slashes for cross-platform
-            $zipPathNormalized = $zipPathAbsolute -replace '\\', '/'
+          # Check which path exists
+          $foundPath = $null
+          if (Test-Path $zipPathWindows) {
+            $foundPath = $zipPathWindows
+          } elseif (Test-Path $zipPathUnix) {
+            $foundPath = $zipPathUnix
+          }
+          
+          if ($foundPath) {
+            # Always normalize to forward slashes for the action
+            $zipPathNormalized = $foundPath -replace '\\', '/'
             
-            Write-Host "Found pre-built zip file: $zipPathRelative"
-            Write-Host "Absolute path: $zipPathNormalized"
+            Write-Host "Found pre-built zip file: $foundPath"
+            Write-Host "Normalized path for action: $zipPathNormalized"
             Write-Output "zip_exists=true" >> $env:GITHUB_OUTPUT
-            # Use relative path for the action (it expects paths relative to workspace root)
-            Write-Output "zip_path=$zipPathRelative" >> $env:GITHUB_OUTPUT
+            # Output with forward slashes - use single quotes to prevent PowerShell from interpreting
+            Write-Output "zip_path=$zipPathNormalized" >> $env:GITHUB_OUTPUT
           } else {
             Write-Host "No pre-built zip found. You should build it locally using build-release.ps1 first."
-            Write-Host "Expected location: $zipPathRelative"
+            Write-Host "Expected location: $zipPathWindows or $zipPathUnix"
             Write-Output "zip_exists=false" >> $env:GITHUB_OUTPUT
           }
         shell: powershell
@@ -77,13 +83,20 @@ jobs:
       - name: Verify zip file exists
         if: steps.check_zip.outputs.zip_exists == 'true'
         run: |
-          $zipPath = "${{ steps.check_zip.outputs.zip_path }}"
-          Write-Host "Verifying zip file: $zipPath"
+          $zipPathFromOutput = "${{ steps.check_zip.outputs.zip_path }}"
+          Write-Host "Path from previous step: '$zipPathFromOutput'"
+          Write-Host "Path contains backslashes: $($zipPathFromOutput -match '\\')"
+          
+          # Ensure forward slashes
+          $zipPath = $zipPathFromOutput -replace '\\', '/'
+          Write-Host "Normalized path: '$zipPath'"
           Write-Host "Current working directory: $(Get-Location)"
           Write-Host "Listing release directory:"
           Get-ChildItem -Path "release" -ErrorAction SilentlyContinue | ForEach-Object {
             Write-Host "  - $($_.Name) ($($_.Length) bytes)"
           }
+          
+          # Try both path formats to find the file
           if (Test-Path $zipPath) {
             $fileInfo = Get-Item $zipPath
             Write-Host "File exists: $($fileInfo.FullName)"
@@ -95,18 +108,20 @@ jobs:
             } else {
               Write-Warning "File size is large - this might be a source code archive!"
             }
+            # Output the normalized path for the next step
+            Write-Output "normalized_zip_path=$zipPath" >> $env:GITHUB_OUTPUT
           } else {
             Write-Error "Zip file not found at: $zipPath"
             exit 1
           }
         shell: powershell
+        id: verify_zip
 
       - name: Create Release
         if: steps.check_zip.outputs.zip_exists == 'true'
         uses: softprops/action-gh-release@v1
         with:
-          files: |
-            ${{ steps.check_zip.outputs.zip_path }}
+          files: ${{ steps.verify_zip.outputs.normalized_zip_path }}
           name: ${{ steps.parse_tag.outputs.mod_name }} v${{ steps.parse_tag.outputs.release_version }}
           tag_name: ${{ github.ref_name }}
           generate_release_notes: false
