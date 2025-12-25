@@ -50,7 +50,8 @@ jobs:
           $modName = "${{ steps.parse_tag.outputs.mod_name }}"
           $releaseVersion = "${{ steps.parse_tag.outputs.release_version }}"
           # Zip file uses release version (without build number)
-          $zipPath = "release\$modName-v$releaseVersion.zip"
+          # Use forward slashes for cross-platform compatibility
+          $zipPath = "release/$modName-v$releaseVersion.zip"
           
           if (Test-Path $zipPath) {
             Write-Host "Found pre-built zip file: $zipPath"
@@ -67,8 +68,7 @@ jobs:
         if: steps.check_zip.outputs.zip_exists == 'true'
         uses: softprops/action-gh-release@v1
         with:
-          files: |
-            ${{ steps.check_zip.outputs.zip_path }}
+          files: ${{ steps.check_zip.outputs.zip_path }}
           name: ${{ steps.parse_tag.outputs.mod_name }} v${{ steps.parse_tag.outputs.release_version }}
           tag_name: ${{ github.ref_name }}
           body: |
