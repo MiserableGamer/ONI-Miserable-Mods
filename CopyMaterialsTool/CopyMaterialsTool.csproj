@@ -118,15 +118,15 @@ del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyMaterials
 del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyMaterialsTool\*.pdb" 2&gt;nul
 del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyMaterialsTool\FMODUnity.dll" 2&gt;nul
 del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyMaterialsTool\UnityEngine.TextRenderingModule.dll" 2&gt;nul
-xcopy /Y /R "$(ProjectDir)mod.yaml" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterials\"
-xcopy /Y /R "$(ProjectDir)mod_info.yaml" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterials\"
-if exist "$(ProjectDir)preview.png" xcopy /Y /R "$(ProjectDir)preview.png" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterials\"
-xcopy /Y /R "$(TargetPath)" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterials\"
-if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterials\"
-del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterials\*.xml" 2&gt;nul
-del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterials\*.pdb" 2&gt;nul
-del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterials\FMODUnity.dll" 2&gt;nul
-del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterials\UnityEngine.TextRenderingModule.dll" 2&gt;nul
+xcopy /Y /R "$(ProjectDir)mod.yaml" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterialsTool\"
+xcopy /Y /R "$(ProjectDir)mod_info.yaml" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterialsTool\"
+if exist "$(ProjectDir)preview.png" xcopy /Y /R "$(ProjectDir)preview.png" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterialsTool\"
+xcopy /Y /R "$(TargetPath)" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterialsTool\"
+if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterialsTool\"
+del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterialsTool\*.xml" 2&gt;nul
+del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterialsTool\*.pdb" 2&gt;nul
+del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterialsTool\FMODUnity.dll" 2&gt;nul
+del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterialsTool\UnityEngine.TextRenderingModule.dll" 2&gt;nul
 del /Q "$(ProjectDir)PLib.dll" 2&gt;nul
 del /Q "$(ProjectDir)$(TargetFileName)" 2&gt;nul</PostBuildEvent>
   </PropertyGroup>
