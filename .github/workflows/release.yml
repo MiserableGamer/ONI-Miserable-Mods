@@ -77,53 +77,43 @@ jobs:
           $releaseBody = ""
           
           if ($modName -eq "MiserableGamersMods") {
-            $releaseBody = @"
-            ## Installation Instructions
-            
-            1. Download the zip file below
-            2. Extract the zip file
-            3. You will find a folder containing all mods
-            4. Copy each mod folder individually to your ONI mods directory:
-               - **Windows**: ``%USERPROFILE%\Documents\Klei\OxygenNotIncluded\mods\Local\``
-               - **Linux**: ``~/.config/unity3d/Klei/OxygenNotIncluded/mods/Local/``
-               - **Mac**: ``~/Library/Application Support/unity3d/Klei/OxygenNotIncluded/mods/Local/``
-            5. Each mod folder should be copied as-is (e.g., copy the `LongerArms` folder, not its contents)
-            6. Restart Oxygen Not Included or reload mods
-            
-            ## What's Included
-            
-            This package contains all available mods from Miserable Gamer. Each mod includes:
-            - Mod DLL file
-            - PLib.dll (if required)
-            - CommonLib.dll (if required)
-            - mod.yaml
-            - mod_info.yaml
-            - preview.png
-            - anim folder (if applicable)
-"@
+            $releaseBody = "## Installation Instructions`n`n" +
+              "1. Download the zip file below`n" +
+              "2. Extract the zip file`n" +
+              "3. You will find a folder containing all mods`n" +
+              "4. Copy each mod folder individually to your ONI mods directory:`n" +
+              "   - **Windows**: ``%USERPROFILE%\Documents\Klei\OxygenNotIncluded\mods\Local\``n" +
+              "   - **Linux**: ``~/.config/unity3d/Klei/OxygenNotIncluded/mods/Local/``n" +
+              "   - **Mac**: ``~/Library/Application Support/unity3d/Klei/OxygenNotIncluded/mods/Local/``n" +
+              "5. Each mod folder should be copied as-is (e.g., copy the `LongerArms` folder, not its contents)`n" +
+              "6. Restart Oxygen Not Included or reload mods`n`n" +
+              "## What's Included`n`n" +
+              "This package contains all available mods from Miserable Gamer. Each mod includes:`n" +
+              "- Mod DLL file`n" +
+              "- PLib.dll (if required)`n" +
+              "- CommonLib.dll (if required)`n" +
+              "- mod.yaml`n" +
+              "- mod_info.yaml`n" +
+              "- preview.png`n" +
+              "- anim folder (if applicable)"
           } else {
-            $releaseBody = @"
-            ## Installation Instructions
-            
-            1. Download the zip file below
-            2. Extract the zip file
-            3. Copy the extracted folder to your ONI mods directory:
-               - **Windows**: ``%USERPROFILE%\Documents\Klei\OxygenNotIncluded\mods\Local\``
-               - **Linux**: ``~/.config/unity3d/Klei/OxygenNotIncluded/mods/Local/``
-               - **Mac**: ``~/Library/Application Support/unity3d/Klei/OxygenNotIncluded/mods/Local/``
-            4. The folder name should match the mod name (e.g., ``$modName``)
-            5. Restart Oxygen Not Included or reload mods
-            
-            ## What's Included
-            
-            - Mod DLL file
-            - PLib.dll (if required)
-            - CommonLib.dll (if required)
-            - mod.yaml
-            - mod_info.yaml
-            - preview.png
-            - anim folder (if applicable)
-"@
+            $releaseBody = "## Installation Instructions`n`n" +
+              "1. Download the zip file below`n" +
+              "2. Extract the zip file`n" +
+              "3. Copy the extracted folder to your ONI mods directory:`n" +
+              "   - **Windows**: ``%USERPROFILE%\Documents\Klei\OxygenNotIncluded\mods\Local\``n" +
+              "   - **Linux**: ``~/.config/unity3d/Klei/OxygenNotIncluded/mods/Local/``n" +
+              "   - **Mac**: ``~/Library/Application Support/unity3d/Klei/OxygenNotIncluded/mods/Local/``n" +
+              "4. The folder name should match the mod name (e.g., ``$modName``)`n" +
+              "5. Restart Oxygen Not Included or reload mods`n`n" +
+              "## What's Included`n`n" +
+              "- Mod DLL file`n" +
+              "- PLib.dll (if required)`n" +
+              "- CommonLib.dll (if required)`n" +
+              "- mod.yaml`n" +
+              "- mod_info.yaml`n" +
+              "- preview.png`n" +
+              "- anim folder (if applicable)"
           }
           
           # Escape newlines for GitHub Actions output
