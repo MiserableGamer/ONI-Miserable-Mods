@@ -50,9 +50,13 @@ jobs:
         run: |
           $modName = "${{ steps.parse_tag.outputs.mod_name }}"
           $releaseVersion = "${{ steps.parse_tag.outputs.release_version }}"
-          # Zip file uses release version (without build number)
+          # Zip file uses release version (without build number), except for MiserableGamersMods which has no version
           # Use forward slashes for GitHub Actions compatibility
-          $zipPath = "release/$modName-v$releaseVersion.zip"
+          if ($modName -eq "MiserableGamersMods") {
+            $zipPath = "release/$modName.zip"
+          } else {
+            $zipPath = "release/$modName-v$releaseVersion.zip"
+          }
           
           if (Test-Path $zipPath) {
             Write-Host "Found pre-built zip file: $zipPath"
@@ -65,24 +69,49 @@ jobs:
           }
         shell: powershell
 
-      - name: Create Release
+      - name: Generate release body
+        id: release_body
         if: steps.check_zip.outputs.zip_exists == 'true'
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            ${{ steps.check_zip.outputs.zip_path }}
-          name: ${{ steps.parse_tag.outputs.mod_name }} v${{ steps.parse_tag.outputs.release_version }}
-          tag_name: ${{ github.ref_name }}
-          body: |
+        run: |
+          $modName = "${{ steps.parse_tag.outputs.mod_name }}"
+          $releaseBody = ""
+          
+          if ($modName -eq "MiserableGamersMods") {
+            $releaseBody = @"
+            ## Installation Instructions
+            
+            1. Download the zip file below
+            2. Extract the zip file
+            3. You will find a folder containing all mods
+            4. Copy each mod folder individually to your ONI mods directory:
+               - **Windows**: ``%USERPROFILE%\Documents\Klei\OxygenNotIncluded\mods\Local\``
+               - **Linux**: ``~/.config/unity3d/Klei/OxygenNotIncluded/mods/Local/``
+               - **Mac**: ``~/Library/Application Support/unity3d/Klei/OxygenNotIncluded/mods/Local/``
+            5. Each mod folder should be copied as-is (e.g., copy the `LongerArms` folder, not its contents)
+            6. Restart Oxygen Not Included or reload mods
+            
+            ## What's Included
+            
+            This package contains all available mods from Miserable Gamer. Each mod includes:
+            - Mod DLL file
+            - PLib.dll (if required)
+            - CommonLib.dll (if required)
+            - mod.yaml
+            - mod_info.yaml
+            - preview.png
+            - anim folder (if applicable)
+"@
+          } else {
+            $releaseBody = @"
             ## Installation Instructions
             
             1. Download the zip file below
             2. Extract the zip file
             3. Copy the extracted folder to your ONI mods directory:
-               - **Windows**: `%USERPROFILE%\Documents\Klei\OxygenNotIncluded\mods\Local\`
-               - **Linux**: `~/.config/unity3d/Klei/OxygenNotIncluded/mods/Local/`
-               - **Mac**: `~/Library/Application Support/unity3d/Klei/OxygenNotIncluded/mods/Local/`
-            4. The folder name should match the mod name (e.g., `${{ steps.parse_tag.outputs.mod_name }}`)
+               - **Windows**: ``%USERPROFILE%\Documents\Klei\OxygenNotIncluded\mods\Local\``
+               - **Linux**: ``~/.config/unity3d/Klei/OxygenNotIncluded/mods/Local/``
+               - **Mac**: ``~/Library/Application Support/unity3d/Klei/OxygenNotIncluded/mods/Local/``
+            4. The folder name should match the mod name (e.g., ``$modName``)
             5. Restart Oxygen Not Included or reload mods
             
             ## What's Included
@@ -94,6 +123,23 @@ jobs:
             - mod_info.yaml
             - preview.png
             - anim folder (if applicable)
+"@
+          }
+          
+          # Escape newlines for GitHub Actions output
+          $releaseBody = $releaseBody -replace "`r?`n", "%0A"
+          Write-Output "body=$releaseBody" >> $env:GITHUB_OUTPUT
+        shell: powershell
+
+      - name: Create Release
+        if: steps.check_zip.outputs.zip_exists == 'true'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ${{ steps.check_zip.outputs.zip_path }}
+          name: ${{ steps.parse_tag.outputs.mod_name }} v${{ steps.parse_tag.outputs.release_version }}
+          tag_name: ${{ github.ref_name }}
+          body: ${{ steps.release_body.outputs.body }}
           draft: false
           prerelease: false
         env:
@@ -113,46 +159,69 @@ jobs:
           # New release link format (without emoji to avoid encoding issues)
           $newLink = "[Latest Release v$releaseVersion](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/$tagName)"
           
-          # Find the mod section by looking for patterns that identify each mod
-          $modPatterns = @{
-            "MorningExercise" = "Morning Exercise"
-            "CopyMaterialsTool" = "Copy Materials Tool"
-            "EmptyStorage" = "Empty Storage"
-            "LongerArms" = "Longer Arms"
-            "DebugFogOfWar" = "Debug Fog of War"
-            "BonbonTreeBoost" = "Bonbon Tree Boost"
-            "ThresholdFixed" = "Threshold Fixed"
-            "ResourceLimpet" = "Resource Limpet"
-          }
-          
-          $modPattern = $modPatterns[$modName]
-          if (-not $modPattern) {
-            Write-Warning "No pattern mapping for mod: $modName. Skipping README update."
-            exit 0
-          }
-          
-          # Split into lines and find the mod section
-          $lines = $readmeContent -split "`r?`n"
-          $inModSection = $false
-          $updated = $false
-          
-          for ($i = 0; $i -lt $lines.Count; $i++) {
-            # Check if we're entering the mod section
-            if ($lines[$i] -match "### .*$modPattern") {
-              $inModSection = $true
+          # Handle "MiserableGamersMods" (All Mods) differently
+          if ($modName -eq "MiserableGamersMods") {
+            # Update the "All Mods Package" section at the top
+            $lines = $readmeContent -split "`r?`n"
+            $updated = $false
+            
+            for ($i = 0; $i -lt $lines.Count; $i++) {
+              # Look for the "All Mods Package" section
+              if ($lines[$i] -match "## .*All Mods Package") {
+                # Find the release link in the next few lines (look for "Latest Release" or "\[.*\]\(.*\)" pattern)
+                for ($j = $i + 1; $j -lt [Math]::Min($i + 10, $lines.Count); $j++) {
+                  if ($lines[$j] -match "Latest Release") {
+                    $lines[$j] = $lines[$j] -replace '\[[^\]]*Latest Release[^\]]*\]\([^\)]+\)', $newLink
+                    $updated = $true
+                    Write-Host "Updated README release link for All Mods Package to v$releaseVersion"
+                    break
+                  }
+                }
+                break
+              }
             }
-            # Once we're in the mod section, look for the release link line
-            # Match "Latest Release" in markdown link format
-            if ($inModSection -and $lines[$i] -match "Latest Release") {
-              # Replace the entire markdown link that contains "Latest Release"
-              $lines[$i] = $lines[$i] -replace '\[[^\]]*Latest Release[^\]]*\]\([^\)]+\)', $newLink
-              $updated = $true
-              Write-Host "Updated README release link for $modName to v$releaseVersion"
-              break
+          } else {
+            # Find the mod section by looking for patterns that identify each mod
+            $modPatterns = @{
+              "MorningExercise" = "Morning Exercise"
+              "CopyMaterialsTool" = "Copy Materials Tool"
+              "EmptyStorage" = "Empty Storage"
+              "LongerArms" = "Longer Arms"
+              "DebugFogOfWar" = "Debug Fog of War"
+              "BonbonTreeBoost" = "Bonbon Tree Boost"
+              "ThresholdFixed" = "Threshold Fixed"
+              "ResourceLimpet" = "Resource Limpet"
             }
-            # Stop looking if we've moved to the next mod section
-            if ($inModSection -and $lines[$i] -match "^### " -and $lines[$i] -notmatch $modPattern) {
-              break
+            
+            $modPattern = $modPatterns[$modName]
+            if (-not $modPattern) {
+              Write-Warning "No pattern mapping for mod: $modName. Skipping README update."
+              exit 0
+            }
+            
+            # Split into lines and find the mod section
+            $lines = $readmeContent -split "`r?`n"
+            $inModSection = $false
+            $updated = $false
+            
+            for ($i = 0; $i -lt $lines.Count; $i++) {
+              # Check if we're entering the mod section
+              if ($lines[$i] -match "### .*$modPattern") {
+                $inModSection = $true
+              }
+              # Once we're in the mod section, look for the release link line
+              # Match "Latest Release" in markdown link format
+              if ($inModSection -and $lines[$i] -match "Latest Release") {
+                # Replace the entire markdown link that contains "Latest Release"
+                $lines[$i] = $lines[$i] -replace '\[[^\]]*Latest Release[^\]]*\]\([^\)]+\)', $newLink
+                $updated = $true
+                Write-Host "Updated README release link for $modName to v$releaseVersion"
+                break
+              }
+              # Stop looking if we've moved to the next mod section
+              if ($inModSection -and $lines[$i] -match "^### " -and $lines[$i] -notmatch $modPattern) {
+                break
+              }
             }
           }
           

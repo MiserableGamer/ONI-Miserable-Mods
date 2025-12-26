@@ -2,6 +2,14 @@
 
 A collection of quality-of-life and enhancement mods for **Oxygen Not Included** by Klei Entertainment.
 
+## 📦 All Mods Package
+
+Download all mods in one convenient package:
+
+[Latest Release](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/MiserableGamersMods-v0.0.0)
+
+This package contains all released mods (excluding work-in-progress mods). Extract and copy each mod folder to your ONI mods directory.
+
 ## 📦 Available Mods
 
 ### 🏃 Morning Exercise
