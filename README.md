@@ -12,7 +12,7 @@ Adds a Morning Exercise schedule block and Manual Exerciser building, allowing D
 ### 📋 Copy Materials Tool
 Extends the "Copy Settings" tool to also copy construction materials between buildings of the same type, with full support for conduits and bridges.
 
-[📖 Read More](CopyMaterials/README.md) | [📦 Latest Release](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/CopyMaterials-v0.0.0) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
+[📖 Read More](CopyMaterials/README.md) | [📦 Latest Release v0.1.1](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/CopyMaterials-v0.1.1) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
 
 ### 📦 Empty Storage
 Adds an "Empty Storage" button to storage buildings, allowing you to quickly drop all contents either immediately or via duplicant labor.
@@ -32,7 +32,7 @@ A debug tool that allows you to reveal the entire map, useful for testing and ex
 ### 🌳 Bonbon Tree Boost
 Enhances the Bonbon Tree with configurable production boosts and other improvements.
 
-[📖 Read More](BonbonTreeBoost/README.md) | [📦 Latest Release](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/BonbonTreeBoost-v0.0.0) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
+[📖 Read More](BonbonTreeBoost/README.md) | [📦 Latest Release v1.0.1](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/BonbonTreeBoost-v1.0.1) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
 
 ### 🧱 Threshold Fixed
 Fixes threshold walls to properly detect creature confinement, allowing them to function as intended.
