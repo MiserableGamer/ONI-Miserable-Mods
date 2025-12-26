@@ -7,22 +7,22 @@ A collection of quality-of-life and enhancement mods for **Oxygen Not Included**
 ### 🏃 Morning Exercise
 Adds a Morning Exercise schedule block and Manual Exerciser building, allowing Duplicants to work out and gain Athletics or Morale bonuses.
 
-[📖 Read More](MorningExercise/README.md) | [📦 Latest Release](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/latest) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
+[📖 Read More](MorningExercise/README.md) | [📦 Latest Release](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/MorningExercise-v0.0.0) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
 
 ### 📋 Copy Materials Tool
 Extends the "Copy Settings" tool to also copy construction materials between buildings of the same type, with full support for conduits and bridges.
 
-[📖 Read More](CopyMaterials/README.md) | [📦 Latest Release](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/latest) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
+[📖 Read More](CopyMaterials/README.md) | [📦 Latest Release](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/CopyMaterials-v0.0.0) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
 
 ### 📦 Empty Storage
 Adds an "Empty Storage" button to storage buildings, allowing you to quickly drop all contents either immediately or via duplicant labor.
 
-[📖 Read More](EmptyStorage/README.md) | [📦 Latest Release](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/latest) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
+[📖 Read More](EmptyStorage/README.md) | [📦 Latest Release](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/EmptyStorage-v0.0.0) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
 
 ### 🦾 Longer Arms
 Increases the reach distance for Duplicants, allowing them to interact with buildings and objects from further away.
 
-[📖 Read More](LongerArms/README.md) | [📦 Latest Release](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/latest) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
+[📖 Read More](LongerArms/README.md) | [📦 Latest Release](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/LongerArms-v0.0.0) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
 
 ### 🔍 Debug Fog of War
 A debug tool that allows you to reveal the entire map, useful for testing and exploring.
@@ -32,12 +32,12 @@ A debug tool that allows you to reveal the entire map, useful for testing and ex
 ### 🌳 Bonbon Tree Boost
 Enhances the Bonbon Tree with configurable production boosts and other improvements.
 
-[📖 Read More](BonbonTreeBoost/README.md) | [📦 Latest Release](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/latest) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
+[📖 Read More](BonbonTreeBoost/README.md) | [📦 Latest Release](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/BonbonTreeBoost-v0.0.0) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
 
 ### 🧱 Threshold Fixed
 Fixes threshold walls to properly detect creature confinement, allowing them to function as intended.
 
-[📖 Read More](ThresholdFixed/README.md) | [📦 Latest Release](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/latest) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
+[📖 Read More](ThresholdFixed/README.md) | [📦 Latest Release](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ThresholdFixed-v0.0.0) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
 
 ## 🚀 Quick Start
 
