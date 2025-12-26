@@ -116,9 +116,11 @@ jobs:
               "- anim folder (if applicable)"
           }
           
-          # Escape newlines for GitHub Actions output
-          $releaseBody = $releaseBody -replace "`r?`n", "%0A"
-          Write-Output "body=$releaseBody" >> $env:GITHUB_OUTPUT
+          # Output multiline body using GitHub Actions multiline format
+          $delimiter = "BODYDELIMITER$(New-Guid)"
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "body<<$delimiter"
+          Add-Content -Path $env:GITHUB_OUTPUT -Value $releaseBody
+          Add-Content -Path $env:GITHUB_OUTPUT -Value $delimiter
         shell: powershell
 
       - name: Create Release
