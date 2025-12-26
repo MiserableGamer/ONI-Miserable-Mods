@@ -109,9 +109,8 @@ jobs:
           $readmePath = "README.md"
           $readmeContent = Get-Content $readmePath -Raw
           
-          # New release link format - construct emoji using Unicode escape to avoid encoding issues
-          $packageEmoji = [char]0x1F4E6
-          $newLink = "[$packageEmoji Latest Release v$releaseVersion](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/$tagName)"
+          # New release link format (without emoji to avoid encoding issues)
+          $newLink = "[Latest Release v$releaseVersion](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/$tagName)"
           
           # Find the mod section by looking for patterns that identify each mod
           $modPatterns = @{
@@ -142,7 +141,7 @@ jobs:
               $inModSection = $true
             }
             # Once we're in the mod section, look for the release link line
-            # Match "Latest Release" in markdown link format (emoji may vary, so we match the text)
+            # Match "Latest Release" in markdown link format
             if ($inModSection -and $lines[$i] -match "Latest Release") {
               # Replace the entire markdown link that contains "Latest Release"
               $lines[$i] = $lines[$i] -replace '\[[^\]]*Latest Release[^\]]*\]\([^\)]+\)', $newLink
