@@ -17,7 +17,7 @@ Extends the "Copy Settings" tool to also copy construction materials between bui
 ### 📦 Empty Storage
 Adds an "Empty Storage" button to storage buildings, allowing you to quickly drop all contents either immediately or via duplicant labor.
 
-[📖 Read More](EmptyStorage/README.md) | [Latest Release](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/EmptyStorage-v0.0.0) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
+[📖 Read More](EmptyStorage/README.md) | [Latest Release v1.0.1](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/EmptyStorage-v1.0.1) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
 
 ### 🦾 Longer Arms
 Increases the reach distance for Duplicants, allowing them to interact with buildings and objects from further away.
