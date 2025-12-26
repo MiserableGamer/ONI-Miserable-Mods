@@ -50,7 +50,8 @@ jobs:
           $modName = "${{ steps.parse_tag.outputs.mod_name }}"
           $releaseVersion = "${{ steps.parse_tag.outputs.release_version }}"
           # Zip file uses release version (without build number)
-          $zipPath = "release\$modName-v$releaseVersion.zip"
+          # Use forward slashes for GitHub Actions compatibility
+          $zipPath = "release/$modName-v$releaseVersion.zip"
           
           if (Test-Path $zipPath) {
             Write-Host "Found pre-built zip file: $zipPath"
