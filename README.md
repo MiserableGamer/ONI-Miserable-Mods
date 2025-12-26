@@ -45,7 +45,7 @@ Enhances the Bonbon Tree with configurable production boosts and other improveme
 ### 🧱 Threshold Fixed
 Fixes threshold walls to properly detect creature confinement, allowing them to function as intended.
 
-[📖 Read More](ThresholdFixed/README.md) | [Latest Release](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ThresholdFixed-v0.0.0) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
+[📖 Read More](ThresholdFixed/README.md) | [Latest Release v1.0.1](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ThresholdFixed-v1.0.1) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
 
 ## 🚀 Quick Start
 
