@@ -109,8 +109,9 @@ jobs:
           $readmePath = "README.md"
           $readmeContent = Get-Content $readmePath -Raw
           
-          # New release link format
-          $newLink = "[📦 Latest Release v$releaseVersion](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/$tagName)"
+          # New release link format - construct emoji using Unicode escape to avoid encoding issues
+          $packageEmoji = [char]0x1F4E6
+          $newLink = "[$packageEmoji Latest Release v$releaseVersion](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/$tagName)"
           
           # Find the mod section by looking for patterns that identify each mod
           $modPatterns = @{
