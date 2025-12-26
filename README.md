@@ -15,7 +15,7 @@ This package contains all released mods (excluding work-in-progress mods). Extra
 ### 🏃 Morning Exercise
 Adds a Morning Exercise schedule block and Manual Exerciser building, allowing Duplicants to work out and gain Athletics or Morale bonuses.
 
-[📖 Read More](MorningExercise/README.md) | [Latest Release](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/MorningExercise-v0.0.0) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
+[📖 Read More](MorningExercise/README.md) | [Latest Release v1.0.2](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/MorningExercise-v1.0.2) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
 
 ### 📋 Copy Materials Tool
 Extends the "Copy Settings" tool to also copy construction materials between buildings of the same type, with full support for conduits and bridges.
