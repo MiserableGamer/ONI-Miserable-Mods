@@ -375,6 +375,8 @@ cursor-cost-summary/
 
 # PowerShell scripts (build and local operation scripts - not needed for mod functionality)
 *.ps1
+release-mod.ps1
+release-mod.cmd
 
 # Local operation markdown files (not user-facing documentation)
 UPLOAD_INSTRUCTIONS.md

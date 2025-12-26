@@ -118,6 +118,16 @@ del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\EmptyStorage\*.xm
 del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\EmptyStorage\*.pdb" 2&gt;nul
 del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\EmptyStorage\FMODUnity.dll" 2&gt;nul
 del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\EmptyStorage\UnityEngine.TextRenderingModule.dll" 2&gt;nul
+if not exist "$(ProjectDir)$(OutDir)EmptyStorage\" mkdir "$(ProjectDir)$(OutDir)EmptyStorage\"
+xcopy /Y /R "$(ProjectDir)mod.yaml" "$(ProjectDir)$(OutDir)EmptyStorage\"
+xcopy /Y /R "$(ProjectDir)mod_info.yaml" "$(ProjectDir)$(OutDir)EmptyStorage\"
+if exist "$(ProjectDir)preview.png" xcopy /Y /R "$(ProjectDir)preview.png" "$(ProjectDir)$(OutDir)EmptyStorage\"
+xcopy /Y /R "$(TargetPath)" "$(ProjectDir)$(OutDir)EmptyStorage\"
+if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "$(ProjectDir)$(OutDir)EmptyStorage\"
+del /Q "$(ProjectDir)$(OutDir)EmptyStorage\*.xml" 2&gt;nul
+del /Q "$(ProjectDir)$(OutDir)EmptyStorage\*.pdb" 2&gt;nul
+del /Q "$(ProjectDir)$(OutDir)EmptyStorage\FMODUnity.dll" 2&gt;nul
+del /Q "$(ProjectDir)$(OutDir)EmptyStorage\UnityEngine.TextRenderingModule.dll" 2&gt;nul
 del /Q "$(ProjectDir)PLib.dll" 2&gt;nul
 del /Q "$(ProjectDir)$(TargetFileName)" 2&gt;nul</PostBuildEvent>
   </PropertyGroup>

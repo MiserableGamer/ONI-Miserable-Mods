@@ -129,6 +129,17 @@ del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\ResourceLimpet\*.
 del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\ResourceLimpet\*.pdb" 2&gt;nul
 del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\ResourceLimpet\FMODUnity.dll" 2&gt;nul
 del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\ResourceLimpet\UnityEngine.TextRenderingModule.dll" 2&gt;nul
+if not exist "$(ProjectDir)$(OutDir)ResourceLimpet\" mkdir "$(ProjectDir)$(OutDir)ResourceLimpet\"
+xcopy /Y /R "$(ProjectDir)mod.yaml" "$(ProjectDir)$(OutDir)ResourceLimpet\"
+xcopy /Y /R "$(ProjectDir)mod_info.yaml" "$(ProjectDir)$(OutDir)ResourceLimpet\"
+if exist "$(ProjectDir)preview.png" xcopy /Y /R "$(ProjectDir)preview.png" "$(ProjectDir)$(OutDir)ResourceLimpet\"
+xcopy /Y /R "$(TargetPath)" "$(ProjectDir)$(OutDir)ResourceLimpet\"
+if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "$(ProjectDir)$(OutDir)ResourceLimpet\"
+if exist "$(ProjectDir)anim" xcopy /Y /E /I "$(ProjectDir)anim" "$(ProjectDir)$(OutDir)ResourceLimpet\anim"
+del /Q "$(ProjectDir)$(OutDir)ResourceLimpet\*.xml" 2&gt;nul
+del /Q "$(ProjectDir)$(OutDir)ResourceLimpet\*.pdb" 2&gt;nul
+del /Q "$(ProjectDir)$(OutDir)ResourceLimpet\FMODUnity.dll" 2&gt;nul
+del /Q "$(ProjectDir)$(OutDir)ResourceLimpet\UnityEngine.TextRenderingModule.dll" 2&gt;nul
 del /Q "$(ProjectDir)PLib.dll" 2&gt;nul
 del /Q "$(ProjectDir)$(TargetFileName)" 2&gt;nul</PostBuildEvent>
   </PropertyGroup>

@@ -116,6 +116,16 @@ del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\DebugFogOfWar\*.x
 del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\DebugFogOfWar\*.pdb" 2&gt;nul
 del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\DebugFogOfWar\FMODUnity.dll" 2&gt;nul
 del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\DebugFogOfWar\UnityEngine.TextRenderingModule.dll" 2&gt;nul
+if not exist "$(ProjectDir)$(OutDir)DebugFogOfWar\" mkdir "$(ProjectDir)$(OutDir)DebugFogOfWar\"
+xcopy /Y /R "$(ProjectDir)mod.yaml" "$(ProjectDir)$(OutDir)DebugFogOfWar\"
+xcopy /Y /R "$(ProjectDir)mod_info.yaml" "$(ProjectDir)$(OutDir)DebugFogOfWar\"
+if exist "$(ProjectDir)preview.png" xcopy /Y /R "$(ProjectDir)preview.png" "$(ProjectDir)$(OutDir)DebugFogOfWar\"
+xcopy /Y /R "$(TargetPath)" "$(ProjectDir)$(OutDir)DebugFogOfWar\"
+if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "$(ProjectDir)$(OutDir)DebugFogOfWar\"
+del /Q "$(ProjectDir)$(OutDir)DebugFogOfWar\*.xml" 2&gt;nul
+del /Q "$(ProjectDir)$(OutDir)DebugFogOfWar\*.pdb" 2&gt;nul
+del /Q "$(ProjectDir)$(OutDir)DebugFogOfWar\FMODUnity.dll" 2&gt;nul
+del /Q "$(ProjectDir)$(OutDir)DebugFogOfWar\UnityEngine.TextRenderingModule.dll" 2&gt;nul
 del /Q "$(ProjectDir)PLib.dll" 2&gt;nul
 del /Q "$(ProjectDir)$(TargetFileName)" 2&gt;nul</PostBuildEvent>
   </PropertyGroup>

@@ -127,6 +127,16 @@ del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterialsTool
 del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterialsTool\*.pdb" 2&gt;nul
 del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterialsTool\FMODUnity.dll" 2&gt;nul
 del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterialsTool\UnityEngine.TextRenderingModule.dll" 2&gt;nul
+if not exist "$(ProjectDir)$(OutDir)CopyMaterialsTool\" mkdir "$(ProjectDir)$(OutDir)CopyMaterialsTool\"
+xcopy /Y /R "$(ProjectDir)mod.yaml" "$(ProjectDir)$(OutDir)CopyMaterialsTool\"
+xcopy /Y /R "$(ProjectDir)mod_info.yaml" "$(ProjectDir)$(OutDir)CopyMaterialsTool\"
+if exist "$(ProjectDir)preview.png" xcopy /Y /R "$(ProjectDir)preview.png" "$(ProjectDir)$(OutDir)CopyMaterialsTool\"
+xcopy /Y /R "$(TargetPath)" "$(ProjectDir)$(OutDir)CopyMaterialsTool\"
+if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "$(ProjectDir)$(OutDir)CopyMaterialsTool\"
+del /Q "$(ProjectDir)$(OutDir)CopyMaterialsTool\*.xml" 2&gt;nul
+del /Q "$(ProjectDir)$(OutDir)CopyMaterialsTool\*.pdb" 2&gt;nul
+del /Q "$(ProjectDir)$(OutDir)CopyMaterialsTool\FMODUnity.dll" 2&gt;nul
+del /Q "$(ProjectDir)$(OutDir)CopyMaterialsTool\UnityEngine.TextRenderingModule.dll" 2&gt;nul
 del /Q "$(ProjectDir)PLib.dll" 2&gt;nul
 del /Q "$(ProjectDir)$(TargetFileName)" 2&gt;nul</PostBuildEvent>
   </PropertyGroup>

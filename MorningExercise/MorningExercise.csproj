@@ -126,6 +126,17 @@ del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\MorningExercise\*
 del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\MorningExercise\*.pdb" 2&gt;nul
 del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\MorningExercise\FMODUnity.dll" 2&gt;nul
 del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\MorningExercise\UnityEngine.TextRenderingModule.dll" 2&gt;nul
+if not exist "$(ProjectDir)$(OutDir)MorningExercise\" mkdir "$(ProjectDir)$(OutDir)MorningExercise\"
+xcopy /Y /R "$(ProjectDir)mod.yaml" "$(ProjectDir)$(OutDir)MorningExercise\"
+xcopy /Y /R "$(ProjectDir)mod_info.yaml" "$(ProjectDir)$(OutDir)MorningExercise\"
+if exist "$(ProjectDir)preview.png" xcopy /Y /R "$(ProjectDir)preview.png" "$(ProjectDir)$(OutDir)MorningExercise\"
+xcopy /Y /R "$(TargetPath)" "$(ProjectDir)$(OutDir)MorningExercise\"
+if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "$(ProjectDir)$(OutDir)MorningExercise\"
+if exist "$(ProjectDir)anim" xcopy /Y /E /I "$(ProjectDir)anim" "$(ProjectDir)$(OutDir)MorningExercise\anim"
+del /Q "$(ProjectDir)$(OutDir)MorningExercise\*.xml" 2&gt;nul
+del /Q "$(ProjectDir)$(OutDir)MorningExercise\*.pdb" 2&gt;nul
+del /Q "$(ProjectDir)$(OutDir)MorningExercise\FMODUnity.dll" 2&gt;nul
+del /Q "$(ProjectDir)$(OutDir)MorningExercise\UnityEngine.TextRenderingModule.dll" 2&gt;nul
 del /Q "$(ProjectDir)PLib.dll" 2&gt;nul
 del /Q "$(ProjectDir)$(TargetFileName)" 2&gt;nul</PostBuildEvent>
   </PropertyGroup>
