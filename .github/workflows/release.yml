@@ -98,6 +98,81 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Update README with release link
+        if: steps.check_zip.outputs.zip_exists == 'true'
+        run: |
+          $modName = "${{ steps.parse_tag.outputs.mod_name }}"
+          $releaseVersion = "${{ steps.parse_tag.outputs.release_version }}"
+          $tagName = "${{ github.ref_name }}"
+          
+          # Read README
+          $readmePath = "README.md"
+          $readmeContent = Get-Content $readmePath -Raw
+          
+          # New release link format
+          $newLink = "[📦 Latest Release v$releaseVersion](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/$tagName)"
+          
+          # Find the mod section by looking for patterns that identify each mod
+          $modPatterns = @{
+            "MorningExercise" = "Morning Exercise"
+            "CopyMaterials" = "Copy Materials Tool"
+            "EmptyStorage" = "Empty Storage"
+            "LongerArms" = "Longer Arms"
+            "DebugFogOfWar" = "Debug Fog of War"
+            "BonbonTreeBoost" = "Bonbon Tree Boost"
+            "ThresholdFixed" = "Threshold Fixed"
+            "ResourceLimpet" = "Resource Limpet"
+          }
+          
+          $modPattern = $modPatterns[$modName]
+          if (-not $modPattern) {
+            Write-Warning "No pattern mapping for mod: $modName. Skipping README update."
+            exit 0
+          }
+          
+          # Split into lines and find the mod section
+          $lines = $readmeContent -split "`r?`n"
+          $inModSection = $false
+          $updated = $false
+          
+          for ($i = 0; $i -lt $lines.Count; $i++) {
+            # Check if we're entering the mod section
+            if ($lines[$i] -match "### .*$modPattern") {
+              $inModSection = $true
+            }
+            # Once we're in the mod section, look for the release link line
+            if ($inModSection -and $lines[$i] -match "\[📦 Latest Release") {
+              # Replace the release link
+              $lines[$i] = $lines[$i] -replace "\[📦 Latest Release[^\]]*\]\([^\)]+\)", $newLink
+              $updated = $true
+              Write-Host "Updated README release link for $modName to v$releaseVersion"
+              break
+            }
+            # Stop looking if we've moved to the next mod section
+            if ($inModSection -and $lines[$i] -match "^### " -and $lines[$i] -notmatch $modPattern) {
+              break
+            }
+          }
+          
+          if ($updated) {
+            # Write updated README (preserve original line endings)
+            $lineEnding = if ($readmeContent -match "`r`n") { "`r`n" } else { "`n" }
+            Set-Content -Path $readmePath -Value ($lines -join $lineEnding) -NoNewline
+          } else {
+            Write-Warning "Could not find release link for $modName in README. Skipping update."
+          }
+        shell: powershell
+
+      - name: Commit and push README update
+        if: steps.check_zip.outputs.zip_exists == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git diff --staged --quiet || git commit -m "Update README: ${{ steps.parse_tag.outputs.mod_name }} v${{ steps.parse_tag.outputs.release_version }} release"
+          git push
+        shell: powershell
+
       - name: Error if no zip found
         if: steps.check_zip.outputs.zip_exists != 'true'
         run: |
