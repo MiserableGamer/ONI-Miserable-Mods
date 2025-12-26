@@ -141,9 +141,10 @@ jobs:
               $inModSection = $true
             }
             # Once we're in the mod section, look for the release link line
-            if ($inModSection -and $lines[$i] -match "\[📦 Latest Release") {
-              # Replace the release link
-              $lines[$i] = $lines[$i] -replace "\[📦 Latest Release[^\]]*\]\([^\)]+\)", $newLink
+            # Match "Latest Release" in markdown link format (emoji may vary, so we match the text)
+            if ($inModSection -and $lines[$i] -match "Latest Release") {
+              # Replace the entire markdown link that contains "Latest Release"
+              $lines[$i] = $lines[$i] -replace '\[[^\]]*Latest Release[^\]]*\]\([^\)]+\)', $newLink
               $updated = $true
               Write-Host "Updated README release link for $modName to v$releaseVersion"
               break
