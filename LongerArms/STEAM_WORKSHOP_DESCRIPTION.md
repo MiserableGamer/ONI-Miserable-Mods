@@ -26,6 +26,12 @@ Extends duplicant reach distance, allowing them to reach over chasms and other a
 [*]Range: 0 to 10 cells
 [*]Set to 0 to disable horizontal reach extension (vanilla behavior)
 [/list]
+[*][b]Safe Mode (Prevent Reach-Through-Walls)[/b] (Default: true)
+[list]
+[*][b]Important[/b]: Due to the way the game calculates reach paths, extending horizontal reach beyond a certain amount can create an issue where duplicants can reach through obstructed tiles (solid walls/rocks).
+[*]When [b]enabled[/b] (recommended): Horizontal reach is automatically capped at 2 additional cells to prevent reaching through solid tiles. This ensures safe behavior.
+[*]When [b]disabled[/b]: You can use the full horizontal reach value (up to 10), but this will allow duplicants to reach through walls and other solid obstacles. Use this option only if you understand the consequences and want maximum reach despite potential issues.
+[/list]
 [/list]
 
 [h2]Performance[/h2]
@@ -83,4 +89,5 @@ The following features are planned for future releases:
 [*][b]1.0.1.0[/b]: Initial release
 [*][b]1.0.1.56[/b]: Code cleaning
 [*][b]1.0.2.64[/b]: Diagonal bug fix
+[*][b]1.0.3.76[/b]: Fix ladder bug, and added safe mode
 [/list]

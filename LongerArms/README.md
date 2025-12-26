@@ -26,6 +26,11 @@ The mod includes configurable options accessible through the mod options menu:
   - Range: 0 to 10 cells
   - Set to 0 to disable horizontal reach extension (vanilla behavior)
 
+- **Safe Mode (Prevent Reach-Through-Walls)** (Default: true)
+  - **Important**: Due to the way the game calculates reach paths, extending horizontal reach beyond a certain amount can create an issue where duplicants can reach through obstructed tiles (solid walls/rocks).
+  - When **enabled** (recommended): Horizontal reach is automatically capped at 2 additional cells to prevent reaching through solid tiles. This ensures safe behavior similar to other reach extension mods.
+  - When **disabled**: You can use the full horizontal reach value (up to 10), but this may allow duplicants to reach through walls and other solid obstacles. Use this option only if you understand the consequences and want maximum reach despite potential issues.
+
 ## Performance
 
 This mod has **minimal performance impact**:
@@ -80,4 +85,5 @@ The following features are planned for future releases:
 - **1.0.1.0**: Initial release
 - **1.0.1.56**: Code cleaning
 - **1.0.2.64**: Diagonal bug fix
+- **1.0.3.76**: Fix ladder bug, and added safe mode
 

@@ -83,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LongerArms.cs" />
+    <Compile Include="LongerArmsAnimationPatches.cs" />
     <Compile Include="LongerArmsOptions.cs" />
     <Compile Include="LongerArmsPatches.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

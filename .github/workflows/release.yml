@@ -8,8 +8,6 @@ on:
 jobs:
   release:
     runs-on: windows-latest
-    permissions:
-      contents: write
     
     steps:
       - name: Checkout code
@@ -52,79 +50,27 @@ jobs:
           $modName = "${{ steps.parse_tag.outputs.mod_name }}"
           $releaseVersion = "${{ steps.parse_tag.outputs.release_version }}"
           # Zip file uses release version (without build number)
-          # Try both path formats to find the file
-          $zipPathWindows = "release\$modName-v$releaseVersion.zip"
-          $zipPathUnix = "release/$modName-v$releaseVersion.zip"
+          $zipPath = "release\$modName-v$releaseVersion.zip"
           
-          # Check which path exists
-          $foundPath = $null
-          if (Test-Path $zipPathWindows) {
-            $foundPath = $zipPathWindows
-          } elseif (Test-Path $zipPathUnix) {
-            $foundPath = $zipPathUnix
-          }
-          
-          if ($foundPath) {
-            # Always normalize to forward slashes for the action
-            $zipPathNormalized = $foundPath -replace '\\', '/'
-            
-            Write-Host "Found pre-built zip file: $foundPath"
-            Write-Host "Normalized path for action: $zipPathNormalized"
+          if (Test-Path $zipPath) {
+            Write-Host "Found pre-built zip file: $zipPath"
             Write-Output "zip_exists=true" >> $env:GITHUB_OUTPUT
-            # Output with forward slashes - use single quotes to prevent PowerShell from interpreting
-            Write-Output "zip_path=$zipPathNormalized" >> $env:GITHUB_OUTPUT
+            Write-Output "zip_path=$zipPath" >> $env:GITHUB_OUTPUT
           } else {
             Write-Host "No pre-built zip found. You should build it locally using build-release.ps1 first."
-            Write-Host "Expected location: $zipPathWindows or $zipPathUnix"
+            Write-Host "Expected location: $zipPath"
             Write-Output "zip_exists=false" >> $env:GITHUB_OUTPUT
           }
         shell: powershell
-
-      - name: Verify zip file exists
-        if: steps.check_zip.outputs.zip_exists == 'true'
-        run: |
-          $zipPathFromOutput = "${{ steps.check_zip.outputs.zip_path }}"
-          Write-Host "Path from previous step: '$zipPathFromOutput'"
-          Write-Host "Path contains backslashes: $($zipPathFromOutput -match '\\')"
-          
-          # Ensure forward slashes
-          $zipPath = $zipPathFromOutput -replace '\\', '/'
-          Write-Host "Normalized path: '$zipPath'"
-          Write-Host "Current working directory: $(Get-Location)"
-          Write-Host "Listing release directory:"
-          Get-ChildItem -Path "release" -ErrorAction SilentlyContinue | ForEach-Object {
-            Write-Host "  - $($_.Name) ($($_.Length) bytes)"
-          }
-          
-          # Try both path formats to find the file
-          if (Test-Path $zipPath) {
-            $fileInfo = Get-Item $zipPath
-            Write-Host "File exists: $($fileInfo.FullName)"
-            Write-Host "File size: $($fileInfo.Length) bytes"
-            Write-Host "File will be attached to release as: $zipPath"
-            # Verify it's not a source code archive by checking size (source archives are usually much larger)
-            if ($fileInfo.Length -lt 10MB) {
-              Write-Host "File size looks correct for a mod release (not a source code archive)"
-            } else {
-              Write-Warning "File size is large - this might be a source code archive!"
-            }
-            # Output the normalized path for the next step
-            Write-Output "normalized_zip_path=$zipPath" >> $env:GITHUB_OUTPUT
-          } else {
-            Write-Error "Zip file not found at: $zipPath"
-            exit 1
-          }
-        shell: powershell
-        id: verify_zip
 
       - name: Create Release
         if: steps.check_zip.outputs.zip_exists == 'true'
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ steps.verify_zip.outputs.normalized_zip_path }}
+          files: |
+            ${{ steps.check_zip.outputs.zip_path }}
           name: ${{ steps.parse_tag.outputs.mod_name }} v${{ steps.parse_tag.outputs.release_version }}
           tag_name: ${{ github.ref_name }}
-          generate_release_notes: false
           body: |
             ## Installation Instructions
             
