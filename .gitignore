@@ -396,3 +396,6 @@ release/*/
 
 # Local development rules file (contains local paths and development workflow)
 DEV_RULES.txt
+.cursorrules
+/KleiONISource/KleiONISource.csproj
+/KleiONISource/KleiONISource.csproj
