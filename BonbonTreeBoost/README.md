@@ -4,41 +4,89 @@ A mod for Oxygen Not Included that allows you to configure the Bonbon Tree (Spac
 
 ## Features
 
-- **Configurable Nectar Production**: Adjust the multiplier for Space Tree sugar water (nectar) production (0.1x to 10x)
-- **Growth / Branch Efficiency Control**: Control how quickly Space Trees reach optimal production (0.1x to 5x)
-- **Fertilizer Consumption Adjustment**: Modify how much Snow fertilizer the trees consume (0x to 5x)
+- **Separate Wild and Domestic Settings**: Configure wild and domesticated trees independently
+- **Configurable Nectar Production**: Adjust multipliers for Space Tree sugar water (nectar) production (1.0x to 10.0x)
+- **Independent Growth Rate Control**: Control trunk and branch growth rates separately for wild and domesticated trees (0.1x to 10.0x)
+- **Fertilizer Consumption Adjustment**: Modify how much Snow fertilizer domesticated trees consume (0.0x to 10.0x)
+- **Production Balance Control**: Choose whether wild or domestic trees produce more, or if they produce equally
+- **Branch Harvesting Control**: Enable or disable wood harvesting from branches
 - **Fully Configurable**: All settings are adjustable through the mod options menu
 - **Works with Existing Saves**: Changes apply to existing trees, new trees, and all saves
 
 ## Configuration Options
 
-The mod includes three configurable options accessible through the mod options menu:
+The mod includes configurable options organized into groups, accessible through the mod options menu:
+
+### Wild Trees
 
 1. **Nectar Production Multiplier** (Default: 2.0x)
-   - Multiplier for Space Tree sugar water production
-   - Range: 0.1 to 10.0
+   - Multiplier for wild Space Tree sugar water production
+   - Range: 1.0 to 10.0
    - Higher values = more nectar production
-   - Lower values = less nectar production
 
-2. **Growth / Branch Efficiency Multiplier** (Default: 1.0x)
-   - Affects how quickly Space Trees reach optimal production
-   - Range: 0.1 to 5.0
-   - Higher values = trees reach optimal production faster
-   - Lower values = trees take longer to reach optimal production
+2. **Trunk Growth Rate** (Default: 1.0x)
+   - Multiplier for wild Space Tree trunk growth rate
+   - Range: 0.1 to 10.0
+   - Higher values = trunk grows faster
 
-3. **Fertilizer Consumption Multiplier** (Default: 1.0x)
-   - Multiplier for Snow fertilizer consumption
-   - Range: 0.0 to 5.0
-   - Higher values = trees consume more fertilizer
-   - Lower values = trees consume less fertilizer
+3. **Branch Growth Rate** (Default: 1.0x)
+   - Multiplier for wild Space Tree branch growth rate
+   - Range: 0.1 to 10.0
+   - Higher values = branches grow faster
+
+### Domesticated Trees
+
+1. **Nectar Production Multiplier** (Default: 2.0x)
+   - Multiplier for domesticated Space Tree sugar water production
+   - Range: 1.0 to 10.0
+   - Higher values = more nectar production
+
+2. **Trunk Growth Rate** (Default: 1.0x)
+   - Multiplier for domesticated Space Tree trunk growth rate
+   - Range: 0.1 to 10.0
+   - Higher values = trunk grows faster
+
+3. **Branch Growth Rate** (Default: 1.0x)
+   - Multiplier for domesticated Space Tree branch growth rate
+   - Range: 0.1 to 10.0
+   - Higher values = branches grow faster
+
+4. **Fertilizer Consumption Rate** (Default: 1.0x)
+   - Multiplier for Snow fertilizer consumption (domesticated trees only)
+   - Range: 0.0 to 10.0
    - Set to 0.0 to disable fertilizer consumption entirely
+   - Higher values = trees consume more fertilizer
+
+### Production Balance
+
+1. **Wild vs Domestic Production Balance** (Default: 3 - Wild Advantage)
+   - Controls the production relationship between wild and domesticated trees
+   - Options:
+     - **1 = Domestic Advantage**: Domestic trees produce more than wild trees
+     - **2 = Equal Production**: Wild and domestic trees produce the same rate
+     - **3 = Wild Advantage**: Wild trees produce more than domestic trees
+   - Combined with the Production Advantage Multiplier to determine the exact ratio
+
+2. **Production Advantage Multiplier** (Default: 2.0x)
+   - When balance is set to Domestic Advantage (1) or Wild Advantage (3), this controls how much more one produces than the other
+   - Range: 0.5 to 10.0
+   - Example: 2.0 means the advantaged type produces 2x more than the other
+
+### Branch Settings
+
+1. **Allow Branch Harvesting** (Default: Enabled)
+   - If disabled, branches cannot be harvested for wood
+   - Dupes will only harvest nectar from the trunk
+   - If enabled, dupes can harvest both nectar and wood from branches
 
 ## How It Works
 
-The mod modifies the Space Tree's production mechanics by adjusting:
-- **Production Duration**: Lower duration means more frequent production cycles
-- **Branch Requirements**: Adjusts how many branches are needed for optimal production
-- **Fertilizer Consumption Rate**: Directly modifies the mass consumption rate of Snow fertilizer
+The mod modifies the Space Tree's mechanics by adjusting:
+- **Production Duration**: Lower duration means more frequent production cycles (affects nectar production rate)
+- **Growth Rates**: Modifies the trunk and branch growth rates independently for wild and domesticated trees
+- **Fertilizer Consumption Rate**: Directly modifies the mass consumption rate of Snow fertilizer (domesticated trees only)
+- **Production Balance**: Allows you to control whether wild or domesticated trees are more productive, or if they produce equally
+- **Branch Harvesting**: Controls whether branches can be harvested for wood or only nectar is collected
 
 Changes are applied when trees are created, affecting both existing and new trees in your save.
 
@@ -82,6 +130,12 @@ This mod is part of the [ONI 200+ Ultimate Mods collection](https://steamcommuni
 
 ## Version History
 
-- **1.0.1.11**: Initial release
 - **1.0.1.4**: Bug fixes and code cleaning
+- **1.0.1.11**: Initial release
+- **2.0.0.66**: Complete rewrite of the code, new options added
+  - Separate configuration options for wild and domesticated trees
+  - Independent control over trunk and branch growth rates
+  - Production balance system to control wild vs domestic production relationships
+  - Production advantage multiplier for fine-tuning balance
+  - Branch harvesting control option
 

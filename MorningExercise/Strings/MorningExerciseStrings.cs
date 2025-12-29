@@ -19,6 +19,13 @@ namespace MorningExercise
                     public static LocString STATUS = "Waiting for exercise equipment";
                     public static LocString TOOLTIP = "This Duplicant is waiting for a Manual Exerciser to become available for their morning exercise";
                 }
+
+                public static class COOLDOWN
+                {
+                    public static LocString NAME = "Cool Down";
+                    public static LocString STATUS = "Cooling down";
+                    public static LocString TOOLTIP = "This Duplicant is cooling down after their morning exercise";
+                }
             }
 
             public static class MODIFIERS

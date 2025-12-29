@@ -2,76 +2,69 @@
 using UnityEngine;
 using PeterHan.PLib.Core;
 using PeterHan.PLib.Options;
-using System.Reflection;
 
 namespace BonbonTreeBoost
 {
+    internal static class DebugFlags
+    {
+        public static readonly bool EnableDebugLogs = true; // Set to false to disable debug logs
+    }
+
+    // Stores growth multipliers to avoid modifying base fields (which causes tooltip crashes)
+    public class GrowthMultiplierData : KMonoBehaviour
+    {
+        public float WildTrunkMultiplier { get; set; } = 1.0f;
+        public float WildBranchMultiplier { get; set; } = 1.0f;
+        public float DomesticTrunkMultiplier { get; set; } = 1.0f;
+        public float DomesticBranchMultiplier { get; set; } = 1.0f;
+        public bool IsBranch { get; set; } = false;
+    }
+
     [RestartRequired]
     [ConfigFile(SharedConfigLocation: true)]
     public class BonbonTreeBoostOptions
     {
-        [Option("Nectar Production Multiplier", "Multiplier for Space Tree sugar water production")]
+        [Option("Nectar Production Multiplier", "Multiplier for wild Bonbon Tree Nectar production", "Wild Trees")]
+        [Limit(1, 10.0)]
+        public float WildProductionMultiplier { get; set; } = 2.0f;
+
+        [Option("Trunk Growth Rate", "Multiplier for wild Bonbon Tree trunk growth rate", "Wild Trees")]
         [Limit(0.1, 10.0)]
-        public float YieldMultiplier { get; set; } = 2.0f;
+        public float WildTrunkGrowthRate { get; set; } = 1.0f;
 
-        [Option("Growth / Branch Efficiency Multiplier", "Affects how quickly Space Trees reach optimal production")]
-        [Limit(0.1, 5.0)]
-        public float GrowthMultiplier { get; set; } = 1.0f;
+        [Option("Branch Growth Rate", "Multiplier for wild Bonbon Tree branch growth rate", "Wild Trees")]
+        [Limit(0.1, 10.0)]
+        public float WildBranchGrowthRate { get; set; } = 1.0f;
 
-        [Option("Fertilizer Consumption Multiplier", "Multiplier for Snow fertilizer consumption")]
-        [Limit(0.0, 5.0)]
-        public float FertilizerMultiplier { get; set; } = 1.0f;
-    }
+        [Option("Nectar Production Multiplier", "Multiplier for domesticated Bonbon Tree Nectar production", "Domesticated Trees")]
+        [Limit(1, 10.0)]
+        public float DomesticProductionMultiplier { get; set; } = 2.0f;
 
-    [HarmonyPatch(typeof(SpaceTreeConfig), "CreatePrefab")]
-    public static class SpaceTree_DefPatch
-    {
-        public static void Postfix(GameObject __result)
-        {
-            if (__result == null)
-                return;
+        [Option("Trunk Growth Rate", "Multiplier for domesticated Bonbon Tree trunk growth rate", "Domesticated Trees")]
+        [Limit(0.1, 10.0)]
+        public float DomesticTrunkGrowthRate { get; set; } = 1.0f;
 
-            BonbonTreeBoostOptions options;
-            try
-            {
-                options = POptions.ReadSettings<BonbonTreeBoostOptions>() ?? new BonbonTreeBoostOptions();
-            }
-            catch (System.Exception ex)
-            {
-                Debug.LogWarning($"[BonbonTreeBoost] Failed to read config file, using defaults: {ex.Message}");
-                options = new BonbonTreeBoostOptions();
-            }
+        [Option("Branch Growth Rate", "Multiplier for domesticated Bonbon Tree branch growth rate", "Domesticated Trees")]
+        [Limit(0.1, 10.0)]
+        public float DomesticBranchGrowthRate { get; set; } = 1.0f;
 
-            var def = __result.GetDef<SpaceTreePlant.Def>();
-            if (def != null)
-            {
-                // Lower duration means more frequent production cycles
-                def.OptimalProductionDuration /= options.YieldMultiplier;
-                def.OptimalAmountOfBranches = Mathf.Max(1,
-                    Mathf.RoundToInt(def.OptimalAmountOfBranches * options.GrowthMultiplier));
-            }
-            var absorbers = __result.GetComponents<PlantElementAbsorber>();
-            if (absorbers != null && absorbers.Length > 0)
-            {
-                // Use reflection to access private consumedElements field
-                FieldInfo consumedField = typeof(PlantElementAbsorber)
-                    .GetField("consumedElements", BindingFlags.NonPublic | BindingFlags.Instance);
+        [Option("Wild vs Domestic Production Balance", "Controls the production relationship between wild and domesticated trees. 1 = Domestic Advantage (wild produces less), 2 = Equal Production (wild and domestic produce the same), 3 = Wild Advantage (wild produces more). Default: 3 (Wild Advantage).", "Production Balance")]
+        [Limit(1, 3)]
+        public int ProductionBalance { get; set; } = 3;
 
-                if (consumedField != null)
-                {
-                    foreach (var absorber in absorbers)
-                    {
-                        if (ReferenceEquals(absorber, null)) continue;
+        [Option("Production Advantage Multiplier", "When balance is set to Domestic Advantage (1) or Wild Advantage (3), this controls how much more one produces than the other. For example, 2.0 means the advantaged type produces 2x more than the other. Default: 2.0", "Production Balance")]
+        [Limit(0.5, 10.0)]
+        public float ProductionAdvantageMultiplier { get; set; } = 2.0f;
 
-                        var consumed = (PlantElementAbsorber.ConsumeInfo[])consumedField.GetValue(absorber);
-                        if (consumed == null) continue;
+        [Option("Allow Branch Harvesting", "If disabled, branches cannot be harvested for wood. Dupes will only harvest nectar from the trunk.", "Branch Settings")]
+        public bool AllowBranchHarvesting { get; set; } = true;
 
-                        for (int i = 0; i < consumed.Length; i++)
-                            consumed[i].massConsumptionRate *= options.FertilizerMultiplier;
-                    }
-                }
-            }
-        }
+                // FERTILIZER OPTION COMMENTED OUT - TO BE DEALT WITH LATER
+                /*
+                [Option("Fertilizer Consumption Rate", "Multiplier for Snow fertilizer consumption (domesticated trees only). Set to 0 to disable fertilizer consumption.", "Domesticated Trees")]
+                [Limit(0.0, 10.0)]
+                public float FertilizerConsumptionRate { get; set; } = 2.0f;
+                */
     }
 
     public sealed class BonbonTreeBoostMod : KMod.UserMod2

@@ -71,6 +71,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BonbonTreeBoost.cs" />
+    <Compile Include="Patches\TrunkPatches.cs" />
+    <Compile Include="Patches\BranchPatches.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

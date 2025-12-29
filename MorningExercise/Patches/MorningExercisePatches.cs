@@ -25,6 +25,7 @@ namespace MorningExercise
         public static ScheduleGroup ExerciseGroup { get; set; }
         public static ChoreType ExerciseChoreType { get; set; }
         public static ChoreType WaitingForExerciseChoreType { get; set; }
+        public static ChoreType CoolDownChoreType { get; set; }
         public static Effect WarmUpEffect { get; set; }
         public static Effect BionicWarmUpEffect { get; set; }
 
@@ -86,6 +87,20 @@ namespace MorningExercise
                         (string)MorningExerciseStrings.DUPLICANTS.CHORES.WAITINGFOREXERCISE.NAME,
                         (string)MorningExerciseStrings.DUPLICANTS.CHORES.WAITINGFOREXERCISE.STATUS,
                         (string)MorningExerciseStrings.DUPLICANTS.CHORES.WAITINGFOREXERCISE.TOOLTIP,
+                        true,
+                        -1,
+                        null
+                    });
+
+                    CoolDownChoreType = (ChoreType)addMethod.Invoke(__instance, new object[]
+                    {
+                        "CoolDown",
+                        new string[0],
+                        "",
+                        new string[0],
+                        (string)MorningExerciseStrings.DUPLICANTS.CHORES.COOLDOWN.NAME,
+                        (string)MorningExerciseStrings.DUPLICANTS.CHORES.COOLDOWN.STATUS,
+                        (string)MorningExerciseStrings.DUPLICANTS.CHORES.COOLDOWN.TOOLTIP,
                         true,
                         -1,
                         null
@@ -435,50 +450,44 @@ namespace MorningExercise
             }
         }
 
-        // Patch ChorePreconditions constructor to modify IsScheduledTime to allow Relax during Exercise block when buffed
+        // Allow Relax chores during Exercise block so dupes can use recreation buildings
         [HarmonyPatch(typeof(ChorePreconditions), MethodType.Constructor)]
         public static class ChorePreconditions_Constructor_Patch
         {
             internal static void Postfix(ChorePreconditions __instance)
             {
-                // Store the original delegate function
                 var originalFn = __instance.IsScheduledTime.fn;
                 
-                // Replace with our modified version
                 __instance.IsScheduledTime.fn = delegate(ref Chore.Precondition.Context context, object data)
                 {
-                    // First run the original check
-                    bool originalResult = originalFn(ref context, data);
+                    // Run original check first
+                    if (originalFn(ref context, data)) return true;
                     
-                    // If original check passed, we're done
-                    if (originalResult) return true;
-                    
-                    // Only modify for Relax chores checking Recreation schedule block
+                    // Only handle Relax chores requesting Recreation block
                     if (ExerciseBlock == null) return false;
-                    if (context.chore == null || context.chore.choreType != Db.Get().ChoreTypes.Relax) return false;
+                    if (context.chore?.choreType != Db.Get().ChoreTypes.Relax) return false;
                     
                     ScheduleBlockType requestedType = data as ScheduleBlockType;
                     if (requestedType != Db.Get().ScheduleBlockTypes.Recreation) return false;
                     
-                    // Check if dupe is in Exercise block time
+                    // Check if dupe is in Exercise block
                     var scheduleBlock = context.consumerState?.scheduleBlock;
                     if (scheduleBlock == null || !scheduleBlock.IsAllowed(ExerciseBlock)) return false;
                     
-                    // Check if dupe has the warm-up buff
+                    // Allow Relax if: has buff OR no equipment
                     var dupe = context.consumerState?.gameObject;
                     if (dupe == null) return false;
                     
                     var effects = dupe.GetComponent<Effects>();
-                    if (effects == null) return false;
+                    bool hasBuff = effects != null && 
+                        (effects.HasEffect(WARMUP_EFFECT_ID) || effects.HasEffect(BIONIC_WARMUP_EFFECT_ID));
+                    if (hasBuff) return true;
                     
-                    bool hasBuff = effects.HasEffect(WARMUP_EFFECT_ID) || effects.HasEffect(BIONIC_WARMUP_EFFECT_ID);
-                    if (!hasBuff) return false;
-                    
-                    // Allow Relax chore during Exercise block when they have the buff
-                    return true;
+                    var monitor = dupe.GetComponent<ExerciseMonitor>();
+                    bool hasEquipment = monitor != null && monitor.HasAnyExerciseEquipment();
+                    return !hasEquipment;
                 };
             }
         }
-
     }
 }
