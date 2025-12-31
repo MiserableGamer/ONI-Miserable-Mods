@@ -82,19 +82,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="mod_info.yaml" />
     <Compile Include="NoDisease.cs" />
     <Compile Include="Patches\NoDiseasePatches.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Content Include="mod_info.yaml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="preview.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="mod.yaml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="mod_info.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="README.md" />
@@ -140,4 +135,3 @@ del /Q "$(ProjectDir)$(TargetFileName)" 2&gt;nul</PostBuildEvent>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 </Project>
-

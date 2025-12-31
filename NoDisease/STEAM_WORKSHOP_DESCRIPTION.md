@@ -60,4 +60,5 @@ Please mention "No Disease" in your issue title or description.
 [h2]Version History[/h2]
 [list]
 [*][b]0.0.1.1[/b]: Initial release - complete disease system removal
+[*][b]1.0.1.13[/b]: Fixed visual bug (red box around duplicants with existing disease effects)
 [/list]
