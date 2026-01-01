@@ -47,6 +47,26 @@ Fixes threshold walls to properly detect creature confinement, allowing them to 
 
 [📖 Read More](ThresholdFixed/README.md) | [Latest Release v1.0.1](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ThresholdFixed-v1.0.1) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
 
+### 🦠 No Disease
+Completely disables the disease system in Oxygen Not Included, removing all germs, sicknesses, and disease-related mechanics.
+
+[📖 Read More](NoDisease/README.md) | [Latest Release v1.0.1](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/NoDisease-v1.0.1)
+
+### 📏 Capacity Control
+Increases the character limit for storage capacity input fields, allowing you to type larger values when using mods that increase storage capacity.
+
+[📖 Read More](CapacityControl/README.md) | [Latest Release v1.0.1](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/CapacityControl-v1.0.1)
+
+### 💨 Controlled Sublimation
+Complete control over element sublimation and off-gassing, with separate settings for debris and storage. Configure Bleach Stone, Oxylite, Polluted Dirt, Slime, Polluted Water, and Polluted Mud individually.
+
+[📖 Read More](ControlledSublimation/README.md) | [Latest Release v1.0.1](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledSublimation-v1.0.1)
+
+### 🌡️ Controlled Overlay
+Adds a text input field to the Temperature Overlay's relative temperature slider, allowing you to type exact temperature values instead of struggling with the slider.
+
+[📖 Read More](ControlledOverlay/README.md) | [Latest Release v1.0.1](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledOverlay-v1.0.1)
+
 ## 🚀 Quick Start
 
 ### Installation via Steam Workshop (Recommended)

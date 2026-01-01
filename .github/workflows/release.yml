@@ -183,6 +183,10 @@ jobs:
               "BonbonTreeBoost" = "Bonbon Tree Boost"
               "ThresholdFixed" = "Threshold Fixed"
               "ResourceLimpet" = "Resource Limpet"
+              "NoDisease" = "No Disease"
+              "CapacityControl" = "Capacity Control"
+              "ControlledSublimation" = "Controlled Sublimation"
+              "ControlledOverlay" = "Controlled Overlay"
             }
             
             $modPattern = $modPatterns[$modName]
