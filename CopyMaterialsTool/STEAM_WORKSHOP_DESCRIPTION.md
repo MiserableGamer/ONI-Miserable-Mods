@@ -1,5 +1,4 @@
 [h1]Copy Materials Tool[/h1]
-[b]⚠️ WARNING: This is a testing/work-in-progress mod. There WILL be issues, crashes, and incompatibilities. Use at your own risk. Do not use on save files you are not willing to lose.[/b]
 
 A Quality of Life mod that extends the "Copy Settings" tool to also copy construction materials between buildings of the same type.
 
@@ -119,9 +118,8 @@ This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/
 
 [h2]Version History[/h2]
 [list]
-[*][b]0.1.0.10[/b]: Test release
+[*][b]1.0.0.0[/b]: Initial release
 [*][b]0.1.1.11[/b]: Code cleaning
+[*][b]0.1.0.10[/b]: Test release
 [/list]
-
-[b]Note[/b]: This mod is a work in progress. Report bugs and suggestions on [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues]GitHub Issues[/url] or through Steam Workshop comments.
 

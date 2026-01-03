@@ -1,7 +1,5 @@
 # Copy Materials Tool
 
-**⚠️ WARNING: This is a testing/work-in-progress mod. There WILL be issues, crashes, and incompatibilities. Use at your own risk. Do not use on save files you are not willing to lose.**
-
 A Quality of Life mod for Oxygen Not Included that extends the "Copy Settings" tool to also copy construction materials between buildings of the same type.
 
 ## Features
@@ -156,5 +154,6 @@ Please mention "Copy Materials Tool" in your issue title or description so we ca
 
 ## Version History
 
-- **0.1.0.10**: Test release
+- **1.0.0.0**: Initial release
 - **0.1.1.11**: Code cleaning
+- **0.1.0.10**: Test release

@@ -29,7 +29,7 @@ namespace CopyMaterials.Patches
             injectedThisCycle = true;
 
             var buttonInfo = new KIconButtonMenu.ButtonInfo(
-                "action_copy",
+                "action_mirror",
                 CopyMaterialsStrings.UI.COPY_MATERIALS.BUTTON_TEXT,
                 () =>
                 {
