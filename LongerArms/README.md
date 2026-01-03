@@ -1,46 +1,58 @@
-# Longer Arms Mod
+# Longer Arms
 
-A mod for Oxygen Not Included that extends duplicant reach distance, allowing them to reach over chasms and other areas that would normally be out of reach.
+Extends duplicant reach distance, allowing them to reach over chasms and other areas that would normally be out of reach.
 
 ## Features
 
-- **Configurable Vertical Reach**: Set how many additional cells duplicants can reach upward and downward
-- **Configurable Horizontal Reach**: Set how many additional cells duplicants can reach left and right (allows reaching over chasms)
-- **Reach Over Chasms**: Allows duplicants to reach across gaps and chasms that they cannot cross
-- **Easy Configuration**: Simple options menu with separate sliders for vertical and horizontal reach
+- **Configurable Vertical Reach** - Set how many additional cells duplicants can reach upward and downward
+- **Configurable Horizontal Reach** - Set how many additional cells duplicants can reach left and right
+- **Reach Over Chasms** - Allows duplicants to reach across gaps they cannot cross
+- **Safe Mode** - Prevents reaching through solid walls and obstacles
 
-## Configuration
+## How to Use
 
-The mod includes configurable options accessible through the mod options menu:
+1. **Open Mod Options** - Main Menu → Mods → Longer Arms → Options (gear icon)
+2. **Configure Vertical Reach** - Set additional cells for up/down reach (0-10)
+3. **Configure Horizontal Reach** - Set additional cells for left/right reach (0-10)
+4. **Enable Safe Mode** - Recommended to prevent reaching through walls
+5. **Restart Game** - Changes require a game restart to take effect
 
-- **Vertical Reach (cells)** (Default: 1)
-  - Number of additional cells beyond vanilla reach that duplicants can reach vertically (up/down)
-  - Vanilla allows reaching 3 cells up (cells 1-3 from floor at 0)
-  - Setting this to 1 allows reaching cell 4
-  - Range: 0 to 10 cells
-  - Set to 0 to disable vertical reach extension (vanilla behavior)
+### Tips
 
-- **Horizontal Reach (cells)** (Default: 1)
-  - Number of additional cells beyond vanilla reach that duplicants can reach horizontally (left/right)
-  - Allows reaching over chasms and gaps that duplicants cannot cross
-  - Range: 0 to 10 cells
-  - Set to 0 to disable horizontal reach extension (vanilla behavior)
+- Vanilla allows reaching 3 cells up from floor level (cells 1-3)
+- Setting vertical reach to 1 allows reaching cell 4
+- Safe Mode caps horizontal reach at 2 to prevent wall clipping issues
+- Disable Safe Mode only if you understand the consequences
 
-- **Safe Mode (Prevent Reach-Through-Walls)** (Default: true)
-  - **Important**: Due to the way the game calculates reach paths, extending horizontal reach beyond a certain amount can create an issue where duplicants can reach through obstructed tiles (solid walls/rocks).
-  - When **enabled** (recommended): Horizontal reach is automatically capped at 2 additional cells to prevent reaching through solid tiles. This ensures safe behavior similar to other reach extension mods.
-  - When **disabled**: You can use the full horizontal reach value (up to 10), but this may allow duplicants to reach through walls and other solid obstacles. Use this option only if you understand the consequences and want maximum reach despite potential issues.
+## Installation
 
-## Performance
+### Steam Workshop (Recommended)
+Subscribe on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=XXXXXXXXX) and enable in the Mods menu.
 
-This mod has **minimal performance impact**:
+### Manual Installation
+1. Download the [latest release](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases)
+2. Extract to: `%USERPROFILE%\Documents\Klei\OxygenNotIncluded\mods\Local\LongerArms\`
+3. Enable in the Mods menu
 
 ## Compatibility
 
-- **Supported Content**: All DLCs
-- **Minimum Build**: 700386
-- **API Version**: 2
-- Uses PLib for options management
+- **Oxygen Not Included** - Build 700386 or later
+- **Mod API** - Version 2
+- **DLC Support** - Works with base game and all DLC
+- **Other Mods** - Compatible with most mods
+
+## Performance
+
+**Minimal Performance Impact**
+- **One-Time Modification** - Reach values applied once when game loads
+- **No Runtime Overhead** - No continuous calculations or monitoring
+- **Efficient Patches** - Only modifies reach calculation when needed
+
+## Future Updates
+
+- Diagonal reach for corner cells
+- Linked reach sliders option
+- Per-duplicant reach customization
 
 ## Support & Issues
 
@@ -60,7 +72,7 @@ Found a bug or have a feature request? Please report it on GitHub using our issu
 - **❓ Questions**: [Ask a Question](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=question.yml) - Need help understanding how something works?
 - **📝 Other Issues**: [Other Issue](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=other.yml) - Something else that doesn't fit the above categories
 
-Please mention "Longer Arms" in your issue title or description so we can identify it easily.
+Please mention "Longer Arms" in your issue title or description.
 
 ## Mod Collection
 
@@ -68,22 +80,12 @@ This mod is part of the [ONI 200+ Ultimate Mods collection](https://steamcommuni
 
 ## Credits
 
-- Developed for Oxygen Not Included
-- Uses PLib by Peter Han
-- Uses Harmony by pardeike
-
-## Future Functionality
-
-The following features are planned for future releases:
-
-- **Diagonal Reach**: Allow duplicants to reach cells that are diagonally positioned (both above/below and to the side). This would enable reaching corner cells that are currently unreachable even with extended vertical reach. This feature was partially implemented but removed for v1.0 to ensure stability and proper wall collision detection.
-
-- **Linked Reach Sliders**: A checkbox option to link the vertical and horizontal reach sliders, so that adjusting one automatically updates the other to match. The last value you set would be applied to both sliders when the link is enabled.
+- Built using [PLib](https://github.com/peterhaneve/ONIMods) by Peter Han
+- Uses [Harmony](https://github.com/pardeike/Harmony) for runtime patching
 
 ## Version History
 
-- **1.0.1.0**: Initial release
-- **1.0.1.56**: Code cleaning
+- **1.0.3.76**: Fix ladder bug, added safe mode
 - **1.0.2.64**: Diagonal bug fix
-- **1.0.3.76**: Fix ladder bug, and added safe mode
-
+- **1.0.1.56**: Code cleaning
+- **1.0.1.0**: Initial release

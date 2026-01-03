@@ -1,50 +1,53 @@
 [h1]Longer Arms[/h1]
+
 Extends duplicant reach distance, allowing them to reach over chasms and other areas that would normally be out of reach.
 
 [h2]Features[/h2]
 [list]
 [*][b]Configurable Vertical Reach[/b] - Set how many additional cells duplicants can reach upward and downward
-[*][b]Configurable Horizontal Reach[/b] - Set how many additional cells duplicants can reach left and right (allows reaching over chasms)
-[*][b]Reach Over Chasms[/b] - Allows duplicants to reach across gaps and chasms that they cannot cross
-[*][b]Easy Configuration[/b] - Simple options menu with separate sliders for vertical and horizontal reach
+[*][b]Configurable Horizontal Reach[/b] - Set how many additional cells duplicants can reach left and right
+[*][b]Reach Over Chasms[/b] - Allows duplicants to reach across gaps they cannot cross
+[*][b]Safe Mode[/b] - Prevents reaching through solid walls and obstacles
 [/list]
 
-[h2]Configuration[/h2]
+[h2]How to Use[/h2]
+[olist]
+[*][b]Open Mod Options[/b] - Main Menu → Mods → Longer Arms → Options (gear icon)
+[*][b]Configure Vertical Reach[/b] - Set additional cells for up/down reach (0-10)
+[*][b]Configure Horizontal Reach[/b] - Set additional cells for left/right reach (0-10)
+[*][b]Enable Safe Mode[/b] - Recommended to prevent reaching through walls
+[*][b]Restart Game[/b] - Changes require a game restart to take effect
+[/olist]
+
+[h3]Tips[/h3]
 [list]
-[*][b]Vertical Reach (cells)[/b] (Default: 1)
-[list]
-[*]Number of additional cells beyond vanilla reach that duplicants can reach vertically (up/down)
-[*]Vanilla allows reaching 3 cells up (cells 1-3 from floor at 0)
-[*]Setting this to 1 allows reaching cell 4
-[*]Range: 0 to 10 cells
-[*]Set to 0 to disable vertical reach extension (vanilla behavior)
+[*]Vanilla allows reaching 3 cells up from floor level (cells 1-3)
+[*]Setting vertical reach to 1 allows reaching cell 4
+[*]Safe Mode caps horizontal reach at 2 to prevent wall clipping issues
+[*]Disable Safe Mode only if you understand the consequences
 [/list]
-[*][b]Horizontal Reach (cells)[/b] (Default: 1)
+
+[h2]Compatibility[/h2]
 [list]
-[*]Number of additional cells beyond vanilla reach that duplicants can reach horizontally (left/right)
-[*]Allows reaching over chasms and gaps that duplicants cannot cross
-[*]Range: 0 to 10 cells
-[*]Set to 0 to disable horizontal reach extension (vanilla behavior)
-[/list]
-[*][b]Safe Mode (Prevent Reach-Through-Walls)[/b] (Default: true)
-[list]
-[*][b]Important[/b]: Due to the way the game calculates reach paths, extending horizontal reach beyond a certain amount can create an issue where duplicants can reach through obstructed tiles (solid walls/rocks).
-[*]When [b]enabled[/b] (recommended): Horizontal reach is automatically capped at 2 additional cells to prevent reaching through solid tiles. This ensures safe behavior.
-[*]When [b]disabled[/b]: You can use the full horizontal reach value (up to 10), but this will allow duplicants to reach through walls and other solid obstacles. Use this option only if you understand the consequences and want maximum reach despite potential issues.
-[/list]
+[*][b]Oxygen Not Included[/b] - Build 700386 or later
+[*][b]Mod API[/b] - Version 2
+[*][b]DLC Support[/b] - Works with base game and all DLC
+[*][b]Other Mods[/b] - Compatible with most mods
 [/list]
 
 [h2]Performance[/h2]
 [b]Minimal Performance Impact[/b]
 [list]
+[*][b]One-Time Modification[/b] - Reach values applied once when game loads
+[*][b]No Runtime Overhead[/b] - No continuous calculations or monitoring
+[*][b]Efficient Patches[/b] - Only modifies reach calculation when needed
+[/list]
 
-The mod simply extends the game's existing reach tables, so there is no noticeable performance difference compared to vanilla gameplay.
-
-[h2]Compatibility[/h2]
+[h2]Future Updates[/h2]
 [list]
-[*]All DLCs supported
-[*]Minimum Build: 700386
-[*]API Version: 2
+[*]Diagonal reach for corner cells
+[*]Linked reach sliders option
+[*]Per-duplicant reach customization
 [/list]
 
 [h2]Support & Issues[/h2]
@@ -72,22 +75,14 @@ This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/
 
 [h2]Credits[/h2]
 [list]
-[*]Developed for Oxygen Not Included
-[*]Uses PLib by Peter Han
-[*]Uses Harmony by pardeike
-[/list]
-
-[h2]Future Functionality[/h2]
-The following features are planned for future releases:
-[list]
-[*][b]Diagonal Reach[/b] - Allow duplicants to reach cells that are diagonally positioned (both above/below and to the side). This would enable reaching corner cells that are currently unreachable even with extended vertical reach. This feature was partially implemented but removed for v1.0 to ensure stability and proper wall collision detection.
-[*][b]Linked Reach Sliders[/b] - A checkbox option to link the vertical and horizontal reach sliders, so that adjusting one automatically updates the other to match. The last value you set would be applied to both sliders when the link is enabled.
+[*]Built using [url=https://github.com/peterhaneve/ONIMods]PLib[/url] by Peter Han
+[*]Uses [url=https://github.com/pardeike/Harmony]Harmony[/url] for runtime patching
 [/list]
 
 [h2]Version History[/h2]
 [list]
-[*][b]1.0.1.0[/b]: Initial release
-[*][b]1.0.1.56[/b]: Code cleaning
+[*][b]1.0.3.76[/b]: Fix ladder bug, added safe mode
 [*][b]1.0.2.64[/b]: Diagonal bug fix
-[*][b]1.0.3.76[/b]: Fix ladder bug, and added safe mode
+[*][b]1.0.1.56[/b]: Code cleaning
+[*][b]1.0.1.0[/b]: Initial release
 [/list]

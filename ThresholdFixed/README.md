@@ -1,70 +1,73 @@
-# Romen's Threshold Walls (Fixed) Mod
+# Threshold Walls (Fixed)
 
-A mod for Oxygen Not Included that adds new backwall buildings that can be used to divide spaces into rooms like a door. Also acts as a backwall against space like drywall.
+Adds new backwall buildings that can be used to divide spaces into rooms like a door, while also acting as a backwall against space like drywall.
 
 ## Features
 
-- **Multiple Threshold Wall Types**: Five different threshold wall variants to choose from
-  - **Threshold Wall**: Basic drywall-style threshold wall
-  - **Industrial Threshold Wall**: Cautionary pattern threshold wall
-  - **Metal Threshold Wall**: Metal variant threshold wall
-  - **Plastic Threshold Wall**: Plastic variant threshold wall
-  - **Programmable Threshold Wall**: Advanced threshold wall with LED matrix display and automation control
-- **Room Division**: Acts like a door for room division without occupying the cell
-- **Space Protection**: Functions as a backwall against space, similar to drywall
-- **Automation Support**: Programmable Threshold Wall can be controlled via automation signals
-- **Configurable Options**: Option to hide pipes and wires when using compatible mods
+- **Multiple Wall Types** - Five different threshold wall variants to choose from
+- **Room Division** - Acts like a door for room division without occupying the cell
+- **Space Protection** - Functions as a backwall against space, similar to drywall
+- **Automation Support** - Programmable Threshold Wall with LED matrix display
+- **Pipe Hiding** - Option to hide pipes and wires (with compatible mods)
 
-## How It Works
+## Available Wall Types
 
-Threshold walls are backwall buildings that mark the edge of a room. Unlike regular walls, they don't occupy the cell space, allowing duplicants and resources to pass through while still dividing rooms for room bonuses and effects.
+- **Threshold Wall** - Basic drywall-style threshold wall
+- **Industrial Threshold Wall** - Cautionary pattern threshold wall
+- **Metal Threshold Wall** - Metal variant threshold wall
+- **Plastic Threshold Wall** - Plastic variant threshold wall
+- **Programmable Threshold Wall** - Advanced wall with LED matrix and automation control
 
-The **Programmable Threshold Wall** includes:
-- **LED Matrix Display**: Shows various patterns that can be selected via automation
-- **Room Toggle**: Automation control to enable/disable the threshold wall effect
-- **Pathing Toggle**: Automation control to allow/block duplicant pathing
-- **Pattern Selection**: Choose from different LED display patterns using automation bits
+## How to Use
 
-## Why Use This Mod?
+1. **Build Threshold Walls** - Place at room boundaries where you want division
+2. **Duplicants Pass Through** - They can walk through while rooms stay separate
+3. **Use Automation** - Programmable variant responds to automation signals
+4. **Enjoy Room Bonuses** - Rooms are properly divided for bonuses and effects
 
-Threshold walls provide a flexible way to:
-- **Control Room Boundaries**: Divide spaces into separate rooms without blocking movement
-- **Optimize Room Layouts**: Subtract cells from room sizes without occupying space
-- **Create Visual Boundaries**: Mark room edges with different aesthetic options
-- **Automate Room Control**: Use the programmable variant to dynamically control room boundaries
+### Tips
 
-## Configuration Options
+- Threshold walls don't block movement like regular walls
+- Use them to divide large spaces into multiple rooms
+- Programmable variant has LED patterns selectable via automation
+- Works great for optimizing room layouts and sizes
 
-The mod includes one configurable option accessible through the mod options menu:
+## Installation
 
-1. **Hide Pipes and Wires** (Default: Disabled)
-   - When enabled, threshold walls will hide pipes and wires behind them (requires compatible mod)
-   - Automatically enabled if the DrywallHidesPipes mod is detected
+### Steam Workshop (Recommended)
+Subscribe on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=XXXXXXXXX) and enable in the Mods menu.
 
-## Compatibility
-
-- **Supported Content**: All DLCs
-- **Minimum Build**: 700386
-- **API Version**: 2
-- Uses PLib for options management
-- Compatible with DrywallHidesPipes mod
+### Manual Installation
+1. Download the [latest release](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases)
+2. Extract to: `%USERPROFILE%\Documents\Klei\OxygenNotIncluded\mods\Local\ThresholdFixed\`
+3. Enable in the Mods menu
 
 ## Important Notice
 
-This mod is a fixed/updated version of Romen's Threshold Walls mod, created to restore compatibility with the latest version of Oxygen Not Included after the original mod became incompatible.
+⚠️ **This mod is created without permission from the original author (RomenH).** This is a community-maintained fix to restore functionality to an otherwise abandoned mod. If the original author requests removal, or if the original mod is updated, this version will be removed.
 
-⚠️ **This mod is created without permission from the original author (RomenH).** This is a community-maintained fix to restore functionality to an otherwise abandoned mod. If the original author requests removal, or if the original mod is updated and becomes compatible again, this version will be removed from the Workshop.
+**Original Mod**: [Romen's Threshold Walls](https://steamcommunity.com/sharedfiles/filedetails/?id=2610275728)
+**Original Author**: RomenH - © 2021 RomenH
 
-**Original Mod**: [Romen's Threshold Walls](https://steamcommunity.com/sharedfiles/filedetails/?id=2610275728)  
-**Original Author**: RomenH  
-© 2021 RomenH
+## Compatibility
 
-## Changes from Original
+- **Oxygen Not Included** - Build 700386 or later
+- **Mod API** - Version 2
+- **DLC Support** - Works with base game and all DLC
+- **Other Mods** - Compatible with DrywallHidesPipes mod
 
-- Fixed compatibility with ONI U57+
-- Updated API calls to match current game version
-- Fixed Harmony patching for creature confinement detection
-- Improved mod initialization and string registration
+## Performance
+
+**Minimal Performance Impact**
+- **Standard Building Logic** - Uses game's built-in room detection
+- **No Polling** - Event-driven room boundary checks
+- **Lightweight Automation** - Programmable variant uses standard automation
+
+## Future Updates
+
+- Additional wall patterns and styles
+- More automation options for programmable variant
+- Enhanced pipe hiding compatibility
 
 ## Support & Issues
 
@@ -84,7 +87,7 @@ Found a bug or have a feature request? Please report it on GitHub using our issu
 - **❓ Questions**: [Ask a Question](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=question.yml) - Need help understanding how something works?
 - **📝 Other Issues**: [Other Issue](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=other.yml) - Something else that doesn't fit the above categories
 
-Please mention "Threshold Walls" or "ThresholdFixed" in your issue title or description so we can identify it easily.
+Please mention "Threshold Walls" or "ThresholdFixed" in your issue title or description.
 
 ## Mod Collection
 
@@ -92,19 +95,12 @@ This mod is part of the [ONI 200+ Ultimate Mods collection](https://steamcommuni
 
 ## Credits
 
-- Developed for Oxygen Not Included
-- Uses PLib by Peter Han
-- Uses Harmony by pardeike
-- Original mod by RomenH
+- Original mod by [RomenH](https://steamcommunity.com/sharedfiles/filedetails/?id=2610275728)
 - Fixed and maintained by the community
+- Built using [PLib](https://github.com/peterhaneve/ONIMods) by Peter Han
+- Uses [Harmony](https://github.com/pardeike/Harmony) for runtime patching
 
 ## Version History
 
-- **1.0.1.16**: Initial release
+- **1.0.1.16**: Initial release (fixed version)
 - **1.0.1.13**: Code cleaning
-
-
-
-
-
-

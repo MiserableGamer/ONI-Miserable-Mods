@@ -1,119 +1,63 @@
 [h1]Morning Exercise[/h1]
+
 Adds a Morning Exercise schedule block and Manual Exerciser building, allowing Duplicants to work out and gain Athletics or Morale bonuses.
 
 [h2]Features[/h2]
 [list]
 [*][b]Morning Exercise Schedule Block[/b] - New schedule block type for exercise time
-[*][b]Manual Exerciser Building[/b] - Exercise-only building in the Medicine category (requires Medicine I research)
-[*][b]Warm Up Buff[/b] - Regular Duplicants gain Athletics bonus after exercising (configurable, default +3)
-[*][b]Bionic Warm Up Buff[/b] - Bionic Duplicants gain Morale bonus instead of Athletics (configurable, default +2)
-[*][b]Waiting Chore[/b] - Duplicants wait for equipment instead of going idle when no exercisers are available
-[*][b]Configurable Options[/b] - Customize exercise duration, buff duration, and bonus amounts
-[*][b]Separate Settings for Dupes and Boops[/b] - Independent configuration for standard Duplicants ("Dupes") and Bionic Duplicants ("Boops")
-[*][b]Enable/Disable Exercise[/b] - Toggle exercise on or off for each duplicant type independently
-[*][b]Experience Gain[/b] - Optional permanent Athletics attribute experience gain (like Manual Generator)
-[*][b]Animation Variant Selection[/b] - Choose between Standard, Variant A, or Variant B Manual Generator animations
+[*][b]Manual Exerciser Building[/b] - Exercise-only building in the Medicine category
+[*][b]Warm Up Buff[/b] - Regular Duplicants gain Athletics bonus after exercising
+[*][b]Bionic Warm Up Buff[/b] - Bionic Duplicants gain Morale bonus instead
+[*][b]Experience Gain[/b] - Optional permanent Athletics attribute experience
+[*][b]Separate Dupe/Boop Settings[/b] - Independent configuration for each duplicant type
+[*][b]Animation Variants[/b] - Choose between Standard, Variant A, or Variant B animations
 [/list]
 
-[h2]How It Works[/h2]
+[h2]How to Use[/h2]
 [olist]
-[*]Research [b]Medicine I[/b] to unlock the Manual Exerciser
-[*]Build [b]Manual Exercisers[/b] in your base (Medicine category)
-[*]Add [b]Morning Exercise[/b] blocks to your Duplicants' schedules
-[*]During exercise time, Duplicants find an available Manual Exerciser
-[*]They exercise for the configured duration (default: 20 seconds)
-[*]After completing exercise, they receive the appropriate buff:
-[list]
-[*][b]Regular Duplicants ("Dupes")[/b]: Warm Up buff (+3 Athletics by default, 6 minutes)
-[*][b]Bionic Duplicants ("Boops")[/b]: Bionic Warm Up buff (+2 Morale by default, 12 minutes)
-[/list]
-[*]If experience gain is enabled, Duplicants also gain permanent Athletics attribute experience (same as Manual Generator)
-[*]Duplicants can only exercise once per exercise block
+[*][b]Research Medicine I[/b] - Unlocks the Manual Exerciser building
+[*][b]Build Manual Exercisers[/b] - Found in the Medicine category
+[*][b]Add Schedule Blocks[/b] - Add "Morning Exercise" to duplicant schedules
+[*][b]Duplicants Exercise[/b] - They find an exerciser during exercise time
+[*][b]Receive Buffs[/b] - After exercising, dupes get Athletics or Morale bonuses
 [/olist]
 
-[h2]Configuration[/h2]
-Options are organized into sections: [b]Dupes[/b], [b]Boops[/b], [b]Experience Settings[/b], and [b]Visual Settings[/b].
-
-[h3]Dupes (Standard Duplicants)[/h3]
+[h3]Tips[/h3]
 [list]
-[*][b]Enable Exercise[/b] (Default: Enabled) - Toggle to allow/prevent standard Duplicants from exercising
-[*][b]Exercise Duration (seconds)[/b] (Default: 20)
-[list]
-[*]Range: 5 to 120 seconds
-[/list]
-[*][b]Buff Duration (seconds)[/b] (Default: 360)
-[list]
-[*]Range: 60 to 999 seconds
-[*]Default: 6 minutes
-[/list]
-[*][b]Athletics Bonus[/b] (Default: 3)
-[list]
-[*]Range: 1 to 10
-[/list]
+[*]Regular Duplicants get Athletics bonus (default +3 for 6 minutes)
+[*]Bionic Duplicants get Morale bonus (default +2 for 12 minutes)
+[*]Duplicants can only exercise once per exercise block
+[*]Enable experience gain for permanent Athletics improvements
 [/list]
 
-[h3]Boops (Bionic Duplicants)[/h3]
+[h2]⚠️ WARNING: NOT SAVE SAFE[/h2]
+[b]If you delete this mod, your save games will NO LONGER LOAD![/b]
 [list]
-[*][b]Enable Exercise[/b] (Default: Enabled) - Toggle to allow/prevent Bionic Duplicants from exercising
-[*][b]Buff Duration (seconds)[/b] (Default: 720)
-[list]
-[*]Range: 60 to 999 seconds
-[*]Default: 12 minutes (longer due to extended bionic cycles)
-[/list]
-[*][b]Morale Bonus[/b] (Default: 2)
-[list]
-[*]Range: 1 to 10
-[/list]
-[/list]
-
-[h3]Experience Settings[/h3]
-[list]
-[*][b]Enable Experience Gain[/b] (Default: Enabled)
-[list]
-[*]Grants permanent Athletics attribute experience (like Manual Generator)
-[/list]
-[*][b]Experience Multiplier[/b] (Default: 1)
-[list]
-[*]Range: 0 to 10
-[*]1 = same rate as Manual Generator (1 exp/second)
-[/list]
-[/list]
-
-[h3]Visual Settings[/h3]
-[list]
-[*][b]Animation Variant[/b] (Default: Variant A)
-[list]
-[*]Options: Standard, Variant A, or Variant B
-[/list]
-[/list]
-
-[h2]Building Details[/h2]
-[b]Manual Exerciser[/b]
-[list]
-[*]Category: Medicine
-[*]Research: Medicine I
-[*]Size: 2x2 tiles
-[*]Material: All Metals
-[*]Function: Exercise-only (does not generate power)
-[*]Animation: Selectable variant (Standard, Variant A, or Variant B)
-[/list]
-
-[h2]Performance[/h2]
-[b]Minimal Performance Impact[/b]
-
-[h2]⚠️ IMPORTANT WARNING ⚠️[/h2]
-[b]This mod is NOT game save safe![/b]
-[list]
-[*][b]If you delete this mod, your save games will NO LONGER LOAD[/b]
-[*][b]Before removing this mod, you MUST remove all Morning Exercise schedule blocks from all Duplicants' schedules[/b]
-[*][b]Failure to remove the schedule blocks before uninstalling will result in a crash when trying to load the save file[/b]
+[*]Before removing this mod, you MUST remove all Morning Exercise schedule blocks from all Duplicants' schedules
+[*]Failure to remove schedule blocks before uninstalling will crash the game when loading saves
 [/list]
 
 [h2]Compatibility[/h2]
 [list]
-[*]All DLCs supported (Base Game, Spaced Out!, The Frosty Planet Pack, The Bionic Booster Pack)
-[*]Minimum Build: 700386
-[*]API Version: 2
+[*][b]Oxygen Not Included[/b] - Build 700386 or later
+[*][b]Mod API[/b] - Version 2
+[*][b]DLC Support[/b] - Works with base game and all DLC (including Bionic Booster Pack)
+[*][b]Other Mods[/b] - Compatible with most mods
+[/list]
+
+[h2]Performance[/h2]
+[b]Minimal Performance Impact[/b]
+[list]
+[*][b]Standard Game Mechanics[/b] - Uses existing schedule and chore systems
+[*][b]No Polling[/b] - Event-driven, no continuous monitoring
+[*][b]Lightweight Buffs[/b] - Standard effect system for buffs
+[/list]
+
+[h2]Future Updates[/h2]
+[list]
+[*]Custom animation variant for Manual Exerciser
+[*]Additional exercise building types
+[*]More buff customization options
 [/list]
 
 [h2]Support & Issues[/h2]
@@ -141,19 +85,13 @@ This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/
 
 [h2]Credits[/h2]
 [list]
-[*]Developed for Oxygen Not Included
-[*]Uses PLib by Peter Han
-[*]Uses Harmony by pardeike
+[*]Built using [url=https://github.com/peterhaneve/ONIMods]PLib[/url] by Peter Han
+[*]Uses [url=https://github.com/pardeike/Harmony]Harmony[/url] for runtime patching
 [/list]
-
-[h2]Future Functionality[/h2]
-The following features are planned for future releases:
-
-[b]Custom Animation Variant[/b] - A dedicated custom animation for the Manual Exerciser building, providing a unique visual appearance distinct from the Manual Generator. This would include custom sprites and animations specifically designed for the exercise machine, making it visually distinct while maintaining the same functionality.
 
 [h2]Version History[/h2]
 [list]
 [*][b]1.0.2.127[/b]: Initial release
+[*][b]1.0.2.125[/b]: Dupes now go to relax after exercising or if already buffed
 [*][b]1.0.1.103[/b]: Code cleaning
-[*][b]1.0.2.125[/b]: Dupes will now go to relax after exercising, or if they already are buffed, rather than just to idle
 [/list]

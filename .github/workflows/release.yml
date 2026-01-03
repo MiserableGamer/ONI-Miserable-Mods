@@ -188,6 +188,7 @@ jobs:
               "ControlledSublimation" = "Controlled Sublimation"
               "ControlledOverlay" = "Controlled Overlay"
               "ControlledFiltering" = "Controlled Filtering"
+              "CopyTileTool" = "Copy Tile Tool"
             }
             
             $modPattern = $modPatterns[$modName]

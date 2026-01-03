@@ -1,50 +1,57 @@
-# No Disease Mod
+# No Disease
 
-A mod for Oxygen Not Included that **completely disables** the disease system - not just immunity, but removes disease mechanics entirely from the game.
-
-> **Note**: This mod is intended as an **interim solution** until [FastTrack](https://steamcommunity.com/sharedfiles/filedetails/?id=1967921388) by Peter Han is updated for the current game version. If you only want the "No Disease" functionality without FastTrack's other features, this standalone mod is for you. This mod will be removed from the workshop if requested by other modders.
+Completely disables the disease system - not just immunity, but removes disease mechanics entirely from the game.
 
 ## Features
 
-This mod comprehensively disables all disease-related systems:
+- **No Germs** - All existing germs are wiped from the world on load
+- **No Disease Spread** - Germs cannot spread through air, water, or pipes
+- **No Infections** - Duplicants cannot get sick from germs
+- **No Disease UI** - Disease overlay and panels are hidden
+- **No Disease Tools** - Disinfect tool is removed
+- **Hidden Buildings** - Disease-related buildings are deprecated
 
-- **No Germs**: All existing germs are wiped from the world on load
-- **No Disease Spread**: Germs cannot spread through air, water, or pipes
-- **No Infections**: Duplicants cannot get sick from germs
-- **No Disease UI**: Disease overlay and panels are hidden
-- **No Disease Tools**: Disinfect tool is removed
-- **Hidden Buildings**: Disease-related buildings are deprecated:
-  - Doctor Stations (basic and advanced)
-  - Disease Sensors (gas, liquid, solid conduits)
-  - Apothecary buildings (except when Radiation DLC is enabled - kept for rad pills)
+## How to Use
 
-## Why Use This Mod?
+1. **Install the Mod** - Enable in the Mods menu
+2. **Load Your Save** - Existing germs will be removed automatically
+3. **Play Disease-Free** - No further action needed
 
-- **Performance**: Disease simulation can impact game performance on large colonies
-- **Gameplay Preference**: Some players find the disease system tedious rather than fun
-- **Simplification**: Focus on other aspects of colony management
+### Tips
 
-## Technical Details
+- This is an interim solution while FastTrack is updated
+- Apothecary is kept when Radiation DLC is enabled (needed for rad pills)
+- Great for players who find disease tedious or want better performance
+- Safe to add to existing saves - germs are wiped on load
 
-This mod patches over 40 game methods to completely disable:
-- Disease containers and emitters
-- Germ exposure monitoring
-- Auto-disinfection systems
-- World generation disease placement
-- Disease in conduits and storage
+## Installation
 
-## Credits
+### Steam Workshop (Recommended)
+Subscribe on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=XXXXXXXXX) and enable in the Mods menu.
 
-This mod is inspired by the disease-disabling functionality from **FastTrack** by **Peter Han**.
-- Original source: [FastTrack on GitHub](https://github.com/peterhaneve/ONIMods/tree/main/FastTrack)
-- Licensed under MIT License
+### Manual Installation
+1. Download the [latest release](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases)
+2. Extract to: `%USERPROFILE%\Documents\Klei\OxygenNotIncluded\mods\Local\NoDisease\`
+3. Enable in the Mods menu
 
 ## Compatibility
 
-- **Supported Content**: All DLCs
-- **Minimum Build**: 700386
-- **API Version**: 2
-- Uses PLib by Peter Han
+- **Oxygen Not Included** - Build 700386 or later
+- **Mod API** - Version 2
+- **DLC Support** - Works with base game and all DLC
+- **Other Mods** - Compatible with most mods
+
+## Performance
+
+**Improves Performance**
+- **No Disease Simulation** - Removes germ calculations entirely
+- **No Spread Processing** - No need to calculate disease transmission
+- **Reduced Memory Usage** - Disease containers not needed
+
+## Future Updates
+
+- This mod may be deprecated if FastTrack is updated
+- Additional disease-related options
 
 ## Support & Issues
 
@@ -59,13 +66,24 @@ Need help, found a bug, or have a suggestion? We're here to help!
 
 Found a bug or have a feature request? Please report it on GitHub using our issue templates:
 
-- **🐛 Bug Reports**: [Report a Bug](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=bug_report.yml)
-- **💡 Feature Requests**: [Suggest a Feature](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=feature_request.yml)
-- **❓ Questions**: [Ask a Question](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=question.yml)
+- **🐛 Bug Reports**: [Report a Bug](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=bug_report.yml) - Use this for crashes, errors, or unexpected behavior
+- **💡 Feature Requests**: [Suggest a Feature](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=feature_request.yml) - Have an idea for a new feature or improvement?
+- **❓ Questions**: [Ask a Question](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=question.yml) - Need help understanding how something works?
+- **📝 Other Issues**: [Other Issue](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=other.yml) - Something else that doesn't fit the above categories
 
 Please mention "No Disease" in your issue title or description.
 
+## Mod Collection
+
+This mod is part of the [ONI 200+ Ultimate Mods collection](https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156) on Steam Workshop, featuring over 200 tested and compatible mods for Oxygen Not Included.
+
+## Credits
+
+- Built using [PLib](https://github.com/peterhaneve/ONIMods) by Peter Han
+- Uses [Harmony](https://github.com/pardeike/Harmony) for runtime patching
+- Inspired by disease-disabling functionality from [FastTrack](https://github.com/peterhaneve/ONIMods/tree/main/FastTrack) by Peter Han
+
 ## Version History
 
-- **0.0.1.1**: Initial release - complete disease system removal
 - **1.0.1.13**: Fixed visual bug (red box around duplicants with existing disease effects)
+- **0.0.1.1**: Initial release - complete disease system removal

@@ -1,42 +1,55 @@
-# Debug Fog of War Mod
+# Debug Fog of War
 
-A mod for Oxygen Not Included that prevents the fog of war from being removed when debug mode is activated.
+Prevents the fog of war from being removed when debug mode is activated, preserving map exploration and improving performance.
 
 ## Features
 
-- **Preserves Fog of War**: When debug mode is activated, the fog of war remains intact
-- **Full Debug Functionality**: All debug mode features still work (free camera, debug tools, element painting, etc.) - only map discovery is prevented
+- **Preserves Fog of War** - Map discovery stays intact when debug mode is activated
+- **Full Debug Functionality** - All debug tools still work (free camera, debug tools, element painting, etc.)
+- **Performance Preservation** - Prevents unnecessary cell simulation from automatic map reveal
 
-## How It Works
+## How to Use
 
-When you press the debug toggle key (Backspace by default), the mod intercepts the debug mode activation and handles the UI toggling without triggering the map discovery code. This means:
+1. **Install the Mod** - Enable in the Mods menu
+2. **Activate Debug Mode** - Press Backspace (default) to toggle debug mode
+3. **Use Debug Tools** - All debug features work normally
+4. **Map Stays Hidden** - Unexplored areas remain covered by fog of war
 
-- ✅ Debug tools and UI still work normally
-- ✅ Free camera mode still works
-- ✅ Element painting and other debug features still function
-- ❌ Map discovery is prevented (fog of war stays intact)
+### Tips
 
-## Why Use This Mod?
+- Debug mode still provides access to all tools and features
+- Great for testing without spoiling map exploration
+- Significantly improves performance compared to revealed maps
+- Works with free camera mode - you can see unexplored areas but they won't be "discovered"
 
-When debug mode is activated in the base game, it automatically reveals the entire map by discovering all cells. This causes:
+## Installation
 
-- **Performance Issues**: All cells on the map need to be simulated, even if you haven't explored them, which can significantly impact game performance
-- **Unwanted Discovery**: You may not want to see the entire map when using debug tools
+### Steam Workshop (Recommended)
+Subscribe on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=XXXXXXXXX) and enable in the Mods menu.
 
-This mod allows you to use debug mode for its intended purpose (testing, building, element painting) without the side effect of revealing the entire map, saving you from the performance impact of simulating all discovered cells.
+### Manual Installation
+1. Download the [latest release](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases)
+2. Extract to: `%USERPROFILE%\Documents\Klei\OxygenNotIncluded\mods\Local\DebugFogOfWar\`
+3. Enable in the Mods menu
 
 ## Compatibility
 
-- **Supported Content**: All DLCs
-- **Minimum Build**: 700386
-- **API Version**: 2
-- Uses PLib and Harmony
+- **Oxygen Not Included** - Build 700386 or later
+- **Mod API** - Version 2
+- **DLC Support** - Works with base game and all DLC
+- **Other Mods** - Compatible with most mods
 
-## Inspiration
+## Performance
 
-This mod was inspired by [Cairath's DebugDoesNotDiscoverMap mod](https://github.com/Cairath/ONI-Mods/tree/master/src/DebugDoesNotDiscoverMap), which unfortunately no longer functions and is no longer being updated. This is a reimplementation that works with current game versions.
+**Improves Performance**
+- **Prevents Cell Discovery** - Undiscovered cells don't need full simulation
+- **Lightweight Patch** - Only intercepts debug toggle, no runtime overhead
+- **No Continuous Monitoring** - Patch only triggers when debug mode is toggled
 
-Special thanks to [Cairath](https://github.com/Cairath/ONI-Mods) for the original concept and approach.
+## Future Updates
+
+- Option to toggle map discovery behavior
+- Keyboard shortcut to manually trigger map discovery if desired
 
 ## Support & Issues
 
@@ -56,7 +69,7 @@ Found a bug or have a feature request? Please report it on GitHub using our issu
 - **❓ Questions**: [Ask a Question](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=question.yml) - Need help understanding how something works?
 - **📝 Other Issues**: [Other Issue](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=other.yml) - Something else that doesn't fit the above categories
 
-Please mention "Debug Fog of War" in your issue title or description so we can identify it easily.
+Please mention "Debug Fog of War" in your issue title or description.
 
 ## Mod Collection
 
@@ -64,13 +77,11 @@ This mod is part of the [ONI 200+ Ultimate Mods collection](https://steamcommuni
 
 ## Credits
 
-- Developed for Oxygen Not Included
-- Uses PLib by Peter Han
-- Uses Harmony by pardeike
-- Inspired by Cairath's DebugDoesNotDiscoverMap mod
+- Built using [PLib](https://github.com/peterhaneve/ONIMods) by Peter Han
+- Uses [Harmony](https://github.com/pardeike/Harmony) for runtime patching
+- Inspired by [Cairath's DebugDoesNotDiscoverMap mod](https://github.com/Cairath/ONI-Mods/tree/master/src/DebugDoesNotDiscoverMap)
 
 ## Version History
 
 - **1.0.1.19**: Initial release
 - **1.0.1.17**: Code cleaning
-

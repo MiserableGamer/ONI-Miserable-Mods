@@ -1,40 +1,50 @@
 [h1]Debug Fog of War[/h1]
-Prevents fog of war from being removed when debug mode is activated.
+
+Prevents the fog of war from being removed when debug mode is activated, preserving map exploration and improving performance.
 
 [h2]Features[/h2]
 [list]
-[*][b]Preserves Fog of War[/b] - When debug mode is activated, the fog of war remains intact
-[*][b]Full Debug Functionality[/b] - All debug mode features still work (free camera, debug tools, element painting, etc.) - only map discovery is prevented
+[*][b]Preserves Fog of War[/b] - Map discovery stays intact when debug mode is activated
+[*][b]Full Debug Functionality[/b] - All debug tools still work (free camera, debug tools, element painting, etc.)
+[*][b]Performance Preservation[/b] - Prevents unnecessary cell simulation from automatic map reveal
 [/list]
 
-[h2]How It Works[/h2]
-When you press the debug toggle key (Backspace by default), the mod intercepts the debug mode activation and handles the UI toggling without triggering the map discovery code. This means:
+[h2]How to Use[/h2]
+[olist]
+[*][b]Install the Mod[/b] - Enable in the Mods menu
+[*][b]Activate Debug Mode[/b] - Press Backspace (default) to toggle debug mode
+[*][b]Use Debug Tools[/b] - All debug features work normally
+[*][b]Map Stays Hidden[/b] - Unexplored areas remain covered by fog of war
+[/olist]
+
+[h3]Tips[/h3]
 [list]
-[*]Debug tools and UI still work normally
-[*]Free camera mode still works
-[*]Element painting and other debug features still function
-[*]Map discovery is prevented (fog of war stays intact)
+[*]Debug mode still provides access to all tools and features
+[*]Great for testing without spoiling map exploration
+[*]Significantly improves performance compared to revealed maps
+[*]Works with free camera mode - you can see unexplored areas but they won't be "discovered"
 [/list]
-
-[h2]Why Use This Mod?[/h2]
-When debug mode is activated in the base game, it automatically reveals the entire map by discovering all cells. This causes:
-[list]
-[*][b]Performance Issues[/b]: All cells on the map need to be simulated, even if you haven't explored them, which can significantly impact game performance
-[*][b]Unwanted Discovery[/b]: You may not want to see the entire map when using debug tools
-[/list]
-
-This mod allows you to use debug mode for its intended purpose (testing, building, element painting) without the side effect of revealing the entire map, saving you from the performance impact of simulating all discovered cells.
-
-[h2]Inspiration[/h2]
-This mod was inspired by [url=https://github.com/Cairath/ONI-Mods/tree/master/src/DebugDoesNotDiscoverMap]Cairath's DebugDoesNotDiscoverMap mod[/url], which unfortunately no longer functions and is no longer being updated. This is a reimplementation that works with current game versions.
-
-Special thanks to [url=https://github.com/Cairath/ONI-Mods]Cairath[/url] for the original concept and approach.
 
 [h2]Compatibility[/h2]
 [list]
-[*]All DLCs supported
-[*]Minimum Build: 700386
-[*]API Version: 2
+[*][b]Oxygen Not Included[/b] - Build 700386 or later
+[*][b]Mod API[/b] - Version 2
+[*][b]DLC Support[/b] - Works with base game and all DLC
+[*][b]Other Mods[/b] - Compatible with most mods
+[/list]
+
+[h2]Performance[/h2]
+[b]Improves Performance[/b]
+[list]
+[*][b]Prevents Cell Discovery[/b] - Undiscovered cells don't need full simulation
+[*][b]Lightweight Patch[/b] - Only intercepts debug toggle, no runtime overhead
+[*][b]No Continuous Monitoring[/b] - Patch only triggers when debug mode is toggled
+[/list]
+
+[h2]Future Updates[/h2]
+[list]
+[*]Option to toggle map discovery behavior
+[*]Keyboard shortcut to manually trigger map discovery if desired
 [/list]
 
 [h2]Support & Issues[/h2]
@@ -62,10 +72,9 @@ This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/
 
 [h2]Credits[/h2]
 [list]
-[*]Developed for Oxygen Not Included
-[*]Uses PLib by Peter Han
-[*]Uses Harmony by pardeike
-[*]Inspired by Cairath's DebugDoesNotDiscoverMap mod
+[*]Built using [url=https://github.com/peterhaneve/ONIMods]PLib[/url] by Peter Han
+[*]Uses [url=https://github.com/pardeike/Harmony]Harmony[/url] for runtime patching
+[*]Inspired by [url=https://github.com/Cairath/ONI-Mods/tree/master/src/DebugDoesNotDiscoverMap]Cairath's DebugDoesNotDiscoverMap mod[/url]
 [/list]
 
 [h2]Version History[/h2]
