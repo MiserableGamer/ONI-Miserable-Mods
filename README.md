@@ -22,6 +22,11 @@ Increases the character limit for storage capacity input fields, allowing you to
 
 [📖 Read More](CapacityControl/README.md) | [Latest Release v1.0.1](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/CapacityControl-v1.0.1)
 
+### 🗂️ Controlled Filtering
+Control which item categories appear as Standard vs Non-Standard in storage filter lists. Choose whether Clothing, Critter Eggs, and Sublimating items should be included in the "Select All Standard" selection.
+
+[📖 Read More](ControlledFiltering/README.md) | [Latest Release v1.0.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledFiltering-v1.0.0)
+
 ### 🌡️ Controlled Overlay
 Adds a text input field to the Temperature Overlay's relative temperature slider, allowing you to type exact temperature values instead of struggling with the slider.
 

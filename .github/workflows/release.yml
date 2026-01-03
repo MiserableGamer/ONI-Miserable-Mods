@@ -187,6 +187,7 @@ jobs:
               "CapacityControl" = "Capacity Control"
               "ControlledSublimation" = "Controlled Sublimation"
               "ControlledOverlay" = "Controlled Overlay"
+              "ControlledFiltering" = "Controlled Filtering"
             }
             
             $modPattern = $modPatterns[$modName]
