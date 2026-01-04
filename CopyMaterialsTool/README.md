@@ -154,6 +154,8 @@ Please mention "Copy Materials Tool" in your issue title or description so we ca
 
 ## Version History
 
+
+- **1.0.1.21**: Bugfix - icon on the button
 - **1.0.0.0**: Initial release
 - **0.1.1.11**: Code cleaning
 - **0.1.0.10**: Test release
