@@ -85,5 +85,6 @@ This mod is part of the [ONI 200+ Ultimate Mods collection](https://steamcommuni
 
 ## Version History
 
+- **1.0.2.120**: Fixed bug affecting game priority system (bionic lubricant refill and other chores)
 - **1.0.1.91**: Initial release
 - **1.0.1.83**: Code cleaning

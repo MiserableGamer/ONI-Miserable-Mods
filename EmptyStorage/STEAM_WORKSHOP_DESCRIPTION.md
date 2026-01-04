@@ -81,6 +81,7 @@ This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/
 
 [h2]Version History[/h2]
 [list]
+[*][b]1.0.2.120[/b]: Fixed bug affecting game priority system (bionic lubricant refill and other chores)
 [*][b]1.0.1.91[/b]: Initial release
 [*][b]1.0.1.83[/b]: Code cleaning
 [/list]

@@ -86,6 +86,7 @@
     <Compile Include="EmptyStorageOptions.cs" />
     <Compile Include="EmptyStoragePatches.cs" />
     <Compile Include="EmptyStorageSetting.cs" />
+    <Compile Include="EmptyStorageWorkable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="mod_info.yaml" />
     <Content Include="preview.png" />
