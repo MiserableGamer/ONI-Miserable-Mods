@@ -1,144 +1,129 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 namespace CopyTileTool.Logic
 {
-    // Watches for tile deconstruction and queues reconstruction with new type/material
+    // Watches a single cell for tile removal, then places the replacement blueprint
     public class TileReplacementWatcher : KMonoBehaviour
     {
-        private static Dictionary<int, TileReplacementWatcher> activeWatchers = new Dictionary<int, TileReplacementWatcher>();
-
         private int cell;
         private BuildingDef destinationDef;
         private SimHashes destinationMaterial;
         private Orientation orientation;
         private PrioritySetting priority;
-        private float timeoutTimer;
-        private const float TIMEOUT_SECONDS = 30f;
+        private bool blueprintCreated;
 
-        public static void Attach(
-            Building originalTile,
-            int tileCell,
-            BuildingDef destDef,
-            SimHashes destMaterial,
-            Orientation tileOrientation,
-            PrioritySetting tilePriority)
+        public static TileReplacementWatcher Attach(int cell, BuildingDef destDef, SimHashes destMaterial, Orientation orientation, PrioritySetting priority)
         {
-            if (originalTile == null || destDef == null) return;
-
-            // Don't create duplicate watchers for the same cell
-            if (activeWatchers.ContainsKey(tileCell))
+            // Create a persistent root object if needed
+            GameObject root = Game.Instance?.gameObject ?? GameObject.Find("CopyTileRoot");
+            if (root == null)
             {
-                CopyTileManager.Log($"Watcher already exists for cell {tileCell}, skipping");
-                return;
+                root = new GameObject("CopyTileRoot");
+                Object.DontDestroyOnLoad(root);
             }
 
-            var watcher = originalTile.gameObject.AddComponent<TileReplacementWatcher>();
-            watcher.cell = tileCell;
+            var watcher = root.AddComponent<TileReplacementWatcher>();
+            watcher.cell = cell;
             watcher.destinationDef = destDef;
             watcher.destinationMaterial = destMaterial;
-            watcher.orientation = tileOrientation;
-            watcher.priority = tilePriority;
-            watcher.timeoutTimer = TIMEOUT_SECONDS;
+            watcher.orientation = orientation;
+            watcher.priority = priority;
+            watcher.blueprintCreated = false;
 
-            activeWatchers[tileCell] = watcher;
-
-            CopyTileManager.Log($"Watcher attached for cell {tileCell}: {destDef.PrefabID} with {destMaterial}");
-        }
-
-        protected override void OnCleanUp()
-        {
-            base.OnCleanUp();
-
-            // Remove from active watchers
-            activeWatchers.Remove(cell);
-
-            // Queue construction of the new tile
-            QueueConstruction();
+            CopyTileManager.Log($"Watcher attached for cell {cell}: {destDef.PrefabID} with {destMaterial}");
+            return watcher;
         }
 
         private void Update()
         {
-            // Timeout check - in case the tile never gets deconstructed
-            timeoutTimer -= Time.deltaTime;
-            if (timeoutTimer <= 0)
+            if (blueprintCreated)
             {
-                CopyTileManager.Warn($"Watcher for cell {cell} timed out");
-                activeWatchers.Remove(cell);
                 Destroy(this);
-            }
-        }
-
-        private void QueueConstruction()
-        {
-            if (destinationDef == null)
-            {
-                CopyTileManager.Warn($"Cannot queue construction - destinationDef is null");
                 return;
             }
 
-            CopyTileManager.Log($"Queueing construction at cell {cell}: {destinationDef.PrefabID} with {destinationMaterial}");
-
-            try
+            // Check if the cell is empty (tile has been deconstructed)
+            if (!IsCellEmpty())
             {
-                // Get the position from the cell
-                Vector3 position = Grid.CellToPosCBC(cell, destinationDef.SceneLayer);
-
-                // Create the build order
-                var selectedElements = new Tag[] { ElementLoader.FindElementByHash(destinationMaterial).tag };
-
-                // Use the game's building placement system
-                if (destinationDef.IsValidPlaceLocation(null, cell, orientation, out string _))
-                {
-                    // Queue the build order
-                    var buildOrder = destinationDef.TryPlace(
-                        null,
-                        position,
-                        orientation,
-                        selectedElements,
-                        0  // facadeIndex
-                    );
-
-                    if (buildOrder != null)
-                    {
-                        // Apply priority
-                        var prioritizable = buildOrder.GetComponent<Prioritizable>();
-                        if (prioritizable != null)
-                        {
-                            prioritizable.SetMasterPriority(priority);
-                        }
-
-                        CopyTileManager.Log($"Build order created successfully at cell {cell}");
-                    }
-                    else
-                    {
-                        CopyTileManager.Warn($"TryPlace returned null for cell {cell}");
-                    }
-                }
-                else
-                {
-                    CopyTileManager.Warn($"Invalid placement location for cell {cell}");
-                }
+                return;
             }
-            catch (System.Exception e)
+
+            // Cell is empty - try to place blueprint
+            if (TryCreateBlueprint())
             {
-                CopyTileManager.Warn($"Error queueing construction: {e.Message}\n{e.StackTrace}");
+                blueprintCreated = true;
             }
         }
 
-        public static void ClearAllWatchers()
+        private bool IsCellEmpty()
         {
-            foreach (var watcher in activeWatchers.Values)
+            // Check the FoundationTile layer for tiles
+            GameObject obj = Grid.Objects[cell, (int)ObjectLayer.FoundationTile];
+            if (obj != null)
             {
-                if (watcher != null)
+                // Something exists at this cell
+                var building = obj.GetComponent<Building>();
+                if (building != null)
                 {
-                    Destroy(watcher);
+                    // Check if it's a Constructable (blueprint) we created
+                    var constructable = obj.GetComponent<Constructable>();
+                    if (constructable != null)
+                    {
+                        // There's a blueprint - our work here is done
+                        CopyTileManager.Log($"Blueprint already exists at cell {cell}");
+                        blueprintCreated = true;
+                        return false;
+                    }
+
+                    // Building still exists - not empty yet
+                    return false;
                 }
             }
-            activeWatchers.Clear();
+
+            // Cell appears to be empty
+            return true;
         }
 
-        public static int GetActiveWatcherCount() => activeWatchers.Count;
+        private bool TryCreateBlueprint()
+        {
+            if (destinationDef == null)
+            {
+                CopyTileManager.Warn($"Cannot create blueprint - destinationDef is null");
+                return true; // Don't retry
+            }
+
+            var element = ElementLoader.FindElementByHash(destinationMaterial);
+            if (element == null)
+            {
+                CopyTileManager.Warn($"Element not found for hash {destinationMaterial}");
+                return true; // Don't retry
+            }
+
+            Vector3 worldPos = Grid.CellToPosCBC(cell, destinationDef.SceneLayer);
+            var selectedElements = new Tag[] { element.tag };
+
+            CopyTileManager.Log($"Attempting TryPlace at cell {cell}: {destinationDef.PrefabID} with {destinationMaterial}");
+
+            var placed = destinationDef.TryPlace(null, worldPos, orientation, selectedElements, 0);
+            if (placed != null)
+            {
+                // Apply priority
+                var prioritizable = placed.GetComponent<Prioritizable>();
+                if (prioritizable != null)
+                {
+                    prioritizable.SetMasterPriority(priority);
+                }
+
+                CopyTileManager.Log($"Blueprint successfully placed at cell {cell}");
+                CopyTileManager.ShowPopup(CopyTileStrings.UI.COPY_TILE.REPLACEMENT_QUEUED, worldPos);
+                return true;
+            }
+            else
+            {
+                // TryPlace failed - will retry next frame
+                CopyTileManager.Log($"TryPlace failed for cell {cell}, will retry");
+                return false;
+            }
+        }
     }
 }
-

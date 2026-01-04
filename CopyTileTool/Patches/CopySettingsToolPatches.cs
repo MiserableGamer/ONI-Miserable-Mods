@@ -18,6 +18,8 @@ namespace CopyTileTool.Patches
         [HarmonyPatch("OnDragTool")]
         public static bool Prefix(CopySettingsTool __instance, int cell)
         {
+            CopyTileManager.Log($"OnDragTool Prefix: isTileCopyMode={isTileCopyMode}, state={CopyTileManager.CurrentState}, cell={cell}");
+            
             if (!isTileCopyMode) return true;
 
             // Handle based on current state
@@ -26,16 +28,19 @@ namespace CopyTileTool.Patches
             if (state == ToolState.SelectingSource)
             {
                 // User is clicking to select the source tile
+                CopyTileManager.Log("State is SelectingSource, calling HandleSourceSelection");
                 HandleSourceSelection(cell);
                 return false;  // Don't run base OnDragTool
             }
             else if (state == ToolState.ReadyToDrag)
             {
                 // User is dragging to apply replacements
+                CopyTileManager.Log("State is ReadyToDrag, calling HandleDragReplacement");
                 HandleDragReplacement(cell);
                 return false;  // Don't run base OnDragTool
             }
 
+            CopyTileManager.Log($"State is {state}, falling through to base");
             return true;
         }
 
@@ -131,31 +136,52 @@ namespace CopyTileTool.Patches
 
             CopyTileManager.Log($"Processing tile at cell {cell}: {building.Def.PrefabID}/{pe.ElementID} -> {destDef?.PrefabID}/{destMaterial}");
 
-            // Queue deconstruction
-            var deconstructable = obj.GetComponent<Deconstructable>();
-            if (deconstructable != null)
+            // Queue build directly over existing tile - no deconstruction needed
+            // ONI allows building tiles over existing tiles and handles the replacement
+            QueueTileBuild(cell, destDef, destMaterial, obj);
+        }
+
+        private static void QueueTileBuild(int cell, BuildingDef destDef, SimHashes destMaterial, GameObject existingTile)
+        {
+            CopyTileManager.Log($"QueueTileBuild called: cell={cell}, destDef={destDef?.PrefabID}, destMaterial={destMaterial}");
+            
+            try
             {
-                deconstructable.QueueDeconstruction(true);
+                // Get orientation from existing tile
+                var orientation = existingTile.GetComponent<Rotatable>()?.GetOrientation() ?? Orientation.Neutral;
+                
+                // Get priority from destination tile
+                var priority = CopyTileManager.GetDestinationPriority();
 
-                // Get orientation
-                var orientation = obj.GetComponent<Rotatable>()?.GetOrientation() ?? Orientation.Neutral;
-
-                // Attach watcher to queue reconstruction after deconstruction
-                TileReplacementWatcher.Attach(
-                    building,
-                    cell,
-                    destDef,
-                    destMaterial,
-                    orientation,
-                    CopyTileManager.GetDestinationPriority()
-                );
-
-                Vector3 pos = obj.transform.position;
-                CopyTileManager.ShowPopup(CopyTileStrings.UI.COPY_TILE.REPLACEMENT_QUEUED, pos);
+                // Queue deconstruction of the existing tile
+                var deconstructable = existingTile.GetComponent<Deconstructable>();
+                if (deconstructable != null)
+                {
+                    // Mark for deconstruction (true = user triggered)
+                    deconstructable.QueueDeconstruction(true);
+                    
+                    // Apply priority to deconstruction
+                    var prioritizable = existingTile.GetComponent<Prioritizable>();
+                    if (prioritizable != null)
+                    {
+                        prioritizable.SetMasterPriority(priority);
+                    }
+                    
+                    // Attach a watcher that will place the blueprint once the tile is gone
+                    TileReplacementWatcher.Attach(cell, destDef, destMaterial, orientation, priority);
+                    
+                    Vector3 pos = existingTile.transform.position;
+                    CopyTileManager.ShowPopup(CopyTileStrings.UI.COPY_TILE.TILE_COPIED, pos);
+                    CopyTileManager.Log($"Queued deconstruction at cell {cell}, watcher will rebuild as {destDef.PrefabID} with {destMaterial}");
+                }
+                else
+                {
+                    CopyTileManager.Warn($"No Deconstructable component on tile at cell {cell}");
+                }
             }
-            else
+            catch (System.Exception e)
             {
-                CopyTileManager.Warn($"No Deconstructable component on tile at cell {cell}");
+                CopyTileManager.Warn($"Error queueing tile replacement: {e.Message}\n{e.StackTrace}");
             }
         }
 

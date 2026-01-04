@@ -81,4 +81,5 @@ This mod is part of the [ONI 200+ Ultimate Mods collection](https://steamcommuni
 
 ## Version History
 
+- **1.0.1.0**: Fixed tile replacement not queuing new build after deconstruction
 - **1.0.0.0**: Initial release

@@ -74,5 +74,6 @@ This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/
 
 [h2]Version History[/h2]
 [list]
+[*][b]1.0.1.0[/b]: Fixed tile replacement not queuing new build after deconstruction
 [*][b]1.0.0.0[/b]: Initial release
 [/list]

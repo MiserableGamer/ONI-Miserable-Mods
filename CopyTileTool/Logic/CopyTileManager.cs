@@ -12,7 +12,7 @@ namespace CopyTileTool.Logic
 
     public static class CopyTileManager
     {
-        public static bool DebugMode = false;
+        public static bool DebugMode = true;  // Enable for debugging - set to false for release
 
         // Current tool state
         public static ToolState CurrentState { get; private set; } = ToolState.Idle;
