@@ -118,7 +118,7 @@ This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/
 
 [h2]Version History[/h2]
 [list]
-[*][b]1.0.1.21[/b]: Bugfix - icon on the button
+[*][b]1.0.1.21[/b]: Bugfix - added icon to button
 [*][b]1.0.0.0[/b]: Initial release
 [*][b]0.1.1.11[/b]: Code cleaning
 [*][b]0.1.0.10[/b]: Test release
