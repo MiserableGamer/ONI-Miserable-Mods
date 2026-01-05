@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using CopyTileTool.Logic;
 
-// RESTORE POINT: If TryReplaceTile approach doesn't work, revert to git commit before this change
-// The previous approach used TileReplacementWatcher with deconstruct-then-rebuild pattern
-
 namespace CopyTileTool.Patches
 {
     [HarmonyPatch(typeof(CopySettingsTool))]
@@ -100,7 +97,6 @@ namespace CopyTileTool.Patches
             if (CopyTileManager.GetSourceDef() == null) return;
 
             // Safety check - source type must be different from destination type
-            // (same type changes should use CopyMaterialsTool)
             if (CopyTileManager.GetSourceDef()?.PrefabID == CopyTileManager.GetDestinationDef()?.PrefabID)
             {
                 return;
@@ -168,7 +164,6 @@ namespace CopyTileTool.Patches
                 var selectedElements = new Tag[] { element.tag };
 
                 // Use TryReplaceTile - this is what the game uses when you build a tile over an existing different tile
-                // It handles the entire replacement process natively, including visual refresh
                 var placed = destDef.TryReplaceTile(null, worldPos, orientation, selectedElements, null, 0);
                 
                 if (placed != null)

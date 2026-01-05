@@ -99,7 +99,6 @@ namespace CopyTileTool.Logic
             }
 
             // Explicitly remove the old tile's render data
-            // TileVisualizer.RefreshCell doesn't work on empty cells, so we call RemoveBlock directly
             if (oldTileDef != null)
             {
                 World.Instance.blockTileRenderer.RemoveBlock(oldTileDef, false, oldTileMaterial, cell);

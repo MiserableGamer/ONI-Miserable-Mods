@@ -11,7 +11,7 @@ namespace CopyTileTool.Patches
     public static class DiagnosticPatches
     {
         // Set to false to disable all diagnostic logging
-        public static bool EnableDiagnostics = true;
+        public static bool EnableDiagnostics = false;
 
         private static void Log(string message)
         {
@@ -217,11 +217,6 @@ namespace CopyTileTool.Patches
     }
 
     // Fix tile render cleanup - explicitly remove with correct element
-    // This works around a game bug where RemoveBlock uses the wrong element during replacement
-    //
-    // NOTE: This fixes ghosts but TrueTiles texture may not apply on first replacement of CopyTileTool tiles.
-    // TrueTiles works on: CopyTileTool creation, 2nd+ replacement, and after save/reload.
-    //
     [HarmonyPatch(typeof(BuildingComplete), "OnCleanUp")]
     public static class BuildingComplete_OnCleanUp_Patch
     {
