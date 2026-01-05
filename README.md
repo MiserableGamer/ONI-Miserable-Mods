@@ -45,7 +45,7 @@ Extends the "Copy Settings" tool to also copy construction materials between bui
 ### 🧱 Copy Tile Tool
 Replace tiles in bulk by selecting a destination tile type, then a source tile type to replace, then drag-selecting an area. Only tiles matching the source type AND material will be replaced.
 
-[📖 Read More](CopyTileTool/README.md) | [Latest Release v1.0.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/CopyTileTool-v1.0.0)
+[📖 Read More](CopyTileTool/README.md) | [Latest Release v1.0.2](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/CopyTileTool-v1.0.2)
 
 ### 🔍 Debug Fog of War
 A debug tool that allows you to reveal the entire map, useful for testing and exploring.
