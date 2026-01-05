@@ -91,6 +91,7 @@
     <Compile Include="Logic\TileReplacementWatcher.cs" />
     <Compile Include="Patches\UserMenuPatch.cs" />
     <Compile Include="Patches\CopySettingsToolPatches.cs" />
+    <Compile Include="Patches\DiagnosticPatches.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="mod_info.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

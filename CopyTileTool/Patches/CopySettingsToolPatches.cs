@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using CopyTileTool.Logic;
 
+// RESTORE POINT: If TryReplaceTile approach doesn't work, revert to git commit before this change
+// The previous approach used TileReplacementWatcher with deconstruct-then-rebuild pattern
+
 namespace CopyTileTool.Patches
 {
     [HarmonyPatch(typeof(CopySettingsTool))]
@@ -136,47 +139,57 @@ namespace CopyTileTool.Patches
 
             CopyTileManager.Log($"Processing tile at cell {cell}: {building.Def.PrefabID}/{pe.ElementID} -> {destDef?.PrefabID}/{destMaterial}");
 
-            // Queue build directly over existing tile - no deconstruction needed
-            // ONI allows building tiles over existing tiles and handles the replacement
-            QueueTileBuild(cell, destDef, destMaterial, obj);
+            // Use the game's native tile replacement system
+            QueueTileReplacement(cell, destDef, destMaterial, obj);
         }
 
-        private static void QueueTileBuild(int cell, BuildingDef destDef, SimHashes destMaterial, GameObject existingTile)
+        // Uses the game's native TryReplaceTile which handles deconstruction + rebuild in one operation
+        private static void QueueTileReplacement(int cell, BuildingDef destDef, SimHashes destMaterial, GameObject existingTile)
         {
-            CopyTileManager.Log($"QueueTileBuild called: cell={cell}, destDef={destDef?.PrefabID}, destMaterial={destMaterial}");
+            CopyTileManager.Log($"QueueTileReplacement called: cell={cell}, destDef={destDef?.PrefabID}, destMaterial={destMaterial}");
             
             try
             {
+                // Get element for the destination material
+                var element = ElementLoader.FindElementByHash(destMaterial);
+                if (element == null)
+                {
+                    CopyTileManager.Warn($"Element not found for hash {destMaterial}");
+                    return;
+                }
+
                 // Get orientation from existing tile
                 var orientation = existingTile.GetComponent<Rotatable>()?.GetOrientation() ?? Orientation.Neutral;
                 
                 // Get priority from destination tile
                 var priority = CopyTileManager.GetDestinationPriority();
 
-                // Queue deconstruction of the existing tile
-                var deconstructable = existingTile.GetComponent<Deconstructable>();
-                if (deconstructable != null)
+                Vector3 worldPos = Grid.CellToPosCBC(cell, destDef.SceneLayer);
+                var selectedElements = new Tag[] { element.tag };
+
+                // Use TryReplaceTile - this is what the game uses when you build a tile over an existing different tile
+                // It handles the entire replacement process natively, including visual refresh
+                var placed = destDef.TryReplaceTile(null, worldPos, orientation, selectedElements, null, 0);
+                
+                if (placed != null)
                 {
-                    // Mark for deconstruction (true = user triggered)
-                    deconstructable.QueueDeconstruction(true);
+                    // Register in replacement layer (same as BuildTool does)
+                    Grid.Objects[cell, (int)destDef.ReplacementLayer] = placed;
                     
-                    // Apply priority to deconstruction
-                    var prioritizable = existingTile.GetComponent<Prioritizable>();
+                    // Apply priority
+                    var prioritizable = placed.GetComponent<Prioritizable>();
                     if (prioritizable != null)
                     {
                         prioritizable.SetMasterPriority(priority);
                     }
-                    
-                    // Attach a watcher that will place the blueprint once the tile is gone
-                    TileReplacementWatcher.Attach(cell, destDef, destMaterial, orientation, priority);
-                    
+
                     Vector3 pos = existingTile.transform.position;
                     CopyTileManager.ShowPopup(CopyTileStrings.UI.COPY_TILE.TILE_COPIED, pos);
-                    CopyTileManager.Log($"Queued deconstruction at cell {cell}, watcher will rebuild as {destDef.PrefabID} with {destMaterial}");
+                    CopyTileManager.Log($"TryReplaceTile succeeded at cell {cell}");
                 }
                 else
                 {
-                    CopyTileManager.Warn($"No Deconstructable component on tile at cell {cell}");
+                    CopyTileManager.Log($"TryReplaceTile returned null for cell {cell} - replacement may not be valid here");
                 }
             }
             catch (System.Exception e)

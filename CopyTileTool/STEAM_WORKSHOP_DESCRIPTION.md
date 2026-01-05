@@ -34,6 +34,11 @@ Replace tiles in bulk by selecting a destination type, then a source type to rep
 [*][b]DLC Support[/b] - Works with base game and all DLC
 [/list]
 
+[h2]Known Issues[/h2]
+[list]
+[*][b]TrueTiles Texture on First Replacement[/b]: When using the [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2951717779]TrueTiles[/url] mod, tiles created by Copy Tile Tool will display correctly with TrueTiles textures. However, the [b]first[/b] tile built over a Copy Tile Tool-created tile (using normal build tools) may show the default game texture instead of the TrueTiles texture. Saving and reloading the game, will restore the correct TrueTiles texture. This is a visual-only issue and does not affect gameplay.
+[/list]
+
 [h2]Performance[/h2]
 [b]Minimal Performance Impact[/b]
 
@@ -74,6 +79,7 @@ This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/
 
 [h2]Version History[/h2]
 [list]
+[*][b]1.0.2.38[/b]: Fixed mixed tiles appearing after rebuild
 [*][b]1.0.1.0[/b]: Fixed tile replacement not queuing new build after deconstruction
 [*][b]1.0.0.0[/b]: Initial release
 [/list]

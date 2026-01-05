@@ -40,6 +40,10 @@ Subscribe on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails
 - **Mod API** - Version 2
 - **DLC Support** - Works with base game and all DLC
 
+## Known Issues
+
+- **TrueTiles Texture on First Replacement**: When using the [TrueTiles](https://steamcommunity.com/sharedfiles/filedetails/?id=2951717779) mod, tiles created by Copy Tile Tool will display correctly with TrueTiles textures. However, the **first** tile built over a Copy Tile Tool-created tile (using normal build tools) may show the default game texture instead of the TrueTiles texture. Saving and reloading the game, will restore the correct TrueTiles texture. This is a visual-only issue and does not affect gameplay.
+
 ## Performance
 
 **Minimal Performance Impact**
@@ -81,5 +85,6 @@ This mod is part of the [ONI 200+ Ultimate Mods collection](https://steamcommuni
 
 ## Version History
 
+- **1.0.2.38**: Fixed mixed tiles appearing after rebuild
 - **1.0.1.0**: Fixed tile replacement not queuing new build after deconstruction
 - **1.0.0.0**: Initial release

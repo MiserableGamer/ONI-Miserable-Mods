@@ -11,8 +11,12 @@ namespace CopyTileTool.Logic
         private Orientation orientation;
         private PrioritySetting priority;
         private bool blueprintCreated;
+        
+        // Track old tile info for render cleanup
+        private BuildingDef oldTileDef;
+        private SimHashes oldTileMaterial;
 
-        public static TileReplacementWatcher Attach(int cell, BuildingDef destDef, SimHashes destMaterial, Orientation orientation, PrioritySetting priority)
+        public static TileReplacementWatcher Attach(int cell, BuildingDef destDef, SimHashes destMaterial, Orientation orientation, PrioritySetting priority, BuildingDef oldDef, SimHashes oldMaterial)
         {
             // Create a persistent root object if needed
             GameObject root = Game.Instance?.gameObject ?? GameObject.Find("CopyTileRoot");
@@ -29,8 +33,10 @@ namespace CopyTileTool.Logic
             watcher.orientation = orientation;
             watcher.priority = priority;
             watcher.blueprintCreated = false;
+            watcher.oldTileDef = oldDef;
+            watcher.oldTileMaterial = oldMaterial;
 
-            CopyTileManager.Log($"Watcher attached for cell {cell}: {destDef.PrefabID} with {destMaterial}");
+            CopyTileManager.Log($"Watcher attached for cell {cell}: {destDef.PrefabID} with {destMaterial} (replacing {oldDef?.PrefabID} with {oldMaterial})");
             return watcher;
         }
 
@@ -90,6 +96,15 @@ namespace CopyTileTool.Logic
             {
                 CopyTileManager.Warn($"Cannot create blueprint - destinationDef is null");
                 return true; // Don't retry
+            }
+
+            // Explicitly remove the old tile's render data
+            // TileVisualizer.RefreshCell doesn't work on empty cells, so we call RemoveBlock directly
+            if (oldTileDef != null)
+            {
+                World.Instance.blockTileRenderer.RemoveBlock(oldTileDef, false, oldTileMaterial, cell);
+                World.Instance.blockTileRenderer.RemoveBlock(oldTileDef, true, oldTileMaterial, cell);
+                CopyTileManager.Log($"Removed render blocks for old tile {oldTileDef.PrefabID} at cell {cell}");
             }
 
             var element = ElementLoader.FindElementByHash(destinationMaterial);
