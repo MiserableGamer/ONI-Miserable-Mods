@@ -188,6 +188,7 @@ jobs:
               "ControlledSublimation" = "Controlled Sublimation"
               "ControlledOverlay" = "Controlled Overlay"
               "ControlledFiltering" = "Controlled Filtering"
+              "ControlledMods" = "ControlledMods"
               "CopyTileTool" = "Copy Tile Tool"
             }
             
