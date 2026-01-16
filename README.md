@@ -28,7 +28,7 @@ Control which item categories appear as Standard vs Non-Standard in storage filt
 [📖 Read More](ControlledFiltering/README.md) | [Latest Release v1.0.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledFiltering-v1.0.0)
 
 ### 🎛️ ControlledMods
-Customize and override settings from other mods via an in-game options menu. Currently supports Ronivan's Legacy reservoir capacity adjustments (Medium/Small/Wall reservoirs for both gas and liquid).
+A framework for customizing and overriding settings from other mods via an in-game options menu. Currently in development - support for various mods will be added in future updates.
 
 [📖 Read More](ControlledMods/README.md) | [Latest Release v1.0.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledMods-v1.0.0)
 
@@ -61,6 +61,11 @@ A debug tool that allows you to reveal the entire map, useful for testing and ex
 Adds an "Empty Storage" button to storage buildings, allowing you to quickly drop all contents either immediately or via duplicant labor.
 
 [📖 Read More](EmptyStorage/README.md) | [Latest Release v1.0.2](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/EmptyStorage-v1.0.2) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
+
+### 🌡️ High Precision Temperature FIXED
+Displays temperatures with 4 decimal places instead of the default 1 decimal place. A fixed and updated version of the original High Precision Temperature mod that stopped working after game updates.
+
+[📖 Read More](HighPrecisionTemperatureFIXED/README.md) | [Latest Release v1.0.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/HighPrecisionTemperatureFIXED-v1.0.0)
 
 ### 🦾 Longer Arms
 Increases the reach distance for Duplicants, allowing them to interact with buildings and objects from further away.
