@@ -41,7 +41,7 @@ At high extraction rates, duplicants may spend all their time venting pressure!
 [list]
 [*] Enable [b]"Add Gas Output Port"[/b] in mod options (requires restart) - built-in automatic venting!
 [*] Increase "Max Gas Storage" to reduce venting frequency
-[*] Or use [url=https://steamcommunity.com/workshop/filedetails/?id=2058745508] Piped Everything for more advanced piping
+[*] Or use [url=https://steamcommunity.com/workshop/filedetails/?id=2058745508]Piped Everything[/url] for more advanced piping
 [/list]
 
 [h2]Building Output Ports[/h2]
@@ -69,10 +69,9 @@ Add output ports to pipe away gases, liquids, and solids from various buildings!
 [h3]Generators[/h3]
 [table]
 [tr][th]Building[/th][th]CO2 Port[/th][th]Polluted Water Port[/th][/tr]
-[tr][td]Coal Generator[/td][td]✅ (1, 1)[/td][td]-[/td][/tr]
-[tr][td]Wood Burner[/td][td]✅ (0, 1)[/td][td]-[/td][/tr]
-[tr][td]Petroleum Generator[/td][td]✅ (0, 1)[/td][td]✅ (1, 1)[/td][/tr]
-[tr][td]Natural Gas Generator[/td][td]- (vanilla)[/td][td]✅ (1, 1)[/td][/tr]
+[tr][td]Coal Generator[/td][td]✅[/td][td]-[/td][/tr]
+[tr][td]Wood Burner[/td][td]✅[/td][td]-[/td][/tr]
+[tr][td]Petroleum Generator[/td][td]✅[/td][td]✅[/td][/tr]
 [/table]
 
 All ports default to OFF and require game restart when changed.

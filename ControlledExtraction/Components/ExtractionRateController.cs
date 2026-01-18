@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace ControlledExtraction.Components
 {
+    // Controls water input rate and scales oil/gas output proportionally
     [SerializationConfig(MemberSerialization.OptIn)]
     public class ExtractionRateController : KMonoBehaviour
     {
@@ -13,11 +14,8 @@ namespace ControlledExtraction.Components
         [Serialize]
         private float waterInputRate = -1f;
 
-        [MyCmpReq]
-        private ElementConverter elementConverter;
-
-        [MyCmpReq]
-        private ConduitConsumer conduitConsumer;
+        [MyCmpReq] private ElementConverter elementConverter;
+        [MyCmpReq] private ConduitConsumer conduitConsumer;
 
         private OilWellCap oilWellCap;
         private float baseGasRate;
@@ -27,9 +25,13 @@ namespace ControlledExtraction.Components
             get => waterInputRate < 0 ? ControlledExtractionOptions.Instance.DefaultWaterRate : waterInputRate;
             set
             {
-                waterInputRate = Mathf.Clamp(value,
+                float newValue = Mathf.Clamp(value,
                     ControlledExtractionOptions.Instance.MinWaterRate,
                     ControlledExtractionOptions.Instance.MaxWaterRate);
+                
+                if (Mathf.Approximately(newValue, waterInputRate)) return;
+                
+                waterInputRate = newValue;
                 ApplyRates();
             }
         }
@@ -48,6 +50,7 @@ namespace ControlledExtraction.Components
             oilWellCap = GetComponent<OilWellCap>();
             if (oilWellCap != null)
                 baseGasRate = oilWellCap.addGasRate;
+            
             ApplyRates();
         }
 
@@ -55,32 +58,80 @@ namespace ControlledExtraction.Components
         {
             if (elementConverter == null) return;
 
+            float currentRate = WaterInputRate;
+            float multiplier = ExtractionMultiplier;
+
             // Water consumption
             if (elementConverter.consumedElements?.Length > 0)
             {
                 var consumed = elementConverter.consumedElements[0];
-                consumed.MassConsumptionRate = WaterInputRate;
+                consumed.MassConsumptionRate = currentRate;
                 elementConverter.consumedElements[0] = consumed;
             }
 
-            // Oil output (maintains 3.33:1 ratio)
+            // Oil output (3.33:1 ratio with water)
             if (elementConverter.outputElements?.Length > 0)
             {
                 var output = elementConverter.outputElements[0];
-                output.massGenerationRate = WaterInputRate * VANILLA_OIL_RATIO;
+                output.massGenerationRate = currentRate * VANILLA_OIL_RATIO;
                 elementConverter.outputElements[0] = output;
             }
 
-            // Conduit capacity
+            // Conduit capacity scales with rate
             if (conduitConsumer != null)
             {
-                conduitConsumer.consumptionRate = Mathf.Max(2f, WaterInputRate * 2f);
-                conduitConsumer.capacityKG = Mathf.Max(10f, WaterInputRate * 10f);
+                conduitConsumer.consumptionRate = Mathf.Max(2f, currentRate * 2f);
+                conduitConsumer.capacityKG = Mathf.Max(10f, currentRate * 10f);
             }
 
-            // Gas buildup rate
+            // Gas buildup scales with rate
             if (oilWellCap != null && baseGasRate > 0)
-                oilWellCap.addGasRate = baseGasRate * ExtractionMultiplier;
+                oilWellCap.addGasRate = baseGasRate * multiplier;
+
+            // Oil storage scales with rate to prevent overflow at high extraction rates
+            var actualStorage = GetComponent<Storage>();
+            if (actualStorage != null)
+            {
+                float baseCapacity = ControlledExtractionOptions.Instance.MaxOilStorage;
+                actualStorage.capacityKg = baseCapacity * Mathf.Max(1f, multiplier);
+            }
+
+            // Ronivan's Legacy compatibility - scale their hardcoded limits
+            ScaleRonivansLegacyLimits(multiplier);
+        }
+
+        // Scale Ronivan's Legacy hardcoded storage limits if present
+        private void ScaleRonivansLegacyLimits(float multiplier)
+        {
+            // PipedOptionalExhaust - RL sets capacity to 20f for oil
+            foreach (var component in GetComponents<KMonoBehaviour>())
+            {
+                var type = component.GetType();
+                
+                // Scale PipedOptionalExhaust.capacity
+                if (type.Name == "PipedOptionalExhaust")
+                {
+                    var capacityField = type.GetField("capacity");
+                    if (capacityField != null)
+                    {
+                        float baseValue = 20f; // RL's hardcoded value
+                        float scaledValue = baseValue * Mathf.Max(1f, multiplier);
+                        capacityField.SetValue(component, scaledValue);
+                    }
+                }
+                
+                // Scale ElementThresholdOperational.Threshold
+                if (type.Name == "ElementThresholdOperational")
+                {
+                    var thresholdField = type.GetField("Threshold");
+                    if (thresholdField != null)
+                    {
+                        float baseValue = 20f; // RL's hardcoded value for oil
+                        float scaledValue = baseValue * Mathf.Max(1f, multiplier);
+                        thresholdField.SetValue(component, scaledValue);
+                    }
+                }
+            }
         }
 
         private void OnCopySettings(object data)

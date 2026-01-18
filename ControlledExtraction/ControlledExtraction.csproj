@@ -90,11 +90,7 @@
     <Compile Include="Patches\GeneratorPatches.cs" />
     <Compile Include="Patches\OilWellCapPatches.cs" />
     <Compile Include="Patches\RefineryPatches.cs" />
-    <Compile Include="Patches\PortVisualizerPatches.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UI\CustomPortController.cs" />
-    <Compile Include="UI\CustomPortDisplay.cs" />
-    <Compile Include="UI\PortDisplayInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="mod.yaml">
@@ -108,7 +104,6 @@
     <None Include="README.md" />
     <None Include="STEAM_WORKSHOP_DESCRIPTION.md" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>powershell -ExecutionPolicy Bypass -File "$(SolutionDir)increment_version.ps1" -ProjectDir "$(ProjectDir)"</PreBuildEvent>

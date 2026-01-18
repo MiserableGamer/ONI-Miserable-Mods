@@ -8,6 +8,9 @@ namespace ControlledExtraction
     public class ControlledExtractionMod : KMod.UserMod2
     {
         public static bool EnableDebugLogs = false;
+        
+        // Mod detection flags
+        private static bool? ronivansLegacyLoaded = null;
 
         public override void OnLoad(Harmony harmony)
         {
@@ -23,6 +26,34 @@ namespace ControlledExtraction
             {
                 Debug.Log($"[ControlledExtraction] {message}");
             }
+        }
+
+        // Check if Ronivan's Legacy is ENABLED (not just installed)
+        public static bool IsRonivansLegacyLoaded()
+        {
+            if (!ronivansLegacyLoaded.HasValue)
+            {
+                ronivansLegacyLoaded = false;
+                
+                // Check enabled mods through the game's mod manager
+                if (Global.Instance?.modManager?.mods != null)
+                {
+                    foreach (var mod in Global.Instance.modManager.mods)
+                    {
+                        bool isRonivansLegacy = mod.IsEnabledForActiveDlc() && 
+                            (mod.title.ToLower().Contains("ronivan") || 
+                             mod.staticID.ToLower().Contains("ronivan"));
+                        
+                        if (isRonivansLegacy)
+                        {
+                            ronivansLegacyLoaded = true;
+                            Log($"Ronivan's Legacy detected: {mod.title}");
+                            break;
+                        }
+                    }
+                }
+            }
+            return ronivansLegacyLoaded.Value;
         }
     }
 }

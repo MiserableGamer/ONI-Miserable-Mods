@@ -6,16 +6,17 @@ using STRINGS;
 
 namespace ControlledExtraction.Patches
 {
-    // Add output ports to building definition (if enabled)
+    // Add output ports to building definition
     [HarmonyPatch(typeof(OilWellCapConfig), "CreateBuildingDef")]
     public static class OilWellCapConfig_CreateBuildingDef_Patch
     {
         public static void Postfix(BuildingDef __result)
         {
             var opts = ControlledExtractionOptions.Instance;
-            
-            // Primary output - prefer liquid if enabled, otherwise gas
-            if (opts.AddLiquidOutputPort)
+            bool skipLiquidPort = ControlledExtractionMod.IsRonivansLegacyLoaded();
+
+            // Liquid takes priority as primary output (skip if Ronivan's Legacy handles it)
+            if (opts.AddLiquidOutputPort && !skipLiquidPort)
             {
                 __result.OutputConduitType = ConduitType.Liquid;
                 __result.UtilityOutputOffset = new CellOffset(2, 1);
@@ -28,7 +29,7 @@ namespace ControlledExtraction.Patches
         }
     }
 
-    // Add component to prefab (for new buildings) and dispensers if enabled
+    // Add components and dispensers
     [HarmonyPatch(typeof(OilWellCapConfig), "ConfigureBuildingTemplate")]
     public static class OilWellCapConfig_ConfigureBuildingTemplate_Patch
     {
@@ -37,13 +38,14 @@ namespace ControlledExtraction.Patches
             go.AddOrGet<ExtractionRateController>();
 
             var opts = ControlledExtractionOptions.Instance;
+            bool skipLiquidPort = ControlledExtractionMod.IsRonivansLegacyLoaded();
+            bool addingOurLiquidPort = opts.AddLiquidOutputPort && !skipLiquidPort;
 
-            // Liquid output (primary if enabled)
-            if (opts.AddLiquidOutputPort)
+            if (addingOurLiquidPort)
             {
-                // Make ElementConverter store oil output instead of spawning in world
+                // Store oil output instead of spawning in world
                 var converter = go.GetComponent<ElementConverter>();
-                if (converter != null && converter.outputElements != null && converter.outputElements.Length > 0)
+                if (converter?.outputElements?.Length > 0)
                 {
                     var output = converter.outputElements[0];
                     output.storeOutput = true;
@@ -54,55 +56,42 @@ namespace ControlledExtraction.Patches
                 liquidDispenser.conduitType = ConduitType.Liquid;
                 liquidDispenser.alwaysDispense = true;
                 liquidDispenser.elementFilter = new SimHashes[] { SimHashes.CrudeOil };
-
             }
 
-            // Gas output (secondary if liquid also enabled, otherwise primary)
             if (opts.AddGasOutputPort)
             {
-                if (opts.AddLiquidOutputPort)
+                if (addingOurLiquidPort)
                 {
-                    // Use secondary output for gas when liquid is primary
+                    // Gas is secondary when liquid is primary
                     var secondaryOutput = go.AddOrGet<ConduitSecondaryOutput>();
                     secondaryOutput.portInfo = new ConduitPortInfo(ConduitType.Gas, new CellOffset(1, 1));
-                    
-                    // Add custom controller to handle gas dispensing via secondary port
                     go.AddOrGet<GasOutputController>();
                 }
                 else
                 {
-                    // Gas is primary output
+                    // Gas is primary (no liquid port or Ronivan's handles liquid)
                     var gasDispenser = go.AddOrGet<ConduitDispenser>();
                     gasDispenser.conduitType = ConduitType.Gas;
                     gasDispenser.alwaysDispense = true;
                     gasDispenser.elementFilter = null;
                 }
-
             }
         }
     }
 
-    // Add component on spawn (for existing buildings in saves) and apply global settings
+    // Apply settings on spawn (works for existing saves too)
     [HarmonyPatch(typeof(OilWellCap), "OnSpawn")]
     public static class OilWellCap_OnSpawn_Patch
     {
         public static void Postfix(OilWellCap __instance)
         {
             __instance.gameObject.AddOrGet<ExtractionRateController>();
-            
-            // Apply global max gas storage from options
             __instance.maxGasPressure = ControlledExtractionOptions.Instance.MaxGasStorage;
-
-            // Apply global max oil storage from options
-            var storage = __instance.GetComponent<Storage>();
-            if (storage != null)
-            {
-                storage.capacityKg = ControlledExtractionOptions.Instance.MaxOilStorage;
-            }
+            // Oil storage is scaled dynamically in ExtractionRateController.ApplyRates()
         }
     }
 
-    // Slider patches - replace backpressure slider with extraction rate slider
+    // Slider patches - repurpose backpressure slider for extraction rate
     [HarmonyPatch(typeof(OilWellCap), "get_SliderTitleKey")]
     public static class OilWellCap_SliderTitleKey_Patch
     {
@@ -206,7 +195,7 @@ namespace ControlledExtraction.Patches
         }
     }
 
-    // Use global backpressure threshold from options
+    // Use global backpressure threshold
     [HarmonyPatch(typeof(OilWellCap), nameof(OilWellCap.NeedsDepressurizing))]
     public static class OilWellCap_NeedsDepressurizing_Patch
     {
@@ -214,7 +203,6 @@ namespace ControlledExtraction.Patches
 
         public static bool Prefix(OilWellCap __instance, ref bool __result)
         {
-            // Cache reflection lookup
             if (smiField == null)
                 smiField = AccessTools.Field(typeof(OilWellCap), "smi");
 
@@ -225,11 +213,11 @@ namespace ControlledExtraction.Patches
                 __result = smi.GetPressurePercent() >= threshold;
                 return false;
             }
-            return true; // Fallback to original if smi not found
+            return true;
         }
     }
 
-    // Register strings
+    // Register UI strings
     [HarmonyPatch(typeof(Localization), "Initialize")]
     public static class Localization_Initialize_Patch
     {
