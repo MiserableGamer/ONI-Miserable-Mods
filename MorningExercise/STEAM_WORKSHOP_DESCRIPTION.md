@@ -91,7 +91,8 @@ This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/
 
 [h2]Version History[/h2]
 [list]
-[*][b]1.0.2.127[/b]: Initial release
-[*][b]1.0.2.125[/b]: Dupes now go to relax after exercising or if already buffed
-[*][b]1.0.1.103[/b]: Code cleaning
+[*][b]1.0.0[/b]: Initial release
+[*][b]1.0.1[/b]: Dupes now go to relax after exercising or if already buffed
+[*][b]1.0.2[/b]: Code cleaning
+[*][b]1.0.3[/b]: Code cleaning
 [/list]

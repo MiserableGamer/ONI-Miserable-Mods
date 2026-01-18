@@ -94,6 +94,7 @@ This mod is part of the [ONI 200+ Ultimate Mods collection](https://steamcommuni
 
 ## Version History
 
-- **1.0.2.127**: Initial release
-- **1.0.2.125**: Dupes now go to relax after exercising or if already buffed
-- **1.0.1.103**: Code cleaning
+- **1.0.0**: Initial release
+- **1.0.1**: Dupes now go to relax after exercising or if already buffed
+- **1.0.2**: Code cleaning
+- **1.0.3**: Bugfix
