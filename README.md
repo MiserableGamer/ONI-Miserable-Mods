@@ -22,6 +22,11 @@ Increases the character limit for storage capacity input fields, allowing you to
 
 [📖 Read More](CapacityControl/README.md) | [Latest Release v1.0.1](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/CapacityControl-v1.0.1)
 
+### ⛽ Controlled Extraction
+Per-building control over Oil Well extraction rates. Adjust water input from 0.01 to 100 kg/s with proportional oil output and gas pressure scaling. Compatible with Ronivan's Legacy.
+
+[📖 Read More](ControlledExtraction/README.md) | [Latest Release v1.0.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledExtraction-v1.0.0)
+
 ### 🗂️ Controlled Filtering
 Control which item categories appear as Standard vs Non-Standard in storage filter lists. Choose whether Clothing, Critter Eggs, and Sublimating items should be included in the "Select All Standard" selection.
 
