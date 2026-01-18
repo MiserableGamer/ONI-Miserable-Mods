@@ -80,7 +80,7 @@ Increases the reach distance for Duplicants, allowing them to interact with buil
 ### 🏃 Morning Exercise
 Adds a Morning Exercise schedule block and Manual Exerciser building, allowing Duplicants to work out and gain Athletics or Morale bonuses.
 
-[📖 Read More](MorningExercise/README.md) | [Latest Release v1.0.2](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/MorningExercise-v1.0.2) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
+[📖 Read More](MorningExercise/README.md) | [Latest Release v1.0.3](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/MorningExercise-v1.0.3) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
 
 ### 🦠 No Disease
 Completely disables the disease system in Oxygen Not Included, removing all germs, sicknesses, and disease-related mechanics.
