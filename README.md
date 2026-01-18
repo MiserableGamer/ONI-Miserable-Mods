@@ -47,6 +47,11 @@ Complete control over element sublimation and off-gassing, with separate setting
 
 [📖 Read More](ControlledSublimation/README.md) | [Latest Release v1.0.1](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledSublimation-v1.0.1)
 
+### ⚠️ Controlled Warnings
+Enhanced alerts for critical situations. Adds left-side notifications when duplicants get trapped, with escalation to critical (red) alerts if they're also suffocating. Click to jump to location.
+
+[📖 Read More](ControlledWarnings/README.md) | [Latest Release v1.0.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledWarnings-v1.0.0)
+
 ### 📋 Copy Materials Tool
 Extends the "Copy Settings" tool to also copy construction materials between buildings of the same type, with full support for conduits and bridges.
 
