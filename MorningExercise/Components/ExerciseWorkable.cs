@@ -98,6 +98,12 @@ namespace MorningExercise
             }
             synchronizeAnims = false;
             
+            // Critical: Clear post-work animation arrays to prevent crash
+            // Without this, StandardWorker.StartPlayingPostAnim tries to play
+            // animations that don't exist in the override batch
+            workingPstComplete = null;
+            workingPstFailed = null;
+            
             // Get exercise duration from options
             var options = POptions.ReadSettings<Options.MorningExerciseOptions>() ?? new Options.MorningExerciseOptions();
             SetWorkTime(options.ExerciseDuration);
