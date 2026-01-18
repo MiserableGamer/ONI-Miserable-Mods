@@ -115,6 +115,11 @@ Each building category has its own options section for enabling output ports.
 
 [h2]Version History[/h2]
 
+[b]1.0.1.35[/b]
+[list]
+[*] Bugfixes
+[/list]
+
 [b]1.0.0.22[/b]
 [list]
 [*] Initial release

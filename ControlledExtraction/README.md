@@ -122,25 +122,8 @@ Subscribe on the [Steam Workshop](https://steamcommunity.com/sharedfiles/filedet
 
 ## Version History
 
-### 1.0.0.21 (Current)
-- Added output ports for generators (Coal, Wood Burner, Petroleum, Natural Gas)
-- Added output ports for Oil Refinery (Methane)
-- Added output ports for Ethanol Distillery (CO2, Polluted Dirt, Lumber input)
-- Added Oil Well Cap liquid output port for Crude Oil
-- Improved port visualization using game's native system
-- Auto-detect solid conduit capacity for mod compatibility
-- Optimized gas/liquid output using ConduitFlow updaters
-
-### 1.0.0.15
-- Added Oil Well Cap gas output port option
-- Added Max Gas Storage and Max Oil Storage options
-- Added global backpressure threshold setting
-
-### 1.0.0.10
-- Added per-building extraction rate control via slider
-- Proportional scaling of oil output and gas pressure
-- Copy Settings support
-- Configurable slider range via PLib options
+### 1.0.1.35 (Current)
+- Bugfixes
 
 ### 1.0.0.1
 - Initial release
