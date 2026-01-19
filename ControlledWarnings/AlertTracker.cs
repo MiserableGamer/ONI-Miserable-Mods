@@ -123,9 +123,6 @@ namespace ControlledWarnings
             ControlledWarningsMod.DebugLog($"Created {(isCritical ? "CRITICAL" : "warning")} alert for {dupeName}");
         }
 
-        // RESTORE POINT: clearCooldown parameter added for positive confirmation clearing
-        // When a dupe is confirmed freed (reached safety), we clear cooldown so re-trapping triggers new alert
-        // When alert is dismissed manually, cooldown remains to prevent spam
         private static void RemoveAlert(int dupeId, bool clearCooldown = false)
         {
             if (activeAlerts.TryGetValue(dupeId, out TrackedAlert alert))
