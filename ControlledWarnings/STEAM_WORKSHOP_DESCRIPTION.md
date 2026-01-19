@@ -40,5 +40,6 @@ Minimal impact - hooks into the existing trapped duplicant diagnostic cycle.
 
 [h2]Version History[/h2]
 [list]
+[*][b]1.0.1[/b] - Reworked detection method
 [*][b]1.0.0[/b] - Initial release
 [/list]

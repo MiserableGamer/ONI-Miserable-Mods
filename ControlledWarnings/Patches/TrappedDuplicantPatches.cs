@@ -12,7 +12,6 @@ namespace ControlledWarnings.Patches
             int worldId = GetWorldId(__instance);
             if (worldId < 0) return;
 
-            var trappedThisCycle = new HashSet<int>();
             var minions = Components.LiveMinionIdentities.GetWorldItems(worldId, false);
             if (minions == null) return;
 
@@ -23,19 +22,32 @@ namespace ControlledWarnings.Patches
                 var world = ClusterManager.Instance?.GetWorld(worldId);
                 if (world != null && world.IsModuleInterior) continue;
 
-                if (CheckIfMinionTrapped(minion, worldId))
-                {
-                    trappedThisCycle.Add(minion.GetInstanceID());
-                    bool isSuffocating = CheckIfSuffocating(minion);
-                    AlertTracker.HandleTrappedDupe(minion, isSuffocating);
-                }
-            }
+                int dupeId = minion.GetInstanceID();
 
-            // Clear alerts for dupes no longer trapped
-            foreach (MinionIdentity minion in minions)
-            {
-                if (minion != null && !trappedThisCycle.Contains(minion.GetInstanceID()))
-                    AlertTracker.HandleFreedDupe(minion);
+                if (AlertTracker.HasActiveAlert(dupeId))
+                {
+                    // Only clear alert when dupe can actually reach a safe destination
+                    if (CanReachSafeDestination(minion, worldId))
+                    {
+                        ControlledWarningsMod.DebugLog($"{minion.GetProperName()} can now reach safety - clearing alert");
+                        AlertTracker.HandleFreedDupe(minion);
+                    }
+                    else
+                    {
+                        // Still trapped - check if suffocating status changed (for escalation)
+                        bool isSuffocating = CheckIfSuffocating(minion);
+                        AlertTracker.HandleTrappedDupe(minion, isSuffocating);
+                    }
+                }
+                else
+                {
+                    // No active alert - check if we should create one
+                    if (CheckIfMinionTrapped(minion, worldId))
+                    {
+                        bool isSuffocating = CheckIfSuffocating(minion);
+                        AlertTracker.HandleTrappedDupe(minion, isSuffocating);
+                    }
+                }
             }
         }
 
@@ -58,7 +70,7 @@ namespace ControlledWarnings.Patches
             return -1;
         }
 
-        // Replicates trapped check logic from TrappedDuplicantDiagnostic
+        // Checks if dupe is trapped (used for alert creation)
         private static bool CheckIfMinionTrapped(MinionIdentity minion, int worldId)
         {
             if (!CheckMinionBasicallyIdle(minion)) return false;
@@ -116,6 +128,60 @@ namespace ControlledWarnings.Patches
             }
 
             return true;
+        }
+
+        // Checks if dupe can reach any safe destination (used for alert clearing)
+        private static bool CanReachSafeDestination(MinionIdentity minion, int worldId)
+        {
+            Navigator navigator = minion.GetComponent<Navigator>();
+            if (navigator == null) return false;
+
+            var telepads = Components.Telepads.GetWorldItems(navigator.GetMyWorld().id, false);
+            if (telepads != null && telepads.Count > 0)
+            {
+                var telepadApproachable = telepads[0].GetComponent<IApproachable>();
+                if (telepadApproachable != null && navigator.CanReach(telepadApproachable))
+                    return true;
+            }
+
+            var warpReceivers = Components.WarpReceivers.GetWorldItems(navigator.GetMyWorld().id, false);
+            if (warpReceivers != null)
+            {
+                foreach (WarpReceiver receiver in warpReceivers)
+                {
+                    if (receiver == null) continue;
+                    var receiverApproachable = receiver.GetComponent<IApproachable>();
+                    if (receiverApproachable != null && navigator.CanReach(receiverApproachable))
+                        return true;
+                }
+            }
+
+            var beds = Components.NormalBeds.WorldItemsEnumerate(navigator.GetMyWorldId(), true);
+            foreach (Sleepable bed in beds)
+            {
+                if (bed == null) continue;
+                var assignable = bed.assignable;
+                if (assignable != null && assignable.IsAssignedTo(minion))
+                {
+                    if (bed.approachable != null && navigator.CanReach(bed.approachable))
+                        return true;
+                }
+            }
+
+            var otherMinions = Components.LiveMinionIdentities.GetWorldItems(worldId, false);
+            foreach (MinionIdentity other in otherMinions)
+            {
+                if (other == null || other == minion) continue;
+
+                if (!CheckMinionBasicallyIdle(other))
+                {
+                    var approachable = other.GetComponent<IApproachable>();
+                    if (approachable != null && navigator.CanReach(approachable))
+                        return true;
+                }
+            }
+
+            return false;
         }
 
         private static bool CheckMinionBasicallyIdle(MinionIdentity minion)

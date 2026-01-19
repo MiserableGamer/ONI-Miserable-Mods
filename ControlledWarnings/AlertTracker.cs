@@ -49,10 +49,15 @@ namespace ControlledWarnings
             CreateAlert(minion, dupeName, dupeId, shouldBeCritical, options);
         }
 
-        public static void HandleFreedDupe(MinionIdentity minion)
+        public static void HandleFreedDupe(MinionIdentity minion, bool clearCooldown = true)
         {
             if (minion == null) return;
-            RemoveAlert(minion.GetInstanceID());
+            RemoveAlert(minion.GetInstanceID(), clearCooldown);
+        }
+
+        public static bool HasActiveAlert(int dupeId)
+        {
+            return activeAlerts.ContainsKey(dupeId);
         }
 
         public static void ClearAllAlerts()
@@ -118,14 +123,22 @@ namespace ControlledWarnings
             ControlledWarningsMod.DebugLog($"Created {(isCritical ? "CRITICAL" : "warning")} alert for {dupeName}");
         }
 
-        private static void RemoveAlert(int dupeId)
+        // RESTORE POINT: clearCooldown parameter added for positive confirmation clearing
+        // When a dupe is confirmed freed (reached safety), we clear cooldown so re-trapping triggers new alert
+        // When alert is dismissed manually, cooldown remains to prevent spam
+        private static void RemoveAlert(int dupeId, bool clearCooldown = false)
         {
             if (activeAlerts.TryGetValue(dupeId, out TrackedAlert alert))
             {
                 alert.Notification?.Clear();
-                cooldownTimers[dupeId] = Time.unscaledTime;
+                
+                if (clearCooldown)
+                    cooldownTimers.Remove(dupeId);
+                else
+                    cooldownTimers[dupeId] = Time.unscaledTime;
+                
                 activeAlerts.Remove(dupeId);
-                ControlledWarningsMod.DebugLog($"Removed alert for {alert.DupeName}");
+                ControlledWarningsMod.DebugLog($"Removed alert for {alert.DupeName} (cooldown cleared: {clearCooldown})");
             }
         }
 

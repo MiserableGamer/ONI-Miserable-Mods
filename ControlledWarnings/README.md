@@ -48,4 +48,5 @@ Subscribe on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails
 
 ## Version History
 
+- **1.0.1** - Reworked detection method
 - **1.0.0** - Initial release
