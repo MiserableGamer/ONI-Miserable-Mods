@@ -1,39 +1,81 @@
-# Controlled Automation
+# ControlledAutomation
 
-Adds high/low threshold controls and automation signal inversion options to storage buildings and sensors in Oxygen Not Included.
+A mod for Oxygen Not Included - update this description to match your mod's purpose.
 
 ## Features
 
-### Storage Thresholds
-Adds configurable high/low threshold sliders (like Smart Battery) to storage buildings that don't already have them, such as Smart Storage Bin and Refrigerator.
+- **Feature 1** - Description of feature 1
+- **Feature 2** - Description of feature 2
+- **Feature 3** - Description of feature 3
 
-### Automation Signal Inversion
-Adds an "Invert Signal" checkbox to storage buildings, sensors, and various other automation-enabled buildings, allowing you to swap Green/Red automation signals without needing a NOT gate.
+## How to Use
 
-### Adv. Thermo Sensor
-Adds a new temperature sensor building with range-based triggering, and a delay buffer:
-- Set a center temperature and define a range above/below
-- Triggers when temperature is inside (or outside, when inverted) the defined range
-- Supports typed input and nudge buttons like vanilla sensors
-- Available in the Automation build menu
+1. **Step 1** - Description of step 1
+2. **Step 2** - Description of step 2
+3. **Step 3** - Description of step 3
 
-## Options
+### Tips
 
-- **Enable Storage Thresholds** - Enable/disable threshold sliders on supported buildings
-- **Enable Automation Inversion** - Enable/disable signal inversion on all supported buildings
+- Tip 1 for using the mod
+- Tip 2 for using the mod
+- Tip 3 for using the mod
+
+## Installation
+
+### Steam Workshop (Recommended)
+Subscribe on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=XXXXXXXXX) and enable in the Mods menu.
+
+### Manual Installation
+1. Download the [latest release](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases)
+2. Extract to: `%USERPROFILE%\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledAutomation\`
+3. Enable in the Mods menu
 
 ## Compatibility
 
-- Works with base game and all DLCs
-- Compatible with **Big Storage** mod - threshold and inversion controls work on Big Refrigerator, Big Smart Storage Bin, and Big Reservoirs
-- Compatible with **Ronivan's Legacy** mod - inversion controls work on supported buildings
-- Compatible with **Multiple Elements Sensors** mod - inversion controls work on all multi-element sensors
-- Compatible with most other automation mods
-## Version History
+- **Oxygen Not Included** - Build 700386 or later
+- **Mod API** - Version 2
+- **DLC Support** - Works with base game and all DLC
+- **Other Mods** - Compatible with most mods
 
-- **1.1.0** - Added delay buffer to Adv. Thermo Sensor
-- **1.0.0** - Initial release with threshold sliders and signal inversion
+## Performance
+
+**Minimal Performance Impact**
+- **Description** - Details about performance characteristics
+
+## Future Updates
+
+- Planned feature 1
+- Planned feature 2
+
+## Support & Issues
+
+Need help, found a bug, or have a suggestion? We're here to help!
+
+### Community
+
+- **💬 Discord**: [Join our Discord server](https://discord.com/channels/1452947938304200861/1452947939927392398) for discussions, questions, and community support
+- **📝 GitHub Discussions**: [Discuss on GitHub](https://github.com/MiserableGamer/ONI-Miserable-Mods/discussions) - share ideas, ask questions, or get help with modding
+
+### Reporting Issues
+
+Found a bug or have a feature request? Please report it on GitHub using our issue templates:
+
+- **🐛 Bug Reports**: [Report a Bug](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=bug_report.yml) - Use this for crashes, errors, or unexpected behavior
+- **💡 Feature Requests**: [Suggest a Feature](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=feature_request.yml) - Have an idea for a new feature or improvement?
+- **❓ Questions**: [Ask a Question](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=question.yml) - Need help understanding how something works?
+- **📝 Other Issues**: [Other Issue](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=other.yml) - Something else that doesn't fit the above categories
+
+Please mention "ControlledAutomation" in your issue title or description.
+
+## Mod Collection
+
+This mod is part of the [ONI 200+ Ultimate Mods collection](https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156) on Steam Workshop, featuring over 200 tested and compatible mods for Oxygen Not Included.
 
 ## Credits
 
-Inspired by [Storage Refrigerator Thresholds](https://steamcommunity.com/sharedfiles/filedetails/?id=2959340381) by llunak
+- Built using [PLib](https://github.com/peterhaneve/ONIMods) by Peter Han
+- Uses [Harmony](https://github.com/pardeike/Harmony) for runtime patching
+
+## Version History
+
+- **1.0.0.0**: Initial release
