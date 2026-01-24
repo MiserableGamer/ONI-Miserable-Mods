@@ -2,15 +2,19 @@ using HarmonyLib;
 
 namespace ControlledAutomation.Components
 {
+    /// <summary>
+    /// Thresholds component for Smart Storage Bin (StorageLockerSmart).
+    /// </summary>
     public class StorageThresholds : ThresholdsBase
     {
         private delegate void UpdateLogicAndActiveStateDelegate(StorageLockerSmart locker);
-        private static readonly UpdateLogicAndActiveStateDelegate updateMethod =
-            AccessTools.MethodDelegate<UpdateLogicAndActiveStateDelegate>(
+        private static readonly UpdateLogicAndActiveStateDelegate updateMethod
+            = AccessTools.MethodDelegate<UpdateLogicAndActiveStateDelegate>(
                 AccessTools.Method(typeof(StorageLockerSmart), "UpdateLogicAndActiveState"));
 
 #pragma warning disable CS0649
-        [MyCmpGet] private StorageLockerSmart storageLockerSmart;
+        [MyCmpGet]
+        private StorageLockerSmart storageLockerSmart;
 #pragma warning restore CS0649
 
         protected override void UpdateLogicCircuit()
