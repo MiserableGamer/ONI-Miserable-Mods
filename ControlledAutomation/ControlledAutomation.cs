@@ -1,8 +1,5 @@
 using HarmonyLib;
 using PeterHan.PLib.Core;
-using PeterHan.PLib.Options;
-using ControlledAutomation.Options;
-using ControlledAutomation.Patches;
 
 namespace ControlledAutomation
 {
@@ -11,10 +8,12 @@ namespace ControlledAutomation
         public override void OnLoad(Harmony harmony)
         {
             base.OnLoad(harmony);
-            PUtil.InitLibrary(false);
-            new POptions().RegisterOptions(this, typeof(ControlledAutomationOptions));
-            
-            MultipleElementSensorPatches.TryApplyPatches(harmony);
+
+            // Initialize PLib
+            PUtil.InitLibrary();
+
+            // Apply Harmony patches
+            harmony.PatchAll();
         }
     }
 }
