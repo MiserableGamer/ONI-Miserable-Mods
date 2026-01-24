@@ -5,115 +5,371 @@ using ControlledAutomation.Options;
 
 namespace ControlledAutomation.Patches
 {
-    public static class InversionHelper
+    /// <summary>
+    /// Patches for sensor buildings that need inversion only.
+    /// All sensors just need the SensorInverter component added.
+    /// </summary>
+
+    #region Liquid Sensors
+
+    [HarmonyPatch(typeof(LiquidConduitElementSensorConfig))]
+    public class LiquidConduitElementSensorConfig_Patch
     {
-        public static bool IsInversionEnabled()
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(LiquidConduitElementSensorConfig.DoPostConfigureComplete))]
+        public static void DoPostConfigureComplete(GameObject go)
         {
-            try { return ControlledAutomationOptions.Instance?.EnableAutomationInversion ?? true; }
-            catch { return true; }
+            if (ControlledAutomationOptions.Instance.EnableAutomationInversion)
+                go.AddOrGet<SensorInverter>();
         }
     }
 
-    // Core patch that applies signal inversion
-    [HarmonyPatch(typeof(LogicPorts), nameof(LogicPorts.SendSignal), new System.Type[] { typeof(HashedString), typeof(int) })]
-    public static class LogicPorts_SendSignal_Patch
+    [HarmonyPatch(typeof(LiquidConduitDiseaseSensorConfig))]
+    public class LiquidConduitDiseaseSensorConfig_Patch
     {
-        public static void Prefix(LogicPorts __instance, ref int new_value)
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(LiquidConduitDiseaseSensorConfig.DoPostConfigureComplete))]
+        public static void DoPostConfigureComplete(GameObject go)
         {
-            if (!InversionHelper.IsInversionEnabled())
-                return;
-
-            var inverter = SensorInverter.Get(__instance.gameObject) 
-                ?? __instance.gameObject.GetComponent<SensorInverter>();
-            
-            if (inverter?.InvertSignal == true)
-                new_value = (new_value != 0) ? 0 : 1;
+            if (ControlledAutomationOptions.Instance.EnableAutomationInversion)
+                go.AddOrGet<SensorInverter>();
         }
     }
 
-    // Only sensors without vanilla above/below threshold controls benefit from inversion
-    // Element sensors detect presence/absence without thresholds, so inversion is useful
-
-    #region Element Sensors (Vanilla)
-
-    [HarmonyPatch(typeof(LiquidConduitElementSensorConfig), nameof(LiquidConduitElementSensorConfig.DoPostConfigureComplete))]
-    public static class LiquidConduitElementSensorConfig_Patch
+    [HarmonyPatch(typeof(LiquidConduitTemperatureSensorConfig))]
+    public class LiquidConduitTemperatureSensorConfig_Patch
     {
-        public static void Postfix(GameObject go) => go.AddOrGet<SensorInverter>();
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(LiquidConduitTemperatureSensorConfig.DoPostConfigureComplete))]
+        public static void DoPostConfigureComplete(GameObject go)
+        {
+            if (ControlledAutomationOptions.Instance.EnableAutomationInversion)
+                go.AddOrGet<SensorInverter>();
+        }
     }
 
-    [HarmonyPatch(typeof(GasConduitElementSensorConfig), nameof(GasConduitElementSensorConfig.DoPostConfigureComplete))]
-    public static class GasConduitElementSensorConfig_Patch
+    [HarmonyPatch(typeof(LogicElementSensorLiquidConfig))]
+    public class LogicElementSensorLiquidConfig_Patch
     {
-        public static void Postfix(GameObject go) => go.AddOrGet<SensorInverter>();
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(LogicElementSensorLiquidConfig.DoPostConfigureComplete))]
+        public static void DoPostConfigureComplete(GameObject go)
+        {
+            if (ControlledAutomationOptions.Instance.EnableAutomationInversion)
+                go.AddOrGet<SensorInverter>();
+        }
     }
 
-    [HarmonyPatch(typeof(SolidConduitElementSensorConfig), nameof(SolidConduitElementSensorConfig.DoPostConfigureComplete))]
-    public static class SolidConduitElementSensorConfig_Patch
+    [HarmonyPatch(typeof(LiquidLimitValveConfig))]
+    public class LiquidLimitValveConfig_Patch
     {
-        public static void Postfix(GameObject go) => go.AddOrGet<SensorInverter>();
-    }
-
-    [HarmonyPatch(typeof(LogicElementSensorLiquidConfig), nameof(LogicElementSensorLiquidConfig.DoPostConfigureComplete))]
-    public static class LogicElementSensorLiquidConfig_Patch
-    {
-        public static void Postfix(GameObject go) => go.AddOrGet<SensorInverter>();
-    }
-
-    [HarmonyPatch(typeof(LogicElementSensorGasConfig), nameof(LogicElementSensorGasConfig.DoPostConfigureComplete))]
-    public static class LogicElementSensorGasConfig_Patch
-    {
-        public static void Postfix(GameObject go) => go.AddOrGet<SensorInverter>();
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(LiquidLimitValveConfig.DoPostConfigureComplete))]
+        public static void DoPostConfigureComplete(GameObject go)
+        {
+            if (ControlledAutomationOptions.Instance.EnableAutomationInversion)
+                go.AddOrGet<SensorInverter>();
+        }
     }
 
     #endregion
 
-    #region Limit Valves
+    #region Gas Sensors
 
-    [HarmonyPatch(typeof(LiquidLimitValveConfig), nameof(LiquidLimitValveConfig.DoPostConfigureComplete))]
-    public static class LiquidLimitValveConfig_Patch
+    [HarmonyPatch(typeof(GasConduitElementSensorConfig))]
+    public class GasConduitElementSensorConfig_Patch
     {
-        public static void Postfix(GameObject go) => go.AddOrGet<SensorInverter>();
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(GasConduitElementSensorConfig.DoPostConfigureComplete))]
+        public static void DoPostConfigureComplete(GameObject go)
+        {
+            if (ControlledAutomationOptions.Instance.EnableAutomationInversion)
+                go.AddOrGet<SensorInverter>();
+        }
     }
 
-    [HarmonyPatch(typeof(GasLimitValveConfig), nameof(GasLimitValveConfig.DoPostConfigureComplete))]
-    public static class GasLimitValveConfig_Patch
+    [HarmonyPatch(typeof(GasConduitDiseaseSensorConfig))]
+    public class GasConduitDiseaseSensorConfig_Patch
     {
-        public static void Postfix(GameObject go) => go.AddOrGet<SensorInverter>();
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(GasConduitDiseaseSensorConfig.DoPostConfigureComplete))]
+        public static void DoPostConfigureComplete(GameObject go)
+        {
+            if (ControlledAutomationOptions.Instance.EnableAutomationInversion)
+                go.AddOrGet<SensorInverter>();
+        }
     }
 
-    [HarmonyPatch(typeof(SolidLimitValveConfig), nameof(SolidLimitValveConfig.DoPostConfigureComplete))]
-    public static class SolidLimitValveConfig_Patch
+    [HarmonyPatch(typeof(GasConduitTemperatureSensorConfig))]
+    public class GasConduitTemperatureSensorConfig_Patch
     {
-        public static void Postfix(GameObject go) => go.AddOrGet<SensorInverter>();
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(GasConduitTemperatureSensorConfig.DoPostConfigureComplete))]
+        public static void DoPostConfigureComplete(GameObject go)
+        {
+            if (ControlledAutomationOptions.Instance.EnableAutomationInversion)
+                go.AddOrGet<SensorInverter>();
+        }
+    }
+
+    [HarmonyPatch(typeof(LogicElementSensorGasConfig))]
+    public class LogicElementSensorGasConfig_Patch
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(LogicElementSensorGasConfig.DoPostConfigureComplete))]
+        public static void DoPostConfigureComplete(GameObject go)
+        {
+            if (ControlledAutomationOptions.Instance.EnableAutomationInversion)
+                go.AddOrGet<SensorInverter>();
+        }
+    }
+
+    [HarmonyPatch(typeof(GasLimitValveConfig))]
+    public class GasLimitValveConfig_Patch
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(GasLimitValveConfig.DoPostConfigureComplete))]
+        public static void DoPostConfigureComplete(GameObject go)
+        {
+            if (ControlledAutomationOptions.Instance.EnableAutomationInversion)
+                go.AddOrGet<SensorInverter>();
+        }
     }
 
     #endregion
 
-    #region Other Sensors Without Threshold Controls
+    #region Environmental Sensors
 
-    [HarmonyPatch(typeof(LogicDuplicantSensorConfig), nameof(LogicDuplicantSensorConfig.DoPostConfigureComplete))]
-    public static class LogicDuplicantSensorConfig_Patch
+    [HarmonyPatch(typeof(LogicDuplicantSensorConfig))]
+    public class LogicDuplicantSensorConfig_Patch
     {
-        public static void Postfix(GameObject go) => go.AddOrGet<SensorInverter>();
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(LogicDuplicantSensorConfig.DoPostConfigureComplete))]
+        public static void DoPostConfigureComplete(GameObject go)
+        {
+            if (ControlledAutomationOptions.Instance.EnableAutomationInversion)
+                go.AddOrGet<SensorInverter>();
+        }
     }
 
-    [HarmonyPatch(typeof(LogicTimeOfDaySensorConfig), nameof(LogicTimeOfDaySensorConfig.DoPostConfigureComplete))]
-    public static class LogicTimeOfDaySensorConfig_Patch
+    [HarmonyPatch(typeof(LogicPressureSensorGasConfig))]
+    public class LogicPressureSensorGasConfig_Patch
     {
-        public static void Postfix(GameObject go) => go.AddOrGet<SensorInverter>();
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(LogicPressureSensorGasConfig.DoPostConfigureComplete))]
+        public static void DoPostConfigureComplete(GameObject go)
+        {
+            if (ControlledAutomationOptions.Instance.EnableAutomationInversion)
+                go.AddOrGet<SensorInverter>();
+        }
     }
 
-    [HarmonyPatch(typeof(LogicCounterConfig), nameof(LogicCounterConfig.DoPostConfigureComplete))]
-    public static class LogicCounterConfig_Patch
+    [HarmonyPatch(typeof(LogicPressureSensorLiquidConfig))]
+    public class LogicPressureSensorLiquidConfig_Patch
     {
-        public static void Postfix(GameObject go) => go.AddOrGet<SensorInverter>();
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(LogicPressureSensorLiquidConfig.DoPostConfigureComplete))]
+        public static void DoPostConfigureComplete(GameObject go)
+        {
+            if (ControlledAutomationOptions.Instance.EnableAutomationInversion)
+                go.AddOrGet<SensorInverter>();
+        }
     }
 
-    [HarmonyPatch(typeof(LogicClusterLocationSensorConfig), nameof(LogicClusterLocationSensorConfig.DoPostConfigureComplete))]
-    public static class LogicClusterLocationSensorConfig_Patch
+    [HarmonyPatch(typeof(LogicTemperatureSensorConfig))]
+    public class LogicTemperatureSensorConfig_Patch
     {
-        public static void Postfix(GameObject go) => go.AddOrGet<SensorInverter>();
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(LogicTemperatureSensorConfig.DoPostConfigureComplete))]
+        public static void DoPostConfigureComplete(GameObject go)
+        {
+            if (ControlledAutomationOptions.Instance.EnableAutomationInversion)
+                go.AddOrGet<SensorInverter>();
+        }
+    }
+
+    [HarmonyPatch(typeof(LogicLightSensorConfig))]
+    public class LogicLightSensorConfig_Patch
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(LogicLightSensorConfig.DoPostConfigureComplete))]
+        public static void DoPostConfigureComplete(GameObject go)
+        {
+            if (ControlledAutomationOptions.Instance.EnableAutomationInversion)
+                go.AddOrGet<SensorInverter>();
+        }
+    }
+
+    [HarmonyPatch(typeof(LogicWattageSensorConfig))]
+    public class LogicWattageSensorConfig_Patch
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(LogicWattageSensorConfig.DoPostConfigureComplete))]
+        public static void DoPostConfigureComplete(GameObject go)
+        {
+            if (ControlledAutomationOptions.Instance.EnableAutomationInversion)
+                go.AddOrGet<SensorInverter>();
+        }
+    }
+
+    [HarmonyPatch(typeof(LogicDiseaseSensorConfig))]
+    public class LogicDiseaseSensorConfig_Patch
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(LogicDiseaseSensorConfig.DoPostConfigureComplete))]
+        public static void DoPostConfigureComplete(GameObject go)
+        {
+            if (ControlledAutomationOptions.Instance.EnableAutomationInversion)
+                go.AddOrGet<SensorInverter>();
+        }
+    }
+
+    [HarmonyPatch(typeof(LogicCritterCountSensorConfig))]
+    public class LogicCritterCountSensorConfig_Patch
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(LogicCritterCountSensorConfig.DoPostConfigureComplete))]
+        public static void DoPostConfigureComplete(GameObject go)
+        {
+            if (ControlledAutomationOptions.Instance.EnableAutomationInversion)
+                go.AddOrGet<SensorInverter>();
+        }
+    }
+
+    [HarmonyPatch(typeof(LogicRadiationSensorConfig))]
+    public class LogicRadiationSensorConfig_Patch
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(LogicRadiationSensorConfig.DoPostConfigureComplete))]
+        public static void DoPostConfigureComplete(GameObject go)
+        {
+            if (ControlledAutomationOptions.Instance.EnableAutomationInversion)
+                go.AddOrGet<SensorInverter>();
+        }
+    }
+
+    [HarmonyPatch(typeof(LogicHEPSensorConfig))]
+    public class LogicHEPSensorConfig_Patch
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(LogicHEPSensorConfig.DoPostConfigureComplete))]
+        public static void DoPostConfigureComplete(GameObject go)
+        {
+            if (ControlledAutomationOptions.Instance.EnableAutomationInversion)
+                go.AddOrGet<SensorInverter>();
+        }
+    }
+
+    #endregion
+
+    #region Time Sensors
+
+    [HarmonyPatch(typeof(LogicTimeOfDaySensorConfig))]
+    public class LogicTimeOfDaySensorConfig_Patch
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(LogicTimeOfDaySensorConfig.DoPostConfigureComplete))]
+        public static void DoPostConfigureComplete(GameObject go)
+        {
+            if (ControlledAutomationOptions.Instance.EnableAutomationInversion)
+                go.AddOrGet<SensorInverter>();
+        }
+    }
+
+    [HarmonyPatch(typeof(LogicTimerSensorConfig))]
+    public class LogicTimerSensorConfig_Patch
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(LogicTimerSensorConfig.DoPostConfigureComplete))]
+        public static void DoPostConfigureComplete(GameObject go)
+        {
+            if (ControlledAutomationOptions.Instance.EnableAutomationInversion)
+                go.AddOrGet<SensorInverter>();
+        }
+    }
+
+    #endregion
+
+    #region Logic Components
+
+    [HarmonyPatch(typeof(LogicCounterConfig))]
+    public class LogicCounterConfig_Patch
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(LogicCounterConfig.DoPostConfigureComplete))]
+        public static void DoPostConfigureComplete(GameObject go)
+        {
+            if (ControlledAutomationOptions.Instance.EnableAutomationInversion)
+                go.AddOrGet<SensorInverter>();
+        }
+    }
+
+    #endregion
+
+    #region Conveyor Sensors
+
+    [HarmonyPatch(typeof(SolidConduitElementSensorConfig))]
+    public class SolidConduitElementSensorConfig_Patch
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(SolidConduitElementSensorConfig.DoPostConfigureComplete))]
+        public static void DoPostConfigureComplete(GameObject go)
+        {
+            if (ControlledAutomationOptions.Instance.EnableAutomationInversion)
+                go.AddOrGet<SensorInverter>();
+        }
+    }
+
+    [HarmonyPatch(typeof(SolidConduitDiseaseSensorConfig))]
+    public class SolidConduitDiseaseSensorConfig_Patch
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(SolidConduitDiseaseSensorConfig.DoPostConfigureComplete))]
+        public static void DoPostConfigureComplete(GameObject go)
+        {
+            if (ControlledAutomationOptions.Instance.EnableAutomationInversion)
+                go.AddOrGet<SensorInverter>();
+        }
+    }
+
+    [HarmonyPatch(typeof(SolidConduitTemperatureSensorConfig))]
+    public class SolidConduitTemperatureSensorConfig_Patch
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(SolidConduitTemperatureSensorConfig.DoPostConfigureComplete))]
+        public static void DoPostConfigureComplete(GameObject go)
+        {
+            if (ControlledAutomationOptions.Instance.EnableAutomationInversion)
+                go.AddOrGet<SensorInverter>();
+        }
+    }
+
+    [HarmonyPatch(typeof(SolidLimitValveConfig))]
+    public class SolidLimitValveConfig_Patch
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(SolidLimitValveConfig.DoPostConfigureComplete))]
+        public static void DoPostConfigureComplete(GameObject go)
+        {
+            if (ControlledAutomationOptions.Instance.EnableAutomationInversion)
+                go.AddOrGet<SensorInverter>();
+        }
+    }
+
+    #endregion
+
+    #region Space/DLC Sensors
+
+    [HarmonyPatch(typeof(LogicClusterLocationSensorConfig))]
+    public class LogicClusterLocationSensorConfig_Patch
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(LogicClusterLocationSensorConfig.DoPostConfigureComplete))]
+        public static void DoPostConfigureComplete(GameObject go)
+        {
+            if (ControlledAutomationOptions.Instance.EnableAutomationInversion)
+                go.AddOrGet<SensorInverter>();
+        }
     }
 
     #endregion

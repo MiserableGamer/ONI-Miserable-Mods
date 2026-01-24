@@ -1,9 +1,15 @@
+using HarmonyLib;
 using UnityEngine;
 using PeterHan.PLib.UI;
+using STRINGS;
 using ControlledAutomation.Components;
 
 namespace ControlledAutomation.UI
 {
+    /// <summary>
+    /// Sidescreen that shows the inversion checkbox for sensors and other buildings
+    /// that only need inversion (no thresholds).
+    /// </summary>
     public class InversionSideScreen : SideScreenContent
     {
         private GameObject checkbox;
@@ -32,8 +38,8 @@ namespace ControlledAutomation.UI
 
             PCheckBox checkboxField = new PCheckBox("InvertCheckbox")
             {
-                Text = STRINGS.CONTROLLEDAUTOMATION.INVERT_CHECKBOX,
-                ToolTip = STRINGS.CONTROLLEDAUTOMATION.INVERT_CHECKBOX_TOOLTIP,
+                Text = CONTROLLEDAUTOMATION.INVERT_CHECKBOX,
+                ToolTip = CONTROLLEDAUTOMATION.INVERT_CHECKBOX_TOOLTIP,
                 OnChecked = OnCheck,
                 TextStyle = PUITuning.Fonts.TextDarkStyle
             };
@@ -53,11 +59,17 @@ namespace ControlledAutomation.UI
         public override void SetTarget(GameObject new_target)
         {
             if (new_target == null)
+            {
+                Debug.LogError("[ControlledAutomation] Invalid gameObject received");
                 return;
-
+            }
             target = new_target.GetComponent<SensorInverter>();
-            if (target != null)
-                UpdateState();
+            if (target == null)
+            {
+                Debug.LogError("[ControlledAutomation] The gameObject received does not contain a SensorInverter component");
+                return;
+            }
+            UpdateState();
         }
 
         public void UpdateState()
@@ -72,10 +84,13 @@ namespace ControlledAutomation.UI
         {
             int newState = state == PCheckBox.STATE_CHECKED ? PCheckBox.STATE_UNCHECKED : PCheckBox.STATE_CHECKED;
             PCheckBox.SetCheckState(checkbox, newState);
-            PlaySound(GlobalAssets.GetSound("HUD_Click"));
+            KFMOD.PlayUISound(WidgetSoundPlayer.getSoundPath(ToggleSoundPlayer.default_values[state]));
             target.InvertSignal = (newState == PCheckBox.STATE_CHECKED);
         }
 
-        public override string GetTitle() => STRINGS.CONTROLLEDAUTOMATION.SIDESCREEN_TITLE;
+        public override string GetTitle()
+        {
+            return CONTROLLEDAUTOMATION.SIDESCREEN_TITLE;
+        }
     }
 }

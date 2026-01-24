@@ -2,11 +2,16 @@ using HarmonyLib;
 using UnityEngine;
 using System.Reflection;
 using PeterHan.PLib.UI;
+using STRINGS;
 using ControlledAutomation.Components;
 
 namespace ControlledAutomation.UI
 {
-    // Shows "Send Green Signal When Low" checkbox below the threshold sliders
+    /// <summary>
+    /// Sidescreen that shows the "Send Green Signal When Low" checkbox for storage buildings
+    /// with thresholds. The actual threshold sliders are handled by the game's ActiveRangeSideScreen.
+    /// This sidescreen should appear directly below the ActiveRangeSideScreen.
+    /// </summary>
     public class ThresholdsSideScreen : SideScreenContent
     {
         private GameObject checkbox;
@@ -35,8 +40,8 @@ namespace ControlledAutomation.UI
 
             PCheckBox checkboxField = new PCheckBox("InvertStorageCheckbox")
             {
-                Text = STRINGS.CONTROLLEDAUTOMATION.INVERT_CHECKBOX_STORAGE,
-                ToolTip = STRINGS.CONTROLLEDAUTOMATION.INVERT_CHECKBOX_STORAGE_TOOLTIP,
+                Text = CONTROLLEDAUTOMATION.INVERT_CHECKBOX_STORAGE,
+                ToolTip = CONTROLLEDAUTOMATION.INVERT_CHECKBOX_STORAGE_TOOLTIP,
                 OnChecked = OnCheck,
                 TextStyle = PUITuning.Fonts.TextDarkStyle
             };
@@ -57,14 +62,21 @@ namespace ControlledAutomation.UI
         public override void SetTarget(GameObject new_target)
         {
             if (new_target == null)
+            {
+                Debug.LogError("[ControlledAutomation] Invalid gameObject received");
                 return;
+            }
 
             target = new_target.GetComponent<StorageThresholds>();
             if (target == null)
                 target = new_target.GetComponent<RefrigeratorThresholds>();
 
-            if (target != null)
-                UpdateState();
+            if (target == null)
+            {
+                Debug.LogError("[ControlledAutomation] The gameObject received does not contain a ThresholdsBase component");
+                return;
+            }
+            UpdateState();
         }
 
         public void UpdateState()
@@ -79,13 +91,13 @@ namespace ControlledAutomation.UI
         {
             int newState = state == PCheckBox.STATE_CHECKED ? PCheckBox.STATE_UNCHECKED : PCheckBox.STATE_CHECKED;
             PCheckBox.SetCheckState(checkbox, newState);
-            PlaySound(GlobalAssets.GetSound("HUD_Click"));
+            KFMOD.PlayUISound(WidgetSoundPlayer.getSoundPath(ToggleSoundPlayer.default_values[state]));
             target.InvertSignal = (newState == PCheckBox.STATE_CHECKED);
             UpdateActiveRangeSideScreenTooltips();
         }
 
-        private static readonly MethodInfo refreshTooltipsMethod =
-            AccessTools.Method(typeof(ActiveRangeSideScreen), "RefreshTooltips");
+        private static readonly MethodInfo refreshTooltipsMethod
+            = AccessTools.Method(typeof(ActiveRangeSideScreen), "RefreshTooltips");
 
         private void UpdateActiveRangeSideScreenTooltips()
         {
@@ -93,15 +105,21 @@ namespace ControlledAutomation.UI
             if (parent == null)
                 return;
 
+            // The game object is called 'Activation...' and not 'Active...'.
             Transform transform = parent.transform.Find("ActivationRangeSideScreen");
             if (transform == null)
                 return;
 
             ActiveRangeSideScreen screen = transform.gameObject.GetComponent<ActiveRangeSideScreen>();
-            if (screen != null)
-                refreshTooltipsMethod?.Invoke(screen, null);
+            if (screen == null)
+                return;
+
+            refreshTooltipsMethod?.Invoke(screen, null);
         }
 
-        public override string GetTitle() => "";
+        public override string GetTitle()
+        {
+            return ""; // No title needed since this goes below the threshold sliders
+        }
     }
 }

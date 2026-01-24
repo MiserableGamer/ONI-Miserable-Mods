@@ -5,17 +5,34 @@ using System.Collections.Generic;
 
 namespace ControlledAutomation.Components
 {
-    // Base component for high/low threshold support with IActivationRangeTarget interface
+    /// <summary>
+    /// Base component that provides high/low threshold support with IActivationRangeTarget interface.
+    /// Also includes automation signal inversion.
+    /// Used for storage buildings that need threshold controls.
+    /// </summary>
     [SerializationConfig(MemberSerialization.OptIn)]
     public abstract class ThresholdsBase : KMonoBehaviour, IActivationRangeTarget, ISim4000ms
     {
-        [Serialize] private bool invertSignal = false;
-        [Serialize] private int activateValue = 100;
-        [Serialize] private int deactivateValue = 99;
-        [Serialize] private bool activated;
+        [Serialize]
+        private bool invertSignal = false;
 
+        [Serialize]
+        private int activateValue = 100; // High threshold
+
+        [Serialize]
+        private int deactivateValue = 99; // Low threshold
+
+        [Serialize]
+        private bool activated;
+
+        /// <summary>
+        /// Last signal value sent to the logic port.
+        /// </summary>
         public bool? LastSetFlag { get; set; } = null;
 
+        /// <summary>
+        /// Whether to invert the signal (send green when low instead of when high).
+        /// </summary>
         public bool InvertSignal
         {
             get => invertSignal;
@@ -27,17 +44,28 @@ namespace ControlledAutomation.Components
             }
         }
 
-        // IActivationRangeTarget - note: game naming is backwards, "Activate" = High, "Deactivate" = Low
+        // IActivationRangeTarget implementation
+        // Note: The interface naming is confusing in the game code.
+        // "Activate" actually means "High" threshold and "Deactivate" means "Low" threshold.
+
         public float ActivateValue
         {
             get => activateValue;
-            set { activateValue = (int)value; UpdateLogicCircuit(); }
+            set
+            {
+                activateValue = (int)value;
+                UpdateLogicCircuit();
+            }
         }
 
         public float DeactivateValue
         {
             get => deactivateValue;
-            set { deactivateValue = (int)value; UpdateLogicCircuit(); }
+            set
+            {
+                deactivateValue = (int)value;
+                UpdateLogicCircuit();
+            }
         }
 
         public float MinValue => 0f;
@@ -52,39 +80,47 @@ namespace ControlledAutomation.Components
             ? CONTROLLEDAUTOMATION.DEACTIVATE_TOOLTIP_INVERTED
             : CONTROLLEDAUTOMATION.DEACTIVATE_TOOLTIP;
 
+        // Reuse existing game strings for slider labels
         public string ActivationRangeTitleText => BUILDINGS.PREFABS.SMARTRESERVOIR.SIDESCREEN_TITLE;
-        public string ActivateSliderLabelText => BUILDINGS.PREFABS.SMARTRESERVOIR.SIDESCREEN_DEACTIVATE;
-        public string DeactivateSliderLabelText => BUILDINGS.PREFABS.SMARTRESERVOIR.SIDESCREEN_ACTIVATE;
+        public string ActivateSliderLabelText => BUILDINGS.PREFABS.SMARTRESERVOIR.SIDESCREEN_DEACTIVATE; // "High Threshold:"
+        public string DeactivateSliderLabelText => BUILDINGS.PREFABS.SMARTRESERVOIR.SIDESCREEN_ACTIVATE; // "Low Threshold:"
 
-        private static readonly EventSystem.IntraObjectHandler<ThresholdsBase> OnCopySettingsDelegate =
-            new EventSystem.IntraObjectHandler<ThresholdsBase>((component, data) => component.OnCopySettings(data));
-
+        /// <summary>
+        /// Updates the activated state based on current fill percentage.
+        /// Returns the new activated state.
+        /// </summary>
         public bool UpdateLogicState(float percentFull)
         {
             float num = Mathf.RoundToInt(percentFull * 100f);
             
             if (activated)
             {
+                // Currently activated, check if we should deactivate
                 if (invertSignal)
                 {
+                    // Inverted: deactivate when reaching high threshold
                     if (num >= (float)activateValue)
                         activated = false;
                 }
                 else
                 {
+                    // Normal: deactivate when falling below low threshold
                     if (num <= (float)deactivateValue)
                         activated = false;
                 }
             }
             else
             {
+                // Currently not activated, check if we should activate
                 if (invertSignal)
                 {
+                    // Inverted: activate when falling below low threshold
                     if (num <= (float)deactivateValue)
                         activated = true;
                 }
                 else
                 {
+                    // Normal: activate when reaching high threshold
                     if (num >= (float)activateValue)
                         activated = true;
                 }
@@ -98,28 +134,13 @@ namespace ControlledAutomation.Components
             base.OnSpawn();
             fastMap[gameObject] = this;
             LastSetFlag = null;
-            Subscribe((int)GameHashes.CopySettings, OnCopySettingsDelegate);
             UpdateLogicPortTooltip();
         }
 
         protected override void OnCleanUp()
         {
-            Unsubscribe((int)GameHashes.CopySettings, OnCopySettingsDelegate);
             fastMap.Remove(gameObject);
             base.OnCleanUp();
-        }
-
-        private void OnCopySettings(object data)
-        {
-            ThresholdsBase other = ((GameObject)data)?.GetComponent<ThresholdsBase>();
-            if (other != null)
-            {
-                invertSignal = other.invertSignal;
-                activateValue = other.activateValue;
-                deactivateValue = other.deactivateValue;
-                UpdateLogicCircuit();
-                UpdateLogicPortTooltip();
-            }
         }
 
         private void UpdateLogicPortTooltip()
@@ -136,9 +157,15 @@ namespace ControlledAutomation.Components
                 : CONTROLLEDAUTOMATION.LOGIC_PORT_INACTIVE;
         }
 
+        /// <summary>
+        /// Override in derived classes to trigger the building's logic update.
+        /// </summary>
         protected abstract void UpdateLogicCircuit();
 
-        // Handles rocket interior storage that may be restricted
+        /// <summary>
+        /// Checks if the building is actually operational, ignoring rocket usage restriction.
+        /// This prevents restricted storage inside rockets from always signaling false.
+        /// </summary>
         public bool IsActuallyOperational(Operational operational)
         {
             if (operational.IsOperational)
@@ -152,6 +179,9 @@ namespace ControlledAutomation.Components
             return true;
         }
 
+        /// <summary>
+        /// Periodic check for buildings inside rockets that may be restricted.
+        /// </summary>
         public void Sim4000ms(float dt)
         {
             if (!gameObject.GetMyWorld().IsModuleInterior)
@@ -159,13 +189,15 @@ namespace ControlledAutomation.Components
             UpdateLogicCircuit();
         }
 
-        // Fast lookup
-        private static readonly Dictionary<GameObject, ThresholdsBase> fastMap = new Dictionary<GameObject, ThresholdsBase>();
+        // Fast lookup map
+        private static readonly Dictionary<GameObject, ThresholdsBase> fastMap
+            = new Dictionary<GameObject, ThresholdsBase>();
 
         public static ThresholdsBase Get(GameObject go)
         {
-            fastMap.TryGetValue(go, out var thresholds);
-            return thresholds;
+            if (fastMap.TryGetValue(go, out var thresholds))
+                return thresholds;
+            return null;
         }
     }
 }

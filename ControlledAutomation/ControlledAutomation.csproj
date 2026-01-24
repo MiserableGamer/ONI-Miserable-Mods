@@ -81,7 +81,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ControlledAutomation.cs" />
+    <Compile Include="Components\AutomationInverter.cs" />
+    <Compile Include="Components\RefrigeratorThresholds.cs" />
+    <Compile Include="Components\RocketPlatformInverter.cs" />
+    <Compile Include="Components\SensorInverter.cs" />
+    <Compile Include="Components\StorageThresholds.cs" />
+    <Compile Include="Components\ThresholdsBase.cs" />
+    <Compile Include="Options\ControlledAutomationOptions.cs" />
+    <Compile Include="Patches\InversionOnlyStoragePatches.cs" />
+    <Compile Include="Patches\OtherBuildingPatches.cs" />
+    <Compile Include="Patches\ProducerPatches.cs" />
+    <Compile Include="Patches\RocketPlatformPatches.cs" />
+    <Compile Include="Patches\SensorPatches.cs" />
+    <Compile Include="Patches\StoragePatches.cs" />
+    <Compile Include="Patches\UIPatches.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Strings\ControlledAutomationStrings.cs" />
+    <Compile Include="UI\InversionSideScreen.cs" />
+    <Compile Include="UI\RocketPlatformSideScreen.cs" />
+    <Compile Include="UI\ThresholdsSideScreen.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="mod.yaml">
