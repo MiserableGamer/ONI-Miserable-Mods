@@ -1,5 +1,4 @@
 <Solution>
-  <Project Path="BlankProject/BlankProject.csproj" Id="7a836259-5127-4912-ad82-c9a62d8de9de" />
   <Project Path="BonbonTreeBoost/BonbonTreeBoost.csproj" Id="573ce697-fd53-48de-98fe-0c0eb4ca8f04" />
   <Project Path="CapacityControl/CapacityControl.csproj" Id="b3c4d5e6-f7a8-9012-3456-789abcdef012" />
   <Project Path="ControlledExtraction/ControlledExtraction.csproj" Id="87e44818-ad26-4cff-9929-1433c82079cc" />
