@@ -5,25 +5,41 @@ using ControlledAutomation.Options;
 
 namespace ControlledAutomation.Patches
 {
-    // Other buildings - Geotuner, Materials Study Terminal
+    /// <summary>
+    /// Patches for other buildings that need inversion only.
+    /// - Geotuner (GeoTuner)
+    /// - Materials Study Terminal (NuclearResearchCenter)
+    /// </summary>
 
-    [HarmonyPatch(typeof(GeoTunerConfig), nameof(GeoTunerConfig.DoPostConfigureComplete))]
-    public static class GeoTunerConfig_Patch
+    #region Geotuner
+
+    [HarmonyPatch(typeof(GeoTunerConfig))]
+    public class GeoTunerConfig_Patch
     {
-        public static void Postfix(GameObject go)
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(GeoTunerConfig.DoPostConfigureComplete))]
+        public static void DoPostConfigureComplete(GameObject go)
         {
             if (ControlledAutomationOptions.Instance.EnableAutomationInversion)
                 go.AddOrGet<SensorInverter>();
         }
     }
 
-    [HarmonyPatch(typeof(NuclearResearchCenterConfig), nameof(NuclearResearchCenterConfig.DoPostConfigureComplete))]
-    public static class NuclearResearchCenterConfig_Patch
+    #endregion
+
+    #region Materials Study Terminal (NuclearResearchCenter)
+
+    [HarmonyPatch(typeof(NuclearResearchCenterConfig))]
+    public class NuclearResearchCenterConfig_Patch
     {
-        public static void Postfix(GameObject go)
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(NuclearResearchCenterConfig.DoPostConfigureComplete))]
+        public static void DoPostConfigureComplete(GameObject go)
         {
             if (ControlledAutomationOptions.Instance.EnableAutomationInversion)
                 go.AddOrGet<SensorInverter>();
         }
     }
+
+    #endregion
 }
