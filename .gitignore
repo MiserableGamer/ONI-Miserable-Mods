@@ -397,6 +397,9 @@ release/*/
 DEV_RULES.txt
 .cursorrules
 
+# Cursor IDE files and memory bank (local development context)
+.cursor/
+memory-bank/
+
 # Game source code (not for distribution)
 /KleiONISource/
-/.cursor/commands/comment-cleanup.md
