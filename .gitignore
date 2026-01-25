@@ -404,3 +404,7 @@ memory-bank/
 # Game source code (not for distribution)
 /KleiONISource/
 /.cursor/commands/comment-cleanup.md
+
+# Memory Bank (AI assistant context - local only)
+memory-bank/
+.cursor/rules/
