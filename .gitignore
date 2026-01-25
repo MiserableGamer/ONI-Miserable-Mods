@@ -416,17 +416,7 @@ DEV_RULES.txt
 /prime/
 /reference/
 /.cursor/commands/comment-cleanup.md
-/.cursor/mcp.json
 
-# Local/IDE and tooling (not for distribution)
-.claude/
-.serena/
-/jarvis/
-
-# Scripts moved to c:\oni-serena\scripts (backed up separately). Launchers at repo root.
-/scripts/
-
-# Memory Bank and AI assistant context
+# Memory Bank (AI assistant context - local only)
 memory-bank/
 .cursor/rules/
-/HeatingSystemTroubleshooting.html
