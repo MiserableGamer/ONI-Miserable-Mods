@@ -46,7 +46,7 @@ With this mod, you can simply check the "Invert Signal" box on the building itse
 
 [h2]Credits[/h2]
 
-Inspired by [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2954839044]Storage Refrigerator Thresholds[/url] by llunak.
+Inspired by [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2959340381]Storage Refrigerator Thresholds[/url] by llunak.
 
 [h2]Version History[/h2]
 [list]
