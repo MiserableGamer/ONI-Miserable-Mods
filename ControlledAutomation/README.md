@@ -35,4 +35,4 @@ Adds a new temperature sensor building with range-based triggering:
 
 ## Credits
 
-Inspired by [Storage Refrigerator Thresholds](https://steamcommunity.com/sharedfiles/filedetails/?id=2954839044) by llunak
+Inspired by [Storage Refrigerator Thresholds](https://steamcommunity.com/sharedfiles/filedetails/?id=2959340381) by llunak
