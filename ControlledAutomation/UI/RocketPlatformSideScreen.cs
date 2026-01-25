@@ -1,14 +1,9 @@
-using HarmonyLib;
 using UnityEngine;
 using PeterHan.PLib.UI;
-using STRINGS;
 using ControlledAutomation.Components;
 
 namespace ControlledAutomation.UI
 {
-    /// <summary>
-    /// Sidescreen for Rocket Platform with two independent inversion checkboxes.
-    /// </summary>
     public class RocketPlatformSideScreen : SideScreenContent
     {
         private GameObject checkbox1;
@@ -28,7 +23,7 @@ namespace ControlledAutomation.UI
                 };
             }
 
-            PPanel mainPanel = new PPanel("RocketInversionPanel")
+            PPanel mainPanel = new PPanel("MainPanel")
             {
                 Direction = PanelDirection.Vertical,
                 Margin = margin,
@@ -36,27 +31,25 @@ namespace ControlledAutomation.UI
                 FlexSize = Vector2.right
             };
 
-            // Checkbox for Output 1 (Rocket Present)
-            PCheckBox checkbox1Field = new PCheckBox("InvertOutput1Checkbox")
+            PCheckBox checkboxField1 = new PCheckBox("InvertOutput1Checkbox")
             {
-                Text = CONTROLLEDAUTOMATION.ROCKET_INVERT_OUTPUT_1,
-                ToolTip = CONTROLLEDAUTOMATION.ROCKET_INVERT_OUTPUT_1_TOOLTIP,
+                Text = STRINGS.CONTROLLEDAUTOMATION.ROCKET_INVERT_OUTPUT_1,
+                ToolTip = STRINGS.CONTROLLEDAUTOMATION.ROCKET_INVERT_OUTPUT_1_TOOLTIP,
                 OnChecked = OnCheck1,
                 TextStyle = PUITuning.Fonts.TextDarkStyle
             };
-            checkbox1Field.AddOnRealize((obj) => checkbox1 = obj);
-            mainPanel.AddChild(checkbox1Field);
+            checkboxField1.AddOnRealize((obj) => checkbox1 = obj);
+            mainPanel.AddChild(checkboxField1);
 
-            // Checkbox for Output 2 (Rocket Ready)
-            PCheckBox checkbox2Field = new PCheckBox("InvertOutput2Checkbox")
+            PCheckBox checkboxField2 = new PCheckBox("InvertOutput2Checkbox")
             {
-                Text = CONTROLLEDAUTOMATION.ROCKET_INVERT_OUTPUT_2,
-                ToolTip = CONTROLLEDAUTOMATION.ROCKET_INVERT_OUTPUT_2_TOOLTIP,
+                Text = STRINGS.CONTROLLEDAUTOMATION.ROCKET_INVERT_OUTPUT_2,
+                ToolTip = STRINGS.CONTROLLEDAUTOMATION.ROCKET_INVERT_OUTPUT_2_TOOLTIP,
                 OnChecked = OnCheck2,
                 TextStyle = PUITuning.Fonts.TextDarkStyle
             };
-            checkbox2Field.AddOnRealize((obj) => checkbox2 = obj);
-            mainPanel.AddChild(checkbox2Field);
+            checkboxField2.AddOnRealize((obj) => checkbox2 = obj);
+            mainPanel.AddChild(checkboxField2);
 
             mainPanel.AddTo(gameObject);
             ContentContainer = gameObject;
@@ -64,50 +57,32 @@ namespace ControlledAutomation.UI
             UpdateState();
         }
 
-        public override bool IsValidForTarget(GameObject target)
-        {
-            return target.GetComponent<RocketPlatformInverter>() != null;
-        }
+        public override bool IsValidForTarget(GameObject target) =>
+            target.GetComponent<RocketPlatformInverter>() != null;
 
         public override void SetTarget(GameObject new_target)
         {
-            if (new_target == null)
-            {
-                Debug.LogError("[ControlledAutomation] Invalid gameObject received");
-                return;
-            }
+            if (new_target == null) return;
             target = new_target.GetComponent<RocketPlatformInverter>();
-            if (target == null)
-            {
-                Debug.LogError("[ControlledAutomation] The gameObject does not contain a RocketPlatformInverter component");
-                return;
-            }
-            UpdateState();
+            if (target != null) UpdateState();
         }
 
         public void UpdateState()
         {
-            if (target == null)
-                return;
+            if (target == null) return;
 
             if (checkbox1 != null)
-            {
-                PCheckBox.SetCheckState(checkbox1, target.InvertOutput1
-                    ? PCheckBox.STATE_CHECKED : PCheckBox.STATE_UNCHECKED);
-            }
+                PCheckBox.SetCheckState(checkbox1, target.InvertOutput1 ? PCheckBox.STATE_CHECKED : PCheckBox.STATE_UNCHECKED);
 
             if (checkbox2 != null)
-            {
-                PCheckBox.SetCheckState(checkbox2, target.InvertOutput2
-                    ? PCheckBox.STATE_CHECKED : PCheckBox.STATE_UNCHECKED);
-            }
+                PCheckBox.SetCheckState(checkbox2, target.InvertOutput2 ? PCheckBox.STATE_CHECKED : PCheckBox.STATE_UNCHECKED);
         }
 
         public void OnCheck1(GameObject source, int state)
         {
             int newState = state == PCheckBox.STATE_CHECKED ? PCheckBox.STATE_UNCHECKED : PCheckBox.STATE_CHECKED;
             PCheckBox.SetCheckState(checkbox1, newState);
-            KFMOD.PlayUISound(WidgetSoundPlayer.getSoundPath(ToggleSoundPlayer.default_values[state]));
+            PlaySound(GlobalAssets.GetSound("HUD_Click"));
             target.InvertOutput1 = (newState == PCheckBox.STATE_CHECKED);
         }
 
@@ -115,13 +90,10 @@ namespace ControlledAutomation.UI
         {
             int newState = state == PCheckBox.STATE_CHECKED ? PCheckBox.STATE_UNCHECKED : PCheckBox.STATE_CHECKED;
             PCheckBox.SetCheckState(checkbox2, newState);
-            KFMOD.PlayUISound(WidgetSoundPlayer.getSoundPath(ToggleSoundPlayer.default_values[state]));
+            PlaySound(GlobalAssets.GetSound("HUD_Click"));
             target.InvertOutput2 = (newState == PCheckBox.STATE_CHECKED);
         }
 
-        public override string GetTitle()
-        {
-            return CONTROLLEDAUTOMATION.SIDESCREEN_TITLE;
-        }
+        public override string GetTitle() => STRINGS.CONTROLLEDAUTOMATION.SIDESCREEN_TITLE;
     }
 }

@@ -5,77 +5,53 @@ Adds high/low threshold controls and automation signal inversion options to stor
 [h2]Features[/h2]
 
 [h3]Storage Thresholds[/h3]
-Adds configurable high/low threshold sliders (like Smart Battery already has) to:
-[list]
-[*][b]Smart Storage Bin[/b] - Set custom fill thresholds
-[*][b]Refrigerator[/b] - Set custom fill thresholds  
-[/list]
+Adds configurable high/low threshold sliders (like Smart Battery) to storage buildings that don't already have them, such as Smart Storage Bin and Refrigerator.
 
 [h3]Automation Signal Inversion[/h3]
-Adds an "Invert Signal" checkbox to 40+ buildings, allowing you to swap Green/Red automation signals without needing a NOT gate.
+Adds an "Invert Signal" checkbox to storage buildings, sensors, and various other automation-enabled buildings, allowing you to swap Green/Red automation signals without needing a NOT gate.
 
-[b]Storage Buildings (already have thresholds, adds inversion):[/b]
+[h3]Adv. Thermo Sensor[/h3]
+Adds a new temperature sensor building with range-based triggering:
 [list]
-[*]Smart Battery
-[*]Liquid Reservoir
-[*]Gas Reservoir
-[*]Radbolt Chamber
-[/list]
-
-[b]Producer Buildings:[/b]
-[list]
-[*]Critter Trap
-[*]Fish Trap
-[*]Airbourne Critter Trap
-[*]Diamond Press
-[/list]
-
-[b]Sensors:[/b]
-[list]
-[*]All liquid/gas/solid conduit sensors
-[*]All environmental sensors (temperature, pressure, light, etc.)
-[*]All logic sensors (timer, counter, critter count, etc.)
-[*]Meter valves (liquid, gas, solid)
-[*]Starmap Location Sensor
-[/list]
-
-[b]Other Buildings:[/b]
-[list]
-[*]Geotuner
-[*]Materials Study Terminal
-[/list]
-
-[b]Special:[/b]
-[list]
-[*][b]Rocket Platform[/b] - Has two independent inversion options for each automation output
+[*]Set a center temperature and define a range above/below
+[*]Triggers when temperature is inside (or outside, when inverted) the defined range
+[*]Supports typed input and nudge buttons like vanilla sensors
+[*]Available in the Automation build menu
 [/list]
 
 [h2]Options[/h2]
 [list]
 [*][b]Enable Storage Thresholds[/b] - Enable/disable threshold sliders on supported buildings
 [*][b]Enable Automation Inversion[/b] - Enable/disable signal inversion on all supported buildings
-[*][b]Reduced Smart Storage Power[/b] - Reduces Smart Storage Bin power consumption to 20W
 [/list]
 
 [h2]Why Use Signal Inversion?[/h2]
 
 Normally, to invert an automation signal you need to add a NOT gate, which:
-- Takes up space
-- Costs materials
-- Can cause brief false signals on game load
+[list]
+[*]Takes up space
+[*]Costs materials
+[/list]
 
 With this mod, you can simply check the "Invert Signal" box on the building itself!
 
 [h2]Compatibility[/h2]
 [list]
 [*]Works with base game and all DLCs
+[*]Compatible with [b]Big Storage[/b] mod - threshold and inversion controls work on Big Refrigerator, Big Smart Storage Bin, and Big Reservoirs
+[*]Compatible with [b]Ronivan's Legacy[/b] mod - inversion controls work on supported buildings
+[*]Compatible with [b]Multiple Elements Sensors[/b] mod - inversion controls work on all multi-element sensors
 [*]Compatible with most other automation mods
-[*]Saves are compatible - settings are stored per building
 [/list]
 
 [h2]Credits[/h2]
 
 Inspired by [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2954839044]Storage Refrigerator Thresholds[/url] by llunak.
+
+[h2]Version History[/h2]
+[list]
+[*][b]1.0.0[/b] - Initial release with threshold sliders and signal inversion
+[/list]
 
 [h2]Support & Issues[/h2]
 
@@ -83,9 +59,4 @@ Found a bug or have a suggestion?
 [list]
 [*][b]GitHub[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues]Report Issues[/url]
 [*][b]Discord[/b]: [url=https://discord.com/channels/1452947938304200861/1452947939927392398]Join our Discord[/url]
-[/list]
-
-[h2]Version History[/h2]
-[list]
-[*][b]1.0.0[/b]: Initial release - adds thresholds to 3 buildings, inversion to 40+ buildings
 [/list]

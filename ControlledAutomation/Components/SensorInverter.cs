@@ -5,19 +5,12 @@ using System.Collections.Generic;
 
 namespace ControlledAutomation.Components
 {
-    /// <summary>
-    /// Component that adds automation signal inversion to sensors and other buildings.
-    /// Unlike ThresholdsBase, this doesn't implement IActivationRangeTarget.
-    /// </summary>
     [SerializationConfig(MemberSerialization.OptIn)]
     public class SensorInverter : KMonoBehaviour
     {
         [Serialize]
         private bool invertSignal = false;
 
-        /// <summary>
-        /// Whether to invert the automation output signal.
-        /// </summary>
         public bool InvertSignal
         {
             get => invertSignal;
@@ -32,20 +25,13 @@ namespace ControlledAutomation.Components
             }
         }
 
-        /// <summary>
-        /// Last signal value that was sent to the port.
-        /// </summary>
         public bool? LastSentSignal { get; set; } = null;
 
-        /// <summary>
-        /// Original active description from the port info.
-        /// </summary>
         private string originalActiveDescription;
-
-        /// <summary>
-        /// Original inactive description from the port info.
-        /// </summary>
         private string originalInactiveDescription;
+
+        private static readonly EventSystem.IntraObjectHandler<SensorInverter> OnCopySettingsDelegate =
+            new EventSystem.IntraObjectHandler<SensorInverter>((component, data) => component.OnCopySettings(data));
 
         protected override void OnSpawn()
         {
@@ -53,7 +39,6 @@ namespace ControlledAutomation.Components
             fastMap[gameObject] = this;
             LastSentSignal = null;
             
-            // Store original descriptions
             var ports = GetComponent<LogicPorts>();
             if (ports?.outputPortInfo != null && ports.outputPortInfo.Length > 0)
             {
@@ -61,26 +46,26 @@ namespace ControlledAutomation.Components
                 originalInactiveDescription = ports.outputPortInfo[0].inactiveDescription;
             }
             
+            Subscribe((int)GameHashes.CopySettings, OnCopySettingsDelegate);
             UpdatePortTooltips();
         }
 
         protected override void OnCleanUp()
         {
+            Unsubscribe((int)GameHashes.CopySettings, OnCopySettingsDelegate);
             fastMap.Remove(gameObject);
             base.OnCleanUp();
         }
 
-        /// <summary>
-        /// Applies inversion to a signal if enabled.
-        /// </summary>
-        public bool ApplyInversion(bool signal)
+        private void OnCopySettings(object data)
         {
-            return invertSignal ? !signal : signal;
+            SensorInverter other = ((GameObject)data)?.GetComponent<SensorInverter>();
+            if (other != null)
+                InvertSignal = other.InvertSignal;
         }
 
-        /// <summary>
-        /// Sends a signal to the logic port, applying inversion if enabled.
-        /// </summary>
+        public bool ApplyInversion(bool signal) => invertSignal ? !signal : signal;
+
         public bool SendSignal(LogicPorts ports, HashedString portId, bool rawSignal)
         {
             bool finalSignal = ApplyInversion(rawSignal);
@@ -102,37 +87,43 @@ namespace ControlledAutomation.Components
 
             if (invertSignal)
             {
-                // Swap descriptions when inverted
                 ports.outputPortInfo[0].activeDescription = originalInactiveDescription ?? CONTROLLEDAUTOMATION.SENSOR_LOGIC_PORT_ACTIVE_INVERTED;
                 ports.outputPortInfo[0].inactiveDescription = originalActiveDescription ?? CONTROLLEDAUTOMATION.SENSOR_LOGIC_PORT_INACTIVE_INVERTED;
             }
             else
             {
-                // Restore original descriptions
                 ports.outputPortInfo[0].activeDescription = originalActiveDescription;
                 ports.outputPortInfo[0].inactiveDescription = originalInactiveDescription;
             }
         }
 
-        /// <summary>
-        /// Triggers a logic update on the attached component.
-        /// Override this in subclasses if needed for specific building types.
-        /// </summary>
         protected virtual void TriggerLogicUpdate()
         {
-            // Most sensors will update automatically on next tick
-            // Subclasses can override to force immediate update
+            var ports = GetComponent<LogicPorts>();
+            if (ports == null)
+                return;
+
+            HashedString portId = LogicSwitch.PORT_ID;
+            if (ports.outputPortInfo != null && ports.outputPortInfo.Length > 0)
+                portId = ports.outputPortInfo[0].id;
+
+            // Get current output and calculate what the raw (uninverted) value should be
+            int currentOutput = ports.GetOutputValue(portId);
+            
+            // Since we just toggled, the OLD state was !invertSignal
+            bool oldInversionWasOn = !invertSignal;
+            int rawValue = oldInversionWasOn ? (currentOutput != 0 ? 0 : 1) : currentOutput;
+            
+            ports.SendSignal(portId, rawValue);
         }
 
-        // Fast lookup map
-        private static readonly Dictionary<GameObject, SensorInverter> fastMap
-            = new Dictionary<GameObject, SensorInverter>();
+        // Fast lookup
+        private static readonly Dictionary<GameObject, SensorInverter> fastMap = new Dictionary<GameObject, SensorInverter>();
 
         public static SensorInverter Get(GameObject go)
         {
-            if (fastMap.TryGetValue(go, out var inverter))
-                return inverter;
-            return null;
+            fastMap.TryGetValue(go, out var inverter);
+            return inverter;
         }
     }
 }

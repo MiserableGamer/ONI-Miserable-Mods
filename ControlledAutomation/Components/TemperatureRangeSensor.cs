@@ -19,16 +19,12 @@ namespace ControlledAutomation.Components
         [Serialize][SerializeField] private float _degreesBelow = 10f;
         [Serialize][SerializeField] private float _degreesAbove = 10f;
         [Serialize][SerializeField] private bool _activateInsideRange = true;
-        [Serialize][SerializeField] private float _bufferDuration = 0f;
-        [Serialize] private float bufferTimeRemaining;
-        [Serialize] private bool conditionWasPreviouslyMet;
         [Serialize] private bool dirty = true;
 
         public float centerTemperature { get => _centerTemperature; set => _centerTemperature = value; }
         public float degreesBelow { get => _degreesBelow; set => _degreesBelow = value; }
         public float degreesAbove { get => _degreesAbove; set => _degreesAbove = value; }
         public bool activateInsideRange { get => _activateInsideRange; set => _activateInsideRange = value; }
-        public float bufferDuration { get => _bufferDuration; set => _bufferDuration = value; }
 
         public float minTemp;
         public float maxTemp = 373.15f;
@@ -42,7 +38,7 @@ namespace ControlledAutomation.Components
         public float UpperBound => centerTemperature + degreesAbove;
         public float GetTemperature() => averageTemp;
 
-        public override void OnPrefabInit()
+        protected override void OnPrefabInit()
         {
             base.OnPrefabInit();
             Subscribe(-905833192, OnCopySettingsDelegate);
@@ -57,12 +53,11 @@ namespace ControlledAutomation.Components
                 degreesBelow = other.degreesBelow;
                 degreesAbove = other.degreesAbove;
                 activateInsideRange = other.activateInsideRange;
-                _bufferDuration = other._bufferDuration;
                 dirty = true;
             }
         }
 
-        public override void OnSpawn()
+        protected override void OnSpawn()
         {
             base.OnSpawn();
             OnToggle += OnSwitchToggled;
@@ -73,19 +68,6 @@ namespace ControlledAutomation.Components
 
         public void Sim200ms(float dt)
         {
-            // Buffer countdown runs every tick (0.2s resolution), independent of temp averaging
-            if (!conditionWasPreviouslyMet && bufferTimeRemaining > 0f)
-            {
-                bufferTimeRemaining -= dt;
-                if (bufferTimeRemaining <= 0f)
-                {
-                    bufferTimeRemaining = 0f;
-                    if (IsSwitchedOn)
-                        Toggle();
-                }
-            }
-
-            // Sample collection — returns early for frames 0-7
             if (simUpdateCounter < NumFrameDelay && !dirty)
             {
                 int cell = Grid.PosToCell(this);
@@ -97,7 +79,6 @@ namespace ControlledAutomation.Components
                 return;
             }
 
-            // Temperature evaluation — every 8 frames
             simUpdateCounter = 0;
             dirty = false;
             averageTemp = 0f;
@@ -108,33 +89,8 @@ namespace ControlledAutomation.Components
             bool isInRange = averageTemp >= LowerBound && averageTemp <= UpperBound;
             bool shouldBeOn = activateInsideRange ? isInRange : !isInRange;
 
-            if (shouldBeOn)
-            {
-                conditionWasPreviouslyMet = true;
-                bufferTimeRemaining = 0f;
-                if (!IsSwitchedOn)
-                    Toggle();
-            }
-            else if (conditionWasPreviouslyMet)
-            {
-                // Condition just transitioned from met to not-met
-                conditionWasPreviouslyMet = false;
-                if (_bufferDuration > 0f)
-                {
-                    bufferTimeRemaining = _bufferDuration;
-                    // Stay GREEN — buffer countdown will handle the transition
-                }
-                else
-                {
-                    if (IsSwitchedOn)
-                        Toggle();
-                }
-            }
-            else if (bufferTimeRemaining <= 0f)
-            {
-                if (IsSwitchedOn)
-                    Toggle();
-            }
+            if (shouldBeOn != IsSwitchedOn)
+                Toggle();
         }
 
         private void OnSwitchToggled(bool toggled_on)
@@ -159,7 +115,7 @@ namespace ControlledAutomation.Components
             }
         }
 
-        public override void UpdateSwitchStatus()
+        protected override void UpdateSwitchStatus()
         {
             var status = switchedOn 
                 ? Db.Get().BuildingStatusItems.LogicSensorStatusActive 
@@ -189,13 +145,6 @@ namespace ControlledAutomation.Components
         {
             activateInsideRange = inside;
             dirty = true;
-        }
-
-        public void SetBufferDuration(float seconds)
-        {
-            _bufferDuration = Mathf.Clamp(seconds, 0f, 200f);
-            if (bufferTimeRemaining > _bufferDuration)
-                bufferTimeRemaining = _bufferDuration;
         }
     }
 }
