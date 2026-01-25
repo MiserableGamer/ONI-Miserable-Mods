@@ -403,3 +403,4 @@ memory-bank/
 
 # Game source code (not for distribution)
 /KleiONISource/
+/.cursor/commands/comment-cleanup.md
