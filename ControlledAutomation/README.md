@@ -5,50 +5,33 @@ Adds high/low threshold controls and automation signal inversion options to stor
 ## Features
 
 ### Storage Thresholds
-Adds configurable high/low threshold sliders (like Smart Battery) to:
-- **Smart Storage Bin** - Set custom fill thresholds
-- **Refrigerator** - Set custom fill thresholds
+Adds configurable high/low threshold sliders (like Smart Battery) to storage buildings that don't already have them, such as Smart Storage Bin and Refrigerator.
 
 ### Automation Signal Inversion
-Adds an "Invert Signal" checkbox to all supported buildings, allowing you to swap Green/Red automation signals without needing a NOT gate.
+Adds an "Invert Signal" checkbox to storage buildings, sensors, and various other automation-enabled buildings, allowing you to swap Green/Red automation signals without needing a NOT gate.
 
-**Storage Buildings (already have thresholds, adds inversion):**
-- Smart Battery
-- Liquid Reservoir
-- Gas Reservoir
-- Radbolt Chamber
-
-**Producer Buildings:**
-- Critter Trap
-- Fish Trap
-- Airbourne Critter Trap
-- Diamond Press
-
-**Sensors:**
-- All liquid/gas/solid conduit sensors
-- All environmental sensors (temperature, pressure, light, etc.)
-- All logic sensors (timer, counter, critter count, etc.)
-- Meter valves (liquid, gas, solid)
-- Starmap Location Sensor
-
-**Other Buildings:**
-- Geotuner
-- Materials Study Terminal
-
-**Special:**
-- Rocket Platform - Has two independent inversion options for each automation output
+### Adv. Thermo Sensor
+Adds a new temperature sensor building with range-based triggering:
+- Set a center temperature and define a range above/below
+- Triggers when temperature is inside (or outside, when inverted) the defined range
+- Supports typed input and nudge buttons like vanilla sensors
+- Available in the Automation build menu
 
 ## Options
 
 - **Enable Storage Thresholds** - Enable/disable threshold sliders on supported buildings
 - **Enable Automation Inversion** - Enable/disable signal inversion on all supported buildings
-- **Reduced Smart Storage Power** - Reduces Smart Storage Bin power consumption to 20W
 
 ## Compatibility
 
 - Works with base game and all DLCs
+- Compatible with **Big Storage** mod - threshold and inversion controls work on Big Refrigerator, Big Smart Storage Bin, and Big Reservoirs
+- Compatible with **Ronivan's Legacy** mod - inversion controls work on supported buildings
+- Compatible with **Multiple Elements Sensors** mod - inversion controls work on all multi-element sensors
 - Compatible with most other automation mods
-- Saves are compatible - settings are stored per building
+## Version History
+
+- **1.0.0** - Initial release with threshold sliders and signal inversion
 
 ## Credits
 
