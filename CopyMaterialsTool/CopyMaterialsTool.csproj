@@ -43,11 +43,6 @@
     <Reference Include="UnityEngine.InputLegacyModule" HintPath="..\lib\UnityEngine.InputLegacyModule.dll" Private="false" />
   </ItemGroup>
 
-  <!-- Shared files from parent directory -->
-  <ItemGroup>
-    <Compile Include="..\Shared\DevDebug.cs" Link="Shared\DevDebug.cs" />
-  </ItemGroup>
-
   <!-- Content files -->
   <ItemGroup>
     <None Remove="mod.yaml" />
