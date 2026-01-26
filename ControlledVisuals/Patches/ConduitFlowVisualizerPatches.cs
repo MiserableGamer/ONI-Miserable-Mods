@@ -1,6 +1,6 @@
 using HarmonyLib;
+using MiserableMods.Shared;
 using PeterHan.PLib.Core;
-using ControlledVisuals.Options;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -10,7 +10,12 @@ using ConduitFlowMesh = ConduitFlowVisualizer.ConduitFlowMesh;
 
 namespace ControlledVisuals.Patches
 {
-    // Conduit flow throttling (disabled for now). Manual patching to avoid ConduitFlowVisualizer static initializers.
+    /// <summary>
+    /// Reduces the frame rate of conduit flow visual updates based on quality settings.
+    /// Based on FastTrack's implementation by Peter Han.
+    /// 
+    /// Uses manual patching to avoid issues with ConduitFlowVisualizer's static initializers.
+    /// </summary>
     public static class ConduitFlowVisualizerPatches
     {
         private const int MAX_ZOOM = 128;
@@ -26,14 +31,25 @@ namespace ControlledVisuals.Patches
         private static bool patchApplied = false;
         private static bool fastTrackDetected = false;
 
+        /// <summary>
+        /// Whether conduit flow throttling is active.
+        /// </summary>
         internal static bool ReduceFlowUpdates { get; private set; }
 
-        // Called from OnLoad when conduit throttling is re-enabled. Manual patch to avoid touching type too early.
+        /// <summary>
+        /// Applies the conduit flow visualizer patches manually.
+        /// Must be called from OnLoad after determining if throttling should be enabled.
+        /// 
+        /// Manual patching is required because ConduitFlowVisualizer has static initializers
+        /// that can cause issues if the type is accessed too early via attribute-based patching.
+        /// </summary>
+        /// <param name="harmony">The Harmony instance to use for patching.</param>
         internal static void ApplyPatches(Harmony harmony)
         {
             var quality = ControlledVisualsOptions.Instance.ConduitAnimation;
             ReduceFlowUpdates = quality != ControlledVisualsOptions.ConduitAnimationQuality.Full;
 
+            // Check if FastTrack is present and might be handling this already
             fastTrackDetected = DetectFastTrack();
             if (fastTrackDetected)
             {
@@ -48,7 +64,7 @@ namespace ControlledVisuals.Patches
                 return;
             }
 
-            // GetTypeSafe so we don't trigger ConduitFlowVisualizer static initializers too early
+            // Use PPatchTools.GetTypeSafe to avoid triggering static initializers prematurely
             var targetType = PPatchTools.GetTypeSafe(nameof(ConduitFlowVisualizer));
             if (targetType == null)
             {
@@ -59,6 +75,7 @@ namespace ControlledVisuals.Patches
 
             try
             {
+                // Get the Render method
                 var renderMethod = targetType.GetMethod(nameof(ConduitFlowVisualizer.Render),
                     BindingFlags.Public | BindingFlags.Instance);
 
@@ -69,6 +86,7 @@ namespace ControlledVisuals.Patches
                     return;
                 }
 
+                // Apply the prefix patch manually
                 var prefixMethod = typeof(ConduitFlowVisualizerPatches).GetMethod(nameof(Render_Prefix),
                     BindingFlags.NonPublic | BindingFlags.Static);
 
@@ -84,13 +102,18 @@ namespace ControlledVisuals.Patches
             }
         }
 
+        /// <summary>
+        /// Detects if FastTrack mod is installed and has conduit throttling enabled.
+        /// </summary>
         private static bool DetectFastTrack()
         {
             try
             {
+                // Check for FastTrack's ConduitFlowVisualizerPatches class
                 var fastTrackType = PPatchTools.GetTypeSafe("PeterHan.FastTrack.ConduitPatches.ConduitFlowVisualizerPatches");
                 if (fastTrackType != null)
                 {
+                    // Check if their throttling is enabled
                     var reduceProperty = fastTrackType.GetProperty("ReduceFlowUpdates",
                         BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Public);
                     if (reduceProperty != null)
@@ -101,6 +124,7 @@ namespace ControlledVisuals.Patches
                             return true;
                         }
                     }
+                    // FastTrack is present even if throttling is disabled
                     return true;
                 }
             }
@@ -111,6 +135,10 @@ namespace ControlledVisuals.Patches
             return false;
         }
 
+        /// <summary>
+        /// Initializes the throttling settings when the game starts.
+        /// Called from Game.OnSpawn patch.
+        /// </summary>
         internal static void Init()
         {
             NEXT_UPDATE.Clear();
@@ -133,13 +161,24 @@ namespace ControlledVisuals.Patches
                     updateRate = 0.0;
                     break;
             }
+
+            DevDebug.Watch("Conduit Quality", quality.ToString());
+            DevDebug.Watch("Throttling", ReduceFlowUpdates ? "Active" : "Off");
+            DevDebug.Watch("FastTrack", fastTrackDetected ? "Detected" : "Not Found");
         }
 
+        /// <summary>
+        /// Cleans up when the game is destroyed.
+        /// </summary>
         internal static void Cleanup()
         {
             NEXT_UPDATE.Clear();
         }
 
+        /// <summary>
+        /// Forces a conduit update to run next time.
+        /// </summary>
+        /// <param name="instance">The conduit flow visualizer to invalidate, or null to invalidate all.</param>
         internal static void ForceUpdate(ConduitFlowVisualizer instance = null)
         {
             if (instance == null)
@@ -148,6 +187,9 @@ namespace ControlledVisuals.Patches
                 NEXT_UPDATE.Remove(instance);
         }
 
+        /// <summary>
+        /// Draws an existing ConduitFlowMesh without updating it.
+        /// </summary>
         private static void DrawMesh(ConduitFlowMesh flowMesh, float z, int layer)
         {
             if (flowMesh?.mesh != null)
@@ -157,10 +199,14 @@ namespace ControlledVisuals.Patches
             }
         }
 
+        /// <summary>
+        /// Prefix patch for ConduitFlowVisualizer.Render.
+        /// Returns false to skip the original method when throttling, true to run it.
+        /// </summary>
         [HarmonyPriority(Priority.Low)]
         private static bool Render_Prefix(ConduitFlowVisualizer __instance, float z)
         {
-            // Not throttling: run original
+            // Safety check - if not configured to throttle, run original
             if (!ReduceFlowUpdates || updateRate <= 0.0)
                 return true;
 
@@ -173,12 +219,14 @@ namespace ControlledVisuals.Patches
 
                 if (updateRate > 0.0 && cc != null)
                 {
+                    // Set updates to 1 Hz if zoomed way out
                     var area = cc.VisibleArea.CurrentArea;
                     var max = area.Max;
                     var min = area.Min;
                     if (max.x - min.x > MAX_ZOOM || max.y - min.y > MAX_ZOOM)
                         calcUpdateRate = UPDATE_RATE_ZOOMED;
 
+                    // Check if enough time has passed since last update
                     if (NEXT_UPDATE.TryGetValue(__instance, out double nextConduitUpdate))
                         update = now > nextConduitUpdate;
 
@@ -186,8 +234,10 @@ namespace ControlledVisuals.Patches
                         NEXT_UPDATE[__instance] = now + calcUpdateRate;
                 }
 
+                // Always update if showing contents (in overlay mode)
                 update |= __instance.showContents;
 
+                // If not updating, render the last mesh without recalculating
                 if (!update)
                 {
                     __instance.animTime += Time.deltaTime;
@@ -196,16 +246,27 @@ namespace ControlledVisuals.Patches
                     DrawMesh(__instance.staticBallMesh, z, layer);
                 }
 
+#if DEBUG
+                if (Time.frameCount % 120 == 0)
+                {
+                    DevDebug.Watch("Render", update ? "Update" : "Throttled");
+                }
+#endif
+
                 return update;
             }
             catch (Exception ex)
             {
                 Debug.LogWarning($"[ControlledVisuals] Conduit throttling failed: {ex.Message}");
+                // Disable throttling on error to prevent repeated failures
                 ReduceFlowUpdates = false;
                 return true;
             }
         }
 
+        /// <summary>
+        /// Patch for Game.DestroyInstances to clean up tracking dictionary.
+        /// </summary>
         [HarmonyPatch(typeof(Game), nameof(Game.DestroyInstances))]
         public static class Game_DestroyInstances_Patch
         {
@@ -215,6 +276,9 @@ namespace ControlledVisuals.Patches
             }
         }
 
+        /// <summary>
+        /// Patch for Game.OnSpawn to initialize throttling settings.
+        /// </summary>
         [HarmonyPatch(typeof(Game), nameof(Game.OnSpawn))]
         public static class Game_OnSpawn_Patch
         {

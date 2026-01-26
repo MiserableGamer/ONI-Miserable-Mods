@@ -1,4 +1,4 @@
 title: Controlled Visuals
-description: Fixes a long-standing vanilla bug where items on conveyor rails sometimes render in front of drywall and other buildings. Conveyor contents now always draw behind walls as intended.
+description: Performance optimization mod - reduce pipe animation quality to improve FPS in large colonies
 supportedContent: ALL
 staticID: LeoMo.ControlledVisuals
