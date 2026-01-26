@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,7 +9,13 @@ namespace CopyMaterials.Logic
         private static Building sourceBuilding;
         private static SimHashes sourceMaterial = SimHashes.Vacuum;
 
-        public static PrioritySetting sourcePriority = default;
+        /// <summary>
+        /// Default priority used when no valid priority can be obtained.
+        /// Matches the game's default in Prioritizable.cs
+        /// </summary>
+        public static readonly PrioritySetting DefaultPriority = new PrioritySetting(PriorityScreen.PriorityClass.basic, 5);
+
+        public static PrioritySetting sourcePriority = DefaultPriority;
         public static string sourceFacadeID = null;
         public static Tag sourceCopyGroupTag = Tag.Invalid;
         public static int? sourceBridgeWidth = null; // Store bridge width for ExtendedBuildingWidth support
@@ -49,7 +55,7 @@ namespace CopyMaterials.Logic
             sourceMaterial = material;
 
             var p = building?.GetComponent<Prioritizable>();
-            sourcePriority = p != null ? p.GetMasterPriority() : default;
+            sourcePriority = p != null ? p.GetMasterPriority() : DefaultPriority;
 
             var facade = building?.GetComponent<BuildingFacade>();
             sourceFacadeID = facade?.CurrentFacade;
@@ -77,7 +83,7 @@ namespace CopyMaterials.Logic
         {
             sourceBuilding = null;
             sourceMaterial = SimHashes.Vacuum;
-            sourcePriority = default;
+            sourcePriority = DefaultPriority;
             sourceFacadeID = null;
             sourceCopyGroupTag = Tag.Invalid;
             sourceBridgeWidth = null;
@@ -236,13 +242,36 @@ namespace CopyMaterials.Logic
             return false;
         }
 
+        /// <summary>
+        /// Validates if a PrioritySetting has a valid priority_value (1-9).
+        /// </summary>
+        public static bool IsValidPriority(PrioritySetting priority)
+        {
+            return priority.priority_value >= 1 && priority.priority_value <= 9;
+        }
+
+        /// <summary>
+        /// Applies a priority to a game object, with validation.
+        /// If the priority is invalid, uses DefaultPriority instead.
+        /// </summary>
         public static void ApplyPriorityToObject(GameObject go, PrioritySetting priority)
         {
             if (go == null) return;
             var p = go.GetComponent<Prioritizable>();
             if (p != null)
             {
-                p.SetMasterPriority(priority);
+                // Validate priority before applying - must be in range 1-9
+                if (IsValidPriority(priority))
+                {
+                    p.SetMasterPriority(priority);
+                    Log($"Applied priority {priority.priority_class}:{priority.priority_value} to {go.name}");
+                }
+                else
+                {
+                    // Use default priority if invalid
+                    Warn($"Invalid priority {priority.priority_value} - using default (5)");
+                    p.SetMasterPriority(DefaultPriority);
+                }
             }
         }
 

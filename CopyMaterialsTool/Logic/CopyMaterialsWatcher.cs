@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,6 +14,9 @@ namespace CopyMaterials.Logic
         private ObjectLayer objectLayer;
         private UtilityConnections storedConnections;
         private int? bridgeWidth = null; // Store bridge width for ExtendedBuildingWidth support
+        private PrioritySetting priority; // Store priority locally to survive tool deactivation
+        private string facadeID;
+        private Tag copyGroupTag;
 
         public static CopyMaterialsWatcher Attach(Building target, string prefabID, SimHashes material, Orientation orientation = Orientation.Neutral, UtilityConnections connections = default(UtilityConnections))
         {
@@ -35,8 +38,13 @@ namespace CopyMaterials.Logic
             watcher.storedConnections = connections;
             watcher.bridgeWidth = CopyMaterialsManager.sourceBridgeWidth; // Capture bridge width from source
             watcher.blueprintCreated = false;
+            
+            // Capture all settings locally NOW before tool deactivates and clears them
+            watcher.priority = CopyMaterialsManager.sourcePriority;
+            watcher.facadeID = CopyMaterialsManager.sourceFacadeID;
+            watcher.copyGroupTag = CopyMaterialsManager.sourceCopyGroupTag;
 
-            CopyMaterialsManager.Log($"Watcher attached for {prefabID} at cell {watcher.originalCell}, bridge width: {watcher.bridgeWidth}");
+            CopyMaterialsManager.Log($"Watcher attached for {prefabID} at cell {watcher.originalCell}, priority: {watcher.priority.priority_value}, bridge width: {watcher.bridgeWidth}");
             return watcher;
         }
 
@@ -217,7 +225,10 @@ namespace CopyMaterials.Logic
                     null,
                     material,
                     storedConnections,
-                    bridgeWidth  // Pass bridge width to cleanup
+                    bridgeWidth,  // Pass bridge width to cleanup
+                    priority,     // Pass locally stored priority
+                    facadeID,     // Pass locally stored facadeID
+                    copyGroupTag  // Pass locally stored copyGroupTag
                 );
                 CopyMaterialsManager.Log("Blueprint placed and cleanup attached");
                 

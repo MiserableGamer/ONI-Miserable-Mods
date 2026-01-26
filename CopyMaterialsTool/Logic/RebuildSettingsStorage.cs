@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using UnityEngine;
 
 namespace CopyMaterials.Logic
@@ -31,12 +31,8 @@ namespace CopyMaterials.Logic
         {
             if (newBuilding == null) return;
 
-            // Apply priority (full object)
-            var p = newBuilding.GetComponent<Prioritizable>();
-            if (p != null && priority.priority_value != 0)
-            {
-                p.SetMasterPriority(priority);
-            }
+            // Apply priority using the validated method
+            CopyMaterialsManager.ApplyPriorityToObject(newBuilding, priority);
 
             // Apply facade
             if (!string.IsNullOrEmpty(facadeID))

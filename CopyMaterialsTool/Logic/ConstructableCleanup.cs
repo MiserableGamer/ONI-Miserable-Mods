@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using UnityEngine;
 using PeterHan.PLib.Core;
@@ -16,6 +16,11 @@ namespace CopyMaterials.Logic
         private UtilityConnections storedConnections;
         private int? bridgeWidth = null; // Store bridge width for ExtendedBuildingWidth support
         private bool cleanupDone = false;
+        
+        // Store settings locally to survive tool deactivation
+        private PrioritySetting priorityToApply;
+        private string facadeIDToApply;
+        private Tag copyGroupTagToApply;
 
         public static void Attach(
             GameObject placed,
@@ -25,7 +30,10 @@ namespace CopyMaterials.Logic
             GameObject visualizer,  // Ignored
             SimHashes materialToApply,
             UtilityConnections connections,
-            int? bridgeWidth = null  // Bridge width for ExtendedBuildingWidth support
+            int? bridgeWidth = null,  // Bridge width for ExtendedBuildingWidth support
+            PrioritySetting? priority = null,  // Priority to apply
+            string facadeID = null,  // Facade ID to apply
+            Tag? copyGroupTag = null  // Copy group tag to apply
         )
         {
             var cleanup = placed.AddComponent<ConstructableCleanup>();
@@ -37,6 +45,11 @@ namespace CopyMaterials.Logic
             cleanup.storedConnections = connections;
             cleanup.bridgeWidth = bridgeWidth;
             cleanup.cleanupDone = false;
+            
+            // Store settings locally - use defaults if not provided
+            cleanup.priorityToApply = priority ?? CopyMaterialsManager.DefaultPriority;
+            cleanup.facadeIDToApply = facadeID;
+            cleanup.copyGroupTagToApply = copyGroupTag ?? Tag.Invalid;
         }
 
         protected override void OnSpawn()
@@ -105,26 +118,26 @@ namespace CopyMaterials.Logic
                 RestoreConnections(completeGO);
             }
 
-            // Apply source settings
-            CopyMaterialsManager.ApplyPriorityToObject(completeGO, CopyMaterialsManager.sourcePriority);
+            // Apply locally stored settings (not from global state which may have been cleared)
+            CopyMaterialsManager.ApplyPriorityToObject(completeGO, priorityToApply);
 
-            if (!string.IsNullOrEmpty(CopyMaterialsManager.sourceFacadeID))
+            if (!string.IsNullOrEmpty(facadeIDToApply))
             {
                 var facadeComp = completeGO.GetComponent<BuildingFacade>();
                 if (facadeComp != null)
                 {
                     var field = typeof(BuildingFacade).GetField("currentFacade", BindingFlags.Instance | BindingFlags.NonPublic);
-                    field?.SetValue(facadeComp, CopyMaterialsManager.sourceFacadeID);
+                    field?.SetValue(facadeComp, facadeIDToApply);
                 }
             }
 
-            if (CopyMaterialsManager.sourceCopyGroupTag != Tag.Invalid)
+            if (copyGroupTagToApply != Tag.Invalid)
             {
                 var cbs = completeGO.GetComponent<CopyBuildingSettings>();
                 if (cbs != null)
                 {
                     var field = typeof(CopyBuildingSettings).GetField("copyGroupTag", BindingFlags.Instance | BindingFlags.NonPublic);
-                    field?.SetValue(cbs, CopyMaterialsManager.sourceCopyGroupTag);
+                    field?.SetValue(cbs, copyGroupTagToApply);
                 }
             }
 

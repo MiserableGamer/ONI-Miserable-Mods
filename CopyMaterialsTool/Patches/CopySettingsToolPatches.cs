@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Reflection;
@@ -100,40 +100,15 @@ namespace CopyMaterials.Patches
 
                 if (sourcePE.ElementID == targetPE.ElementID && widthsMatch)
                 {
-                    CopyMaterialsManager.Log($"Materials and widths match - applying settings only, skipping deconstruction");
+                    CopyMaterialsManager.Log($"Materials and widths match - applying settings only via game's event system, skipping deconstruction");
                     
-                    // Apply settings directly if materials and widths match
-                    CopyMaterialsManager.ApplyPriorityToObject(obj, CopyMaterialsManager.sourcePriority);
-
-                    if (!string.IsNullOrEmpty(CopyMaterialsManager.sourceFacadeID))
+                    // Use the game's built-in copy settings system which handles priority, facade, etc.
+                    // via the event system. This triggers Prioritizable.OnCopySettings and other handlers.
+                    GameObject sourceGOLocal = (GameObject)sourceField.GetValue(__instance);
+                    if (sourceGOLocal != null)
                     {
-                        var facadeComp = obj.GetComponent<BuildingFacade>();
-                        if (facadeComp != null)
-                        {
-                            var field = typeof(BuildingFacade).GetField("currentFacade", BindingFlags.Instance | BindingFlags.NonPublic);
-                            field?.SetValue(facadeComp, CopyMaterialsManager.sourceFacadeID);
-                        }
+                        CopyBuildingSettings.ApplyCopy(cell, sourceGOLocal);
                     }
-
-                    if (CopyMaterialsManager.sourceCopyGroupTag != Tag.Invalid)
-                    {
-                        var cbs = obj.GetComponent<CopyBuildingSettings>();
-                        if (cbs != null)
-                        {
-                            var field = typeof(CopyBuildingSettings).GetField("copyGroupTag", BindingFlags.Instance | BindingFlags.NonPublic);
-                            field?.SetValue(cbs, CopyMaterialsManager.sourceCopyGroupTag);
-                        }
-                    }
-
-                    // Popup for settings applied (no material change)
-                    Vector3 pos = obj.transform.position;
-                    PopFXManager.Instance.SpawnFX(
-                        PopFXManager.Instance.sprite_Plus,
-                        "Settings Applied",
-                        null,
-                        pos,
-                        2f
-                    );
 
                     return;  // Skip deconstruct
                 }

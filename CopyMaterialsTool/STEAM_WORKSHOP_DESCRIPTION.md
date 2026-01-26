@@ -81,8 +81,6 @@ The mod is designed to be efficient and should not impact game performance, even
 
 [h2]Future Updates[/h2]
 [list]
-[*][b]Settings Preservation[/b] - Automatically preserve priority, facades, and copy group tags when copying materials
-[*][b]Blueprint Issues[/b] - Fix blueprint placement timing issues
 [*][b]Port Overlap Errors[/b] - Resolve temporary overlapping ports error that can occur with bridges
 [/list]
 
@@ -118,6 +116,14 @@ This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/
 
 [h2]Version History[/h2]
 [list]
+[*][b]2.0.0.0[/b]: Major rewrite
+[list]
+[*]Fixed "Priority Value Out Of Range: 0" error causing missing priority numbers
+[*]Settings (priority, facade, copy group tag) now properly preserved across rebuild cycle
+[*]Uses game's native event system when materials already match
+[*]Single DLL deployment
+[*]Improved code structure and validation
+[/list]
 [*][b]1.0.1.21[/b]: Bugfix - added icon to button
 [*][b]1.0.0.0[/b]: Initial release
 [*][b]0.1.1.11[/b]: Code cleaning

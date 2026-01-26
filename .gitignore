@@ -408,3 +408,7 @@ memory-bank/
 # Memory Bank (AI assistant context - local only)
 memory-bank/
 .cursor/rules/
+
+# Infrastructure (local development tools)
+/.cursor/mcp.json
+/infrastructure/

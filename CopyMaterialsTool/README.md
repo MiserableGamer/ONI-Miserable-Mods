@@ -118,8 +118,6 @@ Debug logging can be toggled by setting `CopyMaterialsManager.DebugMode = true` 
 
 ## Future Updates
 
-- **Settings Preservation**: Automatically preserve priority, facades, and copy group tags when copying materials
-- **Blueprint Issues**: Fix blueprint placement timing issues
 - **Port Overlap Errors**: Resolve temporary overlapping ports error that can occur with bridges
 
 ## License
@@ -154,7 +152,12 @@ Please mention "Copy Materials Tool" in your issue title or description so we ca
 
 ## Version History
 
-
+- **2.0.0.0**: Major rewrite
+  - Fixed "Priority Value Out Of Range: 0" error causing missing priority numbers
+  - Settings (priority, facade, copy group tag) now properly preserved across rebuild cycle
+  - Uses game's native event system when materials already match
+  - Single DLL deployment
+  - Improved code structure and validation
 - **1.0.1.21**: Bugfix - icon on the button
 - **1.0.0.0**: Initial release
 - **0.1.1.11**: Code cleaning
