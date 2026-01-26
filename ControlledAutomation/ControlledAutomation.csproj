@@ -129,7 +129,7 @@
   <PropertyGroup>
     <PreBuildEvent>powershell -ExecutionPolicy Bypass -File "$(SolutionDir)increment_version.ps1" -ProjectDir "$(ProjectDir)"</PreBuildEvent>
     <PostBuildEvent>REM Run ILRepack to merge PLib into the main DLL
-"$(SolutionDir)packages\ILRepack.2.0.34\tools\ILRepack.exe" /ndebug /lib:"$(SolutionDir)lib" /out:"$(TargetDir)$(TargetFileName)" "$(TargetPath)" "$(TargetDir)PLib.dll" /targetplatform:v4
+"$(SolutionDir)packages\ILRepack.2.0.34\tools\ILRepack.exe" /ndebug /lib:"$(SolutionDir)lib" /lib:"$(SolutionDir)packages\Newtonsoft.Json.13.0.4\lib\net45" /out:"$(TargetDir)$(TargetFileName)" "$(TargetPath)" "$(TargetDir)PLib.dll" /targetplatform:v4
 del /Q "$(TargetDir)PLib.dll" 2&gt;nul
 if not exist "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledAutomation\" mkdir "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledAutomation\"
 xcopy /Y /R "$(ProjectDir)mod.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledAutomation\"
