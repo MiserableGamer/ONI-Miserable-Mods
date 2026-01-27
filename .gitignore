@@ -412,3 +412,4 @@ memory-bank/
 # Infrastructure (local development tools)
 /.cursor/mcp.json
 /infrastructure/
+/HeatingSystemTroubleshooting.html
