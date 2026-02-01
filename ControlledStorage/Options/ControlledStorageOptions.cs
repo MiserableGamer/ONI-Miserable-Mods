@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using Newtonsoft.Json;
 using PeterHan.PLib.Options;
 
@@ -14,7 +16,7 @@ namespace ControlledStorage
             get
             {
                 if (_instance == null)
-                    _instance = POptions.ReadSettings<ControlledStorageOptions>() ?? new ControlledStorageOptions();
+                    _instance = SafeReadSettings() ?? new ControlledStorageOptions();
                 return _instance;
             }
         }
@@ -22,7 +24,18 @@ namespace ControlledStorage
         // Reload settings (useful when options change)
         public static void Reload()
         {
-            _instance = POptions.ReadSettings<ControlledStorageOptions>() ?? new ControlledStorageOptions();
+            _instance = SafeReadSettings() ?? new ControlledStorageOptions();
+        }
+
+        // PLib ReadSettings throws when config path doesn't exist (first run) - catch and use defaults
+        private static ControlledStorageOptions SafeReadSettings()
+        {
+            try
+            {
+                return POptions.ReadSettings<ControlledStorageOptions>();
+            }
+            catch (DirectoryNotFoundException) { return null; }
+            catch (FileNotFoundException) { return null; }
         }
 
         #region Empty Storage Options
