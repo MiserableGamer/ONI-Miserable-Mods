@@ -89,5 +89,20 @@ namespace ControlledStorage.Patches
                 SourceField?.SetValue(__instance, null);
             }
         }
+
+        // Block CopyBuildingSettings.ApplyCopy when in delivery-only mode - otherwise other mods
+        // (e.g. CopyMaterialsTool) or game code may call it and copy filters/priorities too
+        [HarmonyPatch(typeof(CopyBuildingSettings), nameof(CopyBuildingSettings.ApplyCopy))]
+        public static class CopyBuildingSettings_ApplyCopy_Patch
+        {
+            internal static bool Prepare() => ControlledStorageOptions.Instance.EnableDeliveryControl;
+
+            internal static bool Prefix()
+            {
+                if (IsDeliveryControlCopyMode)
+                    return false;
+                return true;
+            }
+        }
     }
 }
