@@ -6,6 +6,7 @@
   <Project Path="ControlledFiltering/ControlledFiltering.csproj" Id="e6f7a8b9-c0d1-2345-6789-abcdef012345" />
   <Project Path="ControlledMods/ControlledMods.csproj" Id="18500b0e-6852-47ec-925c-0d76fb754264" />
   <Project Path="ControlledOverlay/ControlledOverlay.csproj" Id="d5e6f7a8-b9c0-1234-5678-9abcdef01234" />
+  <Project Path="ControlledStorage/ControlledStorage.csproj" Id="a2b3c4d5-e6f7-8901-2345-6789abcdef01" />
   <Project Path="ControlledSublimation/ControlledSublimation.csproj" Id="c4d5e6f7-a8b9-0123-4567-89abcdef0123" />
   <Project Path="ControlledWarnings/ControlledWarnings.csproj" Id="41e14026-7052-4de3-b022-5ca6f2ad31d9" />
   <Project Path="CopyMaterialsTool/CopyMaterialsTool.csproj" Id="ae6fe0c2-fa12-42c8-909a-5fea7b5aecdf" />

@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- 
+    ControlledStorage - Unified storage control mod
+    Combines: EmptyStorage, ControlledFiltering, CapacityControl
+    Plus new features: Dupe/Sweeper delivery control, No-Sweep zones
+  -->
+
+  <PropertyGroup>
+    <AssemblyName>ControlledStorage</AssemblyName>
+    <RootNamespace>ControlledStorage</RootNamespace>
+  </PropertyGroup>
+
+  <!-- TextAnchor for sidescreen left alignment (BoxLayoutParams.Alignment) -->
+  <ItemGroup>
+    <Reference Include="UnityEngine.TextRenderingModule" HintPath="$(MSBuildProjectDirectory)\..\lib\UnityEngine.TextRenderingModule.dll" Private="false" />
+  </ItemGroup>
+
+  <!-- No-Sweep Zone tool icons (embedded for PUIUtils.LoadSprite) -->
+  <ItemGroup>
+    <EmbeddedResource Include="images\tool_icon.png" LogicalName="ControlledStorage.images.tool_icon.png" />
+    <EmbeddedResource Include="images\visualizer_set.png" LogicalName="ControlledStorage.images.visualizer_set.png" />
+    <EmbeddedResource Include="images\visualizer_cancel.png" LogicalName="ControlledStorage.images.visualizer_cancel.png" />
+  </ItemGroup>
+
+</Project>
