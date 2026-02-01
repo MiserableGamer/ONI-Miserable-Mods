@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- 
+    TEMPLATE: Copy this folder and rename for new mods.
+    Only change AssemblyName and RootNamespace below.
+    All other settings are inherited from Directory.Build.props/targets.
+  -->
+
+  <PropertyGroup>
+    <AssemblyName>BlankProject</AssemblyName>
+    <RootNamespace>BlankProject</RootNamespace>
+  </PropertyGroup>
+
+</Project>
