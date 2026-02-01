@@ -369,14 +369,15 @@ lib/
 # Chrome extension (not part of ONI mods)
 cursor-cost-summary/
 /CommonLib/CommonLib.csproj
-# BlankProject is a template and should not be uploaded to GitHub
-/BlankProject/
 
-# PowerShell scripts (build and local operation scripts - not needed for mod functionality)
+# Solution file - do not use (use ONIMiserableMods.slnx only)
+/ONI Miserable Mods.slnx
+
+# PowerShell scripts (except /scripts/ which is tracked - persistent)
 *.ps1
-release-mod.ps1
-release-mod.cmd
-create-indexed-junctions.ps1
+/release-mod.ps1
+/release-mod.cmd
+/create-indexed-junctions.ps1
 
 # Local operation markdown files (not user-facing documentation)
 UPLOAD_INSTRUCTIONS.md
@@ -403,28 +404,25 @@ DEV_RULES.txt
 /prime/
 /reference/
 
-# Cursor IDE files and memory bank (local development context)
-.cursor/
+# Memory bank (local development context)
 memory-bank/
-/.cursor/commands/comment-cleanup.md
-.cursor/rules/
 
 # Game source code (not for distribution)
 /KleiONISource/
 
 # Infrastructure (local development tools)
 /infrastructure/
-/HeatingSystemTroubleshooting.html
 
-# Local AI/tool config (Serena, Claude, editor - not for distribution)
+# Local AI/tool config (Serena, Claude, editor) - persistent across branches, never push
+# Cursor/Claude creates .claude automatically - keep ignored
 .claude/
+.cursor/
 .serena/
 .vscode/
 
 # Personal/local projects
 jarvis/
-/.cursor/mcp.json
-/scripts/index_repo_gui.py
-/scripts/promote-release.bat
-/scripts/promote_release_gui.py
-/scripts/run-index-repo.bat
+
+# Scripts folder is tracked (persistent across both branches)
+!/scripts/
+!/scripts/**

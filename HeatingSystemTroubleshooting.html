@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S Plan & Y Plan Heating System Troubleshooting Guide</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 11pt;
+            line-height: 1.4;
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 15mm;
+            color: #000;
+        }
+        
+        h1 {
+            font-size: 18pt;
+            text-align: center;
+            border-bottom: 3px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        h2 {
+            font-size: 14pt;
+            background-color: #333;
+            color: white;
+            padding: 8px 12px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            page-break-after: avoid;
+        }
+        
+        h3 {
+            font-size: 12pt;
+            border-bottom: 1px solid #666;
+            padding-bottom: 5px;
+            margin-top: 20px;
+            page-break-after: avoid;
+        }
+        
+        h4 {
+            font-size: 11pt;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            page-break-after: avoid;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0 15px 0;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #333;
+            padding: 6px 8px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #e0e0e0;
+            font-weight: bold;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f5f5f5;
+        }
+        
+        .warning-box {
+            background-color: #fff3cd;
+            border: 2px solid #856404;
+            padding: 12px;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+        
+        .warning-box h3 {
+            color: #856404;
+            margin-top: 0;
+            border: none;
+        }
+        
+        .critical-box {
+            background-color: #f8d7da;
+            border: 2px solid #721c24;
+            padding: 12px;
+            margin: 15px 0;
+        }
+        
+        .info-box {
+            background-color: #d1ecf1;
+            border: 2px solid #0c5460;
+            padding: 12px;
+            margin: 15px 0;
+        }
+        
+        .code-block {
+            font-family: 'Courier New', monospace;
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            padding: 12px;
+            margin: 10px 0;
+            font-size: 9pt;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        
+        .checklist {
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .checklist-item {
+            margin: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .checklist-item::before {
+            content: "☐";
+            position: absolute;
+            left: 0;
+            font-size: 14pt;
+        }
+        
+        .checklist-sub {
+            margin-left: 20px;
+        }
+        
+        ul, ol {
+            margin: 10px 0;
+            padding-left: 25px;
+        }
+        
+        li {
+            margin: 5px 0;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+        
+        .no-break {
+            page-break-inside: avoid;
+        }
+        
+        .notes-table td {
+            height: 30px;
+        }
+        
+        strong {
+            font-weight: bold;
+        }
+        
+        .highlight {
+            background-color: #ffff99;
+            padding: 2px 4px;
+        }
+        
+        @media print {
+            body {
+                padding: 10mm;
+            }
+            
+            h2 {
+                background-color: #333 !important;
+                color: white !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            th {
+                background-color: #e0e0e0 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .warning-box, .critical-box, .info-box {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<h1>S PLAN &amp; Y PLAN HEATING SYSTEM<br>TROUBLESHOOTING GUIDE</h1>
+
+<div class="warning-box">
+    <h3>⚠️ SAFETY WARNING</h3>
+    <ul>
+        <li><strong>230V MAINS VOLTAGE CAN KILL</strong></li>
+        <li>Isolate power at fused spur/consumer unit before working on wiring</li>
+        <li>Take photos of all wiring before disconnecting anything</li>
+        <li>Never assume a circuit is dead - always test</li>
+    </ul>
+</div>
+
+<h2>PART 1: UNDERSTANDING THE SYSTEM</h2>
+
+<h3>The Interlock Principle</h3>
+<p>The boiler only fires when:</p>
+<ol>
+    <li>The programmer is on for that channel,</li>
+	<li>A thermostat is calling for heat, <strong>AND</strong></li>
+    <li>A valve has confirmed it is open (via auxiliary switch)</li>
+</ol>
+<p><strong>No open valve = No boiler firing</strong> (this is the safety interlock)</p>
+
+<h3>2-Port Zone Valve Wiring (S Plan)</h3>
+
+<h4>Standard Wiring (e.g., Honeywell V4043H)</h4>
+
+<table>
+    <tr><th>Wire</th><th>Function</th></tr>
+    <tr><td><strong>Brown</strong></td><td>Motor Live - powers the motor to open the valve</td></tr>
+    <tr><td><strong>Grey</strong></td><td>Aux Switch Live Input - provides power for the orange output</td></tr>
+    <tr><td><strong>Orange</strong></td><td>Aux Switch Output - sends "valve open" signal to boiler</td></tr>
+    <tr><td><strong>Blue</strong></td><td>Neutral</td></tr>
+    <tr><td><strong>Green/Yellow</strong></td><td>Earth</td></tr>
+</table>
+<br><br><br><br><br><br>
+<div class="critical-box">
+    <h4>⚡ CRITICAL: Grey Wire Variations</h4>
+    <p>The <strong>grey wire</strong> can be wired in two different ways depending on who installed the system:</p>
+    
+    <table>
+        <tr><th>Wiring Method</th><th>Grey Wire Connected To</th><th>Effect on Manual Override</th></tr>
+        <tr><td><strong>Method A</strong></td><td>Permanent Live (L)</td><td>Manual lever <strong>ALWAYS</strong> works</td></tr>
+        <tr><td><strong>Method B</strong></td><td>Programmer Channel Output</td><td>Manual lever <strong>ONLY</strong> works when programmer channel is ON</td></tr>
+    </table>
+</div>
+
+<h4>Why This Matters for Troubleshooting</h4>
+
+<p><strong>If grey is on Permanent Live:</strong></p>
+<ul>
+    <li>Manual lever will open valve AND fire boiler (aux has power)</li>
+    <li>If manual works → motor or upstream wiring fault</li>
+    <li>If manual doesn't work → aux switch fault</li>
+</ul>
+
+<p><strong>If grey is via Programmer:</strong></p>
+<ul>
+    <li>Manual lever will physically open valve but <strong>WON'T fire boiler</strong> unless programmer channel is ON</li>
+    <li>Must have programmer channel ON to test aux switch</li>
+    <li>Can cause confusion - "manual doesn't work" might just mean programmer is off</li>
+</ul>
+
+<h4>How to Check Grey Wire Source</h4>
+<ol>
+    <li>Set programmer to <strong>OFF</strong> for that channel</li>
+    <li>Measure voltage: <strong>Grey to Neutral</strong></li>
+    <li><strong>230V present</strong> = Grey is on Permanent Live</li>
+    <li><strong>0V</strong> = Grey is via Programmer (turn channel ON to get 230V)</li>
+</ol>
+
+<h3>How the Valve Operates</h3>
+
+<div class="code-block">CALL FOR HEAT:
+                                    
+Thermostat calls → 230V on BROWN → Motor runs → Valve opens
+                                                    ↓
+                                            Aux switch closes
+                                                    ↓
+                            230V on GREY → passes through aux → 230V on ORANGE
+                                                    ↓
+                                            BOILER FIRES
+
+SATISFIED:
+
+Thermostat satisfied → 0V on BROWN → Spring closes valve → Aux opens → Boiler stops</div>
+
+<h3>3-Port Mid-Position Valve Wiring (Y Plan)</h3>
+
+<h4>Standard Wiring (e.g., Honeywell V4073A)</h4>
+
+<table>
+    <tr><th>Wire</th><th>Function</th></tr>
+    <tr><td><strong>Grey</strong></td><td>HW demand input (from cylinder stat)</td></tr>
+    <tr><td><strong>White</strong></td><td>CH demand input (from room stat)</td></tr>
+    <tr><td><strong>Orange</strong></td><td>Aux switch output (boiler call)</td></tr>
+    <tr><td><strong>Blue</strong></td><td>Neutral</td></tr>
+    <tr><td><strong>Green/Yellow</strong></td><td>Earth</td></tr>
+</table>
+
+<h4>Valve Positions</h4>
+
+<table>
+    <tr><th>HW Demand (Grey)</th><th>CH Demand (White)</th><th>Valve Position</th></tr>
+    <tr><td>OFF</td><td>OFF</td><td>Defaults to HW</td></tr>
+    <tr><td>ON</td><td>OFF</td><td>HW only (Port A)</td></tr>
+    <tr><td>OFF</td><td>ON</td><td>CH only (Port B)</td></tr>
+    <tr><td>ON</td><td>ON</td><td>Mid-position (both)</td></tr>
+</table>
+
+<div class="page-break"></div>
+
+<h2>PART 2: SYSTEMATIC TROUBLESHOOTING</h2>
+
+<h3>Quick Symptom Guide</h3>
+
+<table>
+    <tr><th>Symptom</th><th>Check First</th></tr>
+    <tr><td>Nothing works at all</td><td>Power supply, fuse, programmer</td></tr>
+    <tr><td>HW works, CH doesn't</td><td>Room stat, CH valve, CH wiring</td></tr>
+    <tr><td>CH works, HW doesn't</td><td>Cylinder stat, HW valve, HW wiring</td></tr>
+    <tr><td>Valve opens but boiler won't fire</td><td>Aux switch, grey wire power source</td></tr>
+    <tr><td>Manual lever doesn't fire boiler</td><td>Grey wire wiring method (see above)</td></tr>
+    <tr><td>Boiler has power but won't ignite</td><td>Boiler fault - check error codes</td></tr>
+</table>
+
+<h3>Step-by-Step Diagnostic Procedure</h3>
+
+<div class="no-break">
+<h4>STEP 1: Verify Power Supply</h4>
+<table>
+    <tr><th>Test</th><th>Method</th><th>Expected</th></tr>
+    <tr><td>Main power</td><td>Measure L to N at wiring centre</td><td>230V</td></tr>
+</table>
+<p><strong>If no power:</strong> Check fused spur, consumer unit breaker</p>
+</div>
+
+<div class="no-break">
+<h4>STEP 2: Check Programmer Outputs</h4>
+<p>Set programmer to HW <strong>ON</strong> and CH <strong>ON</strong></p>
+<table>
+    <tr><th>Test</th><th>Method</th><th>Expected</th></tr>
+    <tr><td>HW output</td><td>HW terminal to N</td><td>230V when HW on</td></tr>
+    <tr><td>CH output</td><td>CH terminal to N</td><td>230V when CH on</td></tr>
+</table>
+<p><strong>If no output when ON:</strong> Programmer faulty</p>
+</div>
+
+<div class="no-break">
+<h4>STEP 3: Check Thermostats</h4>
+<p><strong>Room Thermostat:</strong></p>
+<ul>
+    <li>Turn UP above room temperature (should click)</li>
+    <li>Measure input to N = 230V</li>
+    <li>Measure output to N = 230V when calling</li>
+</ul>
+<p><strong>Cylinder Thermostat:</strong></p>
+<ul>
+    <li>Turn UP above tank temperature, or remove stat from cylinder</li>
+    <li>Measure input to N = 230V</li>
+    <li>Measure output to N = 230V when calling</li>
+</ul>
+<p><strong>If 230V in but not out when calling:</strong> Thermostat faulty</p>
+</div>
+
+<div class="no-break">
+<h4>STEP 4: Check Valve Motor Circuit (BROWN wire)</h4>
+<table>
+    <tr><th>Test</th><th>Expected</th><th>If Fail</th></tr>
+    <tr><td>Brown to N when stat calling</td><td>230V</td><td>Wiring fault or stat fault</td></tr>
+    <tr><td>Valve movement within 15 sec</td><td>Motor runs, lever moves</td><td>Motor failure</td></tr>
+</table>
+<p><strong>Motor Failure Confirmation:</strong> 230V on brown but no movement = Motor dead. Replace actuator head (not whole valve body), or synchron motor to keep parts cost down.</p>
+</div>
+
+<div class="no-break">
+<h4>STEP 5: Check Aux Switch Circuit (GREY → ORANGE)</h4>
+
+<p><strong>First: Determine Grey Wire Source</strong></p>
+<table>
+    <tr><th>Test</th><th>Programmer OFF</th><th>Result</th></tr>
+    <tr><td>Grey to N</td><td>230V</td><td>Grey on Permanent Live</td></tr>
+    <tr><td>Grey to N</td><td>0V</td><td>Grey via Programmer</td></tr>
+</table>
+
+<p><strong>Then: Test Aux Switch</strong></p>
+
+<p><em>If Grey on Permanent Live:</em></p>
+<table>
+    <tr><th>Valve State</th><th>Orange to N</th><th>Meaning</th></tr>
+    <tr><td>Closed</td><td>0V</td><td>Correct</td></tr>
+    <tr><td>Open (motor or manual)</td><td>230V</td><td>Aux switch working</td></tr>
+    <tr><td>Open (motor or manual)</td><td>0V</td><td><strong>Aux switch faulty</strong></td></tr>
+</table>
+
+<p><em>If Grey via Programmer:</em></p>
+<table>
+    <tr><th>Programmer</th><th>Valve State</th><th>Orange to N</th><th>Meaning</th></tr>
+    <tr><td>Channel OFF</td><td>Any</td><td>0V</td><td>Correct (no source power)</td></tr>
+    <tr><td>Channel ON</td><td>Closed</td><td>0V</td><td>Correct</td></tr>
+    <tr><td>Channel ON</td><td>Open</td><td>230V</td><td>Aux switch working</td></tr>
+    <tr><td>Channel ON</td><td>Open</td><td>0V</td><td><strong>Aux switch faulty</strong></td></tr>
+</table>
+</div>
+
+<div class="no-break">
+<h4>STEP 6: Manual Override Testing</h4>
+
+<p><strong>For 2-Port Valves (S Plan)</strong></p>
+<table>
+    <tr><th>Grey Wiring</th><th>Manual Lever Test</th><th>Result</th><th>Diagnosis</th></tr>
+    <tr><td>Permanent Live</td><td>Slide lever to open</td><td>Boiler fires</td><td>Motor fault</td></tr>
+    <tr><td>Permanent Live</td><td>Slide lever to open</td><td>Boiler doesn't fire</td><td>Aux switch fault</td></tr>
+    <tr><td>Via Programmer</td><td>Slide lever, programmer ON</td><td>Boiler fires</td><td>Motor fault</td></tr>
+    <tr><td>Via Programmer</td><td>Slide lever, programmer ON</td><td>Boiler doesn't fire</td><td>Aux switch fault</td></tr>
+    <tr><td>Via Programmer</td><td>Slide lever, programmer OFF</td><td>Boiler doesn't fire</td><td><strong>Normal</strong> - no power on grey</td></tr>
+</table>
+
+<div class="warning-box">
+    <strong>⚠️ COMMON MISTAKE:</strong> Thinking manual override is broken when grey is simply not powered because programmer channel is off.
+</div>
+</div>
+
+<div class="no-break">
+<h4>STEP 7: Check Boiler Call Signal</h4>
+<p>At boiler terminals or wiring centre boiler connection:</p>
+<table>
+    <tr><th>Test</th><th>Expected</th><th>If Fail</th></tr>
+    <tr><td>Boiler call to N, system calling</td><td>230V</td><td>Aux switch or wiring fault</td></tr>
+    <tr><td>Boiler call to N, system not calling</td><td>0V</td><td>Correct</td></tr>
+</table>
+<p><strong>If 230V present but boiler not firing:</strong> Boiler fault (check boiler error codes)</p>
+</div>
+
+<div class="no-break">
+<h4>STEP 8: Check Pump</h4>
+<table>
+    <tr><th>Test</th><th>Expected</th><th>If Fail</th></tr>
+    <tr><td>Pump terminals when calling</td><td>230V</td><td>Pump wiring fault</td></tr>
+    <tr><td>Pump runs when powered</td><td>Pump operates, flow occurs</td><td>Pump seized/failed</td></tr>
+</table>
+<p><strong>Seized Pump Tips:</strong> Pump body very hot but not running = likely seized. Try gentle tap on body. Check if shaft turns with screwdriver in bleed screw.</p>
+</div>
+
+<div class="page-break"></div>
+
+<h2>PART 3: CONTINUITY TESTING</h2>
+
+<div class="warning-box">
+    <strong>⚠️ POWER MUST BE OFF FOR ALL CONTINUITY TESTS</strong>
+</div>
+
+<h4>Testing a Wire</h4>
+<ol>
+    <li>Disconnect both ends</li>
+    <li>Meter to continuity (Ω)</li>
+    <li>Touch probes to each end</li>
+    <li><strong>Beep/low Ω</strong> = Good</li>
+    <li><strong>No beep/OL</strong> = Broken</li>
+</ol>
+
+<h4>Testing a Thermostat</h4>
+<table>
+    <tr><th>Condition</th><th>Expected</th></tr>
+    <tr><td>Turned UP (calling)</td><td>Continuity</td></tr>
+    <tr><td>Turned DOWN (satisfied)</td><td>No continuity</td></tr>
+</table>
+
+<h4>Testing a Valve Aux Switch</h4>
+<ol>
+    <li>Disconnect orange wire</li>
+    <li>Manually open valve</li>
+    <li>Check continuity: Orange terminal to Grey terminal</li>
+    <li><strong>Open position</strong> = Continuity</li>
+    <li><strong>Closed position</strong> = No continuity</li>
+</ol>
+
+<h2>PART 4: COMMON FAULTS QUICK REFERENCE</h2>
+
+<table>
+    <tr><th>Component</th><th>Typical Failure</th><th>Symptom</th></tr>
+    <tr><td>Programmer</td><td>Dead/no output</td><td>Nothing works on that channel</td></tr>
+    <tr><td>Room stat</td><td>Contacts worn</td><td>CH never calls or always calls</td></tr>
+    <tr><td>Cylinder stat</td><td>Very common failure</td><td>HW never calls or always calls</td></tr>
+    <tr><td>Valve motor</td><td>Burned out</td><td>Clicks but doesn't open</td></tr>
+    <tr><td>Valve aux switch</td><td>Contacts worn</td><td>Opens but boiler doesn't fire</td></tr>
+    <tr><td>Valve spring</td><td>Broken/weak</td><td>Won't close properly</td></tr>
+    <tr><td>Boiler PCB</td><td>Various</td><td>Has call signal but won't fire</td></tr>
+    <tr><td>Pump</td><td>Seized</td><td>Hot body, no flow</td></tr>
+    <tr><td>Wiring</td><td>Loose/corroded</td><td>Intermittent faults</td></tr>
+</table>
+
+<h2>PART 5: WIRING CENTRE REFERENCE</h2>
+
+<h4>Typical S Plan Wiring Centre Layout</h4>
+<div class="code-block">┌─────────────────────────────────────────────┐
+│                WIRING CENTRE                │
+├─────────────────────────────────────────────┤
+│  L    N    E  │  1    2    3    4  │  5    6│
+│  │    │    │  │  │    │    │    │  │  │    ││
+│  │    │    │  │  │    │    │    │  │  │    ││
+│ Live Neut Erth│ HW   CH   HW   CH │Boil Pump│
+│ (in) (in)(in) │Motor Motor Aux  Aux│Call    ││
+│               │ Out  Out  In   In │        ││
+└─────────────────────────────────────────────┘
+
+(Actual terminal layout varies - always check diagram on your wiring centre)</div>
+
+<div class="page-break"></div>
+
+<h2>TROUBLESHOOTING CHECKLIST</h2>
+
+<div class="checklist">
+    <h4>1. POWER SUPPLY</h4>
+    <div class="checklist-item">230V at wiring centre L-N?</div>
+    <div class="checklist-item">Fused spur on?</div>
+    <div class="checklist-item">Consumer unit breaker on?</div>
+    
+    <h4>2. PROGRAMMER</h4>
+    <div class="checklist-item">Display working?</div>
+    <div class="checklist-item">Set to correct mode (HW on, CH on)?</div>
+    <div class="checklist-item">230V on HW output when HW selected?</div>
+    <div class="checklist-item">230V on CH output when CH selected?</div>
+    
+    <h4>3. THERMOSTATS</h4>
+    <div class="checklist-item">Room stat turned up and clicking?</div>
+    <div class="checklist-item">230V passing through room stat?</div>
+    <div class="checklist-item">Cylinder stat turned up?</div>
+    <div class="checklist-item">230V passing through cylinder stat?</div>
+    
+    <h4>4. ZONE VALVES</h4>
+    <div class="checklist-item">230V on BROWN (motor) when calling?</div>
+    <div class="checklist-item">Motor running, valve opening?</div>
+    <div class="checklist-item">Determine: Is GREY on Permanent Live or via Programmer?</div>
+    <div class="checklist-item">230V on GREY when expected?</div>
+    <div class="checklist-item">230V on ORANGE when valve open?</div>
+    <div class="checklist-item">Manual lever test (with correct power state)?</div>
+    
+    <h4>5. BOILER CALL</h4>
+    <div class="checklist-item">230V at boiler call terminal when system calling?</div>
+    <div class="checklist-item">Boiler responding to call?</div>
+    <div class="checklist-item">Any boiler error codes?</div>
+    
+    <h4>6. PUMP</h4>
+    <div class="checklist-item">230V at pump when system calling?</div>
+    <div class="checklist-item">Pump running?</div>
+    <div class="checklist-item">Flow occurring?</div>
+</div>
+
+<h2>NOTES</h2>
+
+<table class="notes-table">
+    <tr><th style="width:30%">Test Point</th><th style="width:20%">Reading</th><th style="width:50%">Notes</th></tr>
+    <tr><td></td><td></td><td></td></tr>
+    <tr><td></td><td></td><td></td></tr>
+    <tr><td></td><td></td><td></td></tr>
+    <tr><td></td><td></td><td></td></tr>
+    <tr><td></td><td></td><td></td></tr>
+    <tr><td></td><td></td><td></td></tr>
+    <tr><td></td><td></td><td></td></tr>
+    <tr><td></td><td></td><td></td></tr>
+</table>
+
+<p style="margin-top: 20px;">
+    <strong>Grey wire is on:</strong> ☐ Permanent Live &nbsp;&nbsp; ☐ Programmer Channel
+</p>
+<p>
+    <strong>System type:</strong> ☐ S Plan &nbsp;&nbsp; ☐ Y Plan
+</p>
+
+<hr style="margin-top: 30px;">
+<p style="text-align: center; font-size: 9pt; color: #666;">
+    <em>Document version 1.0 - For reference only.</em>
+</p>
+
+</body>
+</html>
