@@ -418,6 +418,14 @@ DEV_RULES.txt
 /.cursor/commands/comment-cleanup.md
 .cursor/mcp.json
 
-# Memory Bank (AI assistant context - local only)
+# Local/IDE and tooling (not for distribution)
+.claude/
+.serena/
+/jarvis/
+
+# Scripts moved to c:\oni-serena\scripts (backed up separately). Launchers at repo root.
+/scripts/
+
+# Memory Bank and AI assistant context (lives locally at C:\oni-memory-bank)
 memory-bank/
 .cursor/rules/
