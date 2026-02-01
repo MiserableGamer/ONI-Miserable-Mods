@@ -423,25 +423,8 @@ DEV_RULES.txt
 # Memory bank (local development context)
 memory-bank/
 
-# Game source code (not for distribution)
-/KleiONISource/
-
-# Infrastructure (local development tools)
-/infrastructure/
-
-# Local AI/tool config (Serena, Claude, editor) - persistent across branches, never push
-.claude/
-.cursor/
-.serena/
-.vscode/
-mcp.json.example
-
-# Personal/local projects
-jarvis/
-
-# Scripts folder is tracked (increment-version.ps1 etc. on both branches)
-!/scripts/
-!/scripts/**
+# Scripts moved to c:\oni-serena\scripts (backed up separately). Launchers at repo root.
+/scripts/
 
 # One-off local files
 /HeatingSystemTroubleshooting.html
