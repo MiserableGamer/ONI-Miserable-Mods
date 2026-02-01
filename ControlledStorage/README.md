@@ -125,8 +125,3 @@ Please mention "Controlled Storage" in your issue title or description.
 
 - **1.0.0**: Initial release
 - **1.0.1**: Bugfix for Copy errors
-- **1.0.2**: Bugfix for sweeper loop
-- **1.0.3**: Removed duplicate overlay icon
-- **1.0.4**: Applied Delivery Control to Loaders with option
-- **1.0.5**: Improved No Sweep Zones to cover edibles on a different chore path
-- **1.1.0**: Improved No Sweep Zones code
