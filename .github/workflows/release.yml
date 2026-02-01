@@ -254,7 +254,7 @@ jobs:
       - name: Error if no zip found
         if: steps.check_zip.outputs.zip_exists != 'true'
         run: |
-          Write-Error "No pre-built zip file found. Please build the release locally first using: .\build-release.ps1 -ModName `"${{ steps.parse_tag.outputs.mod_name }}`" -Version `"${{ steps.parse_tag.outputs.version }}`""
+          Write-Error "No pre-built zip file found. Build locally first: .\scripts\release-mod.ps1 (or use scripts\promote-release.bat)"
           exit 1
         shell: powershell
 

@@ -410,6 +410,18 @@ memory-bank/
 .cursor/rules/
 
 # Infrastructure (local development tools)
-/.cursor/mcp.json
 /infrastructure/
 /HeatingSystemTroubleshooting.html
+
+# Local AI/tool config (Serena, Claude, editor - not for distribution)
+.claude/
+.serena/
+.vscode/
+
+# Personal/local projects
+jarvis/
+/.cursor/mcp.json
+/scripts/index_repo_gui.py
+/scripts/promote-release.bat
+/scripts/promote_release_gui.py
+/scripts/run-index-repo.bat
