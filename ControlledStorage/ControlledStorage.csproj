@@ -4,8 +4,11 @@
     Combines: EmptyStorage, ControlledFiltering, CapacityControl
     Plus new features: Dupe/Sweeper delivery control, No-Sweep zones
   -->
+  <Import Project="$(MSBuildThisFileDirectory)..\Directory.Build.props" />
 
   <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AssemblyName>ControlledStorage</AssemblyName>
     <RootNamespace>ControlledStorage</RootNamespace>
   </PropertyGroup>
