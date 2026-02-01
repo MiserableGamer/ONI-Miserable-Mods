@@ -2,6 +2,7 @@
   <Project Path="BonbonTreeBoost/BonbonTreeBoost.csproj" Id="573ce697-fd53-48de-98fe-0c0eb4ca8f04" />
   <Project Path="CapacityControl/CapacityControl.csproj" Id="b3c4d5e6-f7a8-9012-3456-789abcdef012" />
   <Project Path="ControlledAutomation/ControlledAutomation.csproj" Id="7a836259-5127-4912-ad82-c9a62d8de9de" />
+  <Project Path="ControlledCrashes/ControlledCrashes.csproj" Id="1c2d3e4f-5a6b-7c8d-9e0f-1a2b3c4d5e6f" />
   <Project Path="ControlledExtraction/ControlledExtraction.csproj" Id="87e44818-ad26-4cff-9929-1433c82079cc" />
   <Project Path="ControlledFiltering/ControlledFiltering.csproj" Id="e6f7a8b9-c0d1-2345-6789-abcdef012345" />
   <Project Path="ControlledMods/ControlledMods.csproj" Id="18500b0e-6852-47ec-925c-0d76fb754264" />
