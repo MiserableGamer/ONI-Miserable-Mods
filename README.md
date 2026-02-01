@@ -6,7 +6,7 @@ A collection of quality-of-life and enhancement mods for **Oxygen Not Included**
 
 Download all mods in one convenient package:
 
-[Latest Release v1.9.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/MiserableGamersMods-v1.9.0)
+[Latest Release v1.10.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/MiserableGamersMods-v1.10.0)
 
 This package contains all released mods (excluding work-in-progress mods). Extract and copy each mod folder to your ONI mods directory.
 
@@ -50,7 +50,7 @@ Complete control over element sublimation and off-gassing, with separate setting
 ### 📦 Controlled Storage
 Unified storage control: empty storage button, filtering options, capacity control, per-building delivery permissions (dupes and sweepers), and No-Sweep Zones. Copy delivery settings between buildings of the same type.
 
-[📖 Read More](ControlledStorage/README.md) | [Latest Release v1.0.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledStorage-v1.0.0)
+[📖 Read More](ControlledStorage/README.md) | [Latest Release v1.0.1](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledStorage-v1.0.1)
 
 ### ⚠️ Controlled Warnings
 Enhanced alerts for critical situations. Adds left-side notifications when duplicants get trapped, with escalation to critical (red) alerts if they're also suffocating. Click to jump to location.
