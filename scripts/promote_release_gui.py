@@ -5,6 +5,7 @@ Release: build, zip, commit, push, tag
 Run via promote-release.bat
 """
 
+import os
 import queue
 import re
 import subprocess
@@ -192,6 +193,21 @@ class PromoteReleaseApp:
             command=self._on_release,
         )
         self.release_btn.pack(side=tk.LEFT)
+        self.finish_cherry_btn = tk.Button(
+            btn_frame,
+            text="  ⋯  Finish Cherry-Pick  ",
+            font=("Consolas", 10, "bold"),
+            fg=COLORS["bg_dark"],
+            bg=COLORS["accent_purple"],
+            activebackground=COLORS["accent_purple"],
+            activeforeground=COLORS["bg_dark"],
+            relief=tk.FLAT,
+            padx=12,
+            pady=6,
+            cursor="hand2",
+            command=self._on_finish_cherry_pick,
+        )
+        self.finish_cherry_btn.pack(side=tk.LEFT, padx=(8, 0))
 
         # Info
         info = tk.Label(
@@ -269,6 +285,7 @@ class PromoteReleaseApp:
             self._work_done = None
             self.promote_btn.configure(state=tk.NORMAL)
             self.release_btn.configure(state=tk.NORMAL)
+            self.finish_cherry_btn.configure(state=tk.NORMAL)
             if done:
                 messagebox.showinfo("Done", "Operation completed successfully.")
             else:
@@ -343,6 +360,57 @@ class PromoteReleaseApp:
             return (r.stdout or "").strip() or "unknown"
         except Exception:
             return "unknown"
+
+    def _has_cherry_pick_in_progress(self) -> bool:
+        cherry_head = self.solution_root / ".git" / "CHERRY_PICK_HEAD"
+        return cherry_head.exists()
+
+    def _on_finish_cherry_pick(self):
+        branch = self._get_branch()
+        if branch != "master":
+            messagebox.showerror("Branch Check", "Finish cherry-pick must run from 'master'. Current: " + branch)
+            return
+        if not self._has_cherry_pick_in_progress():
+            messagebox.showwarning("No Cherry-Pick", "No cherry-pick in progress. Resolve conflicts first, then use this after promoting.")
+            return
+        if not messagebox.askyesno("Finish Cherry-Pick", "Stage resolved files, continue cherry-pick, then switch back to development?"):
+            return
+        self.promote_btn.configure(state=tk.DISABLED)
+        self.release_btn.configure(state=tk.DISABLED)
+        self.finish_cherry_btn.configure(state=tk.DISABLED)
+        self._log("-" * 50)
+        self._log("FINISH CHERRY-PICK")
+        threading.Thread(target=self._run_finish_cherry_pick, daemon=True).start()
+        self._drain_log()
+
+    def _run_finish_cherry_pick(self):
+        root = self.solution_root
+        env = {**os.environ, "GIT_EDITOR": "true"}
+        steps = [
+            (["git", "add", "."], "Staging resolved files..."),
+            (["git", "cherry-pick", "--continue"], "Continuing cherry-pick..."),
+            (["git", "checkout", "development"], "Switching back to development..."),
+        ]
+        ok = True
+        for cmd, msg in steps:
+            self._queue_log(msg)
+            try:
+                r = subprocess.run(cmd, cwd=root, capture_output=True, text=True, timeout=30, env=env)
+                for line in (r.stdout or "").splitlines():
+                    if line.strip():
+                        self._queue_log(line)
+                for line in (r.stderr or "").splitlines():
+                    if line.strip():
+                        self._queue_log(f"[stderr] {line}")
+                if r.returncode != 0:
+                    self._queue_log(f"ERROR: {' '.join(cmd)} failed (exit {r.returncode})")
+                    ok = False
+                    break
+            except Exception as e:
+                self._queue_log(f"ERROR: {e}")
+                ok = False
+                break
+        self._queue_log("__DONE_TRUE__" if ok else "__DONE_FALSE__")
 
     def run(self):
         self.root.mainloop()
