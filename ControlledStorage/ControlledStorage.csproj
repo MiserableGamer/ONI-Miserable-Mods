@@ -2,6 +2,8 @@
   <!-- 
     ControlledStorage - Unified storage control mod
     Self-contained for reliable builds from network/isolated paths (no Directory.Build.props).
+    Combines: EmptyStorage, ControlledFiltering, CapacityControl
+    Plus new features: Dupe/Sweeper delivery control, No-Sweep zones
   -->
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
