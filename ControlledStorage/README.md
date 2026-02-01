@@ -39,3 +39,4 @@ Access mod options through the Mods menu (gear icon) to customize all features.
 ## Version History
 
 - **1.0.0**: Initial release
+- **1.0.1**: Bugfix for Copy errors

@@ -32,4 +32,5 @@ Access mod options through the Mods menu to customize all features.
 [h2]Version History[/h2]
 [list]
 [*][b]1.0.0[/b]: Initial release
+[*][b]1.0.1[/b]: Bugfix for Copy errors
 [/list]
