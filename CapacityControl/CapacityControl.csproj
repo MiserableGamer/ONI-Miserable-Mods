@@ -116,14 +116,14 @@ del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CapacityContr
 del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CapacityControl\*.pdb" 2&gt;nul
 del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CapacityControl\FMODUnity.dll" 2&gt;nul
 del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CapacityControl\UnityEngine.TextRenderingModule.dll" 2&gt;nul
-xcopy /Y /R "$(ProjectDir)mod.yaml" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CapacityControl\"
-xcopy /Y /R "$(ProjectDir)mod_info.yaml" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CapacityControl\"
-xcopy /Y /R "$(TargetPath)" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CapacityControl\"
-if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CapacityControl\"
-del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CapacityControl\*.xml" 2&gt;nul
-del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CapacityControl\*.pdb" 2&gt;nul
-del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CapacityControl\FMODUnity.dll" 2&gt;nul
-del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CapacityControl\UnityEngine.TextRenderingModule.dll" 2&gt;nul
+xcopy /Y /R "$(ProjectDir)mod.yaml" "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\CapacityControl\"
+xcopy /Y /R "$(ProjectDir)mod_info.yaml" "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\CapacityControl\"
+xcopy /Y /R "$(TargetPath)" "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\CapacityControl\"
+if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\CapacityControl\"
+del /Q "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\CapacityControl\*.xml" 2&gt;nul
+del /Q "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\CapacityControl\*.pdb" 2&gt;nul
+del /Q "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\CapacityControl\FMODUnity.dll" 2&gt;nul
+del /Q "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\CapacityControl\UnityEngine.TextRenderingModule.dll" 2&gt;nul
 if not exist "$(ProjectDir)$(OutDir)CapacityControl\" mkdir "$(ProjectDir)$(OutDir)CapacityControl\"
 xcopy /Y /R "$(ProjectDir)mod.yaml" "$(ProjectDir)$(OutDir)CapacityControl\"
 xcopy /Y /R "$(ProjectDir)mod_info.yaml" "$(ProjectDir)$(OutDir)CapacityControl\"
