@@ -177,6 +177,7 @@ jobs:
             $modPatterns = @{
               "MorningExercise" = "Morning Exercise"
               "CopyMaterialsTool" = "Copy Materials Tool"
+              "ControlledStorage" = "Controlled Storage"
               "EmptyStorage" = "Empty Storage"
               "LongerArms" = "Longer Arms"
               "DebugFogOfWar" = "Debug Fog of War"
