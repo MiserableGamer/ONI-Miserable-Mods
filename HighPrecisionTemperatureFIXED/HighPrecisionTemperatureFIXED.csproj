@@ -98,7 +98,26 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>REM Deploy to mods/local is via Directory.Build.targets (development only)
+    <PreBuildEvent>powershell -ExecutionPolicy Bypass -File "$(SolutionDir)increment_version.ps1" -ProjectDir "$(ProjectDir)"</PreBuildEvent>
+    <PostBuildEvent>if not exist "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\HighPrecisionTemperatureFIXED\" mkdir "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\HighPrecisionTemperatureFIXED\"
+xcopy /Y /R "$(ProjectDir)mod.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\HighPrecisionTemperatureFIXED\"
+xcopy /Y /R "$(ProjectDir)mod_info.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\HighPrecisionTemperatureFIXED\"
+if exist "$(ProjectDir)preview.png" xcopy /Y /R "$(ProjectDir)preview.png" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\HighPrecisionTemperatureFIXED\"
+xcopy /Y /R "$(TargetPath)" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\HighPrecisionTemperatureFIXED\"
+if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\HighPrecisionTemperatureFIXED\"
+del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\HighPrecisionTemperatureFIXED\*.xml" 2&gt;nul
+del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\HighPrecisionTemperatureFIXED\*.pdb" 2&gt;nul
+del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\HighPrecisionTemperatureFIXED\FMODUnity.dll" 2&gt;nul
+del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\HighPrecisionTemperatureFIXED\UnityEngine.TextRenderingModule.dll" 2&gt;nul
+xcopy /Y /R "$(ProjectDir)mod.yaml" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\HighPrecisionTemperatureFIXED\"
+xcopy /Y /R "$(ProjectDir)mod_info.yaml" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\HighPrecisionTemperatureFIXED\"
+if exist "$(ProjectDir)preview.png" xcopy /Y /R "$(ProjectDir)preview.png" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\HighPrecisionTemperatureFIXED\"
+xcopy /Y /R "$(TargetPath)" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\HighPrecisionTemperatureFIXED\"
+if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\HighPrecisionTemperatureFIXED\"
+del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\HighPrecisionTemperatureFIXED\*.xml" 2&gt;nul
+del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\HighPrecisionTemperatureFIXED\*.pdb" 2&gt;nul
+del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\HighPrecisionTemperatureFIXED\FMODUnity.dll" 2&gt;nul
+del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\HighPrecisionTemperatureFIXED\UnityEngine.TextRenderingModule.dll" 2&gt;nul
 if not exist "$(ProjectDir)$(OutDir)HighPrecisionTemperatureFIXED\" mkdir "$(ProjectDir)$(OutDir)HighPrecisionTemperatureFIXED\"
 xcopy /Y /R "$(ProjectDir)mod.yaml" "$(ProjectDir)$(OutDir)HighPrecisionTemperatureFIXED\"
 xcopy /Y /R "$(ProjectDir)mod_info.yaml" "$(ProjectDir)$(OutDir)HighPrecisionTemperatureFIXED\"
