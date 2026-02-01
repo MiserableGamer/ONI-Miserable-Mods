@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <!-- 
     ControlledStorage - Unified storage control mod
-    Packages from Directory.Build.props; refs/content here (BaseOutputPath for isolated paths).
+    Self-contained for reliable builds from network/isolated paths (no Directory.Build.props).
     Combines: EmptyStorage, ControlledFiltering, CapacityControl
     Plus new features: Dupe/Sweeper delivery control, No-Sweep zones
   -->
@@ -20,8 +20,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
   </PropertyGroup>
-
-  <!-- Packages and game refs: Directory.Build.props (except TextRenderingModule below) -->
 
   <ItemGroup>
     <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2" PrivateAssets="all" />
