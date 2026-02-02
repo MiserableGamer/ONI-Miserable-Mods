@@ -11,7 +11,7 @@ echo.
 echo   Launching GUI...
 echo.
 
-set "SCRIPT_DIR=%~dp0"
+set "SCRIPT_DIR=d:\mcp\oni-serena\scripts\"
 set "ROOT=%SCRIPT_DIR%.."
 cd /d "%ROOT%"
 
