@@ -46,6 +46,7 @@
     <Copy SourceFiles="$(MSBuildProjectDirectory)\mod.yaml" DestinationFolder="$(LocalModFolder)" Condition="Exists('$(MSBuildProjectDirectory)\mod.yaml')" />
     <Copy SourceFiles="$(MSBuildProjectDirectory)\mod_info.yaml" DestinationFolder="$(LocalModFolder)" Condition="Exists('$(MSBuildProjectDirectory)\mod_info.yaml')" />
     <Copy SourceFiles="$(MSBuildProjectDirectory)\preview.png" DestinationFolder="$(LocalModFolder)" Condition="Exists('$(MSBuildProjectDirectory)\preview.png')" />
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\preview.jpg" DestinationFolder="$(LocalModFolder)" Condition="Exists('$(MSBuildProjectDirectory)\preview.jpg')" />
     
     <!-- Copy anim folder if it exists -->
     <ItemGroup>
@@ -60,7 +61,9 @@
   <!-- Version increment: After successful build + deploy (development + Debug only). Runs only when build succeeded. -->
   <Target Name="IncrementVersionAfterBuild" AfterTargets="DeployToLocalMods" DependsOnTargets="DetectGitBranch" Condition="'$(IsDevelopmentBranch)' == 'true' AND '$(Configuration)' == 'Debug'">
     <Message Text="[Build] Build succeeded - incrementing version (development + Debug)" Importance="high" />
-    <Exec Command="powershell -ExecutionPolicy Bypass -File &quot;$(MSBuildThisFileDirectory)scripts\increment-version.ps1&quot; -ProjectDir &quot;$(MSBuildProjectDirectory)&quot;" />
+    <Exec Command="powershell -ExecutionPolicy Bypass -File &quot;$(MSBuildThisFileDirectory)scripts\increment-version.ps1&quot; -ProjectDir &quot;$(MSBuildProjectDirectory)&quot;" ContinueOnError="true" IgnoreExitCode="true" />
+    <!-- Sync updated mod_info.yaml to local mod folder so both source and deployed copy match -->
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\mod_info.yaml" DestinationFolder="$(LocalModFolder)" Condition="Exists('$(MSBuildProjectDirectory)\mod_info.yaml')" />
   </Target>
 
 </Project>
