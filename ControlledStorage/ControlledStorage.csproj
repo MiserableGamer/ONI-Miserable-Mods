@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <!-- 
     ControlledStorage - Unified storage control mod
-    Self-contained for reliable builds from network/isolated paths (no Directory.Build.props).
+    Packages from Directory.Build.props; refs/content here (BaseOutputPath for isolated paths).
     Combines: EmptyStorage, ControlledFiltering, CapacityControl
     Plus new features: Dupe/Sweeper delivery control, No-Sweep zones
   -->
@@ -21,24 +21,9 @@
     <Optimize>true</Optimize>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2" PrivateAssets="all" />
-    <PackageReference Include="ILRepack" Version="2.0.34" PrivateAssets="all" ExcludeAssets="runtime" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" PrivateAssets="all" />
-    <PackageReference Include="PLib" Version="4.19.0" PrivateAssets="all" />
-  </ItemGroup>
+  <!-- Packages and game refs: Directory.Build.props (except TextRenderingModule below) -->
 
   <ItemGroup>
-    <Reference Include="0Harmony" HintPath="$(MSBuildProjectDirectory)\..\lib\0Harmony.dll" Private="false" />
-    <Reference Include="Assembly-CSharp" HintPath="$(MSBuildProjectDirectory)\..\lib\Assembly-CSharp.dll" Private="false" Publicize="true" />
-    <Reference Include="Assembly-CSharp-firstpass" HintPath="$(MSBuildProjectDirectory)\..\lib\Assembly-CSharp-firstpass.dll" Private="false" />
-    <Reference Include="Unity.TextMeshPro" HintPath="$(MSBuildProjectDirectory)\..\lib\Unity.TextMeshPro.dll" Private="false" />
-    <Reference Include="UnityEngine" HintPath="$(MSBuildProjectDirectory)\..\lib\UnityEngine.dll" Private="false" />
-    <Reference Include="UnityEngine.CoreModule" HintPath="$(MSBuildProjectDirectory)\..\lib\UnityEngine.CoreModule.dll" Private="false" />
-    <Reference Include="UnityEngine.ImageConversionModule" HintPath="$(MSBuildProjectDirectory)\..\lib\UnityEngine.ImageConversionModule.dll" Private="false" />
-    <Reference Include="UnityEngine.UI" HintPath="$(MSBuildProjectDirectory)\..\lib\UnityEngine.UI.dll" Private="false" />
-    <Reference Include="UnityEngine.UIModule" HintPath="$(MSBuildProjectDirectory)\..\lib\UnityEngine.UIModule.dll" Private="false" />
-    <Reference Include="UnityEngine.InputLegacyModule" HintPath="$(MSBuildProjectDirectory)\..\lib\UnityEngine.InputLegacyModule.dll" Private="false" />
     <Reference Include="UnityEngine.TextRenderingModule" HintPath="$(MSBuildProjectDirectory)\..\lib\UnityEngine.TextRenderingModule.dll" Private="false" />
   </ItemGroup>
 

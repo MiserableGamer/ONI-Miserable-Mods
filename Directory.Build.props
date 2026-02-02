@@ -1,0 +1,62 @@
+<Project>
+  <!-- 
+    Shared build properties for all ONIMiserableMods projects.
+    Individual projects only need to define AssemblyName and RootNamespace.
+    Required for SDK-style projects (e.g. ControlledCrashes) so ResolvePackageAssets gets TargetFramework.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <EnableDefaultItems>true</EnableDefaultItems>
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+
+  <!-- Debug configuration -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <!-- Release configuration -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
+  <!-- NuGet Packages (shared across SDK projects) -->
+  <ItemGroup Condition="'$(UsingMicrosoftNETSdk)' == 'true'">
+    <PackageReference Include="ILRepack" Version="2.0.34" PrivateAssets="all" ExcludeAssets="runtime" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" PrivateAssets="all" />
+    <PackageReference Include="PLib" Version="4.19.0" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(UsingMicrosoftNETSdk)' == 'true' and '$(MSBuildRuntimeType)' != 'Core'">
+    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2" PrivateAssets="all" />
+  </ItemGroup>
+
+  <!-- Game References (shared; lib at solution root). Only for SDK projects to avoid duplicate refs in legacy projects. -->
+  <ItemGroup Condition="'$(UsingMicrosoftNETSdk)' == 'true'">
+    <Reference Include="0Harmony" HintPath="$(MSBuildThisFileDirectory)lib\0Harmony.dll" Private="false" />
+    <Reference Include="Assembly-CSharp" HintPath="$(MSBuildThisFileDirectory)lib\Assembly-CSharp.dll" Private="false" Publicize="true" />
+    <Reference Include="Assembly-CSharp-firstpass" HintPath="$(MSBuildThisFileDirectory)lib\Assembly-CSharp-firstpass.dll" Private="false" />
+    <Reference Include="Unity.TextMeshPro" HintPath="$(MSBuildThisFileDirectory)lib\Unity.TextMeshPro.dll" Private="false" />
+    <Reference Include="UnityEngine" HintPath="$(MSBuildThisFileDirectory)lib\UnityEngine.dll" Private="false" />
+    <Reference Include="UnityEngine.CoreModule" HintPath="$(MSBuildThisFileDirectory)lib\UnityEngine.CoreModule.dll" Private="false" />
+    <Reference Include="UnityEngine.ImageConversionModule" HintPath="$(MSBuildThisFileDirectory)lib\UnityEngine.ImageConversionModule.dll" Private="false" />
+    <Reference Include="UnityEngine.UI" HintPath="$(MSBuildThisFileDirectory)lib\UnityEngine.UI.dll" Private="false" />
+    <Reference Include="UnityEngine.UIModule" HintPath="$(MSBuildThisFileDirectory)lib\UnityEngine.UIModule.dll" Private="false" />
+    <Reference Include="UnityEngine.InputLegacyModule" HintPath="$(MSBuildThisFileDirectory)lib\UnityEngine.InputLegacyModule.dll" Private="false" />
+  </ItemGroup>
+
+  <!-- Standard content files (mod metadata) -->
+  <ItemGroup>
+    <None Remove="mod.yaml" />
+    <None Remove="mod_info.yaml" />
+    <Content Include="mod.yaml" CopyToOutputDirectory="Always" Condition="Exists('$(MSBuildProjectDirectory)\mod.yaml')" />
+    <Content Include="mod_info.yaml" CopyToOutputDirectory="Always" Condition="Exists('$(MSBuildProjectDirectory)\mod_info.yaml')" />
+    <Content Include="preview.png" CopyToOutputDirectory="PreserveNewest" Condition="Exists('$(MSBuildProjectDirectory)\preview.png')" />
+  </ItemGroup>
+
+</Project>
