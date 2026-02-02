@@ -1,7 +1,0 @@
-development
-
-This file exists only on the development branch.
-If you see this file, you are on development — safe to edit.
-
-Master has no branch indicator. Do not make any code changes on master;
-all work is done here on development and promoted via cherry-pick for release.
