@@ -105,24 +105,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>powershell -ExecutionPolicy Bypass -File "$(SolutionDir)increment_version.ps1" -ProjectDir "$(ProjectDir)"</PreBuildEvent>
-    <PostBuildEvent>if not exist "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledFiltering\" mkdir "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledFiltering\"
-xcopy /Y /R "$(ProjectDir)mod.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledFiltering\"
-xcopy /Y /R "$(ProjectDir)mod_info.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledFiltering\"
-xcopy /Y /R "$(TargetPath)" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledFiltering\"
-if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledFiltering\"
-del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledFiltering\*.xml" 2&gt;nul
-del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledFiltering\*.pdb" 2&gt;nul
-del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledFiltering\FMODUnity.dll" 2&gt;nul
-del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledFiltering\UnityEngine.TextRenderingModule.dll" 2&gt;nul
-xcopy /Y /R "$(ProjectDir)mod.yaml" "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledFiltering\"
-xcopy /Y /R "$(ProjectDir)mod_info.yaml" "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledFiltering\"
-xcopy /Y /R "$(TargetPath)" "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledFiltering\"
-if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledFiltering\"
-del /Q "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledFiltering\*.xml" 2&gt;nul
-del /Q "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledFiltering\*.pdb" 2&gt;nul
-del /Q "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledFiltering\FMODUnity.dll" 2&gt;nul
-del /Q "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledFiltering\UnityEngine.TextRenderingModule.dll" 2&gt;nul
+    <PostBuildEvent>REM Deploy to mods/local is via Directory.Build.targets (development only)
 if not exist "$(ProjectDir)$(OutDir)ControlledFiltering\" mkdir "$(ProjectDir)$(OutDir)ControlledFiltering\"
 xcopy /Y /R "$(ProjectDir)mod.yaml" "$(ProjectDir)$(OutDir)ControlledFiltering\"
 xcopy /Y /R "$(ProjectDir)mod_info.yaml" "$(ProjectDir)$(OutDir)ControlledFiltering\"

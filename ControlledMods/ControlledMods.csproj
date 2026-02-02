@@ -102,26 +102,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>powershell -ExecutionPolicy Bypass -File "$(SolutionDir)increment_version.ps1" -ProjectDir "$(ProjectDir)"</PreBuildEvent>
-    <PostBuildEvent>if not exist "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledMods\" mkdir "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledMods\"
-xcopy /Y /R "$(ProjectDir)mod.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledMods\"
-xcopy /Y /R "$(ProjectDir)mod_info.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledMods\"
-if exist "$(ProjectDir)preview.png" xcopy /Y /R "$(ProjectDir)preview.png" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledMods\"
-xcopy /Y /R "$(TargetPath)" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledMods\"
-if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledMods\"
-del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledMods\*.xml" 2&gt;nul
-del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledMods\*.pdb" 2&gt;nul
-del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledMods\FMODUnity.dll" 2&gt;nul
-del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledMods\UnityEngine.TextRenderingModule.dll" 2&gt;nul
-xcopy /Y /R "$(ProjectDir)mod.yaml" "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledMods\"
-xcopy /Y /R "$(ProjectDir)mod_info.yaml" "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledMods\"
-if exist "$(ProjectDir)preview.png" xcopy /Y /R "$(ProjectDir)preview.png" "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledMods\"
-xcopy /Y /R "$(TargetPath)" "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledMods\"
-if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledMods\"
-del /Q "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledMods\*.xml" 2&gt;nul
-del /Q "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledMods\*.pdb" 2&gt;nul
-del /Q "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledMods\FMODUnity.dll" 2&gt;nul
-del /Q "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledMods\UnityEngine.TextRenderingModule.dll" 2&gt;nul
+    <PostBuildEvent>REM Deploy to mods/local is via Directory.Build.targets (development only)
 if not exist "$(ProjectDir)$(OutDir)ControlledMods\" mkdir "$(ProjectDir)$(OutDir)ControlledMods\"
 xcopy /Y /R "$(ProjectDir)mod.yaml" "$(ProjectDir)$(OutDir)ControlledMods\"
 xcopy /Y /R "$(ProjectDir)mod_info.yaml" "$(ProjectDir)$(OutDir)ControlledMods\"

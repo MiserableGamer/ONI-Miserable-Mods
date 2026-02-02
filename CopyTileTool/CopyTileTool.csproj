@@ -109,24 +109,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>powershell -ExecutionPolicy Bypass -File "$(SolutionDir)increment_version.ps1" -ProjectDir "$(ProjectDir)"</PreBuildEvent>
-    <PostBuildEvent>if not exist "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyTileTool\" mkdir "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyTileTool\"
-xcopy /Y /R "$(ProjectDir)mod.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyTileTool\"
-xcopy /Y /R "$(ProjectDir)mod_info.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyTileTool\"
-xcopy /Y /R "$(TargetPath)" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyTileTool\"
-if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyTileTool\"
-del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyTileTool\*.xml" 2&gt;nul
-del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyTileTool\*.pdb" 2&gt;nul
-del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyTileTool\FMODUnity.dll" 2&gt;nul
-del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyTileTool\UnityEngine.TextRenderingModule.dll" 2&gt;nul
-xcopy /Y /R "$(ProjectDir)mod.yaml" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyTileTool\"
-xcopy /Y /R "$(ProjectDir)mod_info.yaml" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyTileTool\"
-xcopy /Y /R "$(TargetPath)" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyTileTool\"
-if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyTileTool\"
-del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyTileTool\*.xml" 2&gt;nul
-del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyTileTool\*.pdb" 2&gt;nul
-del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyTileTool\FMODUnity.dll" 2&gt;nul
-del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyTileTool\UnityEngine.TextRenderingModule.dll" 2&gt;nul
+    <PostBuildEvent>REM Deploy to mods/local is via Directory.Build.targets (development only)
 if not exist "$(ProjectDir)$(OutDir)CopyTileTool\" mkdir "$(ProjectDir)$(OutDir)CopyTileTool\"
 xcopy /Y /R "$(ProjectDir)mod.yaml" "$(ProjectDir)$(OutDir)CopyTileTool\"
 xcopy /Y /R "$(ProjectDir)mod_info.yaml" "$(ProjectDir)$(OutDir)CopyTileTool\"

@@ -105,24 +105,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>powershell -ExecutionPolicy Bypass -File "$(SolutionDir)increment_version.ps1" -ProjectDir "$(ProjectDir)"</PreBuildEvent>
-    <PostBuildEvent>if not exist "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledSublimation\" mkdir "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledSublimation\"
-xcopy /Y /R "$(ProjectDir)mod.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledSublimation\"
-xcopy /Y /R "$(ProjectDir)mod_info.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledSublimation\"
-xcopy /Y /R "$(TargetPath)" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledSublimation\"
-if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledSublimation\"
-del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledSublimation\*.xml" 2&gt;nul
-del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledSublimation\*.pdb" 2&gt;nul
-del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledSublimation\FMODUnity.dll" 2&gt;nul
-del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledSublimation\UnityEngine.TextRenderingModule.dll" 2&gt;nul
-xcopy /Y /R "$(ProjectDir)mod.yaml" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\ControlledSublimation\"
-xcopy /Y /R "$(ProjectDir)mod_info.yaml" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\ControlledSublimation\"
-xcopy /Y /R "$(TargetPath)" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\ControlledSublimation\"
-if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\ControlledSublimation\"
-del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\ControlledSublimation\*.xml" 2&gt;nul
-del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\ControlledSublimation\*.pdb" 2&gt;nul
-del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\ControlledSublimation\FMODUnity.dll" 2&gt;nul
-del /Q "\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\ControlledSublimation\UnityEngine.TextRenderingModule.dll" 2&gt;nul
+    <PostBuildEvent>REM Deploy to mods/local is via Directory.Build.targets (development only)
 if not exist "$(ProjectDir)$(OutDir)ControlledSublimation\" mkdir "$(ProjectDir)$(OutDir)ControlledSublimation\"
 xcopy /Y /R "$(ProjectDir)mod.yaml" "$(ProjectDir)$(OutDir)ControlledSublimation\"
 xcopy /Y /R "$(ProjectDir)mod_info.yaml" "$(ProjectDir)$(OutDir)ControlledSublimation\"

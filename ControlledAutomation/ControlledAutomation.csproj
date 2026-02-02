@@ -127,27 +127,9 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>powershell -ExecutionPolicy Bypass -File "$(SolutionDir)increment_version.ps1" -ProjectDir "$(ProjectDir)"</PreBuildEvent>
     <PostBuildEvent>REM Run ILRepack to merge PLib into the main DLL
 "$(SolutionDir)packages\ILRepack.2.0.34\tools\ILRepack.exe" /ndebug /lib:"$(SolutionDir)lib" /lib:"$(SolutionDir)packages\Newtonsoft.Json.13.0.4\lib\net45" /out:"$(TargetDir)$(TargetFileName)" "$(TargetPath)" "$(TargetDir)PLib.dll" /targetplatform:v4
 del /Q "$(TargetDir)PLib.dll" 2&gt;nul
-if not exist "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledAutomation\" mkdir "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledAutomation\"
-xcopy /Y /R "$(ProjectDir)mod.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledAutomation\"
-xcopy /Y /R "$(ProjectDir)mod_info.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledAutomation\"
-if exist "$(ProjectDir)preview.png" xcopy /Y /R "$(ProjectDir)preview.png" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledAutomation\"
-xcopy /Y /R "$(TargetPath)" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledAutomation\"
-del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledAutomation\*.xml" 2&gt;nul
-del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledAutomation\*.pdb" 2&gt;nul
-del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledAutomation\FMODUnity.dll" 2&gt;nul
-del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledAutomation\UnityEngine.TextRenderingModule.dll" 2&gt;nul
-xcopy /Y /R "$(ProjectDir)mod.yaml" "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledAutomation\"
-xcopy /Y /R "$(ProjectDir)mod_info.yaml" "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledAutomation\"
-if exist "$(ProjectDir)preview.png" xcopy /Y /R "$(ProjectDir)preview.png" "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledAutomation\"
-xcopy /Y /R "$(TargetPath)" "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledAutomation\"
-del /Q "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledAutomation\*.xml" 2&gt;nul
-del /Q "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledAutomation\*.pdb" 2&gt;nul
-del /Q "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledAutomation\FMODUnity.dll" 2&gt;nul
-del /Q "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledAutomation\UnityEngine.TextRenderingModule.dll" 2&gt;nul
 if not exist "$(ProjectDir)$(OutDir)ControlledAutomation\" mkdir "$(ProjectDir)$(OutDir)ControlledAutomation\"
 xcopy /Y /R "$(ProjectDir)mod.yaml" "$(ProjectDir)$(OutDir)ControlledAutomation\"
 xcopy /Y /R "$(ProjectDir)mod_info.yaml" "$(ProjectDir)$(OutDir)ControlledAutomation\"

@@ -110,24 +110,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>powershell -ExecutionPolicy Bypass -File "$(SolutionDir)increment_version.ps1" -ProjectDir "$(ProjectDir)"</PreBuildEvent>
-    <PostBuildEvent>if not exist "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledOverlay\" mkdir "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledOverlay\"
-xcopy /Y /R "$(ProjectDir)mod.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledOverlay\"
-xcopy /Y /R "$(ProjectDir)mod_info.yaml" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledOverlay\"
-xcopy /Y /R "$(TargetPath)" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledOverlay\"
-if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledOverlay\"
-del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledOverlay\*.xml" 2&gt;nul
-del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledOverlay\*.pdb" 2&gt;nul
-del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledOverlay\FMODUnity.dll" 2&gt;nul
-del /Q "C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledOverlay\UnityEngine.TextRenderingModule.dll" 2&gt;nul
-xcopy /Y /R "$(ProjectDir)mod.yaml" "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledOverlay\"
-xcopy /Y /R "$(ProjectDir)mod_info.yaml" "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledOverlay\"
-xcopy /Y /R "$(TargetPath)" "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledOverlay\"
-if exist "$(TargetDir)PLib.dll" xcopy /Y /R "$(TargetDir)PLib.dll" "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledOverlay\"
-del /Q "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledOverlay\*.xml" 2&gt;nul
-del /Q "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledOverlay\*.pdb" 2&gt;nul
-del /Q "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledOverlay\FMODUnity.dll" 2&gt;nul
-del /Q "\\192.168.1.30\development\ONI\Mods\ONIMiserableMods\ControlledOverlay\UnityEngine.TextRenderingModule.dll" 2&gt;nul
+    <PostBuildEvent>REM Deploy to mods/local is via Directory.Build.targets (development only)
 if not exist "$(ProjectDir)$(OutDir)ControlledOverlay\" mkdir "$(ProjectDir)$(OutDir)ControlledOverlay\"
 xcopy /Y /R "$(ProjectDir)mod.yaml" "$(ProjectDir)$(OutDir)ControlledOverlay\"
 xcopy /Y /R "$(ProjectDir)mod_info.yaml" "$(ProjectDir)$(OutDir)ControlledOverlay\"

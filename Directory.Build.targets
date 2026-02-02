@@ -1,0 +1,66 @@
+<Project>
+  <!-- 
+    Shared build targets for all ONIMiserableMods projects.
+    Handles version increment (development branch only), ILRepack, and deployment.
+  -->
+
+  <PropertyGroup>
+    <!-- Local mods folder for testing -->
+    <LocalModsRoot>C:\Users\leomo\Documents\Klei\OxygenNotIncluded\mods\local\</LocalModsRoot>
+    <LocalModFolder>$(LocalModsRoot)$(MSBuildProjectName)\</LocalModFolder>
+  </PropertyGroup>
+
+  <!-- Detect git branch before build -->
+  <Target Name="DetectGitBranch" BeforeTargets="PreBuildEvent">
+    <Exec Command="git rev-parse --abbrev-ref HEAD" ConsoleToMSBuild="true" StandardOutputImportance="low" ContinueOnError="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="GitBranch" />
+    </Exec>
+    <PropertyGroup>
+      <GitBranch Condition="'$(GitBranch)' == ''">unknown</GitBranch>
+      <IsDevelopmentBranch Condition="'$(GitBranch)' == 'development'">true</IsDevelopmentBranch>
+      <IsDevelopmentBranch Condition="'$(GitBranch)' != 'development'">false</IsDevelopmentBranch>
+    </PropertyGroup>
+    <Message Text="[Build] Git branch: $(GitBranch), Configuration: $(Configuration)" Importance="high" />
+  </Target>
+
+  <!-- Post-build: ILRepack to merge PLib into main DLL -->
+  <Target Name="ILRepackMerge" AfterTargets="Build" Condition="Exists('$(TargetDir)PLib.dll')">
+    <Message Text="[Build] Merging PLib.dll into $(TargetFileName)" Importance="high" />
+    <Exec Command="&quot;$(NuGetPackageRoot)ilrepack\2.0.34\tools\ILRepack.exe&quot; /ndebug /lib:&quot;$(MSBuildThisFileDirectory)lib&quot; /lib:&quot;$(NuGetPackageRoot)newtonsoft.json\13.0.4\lib\net45&quot; /out:&quot;$(TargetDir)$(TargetFileName).merged&quot; &quot;$(TargetPath)&quot; &quot;$(TargetDir)PLib.dll&quot;" ContinueOnError="true" />
+    <Delete Files="$(TargetPath)" Condition="Exists('$(TargetDir)$(TargetFileName).merged')" />
+    <Move SourceFiles="$(TargetDir)$(TargetFileName).merged" DestinationFiles="$(TargetPath)" Condition="Exists('$(TargetDir)$(TargetFileName).merged')" />
+    <Delete Files="$(TargetDir)PLib.dll" Condition="Exists('$(TargetDir)PLib.dll')" />
+  </Target>
+
+  <!-- Post-build: Deploy to local mods folder for testing (development only; master does not deploy to mods/local) -->
+  <Target Name="DeployToLocalMods" AfterTargets="ILRepackMerge" DependsOnTargets="DetectGitBranch" Condition="'$(IsDevelopmentBranch)' == 'true'">
+    <Message Text="[Build] Deploying to $(LocalModFolder)" Importance="high" />
+    
+    <!-- Create folder if needed -->
+    <MakeDir Directories="$(LocalModFolder)" Condition="!Exists('$(LocalModFolder)')" />
+    
+    <!-- Copy main DLL -->
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(LocalModFolder)" />
+    
+    <!-- Copy mod metadata files -->
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\mod.yaml" DestinationFolder="$(LocalModFolder)" Condition="Exists('$(MSBuildProjectDirectory)\mod.yaml')" />
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\mod_info.yaml" DestinationFolder="$(LocalModFolder)" Condition="Exists('$(MSBuildProjectDirectory)\mod_info.yaml')" />
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\preview.png" DestinationFolder="$(LocalModFolder)" Condition="Exists('$(MSBuildProjectDirectory)\preview.png')" />
+    
+    <!-- Copy anim folder if it exists -->
+    <ItemGroup>
+      <AnimFiles Include="$(MSBuildProjectDirectory)\anim\**\*.*" Condition="Exists('$(MSBuildProjectDirectory)\anim')" />
+    </ItemGroup>
+    <Copy SourceFiles="@(AnimFiles)" DestinationFolder="$(LocalModFolder)anim\%(RecursiveDir)" Condition="'@(AnimFiles)' != ''" />
+    
+    <!-- Cleanup: Remove stray PLib.dll if it got copied -->
+    <Delete Files="$(LocalModFolder)PLib.dll" Condition="Exists('$(LocalModFolder)PLib.dll')" />
+  </Target>
+
+  <!-- Version increment: After successful build + deploy (development + Debug only). Runs only when build succeeded. -->
+  <Target Name="IncrementVersionAfterBuild" AfterTargets="DeployToLocalMods" DependsOnTargets="DetectGitBranch" Condition="'$(IsDevelopmentBranch)' == 'true' AND '$(Configuration)' == 'Debug'">
+    <Message Text="[Build] Build succeeded - incrementing version (development + Debug)" Importance="high" />
+    <Exec Command="powershell -ExecutionPolicy Bypass -File &quot;$(MSBuildThisFileDirectory)scripts\increment-version.ps1&quot; -ProjectDir &quot;$(MSBuildProjectDirectory)&quot;" />
+  </Target>
+
+</Project>

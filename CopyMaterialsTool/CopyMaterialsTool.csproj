@@ -52,40 +52,6 @@
     <Content Include="preview.png" CopyToOutputDirectory="PreserveNewest" Condition="Exists('preview.png')" />
   </ItemGroup>
 
-  <!-- Pre-build: Version increment -->
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="powershell -ExecutionPolicy Bypass -File &quot;$(SolutionDir)increment_version.ps1&quot; -ProjectDir &quot;$(ProjectDir)&quot;" ContinueOnError="true" />
-  </Target>
-
-  <!-- Post-build: ILRepack and Deploy -->
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <PropertyGroup>
-      <LocalModFolder>C:\Users\Leomo\Documents\Klei\OxygenNotIncluded\mods\Local\CopyMaterialsTool\</LocalModFolder>
-      <NetworkModFolder>\\192.168.1.30\development\ONI\Mods\ONI Miserable Mods\CopyMaterialsTool\</NetworkModFolder>
-    </PropertyGroup>
-
-    <!-- ILRepack: Merge PLib into main DLL -->
-    <Exec Command="&quot;$(NuGetPackageRoot)ilrepack\2.0.34\tools\ILRepack.exe&quot; /ndebug /lib:&quot;$(SolutionDir)lib&quot; /lib:&quot;$(NuGetPackageRoot)newtonsoft.json\13.0.4\lib\net45&quot; /out:&quot;$(TargetDir)$(TargetFileName).merged&quot; &quot;$(TargetPath)&quot; &quot;$(TargetDir)PLib.dll&quot;" Condition="Exists('$(TargetDir)PLib.dll')" ContinueOnError="true" />
-    <Delete Files="$(TargetPath)" Condition="Exists('$(TargetDir)$(TargetFileName).merged')" />
-    <Move SourceFiles="$(TargetDir)$(TargetFileName).merged" DestinationFiles="$(TargetPath)" Condition="Exists('$(TargetDir)$(TargetFileName).merged')" />
-    <Delete Files="$(TargetDir)PLib.dll" Condition="Exists('$(TargetDir)PLib.dll')" />
-
-    <!-- Deploy to Local mods folder -->
-    <MakeDir Directories="$(LocalModFolder)" Condition="!Exists('$(LocalModFolder)')" />
-    <Copy SourceFiles="$(ProjectDir)mod.yaml" DestinationFolder="$(LocalModFolder)" />
-    <Copy SourceFiles="$(ProjectDir)mod_info.yaml" DestinationFolder="$(LocalModFolder)" />
-    <Copy SourceFiles="$(ProjectDir)preview.png" DestinationFolder="$(LocalModFolder)" Condition="Exists('$(ProjectDir)preview.png')" />
-    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(LocalModFolder)" />
-
-    <!-- Deploy to Network share -->
-    <Copy SourceFiles="$(ProjectDir)mod.yaml" DestinationFolder="$(NetworkModFolder)" />
-    <Copy SourceFiles="$(ProjectDir)mod_info.yaml" DestinationFolder="$(NetworkModFolder)" />
-    <Copy SourceFiles="$(ProjectDir)preview.png" DestinationFolder="$(NetworkModFolder)" Condition="Exists('$(ProjectDir)preview.png')" />
-    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(NetworkModFolder)" />
-
-    <!-- Cleanup unwanted files -->
-    <Delete Files="$(LocalModFolder)PLib.dll" Condition="Exists('$(LocalModFolder)PLib.dll')" />
-    <Delete Files="$(NetworkModFolder)PLib.dll" Condition="Exists('$(NetworkModFolder)PLib.dll')" />
-  </Target>
+  <!-- Version increment and deploy to mods/local: Directory.Build.targets (development only). ILRepack: Directory.Build.targets. -->
 
 </Project>
