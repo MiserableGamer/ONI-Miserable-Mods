@@ -3,6 +3,15 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# In-development-only projects (on development branch only; ignore so they are not committed on master).
+# The promote script (promote-release.bat / promote-mod.ps1) automatically removes the project from this list and adds it to ONIMiserableMods.slnx when you promote it to master.
+ControlledLoaders/
+ControlledPerformance/
+ControlledVisuals/
+ElectrolyzerV2FIXED/
+ResourceLimpet/
+ResourceSensorFIXED/
+
 # User-specific files
 *.rsuser
 *.suo
