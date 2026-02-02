@@ -82,7 +82,7 @@
     Increments build number in project-versions.yaml (source of truth) then syncs to mod_info.yaml. -->
   <Target Name="IncrementVersionAfterBuild" AfterTargets="DeployToLocalMods" DependsOnTargets="DetectGitBranch" Condition="'$(IsDevelopmentBranch)' == 'true' AND '$(Configuration)' == 'Debug' AND '$(MSBuildProjectName)' != 'MiserableUtils'">
     <Message Text="[Build] Build succeeded - incrementing version (development + Debug)" Importance="high" />
-    <Exec Command="powershell -ExecutionPolicy Bypass -File &quot;$(ScriptsRoot)increment-version.ps1&quot; -ProjectName &quot;$(MSBuildProjectName)&quot; -ProjectDir &quot;$(MSBuildProjectDirectory)&quot; -SolutionDir &quot;$(MSBuildThisFileDirectory.TrimEnd('\'))&quot;" ContinueOnError="true" IgnoreExitCode="true" />
+    <Exec Command="powershell -ExecutionPolicy Bypass -File &quot;$(MSBuildThisFileDirectory)scripts\increment-version.ps1&quot; -ProjectDir &quot;$(MSBuildProjectDirectory)&quot;" ContinueOnError="true" IgnoreExitCode="true" />
     <!-- Sync updated mod_info.yaml to local mod folder so both source and deployed copy match -->
     <Copy SourceFiles="$(MSBuildProjectDirectory)\mod_info.yaml" DestinationFolder="$(LocalModFolder)" Condition="Exists('$(MSBuildProjectDirectory)\mod_info.yaml')" />
   </Target>
