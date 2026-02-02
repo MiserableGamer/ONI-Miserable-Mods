@@ -414,11 +414,11 @@ release/*/
 DEV_RULES.txt
 .cursorrules
 
-<<<<<<< HEAD
 # Indexed reference code (junctions)
 /source/
 /prime/
 /reference/
+/.cursor/commands/comment-cleanup.md
 
 # Memory bank (local development context)
 memory-bank/
@@ -430,7 +430,6 @@ memory-bank/
 /infrastructure/
 
 # Local AI/tool config (Serena, Claude, editor) - persistent across branches, never push
-# Cursor/Claude creates .claude automatically - keep ignored
 .claude/
 .cursor/
 .serena/
@@ -439,25 +438,9 @@ memory-bank/
 # Personal/local projects
 jarvis/
 
-# Scripts folder is tracked (persistent across both branches)
+# Scripts folder is tracked (increment-version.ps1 etc. on both branches)
 !/scripts/
 !/scripts/**
-=======
-# Indexed reference code (junctions to \\...\indexed\source|prime|reference)
-/source/
-/prime/
-/reference/
-/.cursor/commands/comment-cleanup.md
 
-# Local/IDE and tooling (not for distribution)
-.claude/
-.serena/
-/jarvis/
-/scripts/
-
-# Memory Bank and AI assistant context (lives locally at C:\oni-memory-bank)
-memory-bank/
-.cursor/rules/
-/.cursor/mcp.json
+# One-off local files
 /HeatingSystemTroubleshooting.html
->>>>>>> b11bcd0 (Released ControlledStorage v1.0.0)
