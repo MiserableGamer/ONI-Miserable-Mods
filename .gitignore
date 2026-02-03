@@ -434,6 +434,7 @@ memory-bank/
 .cursor/
 .serena/
 .vscode/
+mcp.json.example
 
 # Personal/local projects
 jarvis/
