@@ -24,8 +24,10 @@ namespace ControlledCrashes.Patches
 
         public static bool Prefix(object __instance, StateMachine.BaseState base_state)
         {
-            if (__instance == null)
-                return false;
+            // TargetMethod returns the base class GoTo, so this patch runs for ALL state machines.
+            // Only apply our null-GO guard to VineBranch.Instance; let all others run normally.
+            if (__instance == null || !(__instance is VineBranch.Instance))
+                return true;
 
             var comp = __instance as Component;
             if (comp == null || comp.gameObject == null || !comp.gameObject)
