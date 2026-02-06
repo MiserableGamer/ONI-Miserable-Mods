@@ -1,94 +1,86 @@
 [h1]Controlled Crashes[/h1]
 
-Prevents Oxygen Not Included from crashing by catching exceptions in known problematic areas and logging detailed diagnostic information to help identify the root cause.
+Prevents Oxygen Not Included from crashing by catching exceptions and logging detailed diagnostic information to help you identify and fix the root cause.
 
-[b]Important:[/b] This mod is a direct copy of ExceptionCrashHandler by TrashCanHands, who has deleted his entire Workshop for ONI. If he reinstates his Workshop in the future, I will gladly delete this mod. [b]This mod DOES NOT fix anything.[/b] It just prevents certain exceptions from causing a Crash to Desktop - it does not resolve the underlying issue; it catches them gracefully. The method that caused the exception will not continue executing.
+[h2]Important Notice[/h2]
+
+[b]This mod is a direct copy of ExceptionCrashHandler by TrashCanHands, who has deleted his entire Workshop for ONI. If he reinstates his Workshop in the future, I will gladly delete this mod.[/b]
+
+[b]This mod DOES NOT fix anything.[/b] It just prevents certain exceptions from causing a Crash to Desktop - it does not resolve anything to do with the exception, it just catches it gracefully. The method that was called that caused the exception will not continue executing.
 
 [h2]Features[/h2]
 [list]
-[*][b]Crash Prevention[/b] - Catches exceptions in 14 game systems before they crash the game
-[*][b]Detailed Logging[/b] - Timestamps, locations, and crash counts in the game log
-[*][b]Stack Trace Analysis[/b] - Helps identify suspect mods or vanilla issues
-[*][b]Actionable Recommendations[/b] - Suggestions after repeated crashes of the same entity
-[*][b]Crash Tracking[/b] - Per-entity frequency to detect patterns (auto-cleanup at 1000 entries)
-[*][b]Targeted Fixes[/b] - Some patches prevent crashes by steering invalid state (e.g. VineBranch null-GO)
+[*] Catches crashes in 13 different game systems before they can crash the game
+[*] Detailed crash logging with timestamps, locations, and crash counts
+[*] Identifies suspect mods causing issues via stack trace analysis
+[*] Provides actionable recommendations after repeated crashes
+[*] Tracks crash frequency per entity to detect patterns
+[*] Special handling for known mod conflicts (Underground Conduit, etc.)
 [/list]
 
-[h2]How to Use[/h2]
+[h2]How It Works[/h2]
+
+When an exception would normally crash your game, this mod:
 [olist]
-[*][b]Install the Mod[/b] - Subscribe on Steam Workshop or place in local mods folder; enable in the Mods menu
-[*][b]Play Normally[/b] - When a protected path would crash, the mod catches it and logs a warning instead
-[*][b]Check the Log[/b] - Look for [b][ControlledCrashes][/b] in your Player log for what was caught and recommendations
+[*] Catches the exception using Harmony Finalizer patches
+[*] Logs detailed diagnostic information to output_log.txt
+[*] Tracks how many times that specific thing has crashed
+[*] Provides recommendations after 3-5 crashes of the same entity
+[*] Lets the game continue running (no crash!)
 [/olist]
 
-[h3]Tips[/h3]
-[list]
-[*]Log severity: [b][LOW][/b] cosmetic, [b][MEDIUM][/b] gameplay, [b][HIGH][/b] serious, [b][CRITICAL][/b] severe
-[*]After 3–5 crashes of the same entity, the mod suggests a recommendation (e.g. dig up the vine, rebuild the building)
-[/list]
-
 [h2]Protected Systems[/h2]
+
 [list]
-[*][b]FetchAreaChore[/b] - Invalid priorities and delivery issues
-[*][b]Growing plants[/b] - Growth calculation errors
-[*][b]Animation system[/b] - Missing animation files
-[*][b]Minion AI[/b] - Animation tracking and todo list crashes
-[*][b]Critter feeding[/b] - Food pathfinding issues
-[*][b]Vine branches[/b] - Cell availability checks and state transition (null GameObject after discovery)
-[*][b]Codex recipes[/b] - Outdated mod compatibility
-[*][b]UI panels[/b] - Todo sidescreen crashes
-[*][b]Underground Conduit mod[/b] - Power terminal and details screen issues
+[*] FetchAreaChore - Invalid priorities and delivery crashes
+[*] Growing plants - Growth calculation errors
+[*] Animation system - Missing animation files
+[*] Minion AI - Animation tracking and todo list
+[*] Critter feeding - Food pathfinding issues
+[*] Vine branches - Cell availability checks
+[*] Codex recipes - Outdated mod compatibility
+[*] UI panels - Todo sidescreen crashes
+[*] Underground Conduit mod - Power terminals and details screens
 [/list]
 
 [h2]Reading the Logs[/h2]
-Look for [b][ControlledCrashes][/b] entries in your Player log with severity levels and recommendations.
 
-[h2]Installation[/h2]
-Subscribe on Steam Workshop and enable in the Mods menu. Or download from [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/releases]GitHub[/url] and extract to [code]%USERPROFILE%\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledCrashes\[/code]
+Look for [b][ControlledCrashes][/b] entries in your output_log.txt with severity levels:
+[list]
+[*] [b][LOW][/b] - Minor issues, usually cosmetic
+[*] [b][MEDIUM][/b] - Moderate issues that may affect gameplay
+[*] [b][HIGH][/b] - Serious issues that should be addressed
+[*] [b][CRITICAL][/b] - Severe issues requiring immediate attention
+[/list]
+
+The mod will tell you:
+[list]
+[*] What crashed and where (coordinates, building name, minion name)
+[*] How many times it has crashed
+[*] What might be causing it
+[*] What you should do to fix it
+[/list]
+
+[h2]Example Log Output[/h2]
+
+[code]
+[ControlledCrashes] [15:42:33] [HIGH] Invalid FetchAreaChore priority detected:
+  Priority: 0 (INVALID - fixing to 5)
+  Chore Type: FarmFetch
+  Target: Farm Tile (ID: 12345, Unity: 67890)
+  Location: Cell 2145 (X:15, Y:42)
+  Crash Count: 3 time(s)
+  RECOMMENDATION: Farm tile at Cell 2145 has priority issues. Dismantle and rebuild the farm tile.
+[/code]
 
 [h2]Compatibility[/h2]
-[list]
-[*][b]Oxygen Not Included[/b] - Build 700386 or later
-[*][b]Mod API[/b] - Version 2
-[*][b]DLC Support[/b] - Works with base game and all DLC
-[*][b]Other Mods[/b] - Works alongside other mods; can help identify which mods are causing crashes
-[/list]
 
-[h2]Performance[/h2]
-[b]Minimal impact[/b] - Patches only run when the protected code path is hit. No per-frame overhead.
+Compatible with Base game, Spaced Out!, and Frosty Planet Pack. Works alongside other mods and can help identify which mods are causing crashes.
 
-[h2]Support & Issues[/h2]
-Need help, found a bug, or have a suggestion? We're here to help!
+[h2]Issues & Feedback[/h2]
 
-[h3]Community[/h3]
-[list]
-[*][b]💬 Discord[/b]: [url=https://discord.com/channels/1452947938304200861/1452947939927392398]Join our Discord server[/url] for discussions, questions, and community support
-[*][b]📝 GitHub Discussions[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/discussions]Discuss on GitHub[/url] - share ideas, ask questions, or get help with modding
-[/list]
-
-[h3]Reporting Issues[/h3]
-Found a bug or have a feature request? Please report it on GitHub using our issue templates:
-[list]
-[*][b]🐛 Bug Reports[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=bug_report.yml]Report a Bug[/url] - Use this for crashes, errors, or unexpected behavior
-[*][b]💡 Feature Requests[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=feature_request.yml]Suggest a Feature[/url] - Have an idea for a new feature or improvement?
-[*][b]❓ Questions[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=question.yml]Ask a Question[/url] - Need help understanding how something works?
-[*][b]📝 Other Issues[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=other.yml]Other Issue[/url] - Something else that doesn't fit the above categories
-[/list]
-
-Please mention "Controlled Crashes" in your issue title or description.
-
-[h2]Mod Collection[/h2]
-This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156]ONI 200+ Ultimate Mods collection[/url] on Steam Workshop, featuring over 200 tested and compatible mods for Oxygen Not Included.
+Please report any bugs or suggestions in the comments or on GitHub.
 
 [h2]Credits[/h2]
-[list]
-[*]Original concept and implementation: [b]ExceptionCrashHandler[/b] by TrashCanHands (Workshop removed; this is a direct copy)
-[*]Built using [url=https://github.com/peterhaneve/ONIMods]PLib[/url] by Peter Han
-[*]Uses [url=https://github.com/pardeike/Harmony]Harmony[/url] for runtime patching
-[/list]
 
-[h2]Version History[/h2]
-[list]
-[*][b]1.0.1.0[/b]: VineBranch GoTo null-GO patch (prevents crash when discovering new vine); 14 protected systems
-[*][b]1.0.2.0[/b]: Initial release; 13 crash protection patches; crash tracking and diagnostic system
-[/list]
+This is a direct copy of ExceptionCrashHandler by TrashCanHands. All credit for the original concept and implementation goes to them.

@@ -138,3 +138,7 @@ DEV_RULES.txt
 # Memory Bank (AI assistant context - local only)
 memory-bank/
 .cursor/rules/
+/.cursor/mcp.json
+/HeatingSystemTroubleshooting.html
+/esphome/common.yaml
+/esphome/underbed-lights.yaml
