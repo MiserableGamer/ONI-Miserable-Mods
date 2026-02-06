@@ -434,3 +434,7 @@ DEV_RULES.txt
 # Memory Bank and AI assistant context (lives locally at C:\oni-memory-bank)
 memory-bank/
 .cursor/rules/
+/.cursor/mcp.json
+/HeatingSystemTroubleshooting.html
+/esphome/common.yaml
+/esphome/underbed-lights.yaml
