@@ -125,3 +125,4 @@ Please mention "Controlled Storage" in your issue title or description.
 
 - **1.0.0**: Initial release
 - **1.0.1**: Bugfix for Copy errors
+- **1.0.2**:Bug fix for sweeper loop

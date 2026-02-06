@@ -53,7 +53,7 @@ namespace ControlledStorage.Patches
 
         private static void Log(string msg)
         {
-            if (DeliveryControlDebugLogs)
+            if (ControlledStorageOptions.Instance?.EnableDeliveryControlDebugLogs == true)
                 Debug.Log("[ControlledStorage.DeliveryControl] " + msg);
         }
 
@@ -81,7 +81,7 @@ namespace ControlledStorage.Patches
             internal static void Prefix(List<Pickupable> pickupables, Storage destination)
             {
                 _sweeperContext = true;
-                if (!DeliveryControlDebugLogs || destination == null) return;
+                if (ControlledStorageOptions.Instance?.EnableDeliveryControlDebugLogs != true || destination == null) return;
                 int sameBinCount = 0;
                 if (pickupables != null)
                 {
@@ -186,21 +186,6 @@ namespace ControlledStorage.Patches
                     if (component2 != null && !component2.AllowDupeExtract)
                         __result = false;
                 }
-            }
-        }
-
-        // Dupes picking up food to eat use FindEdibleFetchTarget, not IsFetchablePickup — block edibles in No Sweep zones.
-        [HarmonyPatch(typeof(FetchManager), nameof(FetchManager.FindEdibleFetchTarget), new[] { typeof(Storage), typeof(HashSet<Tag>), typeof(Tag[]) })]
-        public static class FetchManager_FindEdibleFetchTarget_NoSweep_Patch
-        {
-            internal static bool Prepare() => ControlledStorageOptions.Instance.EnableNoSweepZones;
-
-            internal static void Postfix(ref Pickupable __result)
-            {
-                if (__result == null) return;
-                var instance = NoSweepZoneSaveState.Instance;
-                if (instance != null && instance.NoSweep.ContainsCell(__result.cachedCell))
-                    __result = null;
             }
         }
 
