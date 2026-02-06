@@ -249,8 +249,8 @@ jobs:
           # Check if there are changes to commit (PowerShell syntax)
           git diff --staged --quiet
           if ($LASTEXITCODE -ne 0) {
-            git pull --rebase origin master
             git commit -m "Update README: ${{ steps.parse_tag.outputs.mod_name }} v${{ steps.parse_tag.outputs.release_version }} release"
+            git pull --rebase origin master
             git push origin master
           } else {
             Write-Host "No changes to commit in README"
