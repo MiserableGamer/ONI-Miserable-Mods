@@ -5,6 +5,8 @@ on:
     tags:
       - '**'
 
+run-name: Release ${{ github.ref_name }}
+
 jobs:
   release:
     runs-on: windows-latest
@@ -39,6 +41,8 @@ jobs:
             Write-Output "mod_name=$modName" >> $env:GITHUB_OUTPUT
             Write-Output "version=$version" >> $env:GITHUB_OUTPUT
             Write-Output "release_version=$releaseVersion" >> $env:GITHUB_OUTPUT
+            $displayName = if ($modName -eq "MiserableGamersMods") { "MiserableGamersMods (All Mods)" } else { $modName }
+            Write-Output "release_display_name=$displayName v$releaseVersion" >> $env:GITHUB_OUTPUT
           } else {
             Write-Error "Invalid tag format. Expected: ModName-v1.2.3 or ModName-v1.2.3.4"
             exit 1
@@ -129,7 +133,7 @@ jobs:
         with:
           files: |
             ${{ steps.check_zip.outputs.zip_path }}
-          name: ${{ steps.parse_tag.outputs.mod_name }} v${{ steps.parse_tag.outputs.release_version }}
+          name: ${{ steps.parse_tag.outputs.release_display_name }}
           tag_name: ${{ github.ref_name }}
           body: ${{ steps.release_body.outputs.body }}
           draft: false
@@ -245,6 +249,7 @@ jobs:
           # Check if there are changes to commit (PowerShell syntax)
           git diff --staged --quiet
           if ($LASTEXITCODE -ne 0) {
+            git pull --rebase origin master
             git commit -m "Update README: ${{ steps.parse_tag.outputs.mod_name }} v${{ steps.parse_tag.outputs.release_version }} release"
             git push origin master
           } else {
