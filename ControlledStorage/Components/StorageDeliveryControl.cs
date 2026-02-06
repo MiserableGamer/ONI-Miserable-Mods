@@ -74,6 +74,7 @@ namespace ControlledStorage
                 if (allowSweeperExtract != value)
                 {
                     allowSweeperExtract = value;
+                    UpdateStorageSettings();
                 }
             }
         }
@@ -85,14 +86,12 @@ namespace ControlledStorage
             UpdateStorageSettings();
         }
 
-        /// <summary>
-        /// Updates the underlying storage settings based on our control values.
-        /// </summary>
+        // Storage.allowItemRemoval blocks all extraction at the storage level - must be true if EITHER dupe or sweeper can extract.
+        // Our patches (FindFetchTarget, IsFetchablePickup, CouldBePickedUpByTransferArm) filter who actually gets the errand.
         private void UpdateStorageSettings()
         {
             if (storage == null) return;
-
-            storage.allowItemRemoval = allowDupeExtract;
+            storage.allowItemRemoval = allowDupeExtract || allowSweeperExtract;
         }
 
         /// <summary>
