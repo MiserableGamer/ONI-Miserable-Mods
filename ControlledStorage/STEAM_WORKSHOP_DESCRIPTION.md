@@ -132,4 +132,5 @@ This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/
 [list]
 [*][b]1.0.0[/b]: Initial release
 [*][b]1.0.1[/b]: Bugfix for Copy errors
+[*][b]1.0.2[/b]: Bugfix for Sweeper Loop error
 [/list]
