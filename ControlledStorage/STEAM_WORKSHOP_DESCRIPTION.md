@@ -139,4 +139,5 @@ Please mention "Controlled Storage" in your issue title or description.
 [*][b]1.0.0[/b]: Initial release
 [*][b]1.0.1[/b]: Bugfix for Copy errors
 [*][b]1.0.2[/b]: Bugfix for Sweeper Loop error
+[*][b]1.0.3[/b]: Removed duplicate overlay icon
 [/list]
