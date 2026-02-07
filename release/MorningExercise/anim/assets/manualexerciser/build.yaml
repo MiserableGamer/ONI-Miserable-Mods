@@ -1,0 +1,78 @@
+# Build configuration for Manual Exerciser animation
+# Adjust the frame count and timing based on your actual PNG files
+# Frame 0 = off/idle state, Frames 1-N = working/spinning animation
+
+texture: manualexerciser_0.png
+symbols:
+  - name: body
+    frames:
+      # Frame 0: Off/Idle state
+      - file: manualexerciser_0.png
+        time: 0.0
+      # Working animation frames - adjust count to match your PNG files
+      # Example for 30 frames (common for smooth rotation):
+      # Time increment = 1.0 / (number of frames - 1)
+      # For 30 frames: 1.0 / 29 = 0.0344827 per frame
+      - file: manualexerciser_1.png
+        time: 0.0333333
+      - file: manualexerciser_2.png
+        time: 0.0666666
+      - file: manualexerciser_3.png
+        time: 0.1
+      - file: manualexerciser_4.png
+        time: 0.133333
+      - file: manualexerciser_5.png
+        time: 0.166667
+      - file: manualexerciser_6.png
+        time: 0.2
+      - file: manualexerciser_7.png
+        time: 0.233333
+      - file: manualexerciser_8.png
+        time: 0.266667
+      - file: manualexerciser_9.png
+        time: 0.3
+      - file: manualexerciser_10.png
+        time: 0.333333
+      - file: manualexerciser_11.png
+        time: 0.366667
+      - file: manualexerciser_12.png
+        time: 0.4
+      - file: manualexerciser_13.png
+        time: 0.433333
+      - file: manualexerciser_14.png
+        time: 0.466667
+      - file: manualexerciser_15.png
+        time: 0.5
+      - file: manualexerciser_16.png
+        time: 0.533333
+      - file: manualexerciser_17.png
+        time: 0.566667
+      - file: manualexerciser_18.png
+        time: 0.6
+      - file: manualexerciser_19.png
+        time: 0.633333
+      - file: manualexerciser_20.png
+        time: 0.666667
+      - file: manualexerciser_21.png
+        time: 0.7
+      - file: manualexerciser_22.png
+        time: 0.733333
+      - file: manualexerciser_23.png
+        time: 0.766667
+      - file: manualexerciser_24.png
+        time: 0.8
+      - file: manualexerciser_25.png
+        time: 0.833333
+      - file: manualexerciser_26.png
+        time: 0.866667
+      - file: manualexerciser_27.png
+        time: 0.9
+      - file: manualexerciser_28.png
+        time: 0.933333
+      - file: manualexerciser_29.png
+        time: 0.966667
+      - file: manualexerciser_30.png
+        time: 1.0
+      # Add or remove frames as needed to match your PNG files
+      # Ensure the last frame time is 1.0 for a complete loop
+

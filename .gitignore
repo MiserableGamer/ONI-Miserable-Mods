@@ -4,13 +4,16 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # In-development-only projects (on development branch only; ignore so they are not committed on master).
-# The promote script (promote-release.bat / promote-mod.ps1) automatically removes the project from this list and adds it to ONIMiserableMods.slnx when you promote it to master.
+# The promote script automatically removes the project from this list when you promote it to master.
+BlankProject/
+CommonLib/
 ControlledLoaders/
 ControlledPerformance/
 ControlledVisuals/
 ElectrolyzerV2FIXED/
 ResourceLimpet/
 ResourceSensorFIXED/
+Shared/
 
 # User-specific files
 *.rsuser
@@ -382,17 +385,11 @@ cursor-cost-summary/
 # Solution file - do not use (use ONIMiserableMods.slnx only)
 /ONI Miserable Mods.slnx
 
-# PowerShell scripts (except /scripts/ which is tracked - persistent)
+# PowerShell scripts - ignore stray .ps1 files
 *.ps1
-<<<<<<< HEAD
 /release-mod.ps1
 /release-mod.cmd
 /create-indexed-junctions.ps1
-=======
-release-mod.ps1
-release-mod.cmd
-create-indexed-junctions.ps1
->>>>>>> b11bcd0 (Released ControlledStorage v1.0.0)
 
 # Local operation markdown files (not user-facing documentation)
 UPLOAD_INSTRUCTIONS.md
@@ -428,11 +425,7 @@ DEV_RULES.txt
 # Scripts moved to c:\oni-serena\scripts (backed up separately). Launchers at repo root.
 /scripts/
 
-# Memory Bank and AI assistant context (lives locally at C:\oni-memory-bank)
+# Memory Bank and AI assistant context
 memory-bank/
-
-# Scripts moved to c:\oni-serena\scripts (backed up separately). Launchers at repo root.
-/scripts/
-
-# One-off local files
+.cursor/rules/
 /HeatingSystemTroubleshooting.html

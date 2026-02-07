@@ -1,0 +1,4 @@
+title: "Copy Tile Tool"
+description: "Replace tiles in bulk by selecting destination and source tile types, then drag-selecting an area"
+staticID: CopyTileTool
+

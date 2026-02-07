@@ -1,0 +1,3 @@
+title: Controlled Extraction
+description: Per-building control over Oil Well extraction rates. Adjust water input from 0.01 to 100 kg/s with proportional oil output scaling. Compatible with Ronivan's Legacy.
+supportedContent: ALL
