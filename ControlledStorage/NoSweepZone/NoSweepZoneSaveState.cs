@@ -32,11 +32,14 @@ namespace ControlledStorage.NoSweepZone
             private List<int> _cellList = new List<int>();
 
             private HashSet<int> _cellSet = new HashSet<int>();
+            private readonly object _rebuildLock = new object();
 
+            // Called from worker threads (SimDebugView overlay) — must be thread-safe
             internal bool ContainsCell(int cell)
             {
                 RebuildSetIfNeeded();
-                return _cellSet != null && _cellSet.Contains(cell);
+                var snapshot = _cellSet;
+                return snapshot != null && snapshot.Contains(cell);
             }
 
             internal void AddCell(int cell)
@@ -59,20 +62,28 @@ namespace ControlledStorage.NoSweepZone
                 _cellList?.Clear();
             }
 
+            // Thread-safe rebuild: constructs a new HashSet atomically instead of
+            // clearing and re-adding to a shared instance (which caused
+            // IndexOutOfRangeException when multiple worker threads entered simultaneously)
             private void RebuildSetIfNeeded()
             {
-                if (_cellSet == null) _cellSet = new HashSet<int>();
-                if (_cellList != null && _cellSet.Count != _cellList.Count)
+                if (_cellList != null && (_cellSet == null || _cellSet.Count != _cellList.Count))
                 {
-                    _cellSet.Clear();
-                    foreach (var c in _cellList) _cellSet.Add(c);
+                    lock (_rebuildLock)
+                    {
+                        if (_cellList != null && (_cellSet == null || _cellSet.Count != _cellList.Count))
+                        {
+                            _cellSet = new HashSet<int>(_cellList);
+                        }
+                    }
                 }
             }
 
             public IEnumerator<int> GetEnumerator()
             {
                 RebuildSetIfNeeded();
-                return (_cellSet ?? new HashSet<int>()).GetEnumerator();
+                var snapshot = _cellSet;
+                return (snapshot ?? new HashSet<int>()).GetEnumerator();
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
