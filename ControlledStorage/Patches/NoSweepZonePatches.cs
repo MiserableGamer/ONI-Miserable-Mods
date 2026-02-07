@@ -132,6 +132,11 @@ namespace ControlledStorage.Patches
 
             internal static void Postfix(List<KIconToggleMenu.ToggleInfo> ___overlayToggleInfos)
             {
+                // Guard against duplicate registration (e.g. menu re-init on game reload)
+                foreach (var existing in ___overlayToggleInfos)
+                    if (existing.icon == NoSweepZone.UI.STRINGS.OVERLAY_ICON)
+                        return;
+
                 var constructor = AccessTools.Constructor(
                     AccessTools.Inner(typeof(OverlayMenu), "OverlayToggleInfo"),
                     new[] { typeof(string), typeof(string), typeof(HashedString), typeof(string), typeof(Action), typeof(string), typeof(string) }
