@@ -416,6 +416,7 @@ DEV_RULES.txt
 /prime/
 /reference/
 /.cursor/commands/comment-cleanup.md
+/.cursor/mcp.json
 
 # Local/IDE and tooling (not for distribution)
 .claude/
