@@ -2,7 +2,8 @@ using UnityEngine;
 
 namespace ControlledExtraction.Components
 {
-    // Handles liquid output via secondary conduit for any building
+    // Handles liquid output via secondary conduit for any building.
+    // Falls back to world emission when no liquid pipe is connected.
     public class SecondaryLiquidOutputController : KMonoBehaviour
     {
         [MyCmpReq] private Storage storage;
@@ -35,26 +36,46 @@ namespace ControlledExtraction.Components
         {
             if (outputCell < 0) return;
 
-            var contents = liquidFlow.GetContents(outputCell);
-            if (contents.mass >= 10f) return;
-
             PrimaryElement liquidInStorage = storage.FindPrimaryElement(liquidElement);
             if (liquidInStorage == null || liquidInStorage.Mass <= 0f) return;
 
-            float available = Mathf.Min(liquidInStorage.Mass, 10f - contents.mass);
-            if (available <= 0f) return;
-
-            float temperature = liquidInStorage.Temperature;
-            byte diseaseIdx = liquidInStorage.DiseaseIdx;
-            int diseaseCount = (int)(available / liquidInStorage.Mass * liquidInStorage.DiseaseCount);
-
-            float added = liquidFlow.AddElement(outputCell, liquidElement, available, temperature, diseaseIdx, diseaseCount);
-
-            if (added > 0f)
+            if (IsConduitConnected())
             {
-                liquidInStorage.ModifyDiseaseCount(-diseaseCount, "SecondaryLiquidOutputController");
-                liquidInStorage.Mass -= added;
+                // Pipe to conduit
+                var contents = liquidFlow.GetContents(outputCell);
+                if (contents.mass >= 10f) return;
+
+                float available = Mathf.Min(liquidInStorage.Mass, 10f - contents.mass);
+                if (available <= 0f) return;
+
+                float temperature = liquidInStorage.Temperature;
+                byte diseaseIdx = liquidInStorage.DiseaseIdx;
+                int diseaseCount = (int)(available / liquidInStorage.Mass * liquidInStorage.DiseaseCount);
+
+                float added = liquidFlow.AddElement(outputCell, liquidElement, available, temperature, diseaseIdx, diseaseCount);
+                if (added > 0f)
+                {
+                    liquidInStorage.ModifyDiseaseCount(-diseaseCount, "SecondaryLiquidOutput");
+                    liquidInStorage.Mass -= added;
+                }
             }
+            else
+            {
+                // No conduit connected - emit to world like vanilla
+                int emitCell = Grid.PosToCell(transform.GetPosition());
+                SimMessages.AddRemoveSubstance(emitCell, liquidElement,
+                    CellEventLogger.Instance.Dumpable,
+                    liquidInStorage.Mass, liquidInStorage.Temperature,
+                    liquidInStorage.DiseaseIdx, liquidInStorage.DiseaseCount);
+                liquidInStorage.ModifyDiseaseCount(-liquidInStorage.DiseaseCount, "SecondaryLiquidOutput.Fallback");
+                liquidInStorage.Mass = 0f;
+            }
+        }
+
+        private bool IsConduitConnected()
+        {
+            var obj = Grid.Objects[outputCell, (int)ObjectLayer.LiquidConduit];
+            return obj != null && obj.GetComponent<BuildingComplete>() != null;
         }
     }
 }

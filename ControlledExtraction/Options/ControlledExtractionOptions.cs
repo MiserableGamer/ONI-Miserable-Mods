@@ -79,10 +79,18 @@ namespace ControlledExtraction.Options
         [JsonProperty]
         public bool CoalGenCO2Port { get; set; } = false;
 
+        [Option("Add Solid Input Port", "Conveyor input for Coal at (1, 0).\nRequires restart.", CAT_COAL_GEN)]
+        [JsonProperty]
+        public bool CoalGenSolidInput { get; set; } = false;
+
         // Wood Burner
         [Option("Add CO2 Output Port", "Gas output at (0, 1).\nRequires restart.", CAT_WOOD_GEN)]
         [JsonProperty]
         public bool WoodGenCO2Port { get; set; } = false;
+
+        [Option("Add Solid Input Port", "Conveyor input for Lumber at (0, 0).\nRequires restart.", CAT_WOOD_GEN)]
+        [JsonProperty]
+        public bool WoodGenSolidInput { get; set; } = false;
 
         // Petroleum Generator
         [Option("Add CO2 Output Port", "Gas output at (0, 1).\nRequires restart.", CAT_PETROL_GEN)]

@@ -2,8 +2,11 @@ using UnityEngine;
 
 namespace ControlledExtraction.Components
 {
-    // Handles solid output via conveyor for secondary ports
-    public class SecondarySolidOutputController : KMonoBehaviour
+    // Handles secondary solid conduit output with element filtering and network registration.
+    // Vanilla SolidConduitDispenser.FindSuitableItem ignores elementFilter, so we handle
+    // dispensing ourselves. When no conduit is connected, falls back to vanilla world emission.
+    // Pattern: RailGunPayloadOpener (network reg) + PipedEverything (dispensing + filtering).
+    public class SecondarySolidOutputController : KMonoBehaviour, ISecondaryOutput
     {
         private const float VANILLA_SOLID_CAPACITY = 20f;
         private static float? cachedMaxMass = null;
@@ -11,10 +14,19 @@ namespace ControlledExtraction.Components
         [MyCmpReq] private Storage storage;
         [MyCmpReq] private Building building;
 
-        private CellOffset outputOffset;
-        private SimHashes elementFilter = SimHashes.Void;
+        [SerializeField]
+        public CellOffset outputOffset;
+
+        [SerializeField]
+        public SimHashes elementFilter = SimHashes.Void;
+
         private int outputCell = -1;
         private SolidConduitFlow solidFlow;
+        private FlowUtilityNetwork.NetworkItem networkItem;
+
+        // For controlling AlgaeDistillery world emission based on connection
+        private AlgaeDistillery algaeDistillery;
+        private float originalEmitMass;
 
         public void Initialize(CellOffset offset, SimHashes element)
         {
@@ -25,14 +37,33 @@ namespace ControlledExtraction.Components
         protected override void OnSpawn()
         {
             base.OnSpawn();
-            outputCell = Grid.OffsetCell(building.GetCell(), outputOffset);
+            outputCell = Grid.OffsetCell(building.NaturalBuildingCell(), outputOffset);
             solidFlow = Game.Instance.solidConduitFlow;
+
+            // Register with solid conduit network so conveyor rails can connect
+            networkItem = new FlowUtilityNetwork.NetworkItem(
+                ConduitType.Solid, Endpoint.Source, outputCell, gameObject);
+            Game.Instance.solidConduitSystem.AddToNetworks(outputCell, networkItem, true);
+
             solidFlow.AddConduitUpdater(ConduitUpdate, ConduitFlowPriority.Dispense);
+
+            // Store original emit mass so we can restore it when disconnected
+            algaeDistillery = GetComponent<AlgaeDistillery>();
+            if (algaeDistillery != null)
+                originalEmitMass = algaeDistillery.emitMass;
         }
 
         protected override void OnCleanUp()
         {
             solidFlow?.RemoveConduitUpdater(ConduitUpdate);
+
+            if (outputCell >= 0)
+                Game.Instance.solidConduitSystem.RemoveFromNetworks(outputCell, networkItem, true);
+
+            // Restore vanilla emission on cleanup
+            if (algaeDistillery != null)
+                algaeDistillery.emitMass = originalEmitMass;
+
             base.OnCleanUp();
         }
 
@@ -40,11 +71,17 @@ namespace ControlledExtraction.Components
         {
             if (outputCell < 0) return;
 
-            var conduit = solidFlow.GetConduit(outputCell);
-            if (conduit.idx == -1) return;
+            bool connected = IsConduitConnected();
 
-            var contents = conduit.GetContents(solidFlow);
-            if (contents.pickupableHandle.IsValid()) return;
+            // When connected: suppress world emission so conduit gets the output
+            // When disconnected: restore vanilla emission so dirt drops to ground
+            if (algaeDistillery != null)
+                algaeDistillery.emitMass = connected ? float.MaxValue : originalEmitMass;
+
+            if (!connected) return;
+
+            // Only dispense into empty conduit cells
+            if (!solidFlow.IsConduitEmpty(outputCell)) return;
 
             foreach (var item in storage.items)
             {
@@ -71,13 +108,29 @@ namespace ControlledExtraction.Components
             }
         }
 
+        private bool IsConduitConnected()
+        {
+            var conduitObj = Grid.Objects[outputCell, (int)ObjectLayer.SolidConduit];
+            return conduitObj != null && conduitObj.GetComponent<BuildingComplete>() != null;
+        }
+
+        // ISecondaryOutput - tells the game this port exists for rendering and routing
+        public bool HasSecondaryConduitType(ConduitType type)
+        {
+            return type == ConduitType.Solid;
+        }
+
+        public CellOffset GetSecondaryConduitOffset(ConduitType type)
+        {
+            return type == ConduitType.Solid ? outputOffset : CellOffset.none;
+        }
+
         // Auto-detect solid conduit capacity (for mods that increase it)
         private static float GetMaxMass()
         {
             if (cachedMaxMass.HasValue)
                 return cachedMaxMass.Value;
 
-            // Check WarpConduitSender storage (same method as Piped Everything)
             var prefab = Assets.GetPrefab(new Tag("WarpConduitSender"));
             if (prefab != null)
             {
@@ -85,13 +138,11 @@ namespace ControlledExtraction.Components
                 if (warpStorage != null && warpStorage.capacityKg > 0)
                 {
                     cachedMaxMass = warpStorage.capacityKg / 5f;
-                    ControlledExtractionMod.Log($"Detected solid conduit capacity: {cachedMaxMass.Value} kg");
                     return cachedMaxMass.Value;
                 }
             }
 
             cachedMaxMass = VANILLA_SOLID_CAPACITY;
-            ControlledExtractionMod.Log($"Using vanilla solid conduit capacity: {VANILLA_SOLID_CAPACITY} kg");
             return VANILLA_SOLID_CAPACITY;
         }
     }
