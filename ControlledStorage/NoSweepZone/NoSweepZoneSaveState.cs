@@ -194,15 +194,6 @@ namespace ControlledStorage.NoSweepZone
             private HashSet<int> _cellSet = new HashSet<int>();
             private readonly object _rebuildLock = new object();
 
-            internal bool HasCells
-            {
-                get
-                {
-                    RebuildSetIfNeeded();
-                    return _cellSet != null && _cellSet.Count > 0;
-                }
-            }
-
             // Called from worker threads (SimDebugView overlay) — must be thread-safe
             internal bool ContainsCell(int cell)
             {
