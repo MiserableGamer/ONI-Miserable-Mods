@@ -5,7 +5,6 @@
 
 # In-development-only projects (on development branch only; ignore so they are not committed on master).
 # The promote script automatically removes the project from this list when you promote it to master.
-AdvancedWattageSensor/
 BlankProject/
 CommonLib/
 ControlledLoaders/
