@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using AdvancedWattageSensor.Components;
 using AdvancedWattageSensor.Options;
 using TMPro;
@@ -297,7 +296,6 @@ namespace AdvancedWattageSensor.UI
                 if (sensor != null && sensor.HasLabel)
                     labeled.Add(sensor);
             }
-            labeled = labeled.OrderBy(s => s.sensorLabel, System.StringComparer.OrdinalIgnoreCase).ToList();
 
             if (labeled.Count == 0)
             {

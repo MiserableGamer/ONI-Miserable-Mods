@@ -215,7 +215,7 @@ namespace AdvancedWattageSensor.Components
         [Serialize] public bool useWarningThreshold;
         [Serialize] public bool sendGreenOnWarning;
 
-        private readonly float minWattage = 0f;
+        private readonly float minWattage;
         private readonly float maxWattage = 1.5f * Wire.GetMaxWattageAsFloat(Wire.WattageRating.Max50000);
         public float currentWattage { get; private set; }
         public float lastCycleAverageWattage { get; private set; }
