@@ -6,21 +6,120 @@ A unified storage control mod that combines and enhances multiple storage-relate
 [list]
 [*][b]Empty Storage[/b] - Add "Empty Storage" button to storage buildings. Creates a dupe errand to drop all stored items. Optional skill requirement and instant emptying option.
 [*][b]Controlled Filtering[/b] - Customize which item categories appear in storage filters (Clothing, Eggs, Sublimating items). Choose whether items are "standard" or "non-standard".
-[*][b]Capacity Control[/b] - Increase character limit in capacity input fields. Support for larger storage values.
+[*][b]Capacity Control[/b] - Increase character limit in capacity input fields. Support for larger storage values (up to 9,999,999 kg).
 [*][b]Delivery Control[/b] - Control dupe and auto-sweeper deposit and extract permissions per storage building. Copy checkbox settings to other buildings of the same type via the Copy Delivery Settings button.
 [*][b]No-Sweep Zones[/b] - Mark areas where Duplicants will not sweep items from. Toolbar icon and overlay to define zones.
 [/list]
 
-[h2]Configuration[/h2]
+[h2]How to Use[/h2]
 
-Access mod options through the Mods menu to customize all features.
+[h3]Empty Storage[/h3]
+[olist]
+[*][b]Select a storage building[/b] (Storage Bin, Smart Storage Bin, Fridge, etc.)
+[*][b]Click "Empty Storage"[/b] in the building's side panel
+[*]A dupe will be assigned to drop all stored items (or instantly if configured)
+[/olist]
+
+[h3]Delivery Control[/h3]
+[olist]
+[*][b]Select a storage building[/b] with Delivery Control enabled
+[*][b]Toggle permissions[/b] for dupe deposit, dupe extract, sweeper deposit, and sweeper extract
+[*][b]Copy settings[/b] to other buildings of the same type using the Copy Delivery Settings button
+[/olist]
+
+[h3]No-Sweep Zones[/h3]
+[olist]
+[*][b]Open the toolbar[/b] and select the No-Sweep Zone tool
+[*][b]Paint zones[/b] on the map where dupes should not sweep from
+[*]Use the [b]overlay[/b] to visualize active zones
+[/olist]
+
+[h3]Tips[/h3]
+[list]
+[*]Use Delivery Control to prevent sweeper loops by disabling sweeper extract on bins that sweepers deposit into
+[*]No-Sweep Zones are great for keeping natural resources in place (e.g. Oxylite near your oxygen supply)
+[*]Capacity Control lets you type values beyond 999,999 kg for modded high-capacity storage
+[/list]
+
+[h2]Mod Options[/h2]
+
+Configure via [b]Options > Mods > Controlled Storage[/b]:
+
+[h3]Empty Storage[/h3]
+[list]
+[*][b]Immediate Emptying[/b] - Drop contents instantly or create a dupe errand (default: instant)
+[*][b]Require Skills[/b] - Dupes need Tidy skill to empty solid storage (when not immediate)
+[*][b]Use Work Time[/b] - Emptying takes time based on mass stored (when not immediate)
+[*][b]Work Time per 100kg[/b] - Configurable from 0.1 to 10 seconds
+[/list]
+
+[h3]Storage Filtering[/h3]
+[list]
+[*][b]Clothing is Non-Standard[/b] - Move Clothing to Non-Standard filter section
+[*][b]Critter Eggs are Non-Standard[/b] - Move Eggs to Non-Standard filter section
+[*][b]Sublimating Items are Non-Standard[/b] - Move Bleach Stone, Oxylite, etc. to Non-Standard section
+[/list]
+
+[h3]Capacity Control[/h3]
+[list]
+[*][b]Additional Input Characters[/b] - Extra characters beyond vanilla's 6-character limit (default: 2, giving 8 total)
+[/list]
+
+[h3]Delivery Control[/h3]
+[list]
+[*][b]Enable for Storage Bins[/b] - Add delivery control to Storage Bins and Smart Storage Bins
+[*][b]Enable for Fridges[/b] - Add delivery control to Refrigerators and Ration Boxes
+[*][b]Debug Logs[/b] - Log sweeper/fetch details to Player.log for troubleshooting
+[/list]
+
+[h3]No-Sweep Zones[/h3]
+[list]
+[*][b]Enable No-Sweep Zones[/b] - Adds the No-Sweep Zone tool to the toolbar
+[/list]
 
 [h2]Compatibility[/h2]
 [list]
-[*][b]Oxygen Not Included[/b] - Build 642695 or later
-[*][b]DLC Support[/b] - Works with base game, Spaced Out!, and Frosty Planet Pack
+[*][b]Oxygen Not Included[/b] - Build 700386 or later
+[*][b]Mod API[/b] - Version 2
+[*][b]DLC Support[/b] - Works with base game and all DLC (including Bionic Booster Pack)
 [*][b]Other Mods[/b] - Compatible with most mods
 [/list]
+
+[h2]Performance[/h2]
+[b]Minimal Performance Impact[/b]
+[list]
+[*][b]Event-Driven[/b] - No polling or continuous monitoring; patches only fire on relevant game events
+[*][b]Lightweight Overlays[/b] - No-Sweep Zone overlay uses standard game overlay system
+[/list]
+
+[h2]Future Updates[/h2]
+[list]
+[*]Additional building type support for Delivery Control
+[*]Enhanced No-Sweep Zone visualization options
+[/list]
+
+[h2]Support & Issues[/h2]
+Need help, found a bug, or have a suggestion? We're here to help!
+
+[h3]Community[/h3]
+[list]
+[*][b]Discord[/b]: [url=https://discord.com/channels/1452947938304200861/1452947939927392398]Join our Discord server[/url] for discussions, questions, and community support
+[*][b]GitHub Discussions[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/discussions]Discuss on GitHub[/url] - share ideas, ask questions, or get help with modding
+[/list]
+
+[h3]Reporting Issues[/h3]
+Found a bug or have a feature request? Please report it on GitHub using our issue templates:
+[list]
+[*][b]Bug Reports[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=bug_report.yml]Report a Bug[/url] - Use this for crashes, errors, or unexpected behavior
+[*][b]Feature Requests[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=feature_request.yml]Suggest a Feature[/url] - Have an idea for a new feature or improvement?
+[*][b]Questions[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=question.yml]Ask a Question[/url] - Need help understanding how something works?
+[*][b]Other Issues[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=other.yml]Other Issue[/url] - Something else that doesn't fit the above categories
+[/list]
+
+Please mention "Controlled Storage" in your issue title or description.
+
+[h2]Mod Collection[/h2]
+This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156]ONI 200+ Ultimate Mods collection[/url] on Steam Workshop, featuring over 200 tested and compatible mods for Oxygen Not Included.
 
 [h2]Credits[/h2]
 [list]
