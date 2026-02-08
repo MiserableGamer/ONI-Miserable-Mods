@@ -1,6 +1,7 @@
 using HarmonyLib;
 using KMod;
 using PeterHan.PLib.Core;
+using PeterHan.PLib.Options;
 
 namespace SkillsAndStatsProgressFIXED
 {
@@ -14,16 +15,13 @@ namespace SkillsAndStatsProgressFIXED
             base.OnLoad(harmony);
 
             PUtil.InitLibrary();
+            ConfigMigrationHelper.Migrate("SkillsAndStatsProgressFIXED.dll", "SkillsAndStatsProgressFIXED");
+            new POptions().RegisterOptions(this, typeof(Config));
 
-            if (!Init)
-            {
-                Init = true;
-                Debug.Log("SkillsAndStatsProgressFIXED: OnLoad - Version:" + Config.Cfg.Ver.ToString() + string.Format(" @Build: {0})", typeof(SkillsAndStatsProgressFIXEDMod).Assembly.GetName().Version));
-            }
+            Debug.Log("SkillsAndStatsProgressFIXED: OnLoad - " +
+                string.Format("@Build: {0}", typeof(SkillsAndStatsProgressFIXEDMod).Assembly.GetName().Version));
 
             harmony.PatchAll();
         }
-
-        private static bool Init;
     }
 }
