@@ -45,15 +45,14 @@ namespace AdvancedWattageSensor.Patches
         }
 
         // Register the label sidescreen
-        // Uses __instance because DetailsScreen.Instance may not be set yet during OnPrefabInit
         [HarmonyPatch(typeof(DetailsScreen), "OnPrefabInit")]
         public class DetailsScreen_OnPrefabInit_Patch
         {
-            private static void Postfix(DetailsScreen __instance)
+            private static void Postfix()
             {
                 if (!sideScreenRegistered)
                 {
-                    SideScreenHelper.AddSideScreen<WattageSensorSideScreen>("WattageSensorLabelSideScreen", __instance);
+                    SideScreenHelper.AddSideScreen<WattageSensorSideScreen>("WattageSensorLabelSideScreen");
                     sideScreenRegistered = true;
                 }
             }
