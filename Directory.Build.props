@@ -41,10 +41,13 @@
     <Reference Include="0Harmony" HintPath="$(MSBuildThisFileDirectory)lib\0Harmony.dll" Private="false" />
     <Reference Include="Assembly-CSharp" HintPath="$(MSBuildThisFileDirectory)lib\Assembly-CSharp.dll" Private="false" Publicize="true" />
     <Reference Include="Assembly-CSharp-firstpass" HintPath="$(MSBuildThisFileDirectory)lib\Assembly-CSharp-firstpass.dll" Private="false" />
+    <Reference Include="CommonLib" HintPath="$(MSBuildThisFileDirectory)lib\CommonLib.dll" Private="false" />
+    <Reference Include="FMODUnity" HintPath="$(MSBuildThisFileDirectory)lib\FMODUnity.dll" Private="false" />
     <Reference Include="Unity.TextMeshPro" HintPath="$(MSBuildThisFileDirectory)lib\Unity.TextMeshPro.dll" Private="false" />
     <Reference Include="UnityEngine" HintPath="$(MSBuildThisFileDirectory)lib\UnityEngine.dll" Private="false" />
     <Reference Include="UnityEngine.CoreModule" HintPath="$(MSBuildThisFileDirectory)lib\UnityEngine.CoreModule.dll" Private="false" />
     <Reference Include="UnityEngine.ImageConversionModule" HintPath="$(MSBuildThisFileDirectory)lib\UnityEngine.ImageConversionModule.dll" Private="false" />
+    <Reference Include="UnityEngine.TextRenderingModule" HintPath="$(MSBuildThisFileDirectory)lib\UnityEngine.TextRenderingModule.dll" Private="false" />
     <Reference Include="UnityEngine.UI" HintPath="$(MSBuildThisFileDirectory)lib\UnityEngine.UI.dll" Private="false" />
     <Reference Include="UnityEngine.UIModule" HintPath="$(MSBuildThisFileDirectory)lib\UnityEngine.UIModule.dll" Private="false" />
     <Reference Include="UnityEngine.InputLegacyModule" HintPath="$(MSBuildThisFileDirectory)lib\UnityEngine.InputLegacyModule.dll" Private="false" />
