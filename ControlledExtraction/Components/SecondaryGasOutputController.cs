@@ -6,8 +6,10 @@ namespace ControlledExtraction.Components
     // Falls back to world emission when no gas pipe is connected.
     public class SecondaryGasOutputController : KMonoBehaviour
     {
+#pragma warning disable CS0649
         [MyCmpReq] private Storage storage;
         [MyCmpReq] private Building building;
+#pragma warning restore CS0649
 
         public SimHashes gasElement = SimHashes.CarbonDioxide;
 
@@ -18,9 +20,14 @@ namespace ControlledExtraction.Components
         {
             base.OnSpawn();
 
-            var secondaryOutput = GetComponent<ConduitSecondaryOutput>();
-            if (secondaryOutput != null)
-                outputCell = Grid.OffsetCell(building.GetCell(), secondaryOutput.portInfo.offset);
+            foreach (var output in GetComponents<ConduitSecondaryOutput>())
+            {
+                if (output.portInfo.conduitType == ConduitType.Gas)
+                {
+                    outputCell = Grid.OffsetCell(building.GetCell(), output.portInfo.offset);
+                    break;
+                }
+            }
 
             gasFlow = Game.Instance.gasConduitFlow;
             gasFlow.AddConduitUpdater(ConduitUpdate, ConduitFlowPriority.Dispense);
@@ -41,7 +48,6 @@ namespace ControlledExtraction.Components
 
             if (IsConduitConnected())
             {
-                // Pipe to conduit
                 var contents = gasFlow.GetContents(outputCell);
                 if (contents.mass >= 1f) return;
 

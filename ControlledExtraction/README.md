@@ -1,14 +1,38 @@
 # Controlled Extraction
 
-Per-building control over Oil Well extraction rates and output ports for various buildings. Finally, you decide how fast to pump!
+Per-building control over Oil Well extraction rates, output ports for various buildings, and Ice Kettle enhancements including meltable type selection.
 
 ## Features
 
-- **Adjustable Water Input Rate**: Each Oil Well Cap gets a slider to control water consumption from 0.01 kg/s to 100 kg/s
-- **Proportional Scaling**: Oil output and gas pressure buildup all scale with the water input rate
-- **Per-Building Control**: Each Oil Well can have different settings - throttle some, boost others
-- **Copy Settings Support**: Use the game's Copy Settings tool to quickly apply rates across multiple wells
-- **Output Ports**: Add gas, liquid, and solid conveyor ports to various buildings
+- **Adjustable Water Input Rate** - Each Oil Well Cap gets a slider to control water consumption from 0.01 kg/s to 100 kg/s
+- **Proportional Scaling** - Oil output and gas pressure buildup all scale with the water input rate
+- **Per-Building Control** - Each Oil Well can have different settings - throttle some, boost others
+- **Copy Settings Support** - Use the game's Copy Settings tool to quickly apply rates across multiple wells
+- **Output Ports** - Add gas, liquid, and solid conveyor ports to various buildings
+- **Ice Kettle Enhancements** - CO2 gas output, liquid output, configurable meltable types with per-building multi-select, and smart storage management
+
+## How to Use
+
+### Oil Well Cap
+1. **Build an Oil Well Cap** on an Oil Reservoir (as normal)
+2. **Select the Building** - The slider is now "Water Input Rate"
+3. **Adjust Extraction Speed** - Set from 0.01 to 100 kg/s
+4. **Copy Settings** - Use the game's Copy Settings tool to apply to other wells
+
+### Ice Kettle
+1. **Enable Features** in mod options (Configure Meltables button, CO2/Liquid ports)
+2. **Build Ice Kettles** as normal
+3. **Select Meltable Types** - Use the per-building sidescreen to choose which elements each kettle accepts. Types are organised into collapsible Vanilla/DLC and Modded groups, with group-level checkboxes for quick selection
+4. **Connect Pipes** - Optionally connect gas/liquid pipes to the output ports
+
+### Tips
+
+- Higher extraction rates mean faster gas pressure buildup - enable the Gas Output Port for automatic venting
+- Standard liquid pipes max at 10 kg/s
+- Ice Kettle meltable types are configured globally in mod options (with Select All / Select None buttons), then per-building via the sidescreen
+- Modded elements from other mods (e.g., Ronivan's Legacy) are auto-detected and available via the "Enable modded meltables" toggle
+- When multiple meltable types are selected, the kettle shares its storage space proportionally across all types and automatically melts whichever has the most material first
+- Deselect all types on a kettle to pause it - no deliveries will be made and the kettle will sit idle until a type is re-enabled
 
 ## Extraction Rates
 
@@ -19,28 +43,7 @@ Per-building control over Oil Well extraction rates and output ports for various
 | 10 kg/s | 33.33 kg/s | 10x speed (pipe limit) |
 | 100 kg/s | 333.33 kg/s | Maximum chaos! |
 
-*Note: Standard liquid pipes max at 10 kg/s.*
-
-## ⚠️ Important: Gas Pressure Warning
-
-**Everything scales with extraction rate!** Higher water input = faster gas pressure buildup.
-
-| Water Rate | Gas Buildup | Venting Needed |
-|------------|-------------|----------------|
-| 1 kg/s | Normal | Occasional |
-| 10 kg/s | 10x faster | Very frequent |
-| 100 kg/s | 100x faster | Constant! |
-
-At high extraction rates, duplicants may spend all their time venting pressure!
-
-**Solutions:**
-1. Enable **"Add Gas Output Port"** in mod options (requires restart) - built-in automatic venting!
-2. Increase "Max Gas Storage" to reduce venting frequency
-3. Or use [Piped Everything](https://steamcommunity.com/workshop/filedetails/?id=2058745508) for more advanced piping
-
 ## Building Output Ports
-
-Add output ports to pipe away gases, liquids, and solids from various buildings!
 
 ### Oil Well Cap
 - Gas Output (Natural Gas) at (1, 1)
@@ -54,14 +57,20 @@ Add output ports to pipe away gases, liquids, and solids from various buildings!
 - Solid Output (Polluted Dirt) at (0, 0)
 - Solid Input (Lumber) at (2, 0)
 
+### Ice Kettle
+- Gas Output (CO2) at (1, 1)
+- Liquid Output (any melted liquid) at (1, 0)
+- Smart storage management - shares capacity across all selected meltable types
+- Can be paused by deselecting all types in the sidescreen
+
 ### Generators
 
 | Building | CO2 Port | Polluted Water Port |
 |----------|----------|---------------------|
-| Coal Generator | ✅ (1, 1) | - |
-| Wood Burner | ✅ (0, 1) | - |
-| Petroleum Generator | ✅ (0, 1) | ✅ (1, 1) |
-| Natural Gas Generator | - (vanilla) | ✅ (1, 1) |
+| Coal Generator | (1, 1) | - |
+| Wood Burner | (0, 1) | - |
+| Petroleum Generator | (0, 1) | (1, 1) |
+| Natural Gas Generator | - (vanilla) | (1, 1) |
 
 *Note: Natural Gas Generator already has a CO2 gas output at (2, 2) in vanilla.*
 
@@ -72,79 +81,83 @@ All ports default to OFF and require game restart when changed.
 Configure via **Options > Mods > Controlled Extraction**:
 
 ### Oil Well Cap
-- **Default Water Rate**: Initial slider value for new wells (default: 1 kg/s)
-- **Minimum/Maximum Water Rate**: Slider limits
-- **Backpressure Threshold**: When dupes vent (default: 75%)
-- **Max Gas Storage**: Default 80 kg - increase for high extraction rates!
-- **Max Oil Storage**: Default 50 kg - increase if oil backs up
-- **Add Gas Output Port**: Automatic venting! (requires restart)
-- **Add Liquid Output Port**: Direct oil extraction! (requires restart)
+- Default Water Rate, Min/Max slider values
+- Backpressure Threshold (default: 75%)
+- Max Gas/Oil Storage
+- Gas and Liquid Output Ports
 
-Each building category has its own options section for enabling output ports.
+### Ice Kettle
+- CO2 Gas Output Port
+- Liquid Output Port
+- Configure Meltables (opens dialog for vanilla/DLC per-element toggles, modded meltables toggle, and Select All / Select None buttons)
 
-### Solid Conduit Capacity
-
-Solid conveyor outputs auto-detect conduit capacity from the game. If you use mods that increase conveyor capacity (e.g., 50 kg instead of 20 kg), this is automatically detected. Falls back to vanilla 20 kg if detection fails.
-
-## Compatibility
-
-- ✅ **Ronivan's Legacy**: Fully compatible - scales rates regardless of gas element
-- ✅ **Piped Everything**: Works alongside for even more options
-- ✅ **Conveyor capacity mods**: Auto-detects increased capacity
-- ✅ Base Game
-- ✅ Spaced Out! DLC
-- ✅ All DLCs and content packs
-
-## How to Use
-
-1. Build an Oil Well Cap on an Oil Reservoir (as normal)
-2. Select the building
-3. The slider (previously "Backpressure Release Threshold") is now **Water Input Rate**
-4. Adjust to your preferred extraction speed (0.01 to 100 kg/s)
-5. Use Copy Settings to apply to other wells
-
-*Note: The original backpressure slider is replaced. Duplicants will still depressurize at the configured threshold.*
+### Building Output Ports
+Each building category (Oil Refinery, Ethanol Distillery, Coal Generator, Wood Burner, Petroleum Generator, Natural Gas Generator) has its own options section for enabling output ports.
 
 ## Installation
 
 ### Steam Workshop (Recommended)
-Subscribe on the [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=YOUR_WORKSHOP_ID) and enable in the Mods menu.
+Subscribe on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=XXXXXXXXX) and enable in the Mods menu.
 
 ### Manual Installation
-1. Download the latest release
+1. Download the [latest release](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases)
 2. Extract to: `%USERPROFILE%\Documents\Klei\OxygenNotIncluded\mods\Local\ControlledExtraction\`
-3. Enable in the game's Mods menu
+3. Enable in the Mods menu
 
-## Requirements
+## Compatibility
 
-- Oxygen Not Included: Build 700386 or later
-- Mod API Version: 2
+- **Oxygen Not Included** - Build 700386 or later
+- **Mod API** - Version 2
+- **DLC Support** - Works with base game and all DLC (including Bionic Booster Pack)
+- **Ronivan's Legacy** - Fully compatible - scales rates regardless of gas element, auto-detects modded meltable elements
+- **Piped Everything** - Works alongside for even more options
+- **Conveyor capacity mods** - Auto-detects increased capacity
 
-## Version History
+## Performance
 
-### 1.0.1.35 (Current)
-- Bugfixes
+**Minimal Performance Impact**
+- **Event-Driven** - No polling or continuous monitoring; patches only fire on building config/spawn
+- **Lightweight Controllers** - Output controllers use standard conduit tick updates
+- **Lazy Discovery** - Ice Kettle meltable elements are discovered once on first use, not every frame
 
-### 1.0.0.1
-- Initial release
+## Future Updates
+
+- Additional building support
+- More Ice Kettle customization options
+
+## Support & Issues
+
+Need help, found a bug, or have a suggestion? We're here to help!
+
+### Community
+
+- **Discord**: [Join our Discord server](https://discord.com/channels/1452947938304200861/1452947939927392398) for discussions, questions, and community support
+- **GitHub Discussions**: [Discuss on GitHub](https://github.com/MiserableGamer/ONI-Miserable-Mods/discussions) - share ideas, ask questions, or get help with modding
+
+### Reporting Issues
+
+Found a bug or have a feature request? Please report it on GitHub using our issue templates:
+
+- **Bug Reports**: [Report a Bug](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=bug_report.yml) - Use this for crashes, errors, or unexpected behavior
+- **Feature Requests**: [Suggest a Feature](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=feature_request.yml) - Have an idea for a new feature or improvement?
+- **Questions**: [Ask a Question](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=question.yml) - Need help understanding how something works?
+- **Other Issues**: [Other Issue](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=other.yml) - Something else that doesn't fit the above categories
+
+Please mention "Controlled Extraction" in your issue title or description.
+
+## Mod Collection
+
+This mod is part of the [ONI 200+ Ultimate Mods collection](https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156) on Steam Workshop, featuring over 200 tested and compatible mods for Oxygen Not Included.
 
 ## Credits
 
-- **PLib**: [Peter Han](https://github.com/peterhaneve/ONIMods) - Essential modding library
-- **Harmony**: [pardeike](https://github.com/pardeike/Harmony) - Runtime patching library
+- Built using [PLib](https://github.com/peterhaneve/ONIMods) by Peter Han
+- Uses [Harmony](https://github.com/pardeike/Harmony) for runtime patching
 
-## Source Code
+## Version History
 
-This mod is open source: [GitHub Repository](https://github.com/MiserableGamer/ONI-Miserable-Mods)
-
-## Support
-
-Found a bug? Have a suggestion? Please report on [GitHub Issues](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues).
-
-## Other Mods
-
-Check out my other quality-of-life mods in the [ONI 200+ Ultimate Mods Collection](https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156)!
-
-## License
-
-See LICENSE.txt for license information.
+- **1.0.0**: Initial release
+- **1.0.1**: Bugfixes
+- **1.0.2**: Bugfix ethanol distillery ports not working
+- **1.0.3**: Added more building output ports
+- **1.1.0**: Ice Kettle enhancements - CO2 output, liquid output, configurable meltable types with per-building multi-select and modded element support

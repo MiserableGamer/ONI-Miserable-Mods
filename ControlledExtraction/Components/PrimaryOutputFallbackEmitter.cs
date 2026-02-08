@@ -8,9 +8,11 @@ namespace ControlledExtraction.Components
     // (First priority) and ConduitDispenser (Dispense priority) within the same tick.
     public class PrimaryOutputFallbackEmitter : KMonoBehaviour
     {
+#pragma warning disable CS0649
         [MyCmpReq] private Storage storage;
         [MyCmpReq] private Building building;
         [MyCmpReq] private Operational operational;
+#pragma warning restore CS0649
 
         public ConduitType conduitType;
         public SimHashes element;

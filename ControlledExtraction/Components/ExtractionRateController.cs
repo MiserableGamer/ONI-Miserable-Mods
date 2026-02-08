@@ -14,8 +14,10 @@ namespace ControlledExtraction.Components
         [Serialize]
         private float waterInputRate = -1f;
 
+#pragma warning disable CS0649
         [MyCmpReq] private ElementConverter elementConverter;
         [MyCmpReq] private ConduitConsumer conduitConsumer;
+#pragma warning restore CS0649
 
         private OilWellCap oilWellCap;
         private float baseGasRate;
@@ -61,7 +63,6 @@ namespace ControlledExtraction.Components
             float currentRate = WaterInputRate;
             float multiplier = ExtractionMultiplier;
 
-            // Water consumption
             if (elementConverter.consumedElements?.Length > 0)
             {
                 var consumed = elementConverter.consumedElements[0];
@@ -77,14 +78,12 @@ namespace ControlledExtraction.Components
                 elementConverter.outputElements[0] = output;
             }
 
-            // Conduit capacity scales with rate
             if (conduitConsumer != null)
             {
                 conduitConsumer.consumptionRate = Mathf.Max(2f, currentRate * 2f);
                 conduitConsumer.capacityKG = Mathf.Max(10f, currentRate * 10f);
             }
 
-            // Gas buildup scales with rate
             if (oilWellCap != null && baseGasRate > 0)
                 oilWellCap.addGasRate = baseGasRate * multiplier;
 
@@ -100,7 +99,6 @@ namespace ControlledExtraction.Components
             ScaleRonivansLegacyLimits(multiplier);
         }
 
-        // Scale Ronivan's Legacy hardcoded storage limits if present
         private void ScaleRonivansLegacyLimits(float multiplier)
         {
             // PipedOptionalExhaust - RL sets capacity to 20f for oil
@@ -108,7 +106,6 @@ namespace ControlledExtraction.Components
             {
                 var type = component.GetType();
                 
-                // Scale PipedOptionalExhaust.capacity
                 if (type.Name == "PipedOptionalExhaust")
                 {
                     var capacityField = type.GetField("capacity");
@@ -120,7 +117,6 @@ namespace ControlledExtraction.Components
                     }
                 }
                 
-                // Scale ElementThresholdOperational.Threshold
                 if (type.Name == "ElementThresholdOperational")
                 {
                     var thresholdField = type.GetField("Threshold");

@@ -6,7 +6,6 @@ using STRINGS;
 
 namespace ControlledExtraction.Patches
 {
-    // Add output ports to building definition
     [HarmonyPatch(typeof(OilWellCapConfig), "CreateBuildingDef")]
     public static class OilWellCapConfig_CreateBuildingDef_Patch
     {
@@ -29,7 +28,6 @@ namespace ControlledExtraction.Patches
         }
     }
 
-    // Add components and dispensers
     [HarmonyPatch(typeof(OilWellCapConfig), "ConfigureBuildingTemplate")]
     public static class OilWellCapConfig_ConfigureBuildingTemplate_Patch
     {
@@ -79,7 +77,7 @@ namespace ControlledExtraction.Patches
         }
     }
 
-    // Apply settings on spawn (works for existing saves too)
+    // Also works for existing saves (not just freshly built buildings)
     [HarmonyPatch(typeof(OilWellCap), "OnSpawn")]
     public static class OilWellCap_OnSpawn_Patch
     {
@@ -91,7 +89,7 @@ namespace ControlledExtraction.Patches
         }
     }
 
-    // Slider patches - repurpose backpressure slider for extraction rate
+    // Repurpose vanilla backpressure slider as extraction rate control
     [HarmonyPatch(typeof(OilWellCap), "get_SliderTitleKey")]
     public static class OilWellCap_SliderTitleKey_Patch
     {
@@ -217,7 +215,6 @@ namespace ControlledExtraction.Patches
         }
     }
 
-    // Register UI strings
     [HarmonyPatch(typeof(Localization), "Initialize")]
     public static class Localization_Initialize_Patch
     {

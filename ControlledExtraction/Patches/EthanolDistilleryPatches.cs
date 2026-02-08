@@ -5,29 +5,6 @@ using UnityEngine;
 
 namespace ControlledExtraction.Patches
 {
-    // Oil Refinery - Methane gas output port
-    [HarmonyPatch(typeof(OilRefineryConfig), "ConfigureBuildingTemplate")]
-    public static class OilRefineryConfig_ConfigureBuildingTemplate_Patch
-    {
-        public static void Postfix(GameObject go)
-        {
-            if (!ControlledExtractionOptions.Instance.OilRefineryMethanePort) return;
-
-            RefineryPatchHelpers.SetOutputToStorage(go, SimHashes.Methane);
-
-            // Secondary output since liquid is primary
-            var secondaryOutput = go.AddOrGet<ConduitSecondaryOutput>();
-            secondaryOutput.portInfo = new ConduitPortInfo(ConduitType.Gas, new CellOffset(-1, 3));
-            go.AddOrGet<SecondaryGasOutputController>().gasElement = SimHashes.Methane;
-
-            // Bypass vanilla "no liquid output" restriction and emit petroleum
-            // to the world when no liquid pipe is connected
-            var fallback = go.AddOrGet<PrimaryOutputFallbackEmitter>();
-            fallback.conduitType = ConduitType.Liquid;
-            fallback.element = SimHashes.Petroleum;
-        }
-    }
-
     // Ethanol Distillery - CO2, solid input/output ports
     [HarmonyPatch(typeof(EthanolDistilleryConfig), "CreateBuildingDef")]
     public static class EthanolDistilleryConfig_CreateBuildingDef_Patch
@@ -85,26 +62,6 @@ namespace ControlledExtraction.Patches
                 // emission is restored so polluted dirt drops as normal.
                 go.AddOrGet<SecondarySolidOutputController>().Initialize(
                     new CellOffset(0, 0), SimHashes.ToxicSand);
-            }
-        }
-    }
-
-    public static class RefineryPatchHelpers
-    {
-        public static void SetOutputToStorage(GameObject go, SimHashes element)
-        {
-            var converter = go.GetComponent<ElementConverter>();
-            if (converter?.outputElements == null) return;
-
-            for (int i = 0; i < converter.outputElements.Length; i++)
-            {
-                if (converter.outputElements[i].elementHash == element)
-                {
-                    var output = converter.outputElements[i];
-                    output.storeOutput = true;
-                    converter.outputElements[i] = output;
-                    break;
-                }
             }
         }
     }

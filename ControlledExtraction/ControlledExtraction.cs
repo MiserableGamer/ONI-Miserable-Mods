@@ -9,7 +9,6 @@ namespace ControlledExtraction
     {
         public static bool EnableDebugLogs = false;
         
-        // Mod detection flags
         private static bool? ronivansLegacyLoaded = null;
 
         public override void OnLoad(Harmony harmony)
@@ -35,7 +34,6 @@ namespace ControlledExtraction
             {
                 ronivansLegacyLoaded = false;
                 
-                // Check enabled mods through the game's mod manager
                 if (Global.Instance?.modManager?.mods != null)
                 {
                     foreach (var mod in Global.Instance.modManager.mods)

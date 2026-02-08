@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using PeterHan.PLib.Options;
+using ControlledExtraction.UI;
 
 namespace ControlledExtraction.Options
 {
@@ -16,6 +17,7 @@ namespace ControlledExtraction.Options
         private const string CAT_WOOD_GEN = "Wood Burner";
         private const string CAT_PETROL_GEN = "Petroleum Generator";
         private const string CAT_NATGAS_GEN = "Natural Gas Generator";
+        private const string CAT_ICE_KETTLE = "Ice Kettle";
 
         // Oil Well Cap
         [Option("Default Water Rate (kg/s)", "Default water input rate for new wells.\nVanilla: 1 kg/s", CAT_OIL_WELL)]
@@ -105,6 +107,23 @@ namespace ControlledExtraction.Options
         [Option("Add Polluted Water Output Port", "Liquid output at (1, 1).\nRequires restart.", CAT_NATGAS_GEN)]
         [JsonProperty]
         public bool NatGasGenPWaterPort { get; set; } = false;
+
+        // Ice Kettle
+        [Option("Add CO2 Output Port", "Gas output at (1, 1).\nRequires restart.", CAT_ICE_KETTLE)]
+        [JsonProperty]
+        public bool IceKettleCO2Port { get; set; } = false;
+
+        [Option("Add Liquid Output Port", "Liquid output at (1, 0).\nOutputs any melted liquid.\nRequires restart.", CAT_ICE_KETTLE)]
+        [JsonProperty]
+        public bool IceKettleLiquidPort { get; set; } = false;
+
+        [Option("Configure Meltables", "Select which elements the Ice Kettle can melt.\nRequires restart.", CAT_ICE_KETTLE)]
+        [JsonIgnore]
+        public System.Action<object> ConfigureMeltables => IceKettleMeltablesDialog.Show;
+
+        // Loaded from its own file to avoid PLib overwriting changes on dialog close
+        [JsonIgnore]
+        public IceKettleMeltableOptions IceKettleMeltables => IceKettleMeltableOptions.Load();
 
         public ControlledExtractionOptions() { }
     }

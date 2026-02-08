@@ -11,8 +11,10 @@ namespace ControlledExtraction.Components
         private const float VANILLA_SOLID_CAPACITY = 20f;
         private static float? cachedMaxMass = null;
 
+#pragma warning disable CS0649
         [MyCmpReq] private Storage storage;
         [MyCmpReq] private Building building;
+#pragma warning restore CS0649
 
         [SerializeField]
         public CellOffset outputOffset;
@@ -60,7 +62,6 @@ namespace ControlledExtraction.Components
             if (outputCell >= 0)
                 Game.Instance.solidConduitSystem.RemoveFromNetworks(outputCell, networkItem, true);
 
-            // Restore vanilla emission on cleanup
             if (algaeDistillery != null)
                 algaeDistillery.emitMass = originalEmitMass;
 
@@ -80,7 +81,6 @@ namespace ControlledExtraction.Components
 
             if (!connected) return;
 
-            // Only dispense into empty conduit cells
             if (!solidFlow.IsConduitEmpty(outputCell)) return;
 
             foreach (var item in storage.items)

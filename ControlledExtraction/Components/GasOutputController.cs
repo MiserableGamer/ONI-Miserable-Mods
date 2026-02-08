@@ -5,9 +5,11 @@ namespace ControlledExtraction.Components
     // Handles gas output via secondary conduit for Oil Well Cap
     public class GasOutputController : KMonoBehaviour
     {
+#pragma warning disable CS0649
         [MyCmpReq] private Storage storage;
         [MyCmpReq] private OilWellCap oilWellCap;
         [MyCmpReq] private Building building;
+#pragma warning restore CS0649
 
         private int outputCell = -1;
         private ConduitFlow gasFlow;
