@@ -15,13 +15,13 @@ namespace AdvancedWattageSensor.UI
             AccessTools.Field(typeof(DetailsScreen), "sideScreen2ContentBody") ??
             AccessTools.Field(typeof(DetailsScreen), "sideScreenConfigContentBody");
 
-        public static void AddSideScreen<T>(string name) where T : SideScreenContent
+        public static void AddSideScreen<T>(string name, DetailsScreen detailsScreen) where T : SideScreenContent
         {
-            if (DetailsScreen.Instance == null)
+            if (detailsScreen == null)
                 return;
 
-            var screens = sideScreensField?.GetValue(DetailsScreen.Instance) as List<SideScreenRef>;
-            var contentBody = contentBodyField?.GetValue(DetailsScreen.Instance) as GameObject;
+            var screens = sideScreensField?.GetValue(detailsScreen) as List<SideScreenRef>;
+            var contentBody = contentBodyField?.GetValue(detailsScreen) as GameObject;
 
             if (screens == null || contentBody == null)
                 return;
