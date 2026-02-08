@@ -97,6 +97,11 @@ Completely disables the disease system in Oxygen Not Included, removing all germ
 
 [📖 Read More](NoDisease/README.md) | [Latest Release v1.0.1](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/NoDisease-v1.0.1)
 
+### 📊 Skills and Stats Progress FIXED
+Displays detailed skill XP progress, attribute experience, travel distance, speed info, radiation stats, and workable efficiency on the duplicant stats panel. A fixed and updated version of Mantakus's SkillsAndStatsProgress mod, rebuilt for the current game version. Fully configurable via Mod Options.
+
+[📖 Read More](SkillsAndStatsProgressFIXED/README.md)
+
 ### 🧱 Threshold Fixed
 Fixes threshold walls to properly detect creature confinement, allowing them to function as intended.
 
