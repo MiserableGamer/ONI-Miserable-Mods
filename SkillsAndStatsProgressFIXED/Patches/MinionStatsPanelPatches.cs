@@ -10,14 +10,6 @@ namespace SkillsAndStatsProgressFIXED
     [HarmonyPatch(typeof(MinionPersonalityPanel), "RefreshAttributesPanel")]
     public static class MinionStatsPanelPatches
     {
-        // Format string for XP values — F0 for clean display, or full precision if opted in
-        private static string XpFormat => Config.Cfg.HighPrecisionXP ? "F3" : "F0";
-
-        private static string FormatXp(float value)
-        {
-            return value.ToString(XpFormat);
-        }
-
         private static Dictionary<string, float> OldValue = new Dictionary<string, float>();
         public static Dictionary<NavType, int> TempTI = new Dictionary<NavType, int>();
         public static Dictionary<NavType, int> x = new Dictionary<NavType, int>();
@@ -126,27 +118,27 @@ namespace SkillsAndStatsProgressFIXED
                             OldValue.Add(text, experience);
                         }
                         flag9 = flag9 && Config.Cfg.EnabledFirstFeature;
-                    if (!flag9)
-                    {
-                        text = string.Format("/{0} <b>{1}</b>{2} <b>{3:F2}</b>%", new object[]
+                        if (!flag9)
                         {
-                            attributeInstance2.GetFormattedValue(),
-                                FormatXp(Config.Cfg.ShowRequiredXp ? (attributeLevel.GetExperienceForNextLevel() - attributeLevel.experience) : attributeLevel.experience),
-                                Config.Cfg.ShowMaxExpForStats ? ("/" + FormatXp(attributeLevel.GetExperienceForNextLevel())) : "",
+                            text = string.Format("/{0} <b>{1:F0}</b>{2} <b>{3:F2}</b>%", new object[]
+                            {
+                                attributeInstance2.GetFormattedValue(),
+                                Config.Cfg.ShowRequiredXp ? (attributeLevel.GetExperienceForNextLevel() - attributeLevel.experience) : attributeLevel.experience,
+                                Config.Cfg.ShowMaxExpForStats ? ("/" + attributeLevel.GetExperienceForNextLevel().ToString()) : "",
                                 attributeLevel.GetPercentComplete() * 100f
                             });
-                            str = string.Format("Exp needed: <b>{0}</b>", FormatXp(attributeLevel.GetExperienceForNextLevel() - attributeLevel.experience));
+                            str = string.Format("Exp needed: <b>{0:F2}</b>", attributeLevel.GetExperienceForNextLevel() - attributeLevel.experience);
                         }
-                    else
-                    {
-                        text = string.Format("/{0} {1}{2} {3:F2}%", new object[]
+                        else
                         {
-                            attributeInstance2.GetFormattedValue(),
-                                FormatXp(Config.Cfg.ShowRequiredXp ? (attributeLevel.GetExperienceForNextLevel() - attributeLevel.experience) : attributeLevel.experience),
-                                Config.Cfg.ShowMaxExpForStats ? ("/" + FormatXp(attributeLevel.GetExperienceForNextLevel())) : "",
+                            text = string.Format("/{0} {1:F0}{2} {3:F2}%", new object[]
+                            {
+                                attributeInstance2.GetFormattedValue(),
+                                Config.Cfg.ShowRequiredXp ? (attributeLevel.GetExperienceForNextLevel() - attributeLevel.experience) : attributeLevel.experience,
+                                Config.Cfg.ShowMaxExpForStats ? ("/" + attributeLevel.GetExperienceForNextLevel().ToString()) : "",
                                 attributeLevel.GetPercentComplete() * 100f
                             });
-                            str = string.Format("Exp needed: {0}", FormatXp(attributeLevel.GetExperienceForNextLevel() - attributeLevel.experience));
+                            str = string.Format("Exp needed: {0:F2}", attributeLevel.GetExperienceForNextLevel() - attributeLevel.experience);
                         }
                     }
                     else

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 
 namespace SkillsAndStatsProgressFIXED
 {
@@ -35,6 +36,12 @@ namespace SkillsAndStatsProgressFIXED
             { "Botanist", DataEnum.Farming },
             { "Ranching", DataEnum.Ranching }
         };
+
+        public static string GetConfigFileName()
+        {
+            string location = typeof(MinionStatsPanelPatches).Assembly.Location;
+            return Path.Combine(Path.GetDirectoryName(location), "StatsConfig.TxT");
+        }
 
         public static string ConvertEnumToString(DataEnum E)
         {
