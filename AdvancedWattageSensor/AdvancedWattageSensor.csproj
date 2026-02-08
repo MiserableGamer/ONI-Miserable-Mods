@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    TEMPLATE: Copy this folder and rename for new mods (based on ControlledStorage pattern).
+    Only change AssemblyName and RootNamespace below to match the new project name.
+    SDK, publicize, ILRepack, deploy, and version increment are via Directory.Build.props/targets.
+  -->
+
+  <PropertyGroup>
+    <AssemblyName>AdvancedWattageSensor</AssemblyName>
+    <RootNamespace>AdvancedWattageSensor</RootNamespace>
+  </PropertyGroup>
+
+  <!-- Optional preview.jpg (add file yourself); preview.png supported via Directory.Build.props -->
+  <ItemGroup>
+    <Content Include="preview.jpg" CopyToOutputDirectory="PreserveNewest" Condition="Exists('$(MSBuildProjectDirectory)\preview.jpg')" />
+  </ItemGroup>
+
+</Project>
