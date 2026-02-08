@@ -54,7 +54,6 @@ Configure via **Options > Mods > Controlled Storage**:
 ### Delivery Control
 - **Enable for Storage Bins** - Add delivery control to Storage Bins and Smart Storage Bins
 - **Enable for Fridges** - Add delivery control to Refrigerators and Ration Boxes
-- **Enable for KIN Underground Conduit Storage Sender** - When KIN Underground Conduit mod is installed, add delivery control to its Storage Sender building (no effect if that mod is not loaded)
 - **Debug Logs** - Log sweeper/fetch details to Player.log for troubleshooting
 
 ### No-Sweep Zones
@@ -110,7 +109,7 @@ Please mention "Controlled Storage" in your issue title or description.
 
 ## Mod Collection
 
-This mod is part of the [ONI 235+ Ultimate Mods collection](https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156) on Steam Workshop, featuring over 235 tested and compatible mods for Oxygen Not Included.
+This mod is part of the [ONI 200+ Ultimate Mods collection](https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156) on Steam Workshop, featuring over 200 tested and compatible mods for Oxygen Not Included.
 
 ## Credits
 
@@ -122,5 +121,5 @@ This mod is part of the [ONI 235+ Ultimate Mods collection](https://steamcommuni
 
 - **1.0.0**: Initial release
 - **1.0.1**: Bugfix for Copy errors
-- **1.0.2**: Bug fix for sweeper loop
+- **1.0.2**: Bugfix for sweeper loop
 - **1.0.3**: Removed duplicate overlay icon

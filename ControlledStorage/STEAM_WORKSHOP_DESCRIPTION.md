@@ -69,7 +69,6 @@ Configure via [b]Options > Mods > Controlled Storage[/b]:
 [list]
 [*][b]Enable for Storage Bins[/b] - Add delivery control to Storage Bins and Smart Storage Bins
 [*][b]Enable for Fridges[/b] - Add delivery control to Refrigerators and Ration Boxes
-[*][b]Enable for KIN Underground Conduit Storage Sender[/b] - When KIN Underground Conduit mod is installed, add delivery control to its Storage Sender building (no effect if that mod is not loaded)
 [*][b]Debug Logs[/b] - Log sweeper/fetch details to Player.log for troubleshooting
 [/list]
 
@@ -120,7 +119,7 @@ Found a bug or have a feature request? Please report it on GitHub using our issu
 Please mention "Controlled Storage" in your issue title or description.
 
 [h2]Mod Collection[/h2]
-This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156]ONI 235+ Ultimate Mods collection[/url] on Steam Workshop, featuring over 235 tested and compatible mods for Oxygen Not Included.
+This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156]ONI 200+ Ultimate Mods collection[/url] on Steam Workshop, featuring over 200 tested and compatible mods for Oxygen Not Included.
 
 [h2]Credits[/h2]
 [list]
