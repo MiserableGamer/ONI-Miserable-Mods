@@ -121,5 +121,5 @@ This mod is part of the [ONI 200+ Ultimate Mods collection](https://steamcommuni
 
 - **1.0.0**: Initial release
 - **1.0.1**: Bugfix for Copy errors
-- **1.0.2**: Bug fix for sweeper loop
+- **1.0.2**: Bugfix for sweeper loop
 - **1.0.3**: Removed duplicate overlay icon
