@@ -40,7 +40,7 @@
   <ItemGroup Condition="'$(UsingMicrosoftNETSdk)' == 'true'">
     <Reference Include="0Harmony" HintPath="$(MSBuildThisFileDirectory)lib\0Harmony.dll" Private="false" />
     <Reference Include="Assembly-CSharp" HintPath="$(MSBuildThisFileDirectory)lib\Assembly-CSharp.dll" Private="false" Publicize="true" />
-    <Reference Include="Assembly-CSharp-firstpass" HintPath="$(MSBuildThisFileDirectory)lib\Assembly-CSharp-firstpass.dll" Private="false" />
+    <Reference Include="Assembly-CSharp-firstpass" HintPath="$(MSBuildThisFileDirectory)lib\Assembly-CSharp-firstpass.dll" Private="false" Publicize="true" />
     <Reference Include="CommonLib" HintPath="$(MSBuildThisFileDirectory)lib\CommonLib.dll" Private="false" />
     <Reference Include="FMODUnity" HintPath="$(MSBuildThisFileDirectory)lib\FMODUnity.dll" Private="false" />
     <Reference Include="Unity.TextMeshPro" HintPath="$(MSBuildThisFileDirectory)lib\Unity.TextMeshPro.dll" Private="false" />
