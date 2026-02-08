@@ -20,7 +20,7 @@ A unified storage control mod for Oxygen Not Included that combines and enhances
 3. A dupe will be assigned to drop all stored items (or instantly if configured)
 
 ### Delivery Control
-1. **Select a storage or loader building** with Delivery Control enabled
+1. **Select a storage building** with Delivery Control enabled
 2. **Toggle permissions** for dupe deposit, dupe extract, sweeper deposit, and sweeper extract
 3. **Copy settings** to other buildings of the same type using the Copy Delivery Settings button
 
@@ -56,7 +56,7 @@ Configure via **Options > Mods > Controlled Storage**:
 ### Delivery Control
 - **Enable for Storage Bins** - Add delivery control to Storage Bins and Smart Storage Bins
 - **Enable for Fridges** - Add delivery control to Refrigerators and Ration Boxes
-- **Enable for Loaders** - Add delivery control to conveyor loaders (Solid Conduit Inbox)
+- **Debug Logs** - Log sweeper/fetch details to Player.log for troubleshooting
 
 ### No-Sweep Zones
 - **Enable No-Sweep Zones** - Adds the No-Sweep Zone tool to the toolbar
@@ -109,11 +109,9 @@ Found a bug or have a feature request? Please report it on GitHub using our issu
 
 Please mention "Controlled Storage" in your issue title or description.
 
-## My Workshop & Collections
+## Mod Collection
 
-- [My Workshop](https://steamcommunity.com/id/miserablegamer/myworkshopfiles/?appid=457140) – All my ONI mods on Steam
-- [ONI 235+ Ultimate Mods collection](https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156) – 235+ tested, compatible mods for Oxygen Not Included
-- [The Controlled Series](https://steamcommunity.com/sharedfiles/filedetails/?id=3672308653) – Collection of Controlled mods
+This mod is part of the [ONI 200+ Ultimate Mods collection](https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156) on Steam Workshop, featuring over 200 tested and compatible mods for Oxygen Not Included.
 
 ## Credits
 
@@ -125,5 +123,5 @@ Please mention "Controlled Storage" in your issue title or description.
 
 - **1.0.0**: Initial release
 - **1.0.1**: Bugfix for Copy errors
-- **1.0.2**: Bug fix for sweeper loop
+- **1.0.2**: Bugfix for sweeper loop
 - **1.0.3**: Removed duplicate overlay icon
