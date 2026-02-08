@@ -74,7 +74,7 @@ namespace SkillsAndStatsProgressFIXED
 
             if (!Config.Cfg.WorkableShowOnlyResultReport)
             {
-                DisplayHelper.ShowText(text, __instance.worker.gameObject, Config.Cfg.WorkableInfoReport1Color, Config.Cfg.WorkableInfoReport1Speed, Config.Cfg.WorkableInfoReport1Time);
+                DisplayHelper.ShowText(text, __instance.worker.gameObject, Config.Cfg.GetReport1Color(), Config.Cfg.WorkableInfoReport1Speed, Config.Cfg.WorkableInfoReport1Time);
             }
         }
     }
