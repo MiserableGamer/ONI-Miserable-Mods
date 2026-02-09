@@ -5,31 +5,21 @@ using System.Linq;
 
 namespace ControlledMods.ModDetection
 {
-    // Centralized mod detection for all supported mods
+    // Overarching mod detection: shared helpers and orchestration. Per-mod logic lives in separate *Detection.cs files.
     public static class ModDetector
     {
-        // Detected mod flags - set during OnAllModsLoaded
-        public static bool RonivansLegacyLoaded { get; private set; }
-
-        // Mod identification info
-        private static class ModIds
-        {
-            // Ronivan's Legacy - the combined "All In One" mod
-            public const string RonivansLegacyAssembly = "RonivansLegacy_AllInOne";
-            public const string RonivansLegacyType = "RonivansLegacy_ChemicalProcessing.Mod";
-        }
-
-        // Call this from OnAllModsLoaded to detect all supported mods
+        // Call from OnAllModsLoaded to detect all supported mods
         public static void DetectMods(IReadOnlyList<KMod.Mod> mods)
         {
-            // Detect Ronivan's Legacy
-            RonivansLegacyLoaded = DetectByType(ModIds.RonivansLegacyType);
+            UndergroundConduitDetection.Detect();
+            // Add more: OtherModDetection.Detect();
 
             LogDetectionResults();
         }
 
-        // Detect mod by checking if a specific type exists
-        private static bool DetectByType(string fullTypeName)
+        // --- Shared helpers for use by per-mod detection classes ---
+
+        public static bool DetectByType(string fullTypeName)
         {
             try
             {
@@ -42,8 +32,7 @@ namespace ControlledMods.ModDetection
             }
         }
 
-        // Detect mod by checking loaded assemblies
-        private static bool DetectByAssembly(string assemblyName)
+        public static bool DetectByAssembly(string assemblyName)
         {
             try
             {
@@ -56,8 +45,7 @@ namespace ControlledMods.ModDetection
             }
         }
 
-        // Detect mod by checking the mod list for a specific staticID
-        private static bool DetectByModId(IReadOnlyList<KMod.Mod> mods, string modId)
+        public static bool DetectByModId(IReadOnlyList<KMod.Mod> mods, string modId)
         {
             return mods.Any(m => m.staticID == modId);
         }
@@ -65,8 +53,8 @@ namespace ControlledMods.ModDetection
         private static void LogDetectionResults()
         {
             ControlledModsMod.Log("Mod Detection Results:");
-            ControlledModsMod.Log($"  - Ronivan's Legacy: {(RonivansLegacyLoaded ? "DETECTED" : "not found")}");
+            ControlledModsMod.Log($"  - {UndergroundConduitDetection.DisplayName}: {(UndergroundConduitDetection.Loaded ? "DETECTED" : "not found")}");
+            // Add more per-mod log lines as needed
         }
     }
 }
-

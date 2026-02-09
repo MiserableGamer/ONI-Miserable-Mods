@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using ControlledMods.ModDetection;
 using ControlledMods.Options;
 using ControlledMods.Patches;
-using ControlledMods.Patches.RonivansLegacy;
+using ControlledMods.Patches.UndergroundConduit;
 
 namespace ControlledMods
 {
@@ -47,21 +47,6 @@ namespace ControlledMods
             // Apply patch to resize the options dialog
             OptionsDialogPatch.ApplyPatch(harmony);
 
-            // Increase PrimaryElement.MAX_MASS to allow larger storage capacities
-            // This is the global cap that prevents storing more than ~25,000 kg
-            var opts = ControlledModsOptions.Instance;
-            float maxConfiguredCapacity = System.Math.Max(
-                System.Math.Max(
-                    System.Math.Max(opts.MedGasReservoirCapacity, opts.MedLiquidReservoirCapacity),
-                    System.Math.Max(opts.SmallGasReservoirCapacity, opts.SmallLiquidReservoirCapacity)),
-                System.Math.Max(opts.WallGasTankCapacity, opts.WallLiquidTankCapacity));
-
-            if (maxConfiguredCapacity > PrimaryElement.MAX_MASS)
-            {
-                PrimaryElement.MAX_MASS = maxConfiguredCapacity;
-                Log($"Increased PrimaryElement.MAX_MASS to {maxConfiguredCapacity}");
-            }
-
             Log("Mod loaded - waiting for OnAllModsLoaded to detect target mods");
         }
 
@@ -72,11 +57,8 @@ namespace ControlledMods
             // Detect which target mods are loaded
             ModDetector.DetectMods(mods);
 
-            // Apply conditional patches based on detected mods
-            if (ModDetector.RonivansLegacyLoaded)
-            {
-                ReservoirPatches.ApplyPatches(harmony);
-            }
+            if (UndergroundConduitDetection.Loaded)
+                UndergroundConduitPatches.ApplyPatches(harmony);
 
             Log("All conditional patches applied");
         }

@@ -12,18 +12,21 @@ Customize and override settings from other mods via an in-game options menu. Tak
 
 [h2]Supported Mods[/h2]
 
-[h3]Ronivan's Legacy[/h3]
-Customize reservoir storage capacities beyond the original mod's limits:
+[h3]KIN Underground Conduit[/h3]
+[list]
+[*][b]Fix Power Terminal and Logic Terminal crash[/b] - Prevents InvalidCastException when a logic wire is built in the same cell as a Power Terminal or Logic Terminal (optional, on by default)
+[*][b]Copy Settings[/b] - Enables the vanilla Copy Settings tool for conduit terminals, senders, and receivers; channel is copied when you paste settings
+[/list]
 
 [i]More mods will be added in future updates![/i]
 
 [h2]How to Use[/h2]
 [olist]
-[*]Subscribe to this mod and enable it in the Mods menu
-[*]Enable the target mod(s) you want to customize (e.g., Ronivan's Legacy)
-[*]Click "Mod Options" from the main menu and find "ControlledMods"
-[*]Adjust settings as desired
-[*]Restart the game for changes to take effect
+[*][b]Subscribe/Install[/b] - Enable the mod in the Mods menu
+[*][b]Enable Target Mods[/b] - Enable the mod(s) you want to customize (e.g., KIN Underground Conduit)
+[*][b]Open Options[/b] - Click "Mod Options" from the main menu and find "ControlledMods"
+[*][b]Configure[/b] - Adjust settings as desired
+[*][b]Restart[/b] - Restart the game for changes to take effect
 [/olist]
 
 [h3]Tips[/h3]
@@ -38,8 +41,15 @@ Customize reservoir storage capacities beyond the original mod's limits:
 [list]
 [*][b]Oxygen Not Included[/b] - Build 700386 or later
 [*][b]Mod API[/b] - Version 2
-[*][b]DLC Support[/b] - Works with base game and all DLC (Spaced Out!, Frosty Planet, etc.)
+[*][b]DLC Support[/b] - Works with base game and all DLC (including Bionic Booster Pack)
 [*][b]Target Mods[/b] - Does not require target mods to be installed; safely ignored if not present
+[/list]
+
+[h2]Performance[/h2]
+[b]Minimal Performance Impact[/b]
+[list]
+[*][b]Conditional patches[/b] - Patches apply only when the target mod is detected and the relevant option is enabled
+[*][b]No polling[/b] - No per-frame or sim tick work; logic runs only on paste (Copy Settings) or when the game triggers the patched events
 [/list]
 
 [h2]Future Updates[/h2]
@@ -54,17 +64,17 @@ Need help, found a bug, or have a suggestion? We're here to help!
 
 [h3]Community[/h3]
 [list]
-[*][b]💬 Discord[/b]: [url=https://discord.com/channels/1452947938304200861/1452947939927392398]Join our Discord server[/url] for discussions, questions, and community support
-[*][b]📝 GitHub Discussions[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/discussions]Discuss on GitHub[/url] - share ideas, ask questions, or get help with modding
+[*][b]Discord[/b]: [url=https://discord.com/channels/1452947938304200861/1452947939927392398]Join our Discord server[/url] for discussions, questions, and community support
+[*][b]GitHub Discussions[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/discussions]Discuss on GitHub[/url] - share ideas, ask questions, or get help with modding
 [/list]
 
 [h3]Reporting Issues[/h3]
 Found a bug or have a feature request? Please report it on GitHub using our issue templates:
 [list]
-[*][b]🐛 Bug Reports[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=bug_report.yml]Report a Bug[/url] - Use this for crashes, errors, or unexpected behavior
-[*][b]💡 Feature Requests[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=feature_request.yml]Suggest a Feature[/url] - Have an idea for a new feature or improvement?
-[*][b]❓ Questions[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=question.yml]Ask a Question[/url] - Need help understanding how something works?
-[*][b]📝 Other Issues[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=other.yml]Other Issue[/url] - Something else that doesn't fit the above categories
+[*][b]Bug Reports[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=bug_report.yml]Report a Bug[/url] - Use this for crashes, errors, or unexpected behavior
+[*][b]Feature Requests[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=feature_request.yml]Suggest a Feature[/url] - Have an idea for a new feature or improvement?
+[*][b]Questions[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=question.yml]Ask a Question[/url] - Need help understanding how something works?
+[*][b]Other Issues[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=other.yml]Other Issue[/url] - Something else that doesn't fit the above categories
 [/list]
 
 Please mention "ControlledMods" in your issue title or description.
@@ -76,10 +86,10 @@ This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/
 [list]
 [*]Built using [url=https://github.com/peterhaneve/ONIMods]PLib[/url] by Peter Han
 [*]Uses [url=https://github.com/pardeike/Harmony]Harmony[/url] for runtime patching
-[*]Ronivan's Legacy mod by Sgt_Imalas
 [/list]
 
 [h2]Version History[/h2]
 [list]
-[*][b]1.0.0[/b]: Initial release - Ronivan's Legacy reservoir capacity support
+[*][b]1.1.0[/b]: KIN Underground Conduit – Logic Terminal crash fix, Copy Settings for conduit terminals/senders/receivers
+[*][b]1.0.0[/b]: Initial release
 [/list]

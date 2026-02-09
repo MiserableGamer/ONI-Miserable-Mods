@@ -1,11 +1,12 @@
+using System;
+using System.IO;
+using System.Reflection;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using PeterHan.PLib.Options;
-using ControlledMods.ModDetection;
 
 namespace ControlledMods.Options
 {
-    // Main options class - all options at top level, grouped by category
-    // Options are always visible; descriptions indicate if target mod is required
     [JsonObject(MemberSerialization.OptIn)]
     [ConfigFile("ControlledMods.json", true, true)]
     [RestartRequired]
@@ -18,77 +19,65 @@ namespace ControlledMods.Options
             get
             {
                 if (_instance == null)
+                {
                     _instance = POptions.ReadSettings<ControlledModsOptions>() ?? new ControlledModsOptions();
+                    // Options missing from the config file (e.g. after an update) default to off
+                    DefaultMissingOptionsToOff(_instance);
+                }
                 return _instance;
             }
         }
 
-        // Helper to get status text for descriptions
-        public static string GetModStatus(bool isLoaded) => isLoaded ? "✓ Mod Detected" : "✗ Mod Not Detected";
+        // When config file exists but is from an older version, any option not present in the file is treated as disabled.
+        private static void DefaultMissingOptionsToOff(ControlledModsOptions instance)
+        {
+            string path = null;
+            try
+            {
+                path = POptions.GetConfigFilePath(typeof(ControlledModsOptions));
+            }
+            catch { /* no path */ }
+            if (string.IsNullOrEmpty(path) || !File.Exists(path))
+                return;
+            JObject jo;
+            try
+            {
+                jo = JObject.Parse(File.ReadAllText(path));
+            }
+            catch
+            {
+                return;
+            }
+            foreach (var prop in typeof(ControlledModsOptions).GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            {
+                if (prop.PropertyType != typeof(bool) || !prop.CanWrite)
+                    continue;
+                var jsonAttr = prop.GetCustomAttribute<JsonPropertyAttribute>();
+                string key = jsonAttr?.PropertyName ?? prop.Name;
+                if (string.IsNullOrEmpty(key))
+                    key = prop.Name;
+                if (jo[key] == null)
+                    prop.SetValue(instance, false);
+            }
+        }
 
-        // ========== Ronivan's Legacy - Reservoirs ==========
+        // ========== KIN Underground Conduit ==========
 
-        [Option("Medium Gas Reservoir Capacity (kg)",
-            "Maximum storage capacity for the Medium Gas Reservoir.\n" +
-            "Requires: Ronivan's Legacy mod\n" +
-            "Default: 750 kg",
-            "Ronivan's Legacy - Reservoirs",
-            Format = "F0")]
-        [Limit(750, 1000000)]
+        [Option("Fix Power Terminal + logic wire crash",
+            "When enabled, prevents a crash when a logic wire is built in the same cell as an Underground Conduit Power Terminal. " +
+            "Requires KIN Underground Conduit mod. Disable only if you do not use power terminals or want to risk the crash.",
+            "KIN Underground Conduit")]
         [JsonProperty]
-        public float MedGasReservoirCapacity { get; set; } = 750f;
+        public bool FixPowerTerminalLogicWireCrash { get; set; } = true;
 
-        [Option("Medium Liquid Reservoir Capacity (kg)",
-            "Maximum storage capacity for the Medium Liquid Reservoir.\n" +
-            "Requires: Ronivan's Legacy mod\n" +
-            "Default: 7500 kg",
-            "Ronivan's Legacy - Reservoirs",
-            Format = "F0")]
-        [Limit(7500, 1000000)]
+        [Option("Enable Copy Settings for conduit terminals/senders/receivers",
+            "When enabled, the vanilla Copy Settings tool works for Power/Logic/Liquid/Gas/Solid/Radbolt terminals and senders/receivers (channel is copied). " +
+            "Requires KIN Underground Conduit mod.",
+            "KIN Underground Conduit")]
         [JsonProperty]
-        public float MedLiquidReservoirCapacity { get; set; } = 7500f;
+        public bool EnableCopySettingsForConduits { get; set; } = true;
 
-        [Option("Small Gas Reservoir Capacity (kg)",
-            "Maximum storage capacity for the Small Gas Reservoir (floor and inverted variants).\n" +
-            "Requires: Ronivan's Legacy mod\n" +
-            "Default: 250 kg",
-            "Ronivan's Legacy - Reservoirs",
-            Format = "F0")]
-        [Limit(250, 50000)]
-        [JsonProperty]
-        public float SmallGasReservoirCapacity { get; set; } = 250f;
-
-        [Option("Small Liquid Reservoir Capacity (kg)",
-            "Maximum storage capacity for the Small Liquid Reservoir (floor and inverted variants).\n" +
-            "Requires: Ronivan's Legacy mod\n" +
-            "Default: 2500 kg",
-            "Ronivan's Legacy - Reservoirs",
-            Format = "F0")]
-        [Limit(2500, 50000)]
-        [JsonProperty]
-        public float SmallLiquidReservoirCapacity { get; set; } = 2500f;
-
-        [Option("Wall Gas Tank Capacity (kg)",
-            "Maximum storage capacity for the Wall Gas Tank.\n" +
-            "Requires: Ronivan's Legacy mod\n" +
-            "Default: 150 kg",
-            "Ronivan's Legacy - Reservoirs",
-            Format = "F0")]
-        [Limit(150, 25000)]
-        [JsonProperty]
-        public float WallGasTankCapacity { get; set; } = 150f;
-
-        [Option("Wall Liquid Tank Capacity (kg)",
-            "Maximum storage capacity for the Wall Liquid Tank.\n" +
-            "Requires: Ronivan's Legacy mod\n" +
-            "Default: 1500 kg",
-            "Ronivan's Legacy - Reservoirs",
-            Format = "F0")]
-        [Limit(1500, 25000)]
-        [JsonProperty]
-        public float WallLiquidTankCapacity { get; set; } = 1500f;
-
-        // ========== Add more mod sections here ==========
+        // ========== Add more mod option sections here ==========
 
         public ControlledModsOptions() { }
     }

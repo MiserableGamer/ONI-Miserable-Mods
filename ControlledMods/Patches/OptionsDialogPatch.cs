@@ -15,68 +15,40 @@ namespace ControlledMods.Patches
         private const float TARGET_WIDTH = 900f;
         private const float TARGET_HEIGHT = 700f;
 
-        // Call this from OnLoad to apply the patch
+        // Call this from OnLoad to apply the patch. Only patches our own assembly so we only resize our options dialog.
         public static void ApplyPatch(Harmony harmony)
         {
             try
             {
-                ControlledModsMod.Log("=== Starting PDialog patch application ===");
-                
-                int patchCount = 0;
-                
-                // Find ALL PDialog types across ALL loaded assemblies
-                // Each mod that bundles PLib has its own copy, so we need to patch them all
-                foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+                var ourAssembly = typeof(ControlledModsMod).Assembly;
+                Type pDialogType = null;
+                foreach (var type in ourAssembly.GetTypes())
                 {
-                    try
+                    if (type.FullName == "PeterHan.PLib.UI.PDialog")
                     {
-                        Type pDialogType = null;
-                        foreach (var type in assembly.GetTypes())
-                        {
-                            if (type.FullName == "PeterHan.PLib.UI.PDialog")
-                            {
-                                pDialogType = type;
-                                break;
-                            }
-                        }
-                        
-                        if (pDialogType == null) continue;
-                        
-                        ControlledModsMod.Log($"Found PDialog in assembly: {assembly.GetName().Name}");
-                        
-                        // Try to patch SetDialogSize
-                        var setDialogSizeMethod = AccessTools.Method(pDialogType, "SetDialogSize");
-                        if (setDialogSizeMethod != null)
-                        {
-                            var prefix = new HarmonyMethod(typeof(OptionsDialogPatch), nameof(SetDialogSize_Prefix));
-                            harmony.Patch(setDialogSizeMethod, prefix: prefix);
-                            ControlledModsMod.Log($"  Patched SetDialogSize in {assembly.GetName().Name}");
-                            patchCount++;
-                        }
-                        else
-                        {
-                            // Fallback to Build method
-                            var buildMethod = AccessTools.Method(pDialogType, "Build");
-                            if (buildMethod != null)
-                            {
-                                var buildPrefix = new HarmonyMethod(typeof(OptionsDialogPatch), nameof(Build_Prefix));
-                                harmony.Patch(buildMethod, prefix: buildPrefix);
-                                ControlledModsMod.Log($"  Patched Build in {assembly.GetName().Name}");
-                                patchCount++;
-                            }
-                        }
-                    }
-                    catch (ReflectionTypeLoadException)
-                    {
-                        // Some assemblies can't be scanned - skip them
-                    }
-                    catch (Exception ex)
-                    {
-                        ControlledModsMod.Log($"  Error scanning {assembly.GetName().Name}: {ex.Message}");
+                        pDialogType = type;
+                        break;
                     }
                 }
-                
-                ControlledModsMod.Log($"Applied PDialog resize patch to {patchCount} assemblies");
+
+                if (pDialogType == null)
+                    return;
+
+                var setDialogSizeMethod = AccessTools.Method(pDialogType, "SetDialogSize");
+                if (setDialogSizeMethod != null)
+                {
+                    var prefix = new HarmonyMethod(typeof(OptionsDialogPatch), nameof(SetDialogSize_Prefix));
+                    harmony.Patch(setDialogSizeMethod, prefix: prefix);
+                }
+                else
+                {
+                    var buildMethod = AccessTools.Method(pDialogType, "Build");
+                    if (buildMethod != null)
+                    {
+                        var buildPrefix = new HarmonyMethod(typeof(OptionsDialogPatch), nameof(Build_Prefix));
+                        harmony.Patch(buildMethod, prefix: buildPrefix);
+                    }
+                }
             }
             catch (Exception e)
             {
