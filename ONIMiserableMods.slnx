@@ -21,5 +21,4 @@
   <Project Path="ThresholdFixed/ThresholdFixed.csproj" Id="fe377519-31a0-4c07-9f63-a88d8a76b59a" />
 
 
-  <Project Path="AdvancedWattageSensor/AdvancedWattageSensor.csproj" Id="9341016d-3156-4cd4-ab63-d6a242c4d879" />
 </Solution>
