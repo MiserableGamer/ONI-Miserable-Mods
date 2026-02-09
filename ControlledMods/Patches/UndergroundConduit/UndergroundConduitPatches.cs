@@ -1,6 +1,5 @@
 using HarmonyLib;
 using System;
-using System.Runtime.CompilerServices;
 using System.Reflection;
 using ControlledMods.ModDetection;
 using ControlledMods.Options;
@@ -26,248 +25,10 @@ namespace ControlledMods.Patches.UndergroundConduit
                 PatchConfigsAddCopyBuildingSettings(harmony);
                 PatchKPrefabIDTriggerForChannelCopy(harmony);
             }
-            if (opts.TintLogicTerminalLight)
-                PatchLogicTerminalLightTint(harmony);
-            if (opts.EnableChannelFilter)
-                ChannelFilterPatches.ApplyPatches(harmony);
         }
 
-        // --- Logic Terminal light tint: child overlay controller with our kanim, tint "output" symbol ---
-        private const bool DebugLogicTerminalLight = false;
-        private const string OurKanimId = "controlledmods_logic_terminal_kanim";
-        private static readonly HashedString OutputSymbolHash = (HashedString)"output";
-        private const int StateOff = 0, StateOn = 1, StateRed = 2, StateGreen = 3;
-        private static string StateName(int s) => s < 0 ? "?" : (s == StateOff ? "off" : s == StateOn ? "on" : s == StateRed ? "red" : "green");
-        private static readonly Color TintUnlit = new Color(0.18f, 0.18f, 0.18f, 1f);
-        private static readonly Color TintRed = new Color(1f, 0.25f, 0.25f, 1f);
-        private static readonly Color TintGreen = new Color(0.25f, 1f, 0.25f, 1f);
-        private static readonly HashedString LogicOperationalPortId = (HashedString)"LogicOperational";
-        private static KAnimFile CachedOurKanimFile;
-        private static Type CachedLogicTerminalType;
-        private static FieldInfo CachedOutputCellField;
-        private static ConditionalWeakTable<GameObject, LastLogicTerminalState> LastStateByGo;
-
-        private sealed class LastLogicTerminalState
-        {
-            public int State = -1;
-            public Operational Operational;
-            public Component Terminal;
-            public KBatchedAnimController[] Animators;
-        }
-
-        private static void PatchLogicTerminalLightTint(Harmony harmony)
-        {
-            CachedLogicTerminalType = AccessTools.TypeByName("UndergroundConduit.LogicTerminal");
-            if (CachedLogicTerminalType == null) return;
-            CachedOutputCellField = AccessTools.Field(CachedLogicTerminalType, "OutputCell");
-            if (CachedOutputCellField == null) return;
-
-            LastStateByGo = new ConditionalWeakTable<GameObject, LastLogicTerminalState>();
-
-            var configType = AccessTools.TypeByName("UndergroundConduit.Buildings.LogicTerminalConfig");
-            if (configType != null)
-            {
-                var doPost = AccessTools.Method(configType, "DoPostConfigureComplete", new[] { typeof(GameObject) });
-                if (doPost != null)
-                    harmony.Patch(doPost, postfix: new HarmonyMethod(typeof(UndergroundConduitPatches), nameof(LogicTerminalConfig_DoPostConfigureComplete_Postfix)));
-            }
-
-            var logicTerminalOnSpawn = AccessTools.Method(CachedLogicTerminalType, "OnSpawn");
-            if (logicTerminalOnSpawn != null)
-                harmony.Patch(logicTerminalOnSpawn, postfix: new HarmonyMethod(typeof(UndergroundConduitPatches), nameof(LogicTerminal_OnSpawn_Postfix)));
-
-            var animatorType = AccessTools.TypeByName("UndergroundConduit.Animator");
-            if (animatorType != null)
-            {
-                var simMethod = AccessTools.Method(animatorType, "Sim1000ms", new[] { typeof(float) });
-                if (simMethod != null)
-                    harmony.Patch(simMethod, postfix: new HarmonyMethod(typeof(UndergroundConduitPatches), nameof(Animator_Sim1000ms_Postfix)));
-            }
-
-            ControlledModsMod.Log("KIN Underground Conduit patches applied");
-        }
-
-        public static void LogicTerminal_OnSpawn_Postfix(object __instance)
-        {
-            if (__instance == null) return;
-            var comp = __instance as Component;
-            if (comp == null || comp.gameObject == null) return;
-            var go = comp.gameObject;
-
-            if (CachedOurKanimFile == null)
-                CachedOurKanimFile = Assets.GetAnim(OurKanimId);
-
-            if (CachedOurKanimFile != null)
-                CreateOutputOverlay(go);
-
-            if (go.GetComponent<LogicTerminalLightController>() == null)
-                go.AddComponent<LogicTerminalLightController>();
-            UpdateLogicTerminalLight(go);
-        }
-
-        private static void CreateOutputOverlay(GameObject parent)
-        {
-            try
-            {
-                var parentKbac = parent.GetComponent<KBatchedAnimController>();
-                if (parentKbac == null) { ControlledModsMod.LogWarning("[UCLight] No parent KBAC"); return; }
-
-                var meterPrefab = Assets.GetPrefab(MeterConfig.ID);
-                if (meterPrefab == null) { ControlledModsMod.LogWarning("[UCLight] MeterConfig prefab not found"); return; }
-
-                var overlayGo = UnityEngine.Object.Instantiate(meterPrefab);
-                overlayGo.name = parent.name + ".outputOverlay";
-                overlayGo.SetActive(false);
-                overlayGo.transform.parent = parent.transform;
-
-                var pos = parent.transform.GetPosition();
-                pos.x -= 0.02f;
-                pos.y -= 0.02f;
-                pos.z -= 0.1f;
-                overlayGo.transform.SetPosition(pos);
-
-                overlayGo.GetComponent<KPrefabID>().PrefabTag = new Tag(overlayGo.name);
-
-                var kbac = overlayGo.GetComponent<KBatchedAnimController>();
-                kbac.AnimFiles = new KAnimFile[] { CachedOurKanimFile };
-                kbac.initialAnim = "on";
-                kbac.initialMode = KAnim.PlayMode.Paused;
-                kbac.isMovable = true;
-                kbac.FlipX = parentKbac.FlipX;
-                kbac.FlipY = parentKbac.FlipY;
-
-                var tracker = overlayGo.GetComponent<KBatchedAnimTracker>();
-                if (tracker != null)
-                    UnityEngine.Object.Destroy(tracker);
-
-                overlayGo.SetActive(true);
-
-                kbac.SetSymbolVisiblity((HashedString)"base", false);
-                kbac.SetSymbolVisiblity((HashedString)"place", false);
-                kbac.SetSymbolVisiblity((HashedString)"ui", false);
-
-                new KAnimLink(parentKbac, kbac);
-
-                if (DebugLogicTerminalLight)
-                    ControlledModsMod.Log($"[UCLight] Created output overlay on {parent.name}");
-            }
-            catch (Exception ex)
-            {
-                ControlledModsMod.LogWarning($"[UCLight] CreateOutputOverlay failed: {ex.Message}");
-            }
-        }
-
-        public static void LogicTerminalConfig_DoPostConfigureComplete_Postfix(GameObject go)
-        {
-            if (go == null || !ControlledModsOptions.Instance.TintLogicTerminalLight) return;
-            if (go.GetComponent(CachedLogicTerminalType) == null) return;
-            go.AddComponent<LogicTerminalLightController>();
-        }
-
-        public static void Animator_Sim1000ms_Postfix(object __instance)
-        {
-            if (__instance == null || CachedLogicTerminalType == null) return;
-            var comp = __instance as Component;
-            if (comp == null || comp.gameObject == null) return;
-            if (comp.gameObject.GetComponent(CachedLogicTerminalType) == null) return;
-            UpdateLogicTerminalLight(comp.gameObject);
-        }
-
-        internal static void UpdateLogicTerminalLight(GameObject go, int? eventValue = null)
-        {
-            if (go == null || CachedLogicTerminalType == null || CachedOutputCellField == null || LastStateByGo == null) return;
-            var last = LastStateByGo.GetOrCreateValue(go);
-
-            if (last.Operational == null)
-                last.Operational = go.GetComponent<Operational>() ?? go.GetComponentInChildren<Operational>();
-            if (last.Terminal == null)
-                last.Terminal = go.GetComponent(CachedLogicTerminalType);
-            if (last.Animators == null || last.Animators.Length == 0)
-                last.Animators = go.GetComponentsInChildren<KBatchedAnimController>(true);
-
-            var operational = last.Operational;
-            var terminal = last.Terminal;
-            var animators = last.Animators;
-            if (operational == null || terminal == null || animators == null || animators.Length == 0) return;
-
-            if (DebugLogicTerminalLight)
-            {
-                string source = eventValue.HasValue ? "Event" : "Poll";
-                ControlledModsMod.Log($"[UCLight] Update src={source} ev={eventValue?.ToString() ?? "-"} isActive={operational.IsActive} go={go.name}");
-            }
-
-            int desired;
-            if (eventValue.HasValue)
-            {
-                if (!operational.IsActive) return;
-                desired = LogicCircuitNetwork.IsBitActive(0, eventValue.Value) ? StateGreen : StateRed;
-            }
-            else
-            {
-                if (!operational.IsActive)
-                    desired = StateOff;
-                else
-                {
-                    int outputCell = (int)CachedOutputCellField.GetValue(terminal);
-                    if (outputCell < 0)
-                        desired = StateOn;
-                    else
-                    {
-                        var network = Game.Instance.logicCircuitSystem.GetNetworkForCell(outputCell) as LogicCircuitNetwork;
-                        if (network == null)
-                            desired = (last.State == StateRed || last.State == StateGreen) ? last.State : StateOn;
-                        else
-                            desired = LogicCircuitNetwork.IsBitActive(0, network.OutputValue) ? StateGreen : StateRed;
-                    }
-                }
-            }
-
-            if (last.State == desired) return;
-            if (DebugLogicTerminalLight)
-                ControlledModsMod.Log($"[UCLight] {StateName(last.State)} → {StateName(desired)}");
-            last.State = desired;
-            Color tint = desired == StateOff ? TintUnlit : desired == StateOn ? Color.white : desired == StateRed ? TintRed : TintGreen;
-            foreach (var anim in animators)
-            {
-                if (anim == null) continue;
-                anim.SetSymbolTint(OutputSymbolHash, tint);
-            }
-        }
-
-        private sealed class LogicTerminalLightController : KMonoBehaviour, ISim1000ms
-        {
-            private static readonly EventSystem.IntraObjectHandler<LogicTerminalLightController> OnLogicValueChangedDelegate =
-                new EventSystem.IntraObjectHandler<LogicTerminalLightController>((c, data) => c.OnLogicValueChanged(data));
-
-            public override void OnSpawn()
-            {
-                base.OnSpawn();
-                Subscribe((int)GameHashes.LogicEvent, OnLogicValueChangedDelegate);
-                UpdateLogicTerminalLight(gameObject);
-            }
-
-            public void Sim1000ms(float dt)
-            {
-                UpdateLogicTerminalLight(gameObject);
-            }
-
-            public override void OnCleanUp()
-            {
-                Unsubscribe((int)GameHashes.LogicEvent, OnLogicValueChangedDelegate);
-                base.OnCleanUp();
-            }
-
-            private void OnLogicValueChanged(object data)
-            {
-                if (!(data is LogicValueChanged lvc) || lvc.portID != LogicOperationalPortId) return;
-                if (DebugLogicTerminalLight)
-                    ControlledModsMod.Log($"[UCLight] LogicEvent port={lvc.portID} val={lvc.newValue}");
-                UpdateLogicTerminalLight(gameObject, lvc.newValue);
-            }
-        }
-
-        // PowerTerminal and LogicTerminal OnOperationalChanged(object data) do (bool)data. The game passes Boxed<bool> for
-        // OperationalChanged; convert to boxed bool so (bool)data works. Skip when data is null or other non-bool types.
+        // PowerTerminal and LogicTerminal OnOperationalChanged(object data) do (bool)data. When a logic wire is in the same
+        // cell, the same event hash can be triggered with non-bool data, causing InvalidCastException. Skip the original when data is not bool.
         private static void PatchOperationalChangedGuard(Harmony harmony)
         {
             var prefix = new HarmonyMethod(typeof(UndergroundConduitPatches), nameof(OperationalChanged_Guard_Prefix));
@@ -282,20 +43,13 @@ namespace ControlledMods.Patches.UndergroundConduit
             var method = AccessTools.Method(type, "OnOperationalChanged", new[] { typeof(object) });
             if (method == null) return;
             harmony.Patch(method, prefix: prefix);
-                    ControlledModsMod.Log("KIN Underground Conduit patches applied");
+            ControlledModsMod.Log($"Patched {displayName}.OnOperationalChanged (guard against non-bool data)");
         }
 
-        // Return true to run original, false to skip. Convert Boxed<bool> to boxed bool so (bool)data works in the original.
-        public static bool OperationalChanged_Guard_Prefix(ref object data)
+        // Return true to run original, false to skip. Skip when data is not bool to avoid InvalidCastException.
+        public static bool OperationalChanged_Guard_Prefix(object data)
         {
-            if (data is Boxed<bool> boxed)
-            {
-                data = boxed.value;
-                return true;
-            }
-            if (data is bool)
-                return true;
-            return false;
+            return data is bool;
         }
 
         // --- Copy Settings: when the game triggers CopySettings on the destination building, copy channel from source (no Grid lookup) ---
@@ -402,7 +156,7 @@ namespace ControlledMods.Patches.UndergroundConduit
                 var postfix = new HarmonyMethod(typeof(UndergroundConduitPatches), nameof(Config_DoPostConfigureComplete_Postfix));
                 harmony.Patch(method, postfix: postfix);
             }
-            ControlledModsMod.Log("KIN Underground Conduit patches applied");
+            ControlledModsMod.Log("Patched KIN conduit configs to add CopyBuildingSettings");
         }
 
         private static MethodInfo GetAddOrGetCopyBuildingSettingsMethod(Type copyBuildingSettingsType)
