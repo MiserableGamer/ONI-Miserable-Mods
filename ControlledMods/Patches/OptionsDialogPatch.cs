@@ -14,7 +14,7 @@ namespace ControlledMods.Patches
         private const float TARGET_WIDTH = 900f;
         private const float TARGET_HEIGHT = 700f;
 
-        // Call this from OnLoad to apply the patch.
+        // Call this from OnLoad to apply the patch. Only patches our own assembly so we only resize our options dialog.
         public static void ApplyPatch(Harmony harmony)
         {
             try
