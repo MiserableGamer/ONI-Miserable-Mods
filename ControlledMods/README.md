@@ -12,13 +12,10 @@ Configure and improve behavior from supported ONI mods through a single in-game 
 
 ## Supported Mods
 
-### [Resource Sensor (Berkay's mod)](https://steamcommunity.com/sharedfiles/filedetails/?id=2911545239)
+### KIN Underground Conduit
 
-- Adds **Atmosphere / Storage / Conduits** scope controls
-- Improves counting (includes tile storage and conduit contents)
-- Raises threshold max to **9,999,999** and removes hardcoded unit text
-- Clears range visualizer correctly on deselect
-- Supports **Copy Settings** and ControlledAutomation inversion
+- **Fix Power Terminal and Logic Terminal crash** - Prevents InvalidCastException when a logic wire is built in the same cell as a Power Terminal or Logic Terminal (optional, on by default)
+- **Copy Settings** - Enables the vanilla Copy Settings tool for conduit terminals, senders, and receivers; channel is copied when you paste settings
 
 Compatible with Berkay's Resource Sensor and ResourceSensorFIXED.
 
@@ -52,11 +49,18 @@ Compatible with Berkay's Resource Sensor and ResourceSensorFIXED.
 
 ## How to Use
 
-1. Subscribe and enable ControlledMods
-2. Enable any target mods you want to control
-3. Open **ControlledMods -> Mod Options**
-4. Configure settings
-5. Restart game
+1. **Subscribe/Install** - Enable the mod in the Mods menu
+2. **Enable Target Mods** - Enable the mod(s) you want to customize (e.g., KIN Underground Conduit)
+3. **Open Options** - Click "Mod Options" from the main menu and find "ControlledMods"
+4. **Configure** - Adjust settings as desired
+5. **Restart** - Restart the game for changes to take effect
+
+### Tips
+
+- Settings are grouped by target mod - expand each section to see available options
+- Hover over options for detailed descriptions and default values
+- Changes require a game restart to apply
+- New buildings will use the new capacity; existing buildings may need to be rebuilt
 
 ## Installation
 
@@ -72,10 +76,16 @@ Subscribe on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails
 
 - **Oxygen Not Included** - Build 700386+
 - **Mod API** - Version 2
-- **DLC** - Base game and all DLC
-- **Target Mods** - Optional (safe if not installed)
+- **DLC Support** - Works with base game and all DLC (including Bionic Booster Pack)
+- **Target Mods** - Does not require target mods to be installed; safely ignored if not present
 
 ## Performance
+
+**Minimal Performance Impact**
+- **Conditional patches** - Patches apply only when the target mod is detected and the relevant option is enabled
+- **No polling** - No per-frame or sim tick work; logic runs only on paste (Copy Settings) or when the game triggers the patched events
+
+## Future Updates
 
 - Conditional patching only
 - No continuous polling loops
@@ -109,16 +119,5 @@ Please mention "ControlledMods" in your issue title or description.
 
 ## Version History
 
-- **1.10.0**: Added support for Signs Tags and Ribbons
-- **1.9.0**: Added support for Darkness Not Excluded (relit)
-- **1.8.1**: Fixed Line of Sight ranging of Duplicant Room Sensor
-- **1.8.0**: Enhanced functionality of Pholith's Duplicant Room Sensor
-- **1.7.0**: Added VineBranch max_age compatibility for Customizable Plants mod
-- **1.6.0**: Added colour visualisations to Logic Terminals for logic state
-- **1.5.1**: Fixed kanim loading bug
-- **1.5.0**: Free Resource Buildings – Free Energy Generator wattage slider now controls actual power output; Power Sink building added (configurable power consumer for testing)
-- **1.4.0**: Resource Sensor – Storage counting now includes tile-based storage (e.g. Storage Tiles) in both Distance and Room modes
-- **1.3.0**: Restart button on the main menu (above Quit) for quick restarts
-- **1.2.0**: Resource Sensor (Berkay's mod) – sidescreen with Atmosphere/Storage/Conduits scope checkboxes; counting for atmosphere, storage buildings, and conduits with category tag expansion; threshold max raised to 9,999,999 with units stripped; range visualizer clears on deselect; Copy Settings copies scope toggles; ControlledAutomation inversion support
 - **1.1.0**: KIN Underground Conduit – Logic Terminal crash fix, Copy Settings for conduit terminals/senders/receivers
 - **1.0.0**: Initial release
