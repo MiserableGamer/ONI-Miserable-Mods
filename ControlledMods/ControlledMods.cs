@@ -40,6 +40,7 @@ namespace ControlledMods
 
             // Initialize PLib
             PUtil.InitLibrary();
+            ConfigMigrationHelper.Migrate("ControlledMods.dll", "ControlledMods");
 
             // Register options - must be done in OnLoad for PLib UI to work
             new POptions().RegisterOptions(this, typeof(ControlledModsOptions));
