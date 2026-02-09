@@ -9,14 +9,7 @@ using UnityEngine;
 using ControlledMods.ModDetection;
 using ControlledMods.Options;
 using ControlledMods.Patches;
-using ControlledMods.Patches.FreeResourceBuildings;
-using ControlledMods.Patches.CustomizablePlants;
-using ControlledMods.Patches.ResourceSensor;
-using ControlledMods.Patches.SaveFileFixes;
 using ControlledMods.Patches.UndergroundConduit;
-using ControlledMods.Patches.DuplicantRoomSensor;
-using ControlledMods.Patches.DarknessNotExcludedRelit;
-using ControlledMods.Patches.SignsTagsAndRibbons;
 
 namespace ControlledMods
 {
@@ -92,8 +85,7 @@ namespace ControlledMods
             OptionsDialogPatch.ApplyPatch(harmony);
             MainMenuPatches.ApplyPatch(harmony);
 
-            string displayVersion = GetModVersionFromModInfo();
-            Log($"Mod loaded version {displayVersion} - waiting for OnAllModsLoaded to detect target mods");
+            Log("Mod loaded - waiting for OnAllModsLoaded to detect target mods");
         }
 
         public override void OnAllModsLoaded(Harmony harmony, IReadOnlyList<Mod> mods)
@@ -105,35 +97,6 @@ namespace ControlledMods
 
             if (UndergroundConduitDetection.Loaded)
                 UndergroundConduitPatches.ApplyPatches(harmony);
-
-            if (ResourceSensorDetection.Loaded && ControlledModsOptions.Instance.EnableResourceSensor)
-                ResourceSensorPatches.ApplyPatches(harmony);
-
-            if (FreeResourceBuildingsDetection.Loaded)
-            {
-                FreeEnergyGeneratorPatches.ApplyPatches(harmony);
-
-                if (ControlledModsOptions.Instance.AddPowerSinkBuilding)
-                    PowerSinkRegistrationPatches.ApplyPatches(harmony);
-            }
-
-            if (CustomizablePlantsDetection.Loaded && ControlledModsOptions.Instance.EnableCustomizablePlantsVineBranchMaxAge)
-                VineBranchMaxAgePatches.ApplyPatches(harmony);
-
-            if (DuplicantRoomSensorDetection.Loaded && ControlledModsOptions.Instance.EnableDuplicantRoomSensorRangeCompatibility)
-                DuplicantRoomSensorPatches.ApplyPatches(harmony);
-
-            if (DarknessNotExcludedRelitDetection.Loaded && ControlledModsOptions.Instance.EnableDarknessImpliedLightOcclusionFix)
-                DarknessNotExcludedRelitPatches.ApplyPatches(harmony);
-
-            if (SignsTagsAndRibbonsDetection.Loaded)
-                SignsTagsAndRibbonsPatches.ApplyPatches(harmony);
-
-            if (EnableSaveFileFixes)
-            {
-                CustomModPathPatches.Apply(harmony);
-                SaveFileFixApplier.Apply(harmony);
-            }
 
             Log("All conditional patches applied");
         }
