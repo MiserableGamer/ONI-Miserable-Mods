@@ -52,9 +52,8 @@ namespace ControlledMods.Options
         }
 
         // When config file exists but is from an older version, any option not present in the file is treated as disabled.
-        // We merge missing keys into the existing file (instead of overwriting) so we never wipe values PLib may have
-        // saved under different key names (e.g. after the user enables an option and the game restarts).
-        // All reads/writes use the canonical path (ControlledMods, not ControlledMods.dll) so the .dll folder is never created.
+        // We then write the updated settings back so the config file contains all keys; this ensures new options (e.g. EnableResourceSensor)
+        // appear in the Mod Options dialog when PLib builds the list from the file.
         private static void DefaultMissingOptionsToOff(ControlledModsOptions instance)
         {
             string path = null;
@@ -86,7 +85,6 @@ namespace ControlledMods.Options
                 if (jo[key] == null)
                 {
                     prop.SetValue(instance, false);
-                    jo[key] = false;
                     anyMissing = true;
                 }
             }
@@ -97,7 +95,7 @@ namespace ControlledMods.Options
                     var dir = Path.GetDirectoryName(path);
                     if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
                         Directory.CreateDirectory(dir);
-                    File.WriteAllText(path, JsonConvert.SerializeObject(jo, Formatting.Indented));
+                    File.WriteAllText(path, JsonConvert.SerializeObject(instance, Formatting.Indented));
                 }
                 catch (Exception ex)
                 {
@@ -122,53 +120,13 @@ namespace ControlledMods.Options
         [JsonProperty]
         public bool EnableCopySettingsForConduits { get; set; } = true;
 
-        [Option("Tint Logic Terminal light by signal",
-            "When enabled, the light on the Logic Terminal when a channel is selected reflects the logic output: green signal = standard light, red signal = light tinted red. " +
-            "Requires KIN Underground Conduit mod.",
-            "KIN Underground Conduit")]
-        [JsonProperty]
-        public bool TintLogicTerminalLight { get; set; } = true;
-
         // ========== Resource Sensor (Berkay) ==========
 
         [Option("Apply fixes to Resource Sensor",
-            "When enabled and Berkay's Resource Sensor mod is loaded, applies the fixes: range visualization clears on deselect, liquids and gases support, and sidescreen options.",
+            "When enabled and Berkay's Resource Sensor mod is loaded, applies the same fixes as ResourceSensorFIXED: range visualization clears on deselect, liquids and gases support, and sidescreen without Global option.",
             "Resource Sensor")]
         [JsonProperty]
         public bool EnableResourceSensor { get; set; } = true;
-
-        // ========== Free Resource Buildings (castrolol) ==========
-
-        [Option("Fix Free Energy Generator wattage slider",
-            "When enabled and the Free Resource Buildings mod is loaded, the wattage slider on the Free Energy Generator actually controls power output (vanilla bug: slider had no effect).",
-            "Free Resource Buildings")]
-        [JsonProperty]
-        public bool FixFreeEnergyGeneratorSlider { get; set; } = true;
-
-        [Option("Add Power Sink building",
-            "When enabled and the Free Resource Buildings mod is loaded, adds a Power Sink building (the reverse of the Power Box) that consumes power at a configurable rate via a slider. " +
-            "Useful for testing power systems. Found in the Power category of the build menu.",
-            "Free Resource Buildings")]
-        [JsonProperty]
-        public bool AddPowerSinkBuilding { get; set; } = true;
-
-        // ========== Customizable Plants ==========
-
-        [Option("VineBranch max_age compatibility",
-            "When enabled and the Customizable Plants mod is loaded, applies the max_age setting from Customizable Plants config to Vine Branch (ovagro). " +
-            "E.g. max_age = 1 in Customizable Plants makes vine branches drop fruit immediately when harvest-ready, like other plants. Default off.",
-            "Customizable Plants")]
-        [JsonProperty]
-        public bool EnableCustomizablePlantsVineBranchMaxAge { get; set; }
-
-        // ========== DuplicantRoomSensor (Pholith) ==========
-
-        [Option("Enable Duplicant Room Sensor range compatibility",
-            "When enabled and Pholith's DuplicantRoomSensor mod is loaded, adds a per-sensor range limit mode with side screen controls. " +
-            "Range mode can optionally integrate with ShowRange visualization if that mod is installed.",
-            "Duplicant Room Sensor")]
-        [JsonProperty]
-        public bool EnableDuplicantRoomSensorRangeCompatibility { get; set; } = true;
 
         // ========== Add more mod option sections here ==========
         // Save File Fixes section is in ControlledModsSaveFileFixOptions; that type is only registered when the feature is enabled.

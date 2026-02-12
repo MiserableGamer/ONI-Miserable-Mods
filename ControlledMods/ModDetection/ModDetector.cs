@@ -13,10 +13,6 @@ namespace ControlledMods.ModDetection
         {
             UndergroundConduitDetection.Detect();
             ResourceSensorDetection.Detect();
-            FreeResourceBuildingsDetection.Detect();
-            CustomizablePlantsDetection.Detect();
-            DuplicantRoomSensorDetection.Detect();
-            ShowRangeDetection.Detect();
 
             LogDetectionResults();
         }
@@ -59,10 +55,6 @@ namespace ControlledMods.ModDetection
             ControlledModsMod.Log("Mod Detection Results:");
             ControlledModsMod.Log($"  - {UndergroundConduitDetection.DisplayName}: {(UndergroundConduitDetection.Loaded ? "DETECTED" : "not found")}");
             ControlledModsMod.Log($"  - {ResourceSensorDetection.DisplayName}: {(ResourceSensorDetection.Loaded ? "DETECTED" : "not found")}");
-            ControlledModsMod.Log($"  - {FreeResourceBuildingsDetection.DisplayName}: {(FreeResourceBuildingsDetection.Loaded ? "DETECTED" : "not found")}");
-            ControlledModsMod.Log($"  - {CustomizablePlantsDetection.DisplayName}: {(CustomizablePlantsDetection.Loaded ? "DETECTED" : "not found")}");
-            ControlledModsMod.Log($"  - {DuplicantRoomSensorDetection.DisplayName}: {(DuplicantRoomSensorDetection.Loaded ? "DETECTED" : "not found")}");
-            ControlledModsMod.Log($"  - {ShowRangeDetection.DisplayName}: {(ShowRangeDetection.Loaded ? "DETECTED" : "not found")}");
         }
     }
 }
