@@ -9,6 +9,7 @@ using UnityEngine;
 using ControlledMods.ModDetection;
 using ControlledMods.Options;
 using ControlledMods.Patches;
+using ControlledMods.Patches.ResourceSensor;
 using ControlledMods.Patches.UndergroundConduit;
 
 namespace ControlledMods
@@ -97,6 +98,9 @@ namespace ControlledMods
 
             if (UndergroundConduitDetection.Loaded)
                 UndergroundConduitPatches.ApplyPatches(harmony);
+
+            if (ResourceSensorDetection.Loaded && ControlledModsOptions.Instance.EnableResourceSensor)
+                ResourceSensorPatches.ApplyPatches(harmony);
 
             Log("All conditional patches applied");
         }
