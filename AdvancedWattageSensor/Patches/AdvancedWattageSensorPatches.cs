@@ -8,6 +8,7 @@ namespace AdvancedWattageSensor.Patches
     public class AdvancedWattageSensorPatches
     {
         private static bool buildingRegistered;
+        private static bool sideScreenRegistered;
 
         [HarmonyPatch(typeof(GeneratedBuildings), nameof(GeneratedBuildings.LoadGeneratedBuildings))]
         public class GeneratedBuildings_LoadGeneratedBuildings_Patch
