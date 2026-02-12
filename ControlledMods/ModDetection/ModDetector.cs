@@ -12,7 +12,7 @@ namespace ControlledMods.ModDetection
         public static void DetectMods(IReadOnlyList<KMod.Mod> mods)
         {
             UndergroundConduitDetection.Detect();
-            // Add more: OtherModDetection.Detect();
+            ResourceSensorDetection.Detect();
 
             LogDetectionResults();
         }
@@ -54,7 +54,7 @@ namespace ControlledMods.ModDetection
         {
             ControlledModsMod.Log("Mod Detection Results:");
             ControlledModsMod.Log($"  - {UndergroundConduitDetection.DisplayName}: {(UndergroundConduitDetection.Loaded ? "DETECTED" : "not found")}");
-            // Add more per-mod log lines as needed
+            ControlledModsMod.Log($"  - {ResourceSensorDetection.DisplayName}: {(ResourceSensorDetection.Loaded ? "DETECTED" : "not found")}");
         }
     }
 }
