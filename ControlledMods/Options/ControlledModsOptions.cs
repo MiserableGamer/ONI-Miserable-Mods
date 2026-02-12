@@ -29,6 +29,8 @@ namespace ControlledMods.Options
         }
 
         // When config file exists but is from an older version, any option not present in the file is treated as disabled.
+        // We then write the updated settings back so the config file contains all keys; this ensures new options (e.g. EnableResourceSensor)
+        // appear in the Mod Options dialog when PLib builds the list from the file.
         private static void DefaultMissingOptionsToOff(ControlledModsOptions instance)
         {
             string path = null;
@@ -48,6 +50,7 @@ namespace ControlledMods.Options
             {
                 return;
             }
+            bool anyMissing = false;
             foreach (var prop in typeof(ControlledModsOptions).GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 if (prop.PropertyType != typeof(bool) || !prop.CanWrite)
@@ -57,7 +60,24 @@ namespace ControlledMods.Options
                 if (string.IsNullOrEmpty(key))
                     key = prop.Name;
                 if (jo[key] == null)
+                {
                     prop.SetValue(instance, false);
+                    anyMissing = true;
+                }
+            }
+            if (anyMissing)
+            {
+                try
+                {
+                    var dir = Path.GetDirectoryName(path);
+                    if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                        Directory.CreateDirectory(dir);
+                    File.WriteAllText(path, JsonConvert.SerializeObject(instance, Formatting.Indented));
+                }
+                catch (Exception ex)
+                {
+                    UnityEngine.Debug.LogWarning($"[ControlledMods] Could not write options after adding missing keys: {ex.Message}");
+                }
             }
         }
 
@@ -76,6 +96,14 @@ namespace ControlledMods.Options
             "KIN Underground Conduit")]
         [JsonProperty]
         public bool EnableCopySettingsForConduits { get; set; } = true;
+
+        // ========== Resource Sensor (Berkay) ==========
+
+        [Option("Apply fixes to Resource Sensor",
+            "When enabled and Berkay's Resource Sensor mod is loaded, applies the same fixes as ResourceSensorFIXED: range visualization clears on deselect, liquids and gases support, and sidescreen without Global option.",
+            "Resource Sensor")]
+        [JsonProperty]
+        public bool EnableResourceSensor { get; set; } = true;
 
         // ========== Add more mod option sections here ==========
 
