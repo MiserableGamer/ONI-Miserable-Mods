@@ -52,9 +52,8 @@ namespace ControlledMods.Options
         }
 
         // When config file exists but is from an older version, any option not present in the file is treated as disabled.
-        // We merge missing keys into the existing file (instead of overwriting) so we never wipe values PLib may have
-        // saved under different key names (e.g. after the user enables an option and the game restarts).
-        // All reads/writes use the canonical path (ControlledMods, not ControlledMods.dll) so the .dll folder is never created.
+        // We then write the updated settings back so the config file contains all keys; this ensures new options (e.g. EnableResourceSensor)
+        // appear in the Mod Options dialog when PLib builds the list from the file.
         private static void DefaultMissingOptionsToOff(ControlledModsOptions instance)
         {
             string path = null;
@@ -86,7 +85,6 @@ namespace ControlledMods.Options
                 if (jo[key] == null)
                 {
                     prop.SetValue(instance, false);
-                    jo[key] = false;
                     anyMissing = true;
                 }
             }
@@ -97,7 +95,7 @@ namespace ControlledMods.Options
                     var dir = Path.GetDirectoryName(path);
                     if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
                         Directory.CreateDirectory(dir);
-                    File.WriteAllText(path, JsonConvert.SerializeObject(jo, Formatting.Indented));
+                    File.WriteAllText(path, JsonConvert.SerializeObject(instance, Formatting.Indented));
                 }
                 catch (Exception ex)
                 {
@@ -125,25 +123,10 @@ namespace ControlledMods.Options
         // ========== Resource Sensor (Berkay) ==========
 
         [Option("Apply fixes to Resource Sensor",
-            "When enabled and Berkay's Resource Sensor mod is loaded, applies the fixes: range visualization clears on deselect, liquids and gases support, and sidescreen options.",
+            "When enabled and Berkay's Resource Sensor mod is loaded, applies the same fixes as ResourceSensorFIXED: range visualization clears on deselect, liquids and gases support, and sidescreen without Global option.",
             "Resource Sensor")]
         [JsonProperty]
         public bool EnableResourceSensor { get; set; } = true;
-
-        // ========== Free Resource Buildings (castrolol) ==========
-
-        [Option("Fix Free Energy Generator wattage slider",
-            "When enabled and the Free Resource Buildings mod is loaded, the wattage slider on the Free Energy Generator actually controls power output (vanilla bug: slider had no effect).",
-            "Free Resource Buildings")]
-        [JsonProperty]
-        public bool FixFreeEnergyGeneratorSlider { get; set; } = true;
-
-        [Option("Add Power Sink building",
-            "When enabled and the Free Resource Buildings mod is loaded, adds a Power Sink building (the reverse of the Power Box) that consumes power at a configurable rate via a slider. " +
-            "Useful for testing power systems. Found in the Power category of the build menu.",
-            "Free Resource Buildings")]
-        [JsonProperty]
-        public bool AddPowerSinkBuilding { get; set; } = true;
 
         // ========== Add more mod option sections here ==========
 

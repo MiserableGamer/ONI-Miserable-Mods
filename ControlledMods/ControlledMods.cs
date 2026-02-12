@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using ControlledMods.ModDetection;
 using ControlledMods.Options;
 using ControlledMods.Patches;
-using ControlledMods.Patches.FreeResourceBuildings;
 using ControlledMods.Patches.ResourceSensor;
 using ControlledMods.Patches.UndergroundConduit;
 
@@ -66,14 +65,6 @@ namespace ControlledMods
 
             if (ResourceSensorDetection.Loaded && ControlledModsOptions.Instance.EnableResourceSensor)
                 ResourceSensorPatches.ApplyPatches(harmony);
-
-            if (FreeResourceBuildingsDetection.Loaded)
-            {
-                FreeEnergyGeneratorPatches.ApplyPatches(harmony);
-
-                if (ControlledModsOptions.Instance.AddPowerSinkBuilding)
-                    PowerSinkRegistrationPatches.ApplyPatches(harmony);
-            }
 
             Log("All conditional patches applied");
         }
