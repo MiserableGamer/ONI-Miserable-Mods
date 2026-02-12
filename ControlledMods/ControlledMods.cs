@@ -9,10 +9,7 @@ using UnityEngine;
 using ControlledMods.ModDetection;
 using ControlledMods.Options;
 using ControlledMods.Patches;
-using ControlledMods.Patches.FreeResourceBuildings;
-using ControlledMods.Patches.CustomizablePlants;
 using ControlledMods.Patches.ResourceSensor;
-using ControlledMods.Patches.SaveFileFixes;
 using ControlledMods.Patches.UndergroundConduit;
 
 namespace ControlledMods
@@ -105,23 +102,6 @@ namespace ControlledMods
 
             if (ResourceSensorDetection.Loaded && ControlledModsOptions.Instance.EnableResourceSensor)
                 ResourceSensorPatches.ApplyPatches(harmony);
-
-            if (FreeResourceBuildingsDetection.Loaded)
-            {
-                FreeEnergyGeneratorPatches.ApplyPatches(harmony);
-
-                if (ControlledModsOptions.Instance.AddPowerSinkBuilding)
-                    PowerSinkRegistrationPatches.ApplyPatches(harmony);
-            }
-
-            if (CustomizablePlantsDetection.Loaded && ControlledModsOptions.Instance.EnableCustomizablePlantsVineBranchMaxAge)
-                VineBranchMaxAgePatches.ApplyPatches(harmony);
-
-            if (EnableSaveFileFixes)
-            {
-                CustomModPathPatches.Apply(harmony);
-                SaveFileFixApplier.Apply(harmony);
-            }
 
             Log("All conditional patches applied");
         }
