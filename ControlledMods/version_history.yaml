@@ -1,12 +1,6 @@
 # Version history (version from mod_info.yaml)
 # Newest first.
 
-- version: "1.12.1"
-  summary: "Resource Sensor fix; pause menu restart with auto resume"
-  changes:
-    - "Fixed Resource Sensor bug; added pause menu restart with auto resume save file facility"
-  compatibility: ""
-
 - version: "1.2.0.55"
   summary: "Resource Sensor (Berkay's mod) integration"
   changes:
