@@ -17,7 +17,15 @@ namespace ControlledVisuals
             PUtil.InitLibrary();
 
             ConfigMigrationHelper.Migrate(ConfigMigrationHelper.OldConfigFolderName, ConfigMigrationHelper.NewConfigFolderName);
-            new POptions().RegisterOptions(this, typeof(CVOptions));
+            try
+            {
+                string path = POptions.GetConfigFilePath(typeof(ControlledVisualsOptions));
+                ConfigMigrationHelper.MigrateConfigFromFilePath(path);
+            }
+            catch { /* ignore */ }
+
+            // Initialize debug overlay (only active in DEBUG builds)
+            DevDebug.Init();
 
             // Conduit throttling patch remains disabled; only the active fixes are applied via PatchAll.
             // ConduitFlowVisualizerPatches.ApplyPatches(harmony);
