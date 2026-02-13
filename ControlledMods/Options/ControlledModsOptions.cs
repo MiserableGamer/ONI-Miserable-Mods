@@ -130,13 +130,6 @@ namespace ControlledMods.Options
         [JsonProperty]
         public bool EnableResourceSensor { get; set; } = true;
 
-        // Global mode is hidden for now; option commented out until Global is properly implemented.
-        // [Option("Show Global mode checkbox",
-        //     "When enabled, the Resource Sensor side screen shows the Global mode option. When disabled (default), the Global checkbox is hidden and cannot be selected.",
-        //     "Resource Sensor")]
-        // [JsonProperty("ResourceSensorShowGlobalMode")]
-        // public bool ResourceSensorShowGlobalMode { get; set; } = false;
-
         // ========== Add more mod option sections here ==========
 
         public ControlledModsOptions() { }
