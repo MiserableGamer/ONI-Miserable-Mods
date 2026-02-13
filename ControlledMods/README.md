@@ -11,7 +11,18 @@ Configure and improve behavior from supported ONI mods through a single in-game 
 
 ## Supported Mods
 
-### [Resource Sensor (Berkay's mod)](https://steamcommunity.com/sharedfiles/filedetails/?id=2911545239)
+### Resource Sensor (Berkay's mod)
+
+When the Resource Sensor mod is detected and the option is enabled:
+
+- **Sidescreen** - Three checkboxes: **Atmosphere**, **Storage**, **Conduits** (each can be toggled); "Include Storage Buildings" row hidden; Global mode disabled
+- **Counting** - Atmosphere (world + pickupables), any building with a Storage component, and gas/liquid/solid conduits, based on the checkboxes; category tags in the element filter are expanded to discovered resources
+- **Range visualizer** - Clears when the building is deselected (same behavior as switching to Room mode)
+- **Copy Settings** - Copies the Atmosphere / Storage / Conduits scope toggles
+
+Compatible with Berkay's Resource Sensor and ResourceSensorFIXED.
+
+### KIN Underground Conduit
 
 - Adds **Atmosphere / Storage / Conduits** scope controls
 - Improves counting (includes tile storage and conduit contents)
@@ -105,14 +116,6 @@ Please mention "ControlledMods" in your issue title or description.
 
 ## Version History
 
-- **1.8.1**: Fixed Line of Sight ranging of Duplicant Room Sensor
-- **1.8.0**: Enhanced functionality of Pholith's Duplicant Room Sensor
-- **1.7.0**: Added VineBranch max_age compatibility for Customizable Plants mod
-- **1.6.0**: Added colour visualisations to Logic Terminals for logic state
-- **1.5.1**: Fixed kanim loading bug
-- **1.5.0**: Free Resource Buildings – Free Energy Generator wattage slider now controls actual power output; Power Sink building added (configurable power consumer for testing)
-- **1.4.0**: Resource Sensor – Storage counting now includes tile-based storage (e.g. Storage Tiles) in both Distance and Room modes
-- **1.3.0**: Restart button on the main menu (above Quit) for quick restarts
-- **1.2.0**: Resource Sensor (Berkay's mod) – sidescreen with Atmosphere/Storage/Conduits scope checkboxes; counting for atmosphere, storage buildings, and conduits with category tag expansion; threshold max raised to 9,999,999 with units stripped; range visualizer clears on deselect; Copy Settings copies scope toggles; ControlledAutomation inversion support
+- **1.2.0.55**: Resource Sensor (Berkay's mod) – optional integration when detected: sidescreen with Atmosphere/Storage/Conduits checkboxes and hidden "Include Storage Buildings" row; counting for atmosphere, any storage building, and conduits (gas/liquid/solid) with category tag support; range visualizer clears on deselect; Copy Settings copies scope toggles
 - **1.1.0**: KIN Underground Conduit – Logic Terminal crash fix, Copy Settings for conduit terminals/senders/receivers
 - **1.0.0**: Initial release

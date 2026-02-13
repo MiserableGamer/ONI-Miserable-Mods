@@ -13,7 +13,15 @@ Configure and improve behavior from supported ONI mods through one in-game optio
 [h2]Supported Mods[/h2]
 
 [h3]Resource Sensor[/h3]
-Steam Workshop: [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2911545239]Resource Sensor[/url]
+When the Resource Sensor mod is detected and the option is enabled:
+[list]
+[*][b]Sidescreen[/b] - Three checkboxes: Atmosphere, Storage, Conduits (each can be toggled); "Include Storage Buildings" row hidden; Global mode disabled
+[*][b]Counting[/b] - Atmosphere (world + pickupables), any building with a Storage component, and gas/liquid/solid conduits, based on the checkboxes; category tags in the element filter are expanded to discovered resources
+[*][b]Range visualizer[/b] - Clears when the building is deselected (same behavior as switching to Room mode)
+[*][b]Copy Settings[/b] - Copies the Atmosphere / Storage / Conduits scope toggles
+[/list]
+
+[h3]KIN Underground Conduit[/h3]
 [list]
 [*]Adds Atmosphere / Storage / Conduits scope controls
 [*]Improves counting (including tile storage and conduit contents)
@@ -60,6 +68,13 @@ Steam Workshop: [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3347
 [*][b]Configure[/b] - Adjust settings
 [*][b]Restart[/b] - Restart game
 [/olist]
+
+[h3]Tips[/h3]
+[list]
+[*]Settings are grouped by target mod - expand each section to see available options
+[*]Hover over options for detailed descriptions and default values
+[*]Changes require a game restart to apply
+[/list]
 
 [h2]Compatibility[/h2]
 [list]
@@ -110,15 +125,7 @@ Please mention "ControlledMods" in your issue title or description.
 
 [h2]Version History[/h2]
 [list]
-[*][b]1.8.1[/b]: Fixed Line of Sight ranging of Duplicant Room Sensor
-[*][b]1.8.0[/b]: Pholith's Duplicant Room Sensor support added
-[*][b]1.7.0[/b]: Added VineBranch max_age compatibility for Customizable Plants mod
-[*][b]1.6.0[/b]: Added colour visualisations to Logic Terminals for logic state
-[*][b]1.5.1[/b]: Fixed kanim loading bug
-[*][b]1.5.0[/b]: Free Resource Buildings support added – PowerBox output slider now functions; Power Sink building added
-[*][b]1.4.0[/b]: Resource Sensor – Storage counting now includes tile-based storage
-[*][b]1.3.0[/b]: Restart button on the main menu (above Quit) for quick restarts
-[*][b]1.2.0[/b]: Resource Sensor support added
-[*][b]1.1.0[/b]: KIN Underground Conduit support added
+[*][b]1.2.0.55[/b]: Resource Sensor – optional integration when detected: sidescreen with Atmosphere/Storage/Conduits checkboxes and hidden "Include Storage Buildings" row; counting for atmosphere, any storage building, and conduits (gas/liquid/solid) with category tag support; range visualizer clears on deselect; Copy Settings copies scope toggles
+[*][b]1.1.0[/b]: KIN Underground Conduit – Logic Terminal crash fix, Copy Settings for conduit terminals/senders/receivers
 [*][b]1.0.0[/b]: Initial release
 [/list]
