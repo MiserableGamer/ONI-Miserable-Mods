@@ -15,6 +15,14 @@ namespace ControlledVisuals
             // Initialize PLib
             PUtil.InitLibrary();
 
+            ConfigMigrationHelper.Migrate(ConfigMigrationHelper.OldConfigFolderName, ConfigMigrationHelper.NewConfigFolderName);
+            try
+            {
+                string path = POptions.GetConfigFilePath(typeof(ControlledVisualsOptions));
+                ConfigMigrationHelper.MigrateConfigFromFilePath(path);
+            }
+            catch { /* ignore */ }
+
             // Initialize debug overlay (only active in DEBUG builds)
             DevDebug.Init();
 
