@@ -13,6 +13,15 @@ Configure and improve behavior from supported ONI mods through one in-game optio
 
 [h2]Supported Mods[/h2]
 
+[h3]Resource Sensor[/h3]
+When the Resource Sensor mod is detected and the option is enabled:
+[list]
+[*][b]Sidescreen[/b] - Three checkboxes: Atmosphere, Storage, Conduits (each can be toggled); "Include Storage Buildings" row hidden; Global mode disabled
+[*][b]Counting[/b] - Atmosphere (world + pickupables), any building with a Storage component, and gas/liquid/solid conduits, based on the checkboxes; category tags in the element filter are expanded to discovered resources
+[*][b]Range visualizer[/b] - Clears when the building is deselected (same behavior as switching to Room mode)
+[*][b]Copy Settings[/b] - Copies the Atmosphere / Storage / Conduits scope toggles
+[/list]
+
 [h3]KIN Underground Conduit[/h3]
 [list]
 [*][b]Fix Power Terminal and Logic Terminal crash[/b] - Prevents InvalidCastException when a logic wire is built in the same cell as a Power Terminal or Logic Terminal (optional, on by default)
@@ -68,6 +77,13 @@ Steam Workshop: [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2883
 [*][b]Restart[/b] - Restart the game for changes to take effect
 [/olist]
 
+[h3]Tips[/h3]
+[list]
+[*]Settings are grouped by target mod - expand each section to see available options
+[*]Hover over options for detailed descriptions and default values
+[*]Changes require a game restart to apply
+[/list]
+
 [h2]Compatibility[/h2]
 [list]
 [*][b]Oxygen Not Included[/b] - Build 700386+
@@ -121,6 +137,7 @@ Please mention "ControlledMods" in your issue title or description.
 
 [h2]Version History[/h2]
 [list]
+[*][b]1.2.0.55[/b]: Resource Sensor – optional integration when detected: sidescreen with Atmosphere/Storage/Conduits checkboxes and hidden "Include Storage Buildings" row; counting for atmosphere, any storage building, and conduits (gas/liquid/solid) with category tag support; range visualizer clears on deselect; Copy Settings copies scope toggles
 [*][b]1.1.0[/b]: KIN Underground Conduit – Logic Terminal crash fix, Copy Settings for conduit terminals/senders/receivers
 [*][b]1.0.0[/b]: Initial release
 [/list]
