@@ -17,25 +17,50 @@ namespace ControlledMods.Options
         {
             get
             {
-                if (_instance == null)
+                try
                 {
-                    _instance = POptions.ReadSettings<ControlledModsOptions>() ?? new ControlledModsOptions();
-                    // Options missing from the config file (e.g. after an update) default to off
-                    DefaultMissingOptionsToOff(_instance);
+                    string plibPath = POptions.GetConfigFilePath(typeof(ControlledModsOptions));
+                    ConfigMigrationHelper.MigrateConfigFromFilePath(plibPath);
                 }
-                return _instance;
+                catch { /* ignore */ }
+                var instance = ReadFromCanonicalPath() ?? POptions.ReadSettings<ControlledModsOptions>() ?? new ControlledModsOptions();
+                DefaultMissingOptionsToOff(instance);
+                return instance;
+            }
+        }
+
+        /// <summary>Read options from the canonical config path (ControlledMods folder, not ControlledMods.dll)
+        /// so we never create or use the .dll folder.</summary>
+        private static ControlledModsOptions ReadFromCanonicalPath()
+        {
+            string path = null;
+            try
+            {
+                path = ConfigMigrationHelper.GetCanonicalConfigPath(POptions.GetConfigFilePath(typeof(ControlledModsOptions)));
+            }
+            catch { /* no path */ }
+            if (string.IsNullOrEmpty(path) || !File.Exists(path))
+                return null;
+            try
+            {
+                return JsonConvert.DeserializeObject<ControlledModsOptions>(File.ReadAllText(path));
+            }
+            catch
+            {
+                return null;
             }
         }
 
         // When config file exists but is from an older version, any option not present in the file is treated as disabled.
-        // We then write the updated settings back so the config file contains all keys; this ensures new options (e.g. EnableResourceSensor)
-        // appear in the Mod Options dialog when PLib builds the list from the file.
+        // We merge missing keys into the existing file (instead of overwriting) so we never wipe values PLib may have
+        // saved under different key names (e.g. after the user enables an option and the game restarts).
+        // All reads/writes use the canonical path (ControlledMods, not ControlledMods.dll) so the .dll folder is never created.
         private static void DefaultMissingOptionsToOff(ControlledModsOptions instance)
         {
             string path = null;
             try
             {
-                path = POptions.GetConfigFilePath(typeof(ControlledModsOptions));
+                path = ConfigMigrationHelper.GetCanonicalConfigPath(POptions.GetConfigFilePath(typeof(ControlledModsOptions)));
             }
             catch { /* no path */ }
             if (string.IsNullOrEmpty(path) || !File.Exists(path))
@@ -61,6 +86,7 @@ namespace ControlledMods.Options
                 if (jo[key] == null)
                 {
                     prop.SetValue(instance, false);
+                    jo[key] = false;
                     anyMissing = true;
                 }
             }
@@ -71,7 +97,7 @@ namespace ControlledMods.Options
                     var dir = Path.GetDirectoryName(path);
                     if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
                         Directory.CreateDirectory(dir);
-                    File.WriteAllText(path, JsonConvert.SerializeObject(instance, Formatting.Indented));
+                    File.WriteAllText(path, JsonConvert.SerializeObject(jo, Formatting.Indented));
                 }
                 catch (Exception ex)
                 {
@@ -99,10 +125,17 @@ namespace ControlledMods.Options
         // ========== Resource Sensor (Berkay) ==========
 
         [Option("Apply fixes to Resource Sensor",
-            "When enabled and Berkay's Resource Sensor mod is loaded, applies the same fixes as ResourceSensorFIXED: range visualization clears on deselect, liquids and gases support, and sidescreen without Global option.",
+            "When enabled and Berkay's Resource Sensor mod is loaded, applies the fixes: range visualization clears on deselect, liquids and gases support, and sidescreen options.",
             "Resource Sensor")]
         [JsonProperty]
         public bool EnableResourceSensor { get; set; } = true;
+
+        // Global mode is hidden for now; option commented out until Global is properly implemented.
+        // [Option("Show Global mode checkbox",
+        //     "When enabled, the Resource Sensor side screen shows the Global mode option. When disabled (default), the Global checkbox is hidden and cannot be selected.",
+        //     "Resource Sensor")]
+        // [JsonProperty("ResourceSensorShowGlobalMode")]
+        // public bool ResourceSensorShowGlobalMode { get; set; } = false;
 
         // ========== Add more mod option sections here ==========
 
