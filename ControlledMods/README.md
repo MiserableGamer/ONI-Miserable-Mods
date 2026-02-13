@@ -11,6 +11,17 @@ Customize and override settings from other mods via an in-game options menu. Tak
 
 ## Supported Mods
 
+### Resource Sensor (Berkay's mod)
+
+When the Resource Sensor mod is detected and the option is enabled:
+
+- **Sidescreen** - Three checkboxes: **Atmosphere**, **Storage**, **Conduits** (each can be toggled); "Include Storage Buildings" row hidden; Global mode disabled
+- **Counting** - Atmosphere (world + pickupables), any building with a Storage component, and gas/liquid/solid conduits, based on the checkboxes; category tags in the element filter are expanded to discovered resources
+- **Range visualizer** - Clears when the building is deselected (same behavior as switching to Room mode)
+- **Copy Settings** - Copies the Atmosphere / Storage / Conduits scope toggles
+
+Compatible with Berkay's Resource Sensor and ResourceSensorFIXED.
+
 ### KIN Underground Conduit
 
 - **Fix Power Terminal and Logic Terminal crash** - Prevents InvalidCastException when a logic wire is built in the same cell as a Power Terminal or Logic Terminal (optional, on by default)
@@ -93,5 +104,6 @@ This mod is part of the [ONI 200+ Ultimate Mods collection](https://steamcommuni
 
 ## Version History
 
+- **1.2.0.55**: Resource Sensor (Berkay's mod) – optional integration when detected: sidescreen with Atmosphere/Storage/Conduits checkboxes and hidden "Include Storage Buildings" row; counting for atmosphere, any storage building, and conduits (gas/liquid/solid) with category tag support; range visualizer clears on deselect; Copy Settings copies scope toggles
 - **1.1.0**: KIN Underground Conduit – Logic Terminal crash fix, Copy Settings for conduit terminals/senders/receivers
 - **1.0.0**: Initial release

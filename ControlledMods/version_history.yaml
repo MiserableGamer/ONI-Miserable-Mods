@@ -1,0 +1,21 @@
+# Version history (version from mod_info.yaml)
+# Newest first.
+
+- version: "1.2.0.55"
+  summary: "Resource Sensor (Berkay's mod) integration"
+  changes:
+    - "Sidescreen: Atmosphere / Storage / Conduits checkboxes; 'Include Storage Buildings' row hidden; Global mode disabled"
+    - "Counting: atmosphere, any storage building, gas/liquid/solid conduits; category tags in element filter expanded to discovered resources"
+    - "Range visualizer clears when building is deselected (same path as switching to Room mode)"
+    - "Copy Settings copies Atmosphere / Storage / Conduits scope toggles"
+  compatibility: "Berkay's Resource Sensor and ResourceSensorFIXED"
+
+- version: "1.1.0"
+  summary: "KIN Underground Conduit support"
+  changes:
+    - "Fix Power Terminal and Logic Terminal crash (InvalidCastException with logic wire in same cell)"
+    - "Copy Settings for conduit terminals, senders, and receivers (channel copied)"
+
+- version: "1.0.0"
+  summary: "Initial release"
+  changes: []
