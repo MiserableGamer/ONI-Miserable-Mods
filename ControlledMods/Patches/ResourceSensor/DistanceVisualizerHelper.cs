@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Reflection;
 using HarmonyLib;
 using PeterHan.PLib.Buildings;
 using UnityEngine;
@@ -12,25 +11,6 @@ namespace ControlledMods.ResourceSensor
     /// </summary>
     public static class DistanceVisualizerHelper
     {
-        private static Type _cachedSensorType;
-        private static FieldInfo _cachedVisualizerField;
-        private static FieldInfo _cachedVisCellsField;
-        private static MethodInfo _cachedRefreshMethod;
-        private static bool _reflectionResolved;
-
-        private static bool ResolveReflection()
-        {
-            if (_reflectionResolved) return _cachedSensorType != null;
-            _reflectionResolved = true;
-
-            _cachedSensorType = AccessTools.TypeByName("ResourceSensor.LogicResourceSensor")
-                ?? AccessTools.TypeByName("ResourceSensorFIXED.LogicResourceSensor");
-            if (_cachedSensorType == null) return false;
-
-            _cachedVisualizerField = AccessTools.Field(_cachedSensorType, "visualizer");
-            return true;
-        }
-
         /// <summary>
         /// Same as when switching to Room mode: get the sensor's visualizer and do visCells.Clear() + Refresh().
         /// This is the exact logic that makes the visualizer disappear when you toggle mode.
@@ -40,29 +20,24 @@ namespace ControlledMods.ResourceSensor
             if (building == null) return;
             try
             {
-                if (!ResolveReflection()) return;
-
-                object sensor = building.GetComponent(_cachedSensorType);
+                object sensor = null;
+                Type sensorType = AccessTools.TypeByName("ResourceSensor.LogicResourceSensor")
+                    ?? AccessTools.TypeByName("ResourceSensorFIXED.LogicResourceSensor");
+                if (sensorType != null)
+                    sensor = building.GetComponent(sensorType);
                 if (sensor == null) return;
 
-                object visualizer = _cachedVisualizerField?.GetValue(sensor);
+                var visualizerField = AccessTools.Field(sensor.GetType(), "visualizer");
+                object visualizer = visualizerField?.GetValue(sensor);
                 if (visualizer == null) return;
 
-                if (_cachedVisCellsField == null)
-                {
-                    var vizType = visualizer.GetType();
-                    _cachedVisCellsField = AccessTools.Field(vizType, "visCells")
-                        ?? AccessTools.Field(vizType, "m_visCells");
-                }
-                if (_cachedRefreshMethod == null)
-                {
-                    _cachedRefreshMethod = AccessTools.Method(visualizer.GetType(), "Refresh")
-                        ?? AccessTools.Method(typeof(ColoredRangeVisualizer), "CreateVisualizers");
-                }
-
-                var list = _cachedVisCellsField?.GetValue(visualizer) as IList;
+                var visCellsField = AccessTools.Field(visualizer.GetType(), "visCells") ?? AccessTools.Field(visualizer.GetType(), "m_visCells");
+                var list = visCellsField?.GetValue(visualizer) as IList;
                 list?.Clear();
-                _cachedRefreshMethod?.Invoke(visualizer, null);
+                var refreshMethod = AccessTools.Method(visualizer.GetType(), "Refresh");
+                if (refreshMethod == null)
+                    refreshMethod = AccessTools.Method(typeof(ColoredRangeVisualizer), "CreateVisualizers");
+                refreshMethod?.Invoke(visualizer, null);
             }
             catch (Exception ex)
             {
