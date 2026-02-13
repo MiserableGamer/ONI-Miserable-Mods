@@ -4,9 +4,41 @@ using UnityEngine;
 
 // One-time migration: renames old "{AssemblyName}.dll" folders to the correct name
 // (e.g. after adding staticID to mod.yaml). Runs in both config and mods folders.
+// We also canonicalize config paths so all reads/writes use the non-.dll folder,
+// preventing the .dll folder from being recreated by PLib or our code.
 // Safe to remove once all users have migrated (a few releases after the fix).
 internal static class ConfigMigrationHelper
 {
+    internal const string OldConfigFolderName = "ControlledMods.dll";
+    internal const string NewConfigFolderName = "ControlledMods";
+    /// <summary>Must match [ConfigFile("ControlledMods.json", ...)] in ControlledModsOptions.</summary>
+    internal const string ConfigFileName = "ControlledMods.json";
+
+    /// <summary>Returns the config file path that uses the non-.dll folder.
+    /// Use this for all config file reads and writes so the .dll folder is never created.</summary>
+    internal static string GetCanonicalConfigPath(string configFilePath)
+    {
+        if (string.IsNullOrEmpty(configFilePath))
+            return configFilePath;
+        return configFilePath.Replace(OldConfigFolderName, NewConfigFolderName);
+    }
+
+    /// <summary>Runs config migration in the directory where the config file actually lives
+    /// (e.g. from PLib), so we merge .dll into ControlledMods even if it's under Documents.
+    /// Call this when first resolving the config path.</summary>
+    internal static void MigrateConfigFromFilePath(string configFilePath)
+    {
+        if (string.IsNullOrEmpty(configFilePath))
+            return;
+        string configFolder = Path.GetDirectoryName(configFilePath);
+        if (string.IsNullOrEmpty(configFolder))
+            return;
+        string parentDir = Path.GetDirectoryName(configFolder);
+        if (string.IsNullOrEmpty(parentDir))
+            return;
+        MigrateInDirectory(parentDir, OldConfigFolderName, NewConfigFolderName, isConfig: true);
+    }
+
     /// <summary>Runs config-folder and mods-folder migration. Call from OnLoad.</summary>
     internal static void Migrate(string oldFolderName, string newFolderName)
     {
@@ -59,18 +91,20 @@ internal static class ConfigMigrationHelper
                 return true;
             }
 
-            // Both exist — for config, merge config.json; for mods, copy any files from old into new then remove old
+            // Both exist — for config, merge the actual config file; for mods, copy any files from old into new then remove old
             if (isConfig)
             {
-                string oldConfig = Path.Combine(oldDir, "config.json");
-                string newConfig = Path.Combine(newDir, "config.json");
+                string oldConfig = Path.Combine(oldDir, ConfigFileName);
+                string newConfig = Path.Combine(newDir, ConfigFileName);
                 if (File.Exists(oldConfig))
                 {
                     if (!File.Exists(newConfig) ||
                         File.GetLastWriteTimeUtc(oldConfig) > File.GetLastWriteTimeUtc(newConfig))
                     {
+                        if (!Directory.Exists(newDir))
+                            Directory.CreateDirectory(newDir);
                         File.Copy(oldConfig, newConfig, true);
-                        Debug.Log($"[ConfigMigration] Copied newer config from '{oldFolderName}' -> '{newFolderName}'");
+                        Debug.Log($"[ConfigMigration] Copied config from '{oldFolderName}' -> '{newFolderName}'");
                     }
                 }
             }
