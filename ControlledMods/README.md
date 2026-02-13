@@ -16,21 +16,12 @@ Customize and override settings from other mods via an in-game options menu. Tak
 
 When the Resource Sensor mod is detected and the option is enabled:
 
-- **Sidescreen** - Three scope checkboxes: **Atmosphere**, **Storage**, **Conduits** (each can be toggled independently); "Include Storage Buildings" row hidden; Global mode row hidden
-- **Counting** - Atmosphere (cell element + pickupables), any building with a Storage component (including tile-based storage like Storage Tiles), and gas/liquid/solid conduits, based on the scope checkboxes; category tags in the element filter are expanded to discovered resources
-- **Threshold** - Max raised to 9,999,999; units stripped from the threshold display (no "kg" in textbox or tooltips); input character limit raised to 8
+- **Sidescreen** - Three checkboxes: **Atmosphere**, **Storage**, **Conduits** (each can be toggled); "Include Storage Buildings" row hidden; Global mode disabled
+- **Counting** - Atmosphere (world + pickupables), any building with a Storage component, and gas/liquid/solid conduits, based on the checkboxes; category tags in the element filter are expanded to discovered resources
 - **Range visualizer** - Clears when the building is deselected (same behavior as switching to Room mode)
 - **Copy Settings** - Copies the Atmosphere / Storage / Conduits scope toggles
-- **Inversion** - When ControlledAutomation is loaded with inversion enabled, the invert checkbox appears on the Resource Sensor
 
 Compatible with Berkay's Resource Sensor and ResourceSensorFIXED.
-
-### Free Resource Buildings (castrolol's mod)
-
-When the Free Resource Buildings mod is detected and the option is enabled:
-
-- **Free Energy Generator wattage slider fix** - The sidescreen wattage slider now actually controls power output (the original mod's slider changes a value that is never read for generation)
-- **Power Sink building** - Adds a Power Sink to the Power build menu (reverse of the Power Box): a 1×1 building that consumes power at a configurable rate via a sidescreen slider (0–40,000 W). Useful for testing power systems. Uses a red-tinted Power Box animation to distinguish it visually
 
 ### KIN Underground Conduit
 
@@ -114,9 +105,6 @@ This mod is part of the [ONI 200+ Ultimate Mods collection](https://steamcommuni
 
 ## Version History
 
-- **1.5.0**: Free Resource Buildings – Free Energy Generator wattage slider now controls actual power output; Power Sink building added (configurable power consumer for testing)
-- **1.4.0**: Resource Sensor – Storage counting now includes tile-based storage (e.g. Storage Tiles) in both Distance and Room modes
-- **1.3.0**: Restart button on the main menu (above Quit) for quick restarts
-- **1.2.0**: Resource Sensor (Berkay's mod) – sidescreen with Atmosphere/Storage/Conduits scope checkboxes; counting for atmosphere, storage buildings, and conduits with category tag expansion; threshold max raised to 9,999,999 with units stripped; range visualizer clears on deselect; Copy Settings copies scope toggles; ControlledAutomation inversion support
+- **1.2.0.55**: Resource Sensor (Berkay's mod) – optional integration when detected: sidescreen with Atmosphere/Storage/Conduits checkboxes and hidden "Include Storage Buildings" row; counting for atmosphere, any storage building, and conduits (gas/liquid/solid) with category tag support; range visualizer clears on deselect; Copy Settings copies scope toggles
 - **1.1.0**: KIN Underground Conduit – Logic Terminal crash fix, Copy Settings for conduit terminals/senders/receivers
 - **1.0.0**: Initial release
