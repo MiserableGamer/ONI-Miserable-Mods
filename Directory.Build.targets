@@ -25,7 +25,7 @@
 
   <!-- Post-build: ILRepack to merge PLib into main DLL.
     We output directly to $(TargetPath) using a copy of the primary so the merged assembly
-    keeps AssemblyName "LongerArms" (not "LongerArms.dll"). PLib uses GetName().Name
+    keeps AssemblyName "ControlledMods" (not "ControlledMods.dll"). PLib uses GetName().Name
     for the mod identity and config path; /out:...dll.merged was causing the .dll suffix. -->
   <Target Name="ILRepackMerge" AfterTargets="Build" Condition="Exists('$(TargetDir)PLib.dll')">
     <Message Text="[Build] Merging PLib.dll into $(TargetFileName)" Importance="high" />
