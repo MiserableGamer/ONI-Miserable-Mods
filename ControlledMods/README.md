@@ -12,45 +12,18 @@ Customize and override settings from other mods via an in-game options menu. Tak
 
 ## Supported Mods
 
-### [Resource Sensor (Berkay's mod)](https://steamcommunity.com/sharedfiles/filedetails/?id=2911545239)
+### Resource Sensor (Berkay's mod)
 
 When the Resource Sensor mod is detected and the option is enabled:
 
-- **Sidescreen** - Three scope checkboxes: **Atmosphere**, **Storage**, **Conduits** (each can be toggled independently); "Include Storage Buildings" row hidden; Global mode row hidden
-- **Counting** - Atmosphere (cell element + pickupables), any building with a Storage component (including tile-based storage like Storage Tiles), and gas/liquid/solid conduits, based on the scope checkboxes; category tags in the element filter are expanded to discovered resources
-- **Threshold** - Max raised to 9,999,999; units stripped from the threshold display (no "kg" in textbox or tooltips); input character limit raised to 8
+- **Sidescreen** - Three checkboxes: **Atmosphere**, **Storage**, **Conduits** (each can be toggled); "Include Storage Buildings" row hidden; Global mode disabled
+- **Counting** - Atmosphere (world + pickupables), any building with a Storage component, and gas/liquid/solid conduits, based on the checkboxes; category tags in the element filter are expanded to discovered resources
 - **Range visualizer** - Clears when the building is deselected (same behavior as switching to Room mode)
 - **Copy Settings** - Copies the Atmosphere / Storage / Conduits scope toggles
-- **Inversion** - When ControlledAutomation is loaded with inversion enabled, the invert checkbox appears on the Resource Sensor
 
 Compatible with Berkay's Resource Sensor and ResourceSensorFIXED.
 
-### [Free Resource Buildings (castrolol's mod)](https://steamcommunity.com/sharedfiles/filedetails/?id=2839006500)
-
-When the Free Resource Buildings mod is detected and the option is enabled:
-
-- **Free Energy Generator wattage slider fix** - The sidescreen wattage slider now actually controls power output (the original mod's slider changes a value that is never read for generation)
-- **Power Sink building** - Adds a Power Sink to the Power build menu (reverse of the Power Box): a 1×1 building that consumes power at a configurable rate via a sidescreen slider (0–40,000 W). Useful for testing power systems. Uses a red-tinted Power Box animation to distinguish it visually
-
-### [Customize Plants](https://steamcommunity.com/sharedfiles/filedetails/?id=1818145851)
-
-When the Customize Plants mod is detected and the option is enabled:
-
-- **VineBranch max_age** – The mod’s `max_age` setting (e.g. 1 for instant fruit drop) is applied to Vine Branch (ovagro). Vanilla Customize Plants only applies max_age to plants with StandardCropPlant; vine branches use a different system, so this patch reads your config and applies it to vine branches. Option is off by default.
-
-### [Duplicant Room Sensor (Pholith's mod)](https://steamcommunity.com/sharedfiles/filedetails/?id=1921058858)
-
-When the Duplicant Room Sensor mod is detected and the option is enabled:
-
-- **Range Limit** - Per-sensor toggle to restrict detection to a configurable range instead of the entire room; ideal for corridors
-- **Range Input** - Adjustable range (1–64 cells) via sidescreen textbox and arrow buttons
-- **Wall & Door Blocking** - Range-limited detection respects walls and closed doors; duplicants behind obstacles are not counted
-- **Room Bounded** - Even with range enabled, detection never extends beyond the sensor's room boundary
-- **ShowRange Visualization** - When Peter Han's ShowRange mod is installed, the configured range is visualized on selection
-- **Copy Settings** - Copies range toggle and range value between sensors
-- **Threshold & Above/Below** - Works with the existing duplicant count threshold and above/below logic
-
-### [KIN Underground Conduit](https://steamcommunity.com/sharedfiles/filedetails/?id=3347169088)
+### KIN Underground Conduit
 
 - **Fix Power Terminal and Logic Terminal crash** - Prevents InvalidCastException when a logic wire is built in the same cell as a Power Terminal or Logic Terminal (optional, on by default)
 - **Copy Settings** - Enables the vanilla Copy Settings tool for conduit terminals, senders, and receivers; channel is copied when you paste settings
@@ -134,13 +107,6 @@ Please mention "ControlledMods" in your issue title or description.
 
 ## Version History
 
-- **1.8.0**: Enhanced functionality of Pholith's Duplicant Room Sensor
-- **1.7.0**: Added VineBranch max_age compatibility for Customizable Plants mod
-- **1.6.0**: Added colour visualisations to Logic Terminals for logic state
-- **1.5.1**: Fixed kanim loading bug
-- **1.5.0**: Free Resource Buildings – Free Energy Generator wattage slider now controls actual power output; Power Sink building added (configurable power consumer for testing)
-- **1.4.0**: Resource Sensor – Storage counting now includes tile-based storage (e.g. Storage Tiles) in both Distance and Room modes
-- **1.3.0**: Restart button on the main menu (above Quit) for quick restarts
-- **1.2.0**: Resource Sensor (Berkay's mod) – sidescreen with Atmosphere/Storage/Conduits scope checkboxes; counting for atmosphere, storage buildings, and conduits with category tag expansion; threshold max raised to 9,999,999 with units stripped; range visualizer clears on deselect; Copy Settings copies scope toggles; ControlledAutomation inversion support
+- **1.2.0.55**: Resource Sensor (Berkay's mod) – optional integration when detected: sidescreen with Atmosphere/Storage/Conduits checkboxes and hidden "Include Storage Buildings" row; counting for atmosphere, any storage building, and conduits (gas/liquid/solid) with category tag support; range visualizer clears on deselect; Copy Settings copies scope toggles
 - **1.1.0**: KIN Underground Conduit – Logic Terminal crash fix, Copy Settings for conduit terminals/senders/receivers
 - **1.0.0**: Initial release
