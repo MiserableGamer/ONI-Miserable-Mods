@@ -12,8 +12,6 @@ namespace ControlledAssignments.Patches
         {
             __instance.AssignableSlots.Add(new OwnableSlot(AssignmentConstants.ShowerSlotId, AssignmentConstants.ShowerSlotName));
             __instance.AssignableSlots.Add(new OwnableSlot(AssignmentConstants.SinkSlotId, AssignmentConstants.SinkSlotName));
-            __instance.AssignableSlots.Add(new OwnableSlot(AssignmentConstants.LubricationStationSlotId, AssignmentConstants.LubricationStationSlotName));
-            __instance.AssignableSlots.Add(new OwnableSlot(AssignmentConstants.ExerciserSlotId, AssignmentConstants.ExerciserSlotName));
         }
     }
 }
