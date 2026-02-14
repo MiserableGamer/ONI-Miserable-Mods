@@ -7,5 +7,8 @@ namespace ControlledAssignments
 
         public const string SinkSlotId = "Sink";
         public const string SinkSlotName = "Sink";
+
+        public const string LubricationStationSlotId = "LubricationStation";
+        public const string LubricationStationSlotName = "Lubrication Station";
     }
 }
