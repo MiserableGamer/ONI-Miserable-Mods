@@ -85,7 +85,6 @@ namespace ControlledMods
             // Apply patches that don't depend on other mods
             OptionsDialogPatch.ApplyPatch(harmony);
             MainMenuPatches.ApplyPatch(harmony);
-            DebugPaintElementScreenPatches.ApplyPatches(harmony);
 
             Log("Mod loaded - waiting for OnAllModsLoaded to detect target mods");
         }
