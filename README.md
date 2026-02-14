@@ -37,7 +37,7 @@ Control which item categories appear as Standard vs Non-Standard in storage filt
 
 [📖 Read More](ControlledFiltering/README.md) | [Latest Release v1.0.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledFiltering-v1.0.0)
 
-### 🎛️ ControlledMods
+### 🎛️ Controlled Mods
 A framework for customizing and overriding settings from other mods via an in-game options menu. Currently in development - support for various mods will be added in future updates.
 
 [📖 Read More](ControlledMods/README.md) | [Latest Release v1.2.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledMods-v1.2.0)
