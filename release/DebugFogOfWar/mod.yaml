@@ -1,4 +1,5 @@
 title: Debug Fog of War
 description: Prevents fog of war from being removed when debug mode is activated.
+staticID: MiserableGamer.DebugFogOfWar
 supportedContent: ALL
 
