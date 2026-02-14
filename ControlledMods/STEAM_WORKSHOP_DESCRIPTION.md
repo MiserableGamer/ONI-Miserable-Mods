@@ -8,6 +8,7 @@ Customize and override settings from other mods via an in-game options menu. Tak
 [*][b]Restart Button[/b] - Adds a Restart button to the main menu (above Quit) for quick game restarts after changing mods or settings
 [*][b]Smart Detection[/b] - Options only apply if the target mod is detected and enabled
 [*][b]No Dependencies[/b] - Works independently; target mods are optional, not required
+[*][b]Persistent Settings[/b] - Configuration saved between game sessions
 [/list]
 
 [h2]Supported Mods[/h2]
