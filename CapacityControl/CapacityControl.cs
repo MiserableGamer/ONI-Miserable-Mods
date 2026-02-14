@@ -11,6 +11,7 @@ namespace CapacityControl
 		{
 			base.OnLoad(harmony);
 			PUtil.InitLibrary();
+			ConfigMigrationHelper.Migrate("CapacityControl.dll", "CapacityControl");
 
 			// Register options with shared config location
 			var options = new POptions();
