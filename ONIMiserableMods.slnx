@@ -24,4 +24,6 @@
 
 
   <Project Path="SkillsAndStatsProgressFIXED/SkillsAndStatsProgressFIXED.csproj" Id="aaa2edd7-af81-4ab0-b77d-2eeb8d1db651" />
+
+  <Project Path="AdvancedWattageSensor/AdvancedWattageSensor.csproj" Id="02fa1c65-bc86-439d-83fe-cef1ce2a3992" />
 </Solution>
