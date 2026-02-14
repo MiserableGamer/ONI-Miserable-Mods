@@ -52,8 +52,9 @@ namespace ControlledMods.Options
         }
 
         // When config file exists but is from an older version, any option not present in the file is treated as disabled.
-        // We then write the updated settings back so the config file contains all keys; this ensures new options (e.g. EnableResourceSensor)
-        // appear in the Mod Options dialog when PLib builds the list from the file.
+        // We merge missing keys into the existing file (instead of overwriting) so we never wipe values PLib may have
+        // saved under different key names (e.g. after the user enables an option and the game restarts).
+        // All reads/writes use the canonical path (ControlledMods, not ControlledMods.dll) so the .dll folder is never created.
         private static void DefaultMissingOptionsToOff(ControlledModsOptions instance)
         {
             string path = null;
@@ -85,6 +86,7 @@ namespace ControlledMods.Options
                 if (jo[key] == null)
                 {
                     prop.SetValue(instance, false);
+                    jo[key] = false;
                     anyMissing = true;
                 }
             }
@@ -95,7 +97,7 @@ namespace ControlledMods.Options
                     var dir = Path.GetDirectoryName(path);
                     if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
                         Directory.CreateDirectory(dir);
-                    File.WriteAllText(path, JsonConvert.SerializeObject(instance, Formatting.Indented));
+                    File.WriteAllText(path, JsonConvert.SerializeObject(jo, Formatting.Indented));
                 }
                 catch (Exception ex)
                 {
@@ -123,7 +125,7 @@ namespace ControlledMods.Options
         // ========== Resource Sensor (Berkay) ==========
 
         [Option("Apply fixes to Resource Sensor",
-            "When enabled and Berkay's Resource Sensor mod is loaded, applies the same fixes as ResourceSensorFIXED: range visualization clears on deselect, liquids and gases support, and sidescreen without Global option.",
+            "When enabled and Berkay's Resource Sensor mod is loaded, applies the fixes: range visualization clears on deselect, liquids and gases support, and sidescreen options.",
             "Resource Sensor")]
         [JsonProperty]
         public bool EnableResourceSensor { get; set; } = true;

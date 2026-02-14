@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using HarmonyLib;
 using PeterHan.PLib.Buildings;
 using UnityEngine;
+using UnityEngine.UI;
 using ControlledMods.ModDetection;
 using ControlledMods.Options;
 using ControlledMods.ResourceSensor;
@@ -25,7 +26,7 @@ namespace ControlledMods.Patches.ResourceSensor
             var opts = ControlledModsOptions.Instance;
             if (!opts.EnableResourceSensor) return;
 
-            // 1) ResourceSensor.ResourceSensorSideScreen - keep Berkay's UI, but disable Global mode (and any stray Count Eggs)
+            // Berkay's ResourceSensorSideScreen patches (Global hidden, Include Storage replaced with our scope toggles)
             var theirSideScreenType = AccessTools.TypeByName("ResourceSensor.ResourceSensorSideScreen")
                 ?? FindTypeInAssembly("ResourceSensor", "ResourceSensor.ResourceSensorSideScreen");
             if (theirSideScreenType != null)
@@ -42,55 +43,79 @@ namespace ControlledMods.Patches.ResourceSensor
                 if (theirOnSpawn != null)
                     harmony.Patch(theirOnSpawn, postfix: new HarmonyMethod(typeof(ResourceSensorSideScreen_OnSpawn_Patch), nameof(ResourceSensorSideScreen_OnSpawn_Patch.Postfix)));
 
-                // Prevent toggling to Global Mode from the UI
-                var toggleGlobal = AccessTools.Method(theirSideScreenType, "ToggleGlobal", Type.EmptyTypes);
-                if (toggleGlobal != null)
-                    harmony.Patch(toggleGlobal, prefix: new HarmonyMethod(typeof(ResourceSensorSideScreen_ToggleGlobal_Patch), nameof(ResourceSensorSideScreen_ToggleGlobal_Patch.Prefix)));
-
-                // Sync our Storage checkbox when Berkay's Include Storage is toggled (if that row is ever used)
+                // Sync our Storage checkbox when Berkay's Include Storage is toggled
                 var toggleCountStorage = AccessTools.Method(theirSideScreenType, "ToggleCountStorage", Type.EmptyTypes);
                 if (toggleCountStorage != null)
                     harmony.Patch(toggleCountStorage, postfix: new HarmonyMethod(typeof(ResourceSensorSideScreen_ToggleCountStorage_Patch), nameof(ResourceSensorSideScreen_ToggleCountStorage_Patch.Postfix)));
+
+                // Re-hide Include Storage row after Distance/Room toggle (their UI refresh can make it reappear)
+                var toggleDistance = AccessTools.Method(theirSideScreenType, "ToggleDistance", Type.EmptyTypes);
+                if (toggleDistance != null)
+                    harmony.Patch(toggleDistance, postfix: new HarmonyMethod(typeof(ResourceSensorSideScreen_ToggleDistance_Patch), nameof(ResourceSensorSideScreen_ToggleDistance_Patch.Postfix)));
+                var toggleRoom = AccessTools.Method(theirSideScreenType, "ToggleRoom", Type.EmptyTypes);
+                if (toggleRoom != null)
+                    harmony.Patch(toggleRoom, postfix: new HarmonyMethod(typeof(ResourceSensorSideScreen_ToggleRoom_Patch), nameof(ResourceSensorSideScreen_ToggleRoom_Patch.Postfix)));
             }
 
-            // 2) ThresholdSwitchSideScreen.SetTarget - character limit 8 for their sensor (if the vanilla threshold UI ever shows)
+            // Raise threshold input character limit from 6 to 8 (SetTarget + UpdateTargetThresholdLabel so it sticks)
             var thresholdType = typeof(ThresholdSwitchSideScreen);
             var thresholdSetTarget = AccessTools.Method(thresholdType, "SetTarget", new[] { typeof(GameObject) });
             if (thresholdSetTarget != null)
                 harmony.Patch(thresholdSetTarget, postfix: new HarmonyMethod(typeof(ThresholdSwitchSideScreen_SetTarget_Patch), nameof(ThresholdSwitchSideScreen_SetTarget_Patch.Postfix)));
+            var updateLabel = AccessTools.Method(thresholdType, "UpdateTargetThresholdLabel", Type.EmptyTypes);
+            if (updateLabel != null)
+                harmony.Patch(updateLabel, postfix: new HarmonyMethod(typeof(ThresholdSwitchSideScreen_UpdateTargetThresholdLabel_Patch), nameof(ThresholdSwitchSideScreen_UpdateTargetThresholdLabel_Patch.Postfix)));
 
-            // 3) ColoredRangeVisualizer.OnSpawn - subscribe to SelectObject and clear on deselect
+            // Clear range overlay on deselect
             var coloredType = typeof(ColoredRangeVisualizer);
             var onSpawn = AccessTools.Method(coloredType, "OnSpawn");
             if (onSpawn != null)
                 harmony.Patch(onSpawn, postfix: new HarmonyMethod(typeof(ColoredRangeVisualizer_OnSpawn_Patch), nameof(ColoredRangeVisualizer_OnSpawn_Patch.Postfix)));
 
-            // 4) ColoredRangeVisualizer.OnCleanUp - Unsubscribe
+            // Clean up deselect subscription
             var onCleanUp = AccessTools.Method(coloredType, "OnCleanUp");
             if (onCleanUp != null)
                 harmony.Patch(onCleanUp, postfix: new HarmonyMethod(typeof(ColoredRangeVisualizer_OnCleanUp_Patch), nameof(ColoredRangeVisualizer_OnCleanUp_Patch.Postfix)));
 
-            // 5) ResourceSensor.LogicResourceSensorConfig.ConfigureBuildingTemplate - set storage filters (liquids + gases)
+            // Add liquid/gas storage filters and our scope component to the sensor prefab
             var configType = AccessTools.TypeByName("ResourceSensor.LogicResourceSensorConfig");
             var configureTemplate = AccessTools.Method(configType, "ConfigureBuildingTemplate", new[] { typeof(GameObject), typeof(Tag) });
             if (configureTemplate != null)
                 harmony.Patch(configureTemplate, postfix: new HarmonyMethod(typeof(LogicResourceSensorConfig_ConfigureBuildingTemplate_Patch), nameof(LogicResourceSensorConfig_ConfigureBuildingTemplate_Patch.Postfix)));
 
-            // 6) KSelectable.Unselect - clear resource sensor range overlay on deselect (more reliable than relying on SelectObject event)
+            // Backup deselect clear (more reliable than SelectObject event alone)
             var unselect = AccessTools.Method(typeof(KSelectable), "Unselect", Type.EmptyTypes);
             if (unselect != null)
                 harmony.Patch(unselect, postfix: new HarmonyMethod(typeof(KSelectable_Unselect_Patch), nameof(KSelectable_Unselect_Patch.Postfix)));
 
-            // 7) ResourceSensor.LogicResourceSensor.CountCell - fix counting (expand category tags + include liquid/gas cell mass)
+            // Fix CountCell: expand category tags, include liquid/gas cell mass, respect scope
             var sensorType = AccessTools.TypeByName("ResourceSensor.LogicResourceSensor");
             var countCell = AccessTools.Method(sensorType, "CountCell", new[] { typeof(int) });
             if (countCell != null)
                 harmony.Patch(countCell, prefix: new HarmonyMethod(typeof(LogicResourceSensor_CountCell_Patch), nameof(LogicResourceSensor_CountCell_Patch.Prefix)));
 
-            // 8) ResourceSensor.LogicResourceSensor.CountBuilding - expand category tags for storage contents (needed for Include/Only storage)
+            // Fix CountBuilding: expand category tags, respect storage scope toggle
             var countBuilding = AccessTools.Method(sensorType, "CountBuilding", new[] { typeof(GameObject) });
             if (countBuilding != null)
                 harmony.Patch(countBuilding, prefix: new HarmonyMethod(typeof(LogicResourceSensor_CountBuilding_Patch), nameof(LogicResourceSensor_CountBuilding_Patch.Prefix)));
+
+            // Threshold: raise max to 9999999, strip units from display
+            var getRangeMaxInputField = AccessTools.Method(sensorType, "GetRangeMaxInputField", Type.EmptyTypes);
+            if (getRangeMaxInputField != null)
+                harmony.Patch(getRangeMaxInputField, postfix: new HarmonyMethod(typeof(LogicResourceSensor_GetRangeMaxInputField_Patch), nameof(LogicResourceSensor_GetRangeMaxInputField_Patch.Postfix)));
+            var getRangeMax = AccessTools.Method(sensorType, "get_RangeMax", Type.EmptyTypes);
+            if (getRangeMax != null)
+                harmony.Patch(getRangeMax, postfix: new HarmonyMethod(typeof(LogicResourceSensor_GetRangeMax_Patch), nameof(LogicResourceSensor_GetRangeMax_Patch.Postfix)));
+            var getGetRanges = AccessTools.Method(sensorType, "get_GetRanges", Type.EmptyTypes);
+            if (getGetRanges != null)
+                harmony.Patch(getGetRanges, postfix: new HarmonyMethod(typeof(LogicResourceSensor_GetRanges_Patch), nameof(LogicResourceSensor_GetRanges_Patch.Postfix)));
+            var thresholdValueUnits = AccessTools.Method(sensorType, "ThresholdValueUnits", Type.EmptyTypes);
+            if (thresholdValueUnits != null)
+                harmony.Patch(thresholdValueUnits, postfix: new HarmonyMethod(typeof(LogicResourceSensor_ThresholdValueUnits_Patch), nameof(LogicResourceSensor_ThresholdValueUnits_Patch.Postfix)));
+            // Format(float, bool) - strip " kg" from textbox and tooltips
+            var format = AccessTools.Method(sensorType, "Format", new[] { typeof(float), typeof(bool) });
+            if (format != null)
+                harmony.Patch(format, prefix: new HarmonyMethod(typeof(LogicResourceSensor_Format_Patch), nameof(LogicResourceSensor_Format_Patch.Prefix)));
 
             ControlledModsMod.Log("Resource Sensor patches applied");
         }
@@ -111,6 +136,21 @@ namespace ControlledMods.Patches.ResourceSensor
             return null;
         }
 
+        // Hide "Include Storage Buildings" label+checkbox but keep the row container (avoids breaking layout)
+        private static void HideIncludeStorageRow(object sideScreenInstance)
+        {
+            if (sideScreenInstance == null) return;
+            var includeToggle = AccessTools.Field(sideScreenInstance.GetType(), "countStorageToggle")?.GetValue(sideScreenInstance) as KToggle;
+            if (includeToggle == null) return;
+            var checkboxGroup = includeToggle.transform.parent?.gameObject;
+            if (checkboxGroup == null) return;
+            var row = checkboxGroup.transform.parent;
+            if (row == null) return;
+            var label = row.Find("Label");
+            if (label != null) label.gameObject.SetActive(false);
+            checkboxGroup.SetActive(false);
+        }
+
         public static class ResourceSensorSideScreen_OnPrefabInit_Patch
         {
             public static void Postfix(object __instance)
@@ -121,16 +161,18 @@ namespace ControlledMods.Patches.ResourceSensor
                     var root = comp != null ? comp.gameObject : null;
                     if (root == null) return;
 
-                    // Hide Global Mode row by disabling the container which holds countGlobalToggle.
+                    var roomToggle = AccessTools.Field(__instance.GetType(), "countRoomToggle")?.GetValue(__instance) as KToggle;
+
+                    // Hide Global row (not supported yet)
                     var globalToggle = AccessTools.Field(__instance.GetType(), "countGlobalToggle")?.GetValue(__instance) as KToggle;
                     if (globalToggle != null)
                     {
                         var globalRow = globalToggle.transform.parent?.gameObject;
-                        if (globalRow != null) globalRow.SetActive(false);
+                        if (globalRow != null)
+                            globalRow.SetActive(false);
                     }
 
-                    // If Room Mode toggle failed to bind (game UI changed), create a fallback row so Room Mode still exists.
-                    var roomToggle = AccessTools.Field(__instance.GetType(), "countRoomToggle")?.GetValue(__instance) as KToggle;
+                    // Fallback: create a Room Mode row if the toggle failed to bind (game UI changed)
                     if (roomToggle == null)
                     {
                         var distanceContainer = root.transform.Find("Contents/CheckboxGroup")?.gameObject;
@@ -154,7 +196,6 @@ namespace ControlledMods.Patches.ResourceSensor
 
                                 if (newRoomToggle != null)
                                 {
-                                    // Wire into Berkay's fields so their OnSpawn/ToggleRoom logic works.
                                     AccessTools.Field(__instance.GetType(), "countRoomToggle")?.SetValue(__instance, newRoomToggle);
                                     if (newRoomCheckmark != null)
                                         AccessTools.Field(__instance.GetType(), "roomCheckmark")?.SetValue(__instance, newRoomCheckmark);
@@ -164,26 +205,29 @@ namespace ControlledMods.Patches.ResourceSensor
                     }
                     else
                     {
-                        // Ensure existing room row isn't accidentally hidden.
                         var roomRow = roomToggle.transform.parent?.gameObject;
                         if (roomRow != null) roomRow.SetActive(true);
                     }
 
-                    // Hide Berkay's "Include Storage Buildings" row (full row = label + checkbox; toggle's parent may be the checkbox group)
-                    var includeToggle = AccessTools.Field(__instance.GetType(), "countStorageToggle")?.GetValue(__instance) as KToggle;
-                    if (includeToggle != null)
-                    {
-                        var includeRow = includeToggle.transform.parent?.parent?.gameObject ?? includeToggle.transform.parent?.gameObject;
-                        if (includeRow != null) includeRow.SetActive(false);
-                    }
+                    HideIncludeStorageRow(__instance);
 
-                    // Add our three rows (Atmosphere, Storage, Conduits) by cloning the Room row - a simple label+checkbox row, not the Include Storage container
-                    var templateToggle = AccessTools.Field(__instance.GetType(), "countRoomToggle")?.GetValue(__instance) as KToggle;
-                    var templateRow = templateToggle != null ? templateToggle.transform.parent?.gameObject : null;
+                    // Add Atmosphere / Storage / Conduits rows as siblings of the mode toggles
+                    GameObject templateRow = null;
+                    if (roomToggle != null)
+                        templateRow = roomToggle.transform.parent?.gameObject;
                     if (templateRow == null)
-                        templateToggle = AccessTools.Field(__instance.GetType(), "countDistanceToggle")?.GetValue(__instance) as KToggle;
-                    if (templateToggle != null && templateRow == null)
-                        templateRow = templateToggle.transform.parent?.gameObject;
+                    {
+                        var distanceToggle = AccessTools.Field(__instance.GetType(), "countDistanceToggle")?.GetValue(__instance) as KToggle;
+                        if (distanceToggle != null)
+                            templateRow = distanceToggle.transform.parent?.gameObject;
+                    }
+                    if (templateRow == null)
+                    {
+                        var contents = root.transform.Find("Contents");
+                        var checkboxGroup = contents?.Find("CheckboxGroup") ?? contents?.Find("CheckBoxGroup");
+                        if (checkboxGroup != null)
+                            templateRow = checkboxGroup.gameObject;
+                    }
 
                     if (templateRow != null && templateRow.transform.parent != null && !_atmosphereToggles.ContainsKey(__instance))
                     {
@@ -216,6 +260,7 @@ namespace ControlledMods.Patches.ResourceSensor
                         AddRow("ControlledMods_StorageRow", "Storage", _storageToggles, _storageCheckmarks);
                         AddRow("ControlledMods_ConduitsRow", "Conduits", _conduitsToggles, _conduitsCheckmarks);
                     }
+
                 }
                 catch { }
             }
@@ -285,12 +330,19 @@ namespace ControlledMods.Patches.ResourceSensor
             }
         }
 
-        public static class ResourceSensorSideScreen_ToggleGlobal_Patch
+        public static class ResourceSensorSideScreen_ToggleDistance_Patch
         {
-            public static bool Prefix()
+            public static void Postfix(object __instance)
             {
-                // Skip original ToggleGlobal (disallow Global mode)
-                return false;
+                HideIncludeStorageRow(__instance);
+            }
+        }
+
+        public static class ResourceSensorSideScreen_ToggleRoom_Patch
+        {
+            public static void Postfix(object __instance)
+            {
+                HideIncludeStorageRow(__instance);
             }
         }
 
@@ -306,31 +358,17 @@ namespace ControlledMods.Patches.ResourceSensor
                     var sensor = target.GetComponent(sensorType);
                     if (sensor == null) return;
 
-                    // If an existing building is in Global mode, force it back to Distance
-                    var modeProp = AccessTools.Property(sensorType, "Mode");
-                    var modeVal = modeProp?.GetValue(sensor);
-                    if (modeVal == null) return;
-                    if (string.Equals(modeVal.ToString(), "Global", StringComparison.OrdinalIgnoreCase))
-                    {
-                        var toggleDistance = AccessTools.Method(__instance.GetType(), "ToggleDistance", Type.EmptyTypes);
-                        toggleDistance?.Invoke(__instance, null);
-                    }
-
-                    // Also ensure the Global and Include Storage rows stay hidden after SetTarget refreshes UI.
+                    // Hide Global row (not supported yet)
                     var globalToggle = AccessTools.Field(__instance.GetType(), "countGlobalToggle")?.GetValue(__instance) as KToggle;
                     if (globalToggle != null)
                     {
                         var globalRow = globalToggle.transform.parent?.gameObject;
-                        if (globalRow != null) globalRow.SetActive(false);
+                        if (globalRow != null)
+                            globalRow.SetActive(false);
                     }
-                    var includeToggle = AccessTools.Field(__instance.GetType(), "countStorageToggle")?.GetValue(__instance) as KToggle;
-                    if (includeToggle != null)
-                    {
-                        var includeRow = includeToggle.transform.parent?.parent?.gameObject ?? includeToggle.transform.parent?.gameObject;
-                        if (includeRow != null) includeRow.SetActive(false);
-                    }
+                    HideIncludeStorageRow(__instance);
 
-                    // Sync Atmosphere / Storage / Conduits checkmarks and Berkay's IncludeStorage from our scope
+                    // Sync scope checkmarks with persisted state
                     var scope = target.GetComponent<ControlledMods.ResourceSensor.ResourceSensorStorageScope>();
                     if (scope != null)
                     {
@@ -339,6 +377,7 @@ namespace ControlledMods.Patches.ResourceSensor
                         if (_conduitsCheckmarks.TryGetValue(__instance, out var cc) && cc != null) cc.enabled = scope.IncludeConduits;
                         AccessTools.Property(sensorType, "IncludeStorage")?.SetValue(sensor, scope.IncludeStorage);
                     }
+
                 }
                 catch { }
             }
@@ -366,6 +405,26 @@ namespace ControlledMods.Patches.ResourceSensor
             }
         }
 
+        private static void SetNumberInputCharacterLimit(object numberInput, int limit)
+        {
+            if (numberInput == null) return;
+            var type = numberInput.GetType();
+            foreach (var name in new[] { "field", "inputField", "input" })
+            {
+                var f = AccessTools.Field(type, name);
+                if (f == null) continue;
+                var obj = f.GetValue(numberInput);
+                if (obj == null) continue;
+                var t = obj.GetType();
+                AccessTools.Property(t, "characterLimit")?.SetValue(obj, limit);
+                AccessTools.Property(t, "CharacterLimit")?.SetValue(obj, limit);
+                AccessTools.Property(t, "maxLength")?.SetValue(obj, limit);
+                var charLimitField = AccessTools.Field(t, "m_CharacterLimit") ?? AccessTools.Field(t, "characterLimit");
+                if (charLimitField != null) charLimitField.SetValue(obj, limit);
+                break;
+            }
+        }
+
         public static class ThresholdSwitchSideScreen_SetTarget_Patch
         {
             public static void Postfix(ThresholdSwitchSideScreen __instance, GameObject new_target)
@@ -376,39 +435,45 @@ namespace ControlledMods.Patches.ResourceSensor
                 if (new_target.GetComponent(sensorType) == null) return;
 
                 var numberInput = AccessTools.Field(typeof(ThresholdSwitchSideScreen), "numberInput")?.GetValue(__instance);
-                if (numberInput != null)
-                {
-                    var fieldObj = AccessTools.Field(numberInput.GetType(), "field")?.GetValue(numberInput);
-                    if (fieldObj != null)
-                    {
-                        var charLimitProp = AccessTools.Property(fieldObj.GetType(), "characterLimit") ?? AccessTools.Property(fieldObj.GetType(), "CharacterLimit");
-                        charLimitProp?.SetValue(fieldObj, 8);
-                    }
-                }
+                SetNumberInputCharacterLimit(numberInput, 8);
+            }
+        }
+
+        public static class ThresholdSwitchSideScreen_UpdateTargetThresholdLabel_Patch
+        {
+            public static void Postfix(ThresholdSwitchSideScreen __instance)
+            {
+                var target = AccessTools.Field(typeof(ThresholdSwitchSideScreen), "target")?.GetValue(__instance) as GameObject;
+                if (target == null) return;
+                var sensorType = AccessTools.TypeByName("ResourceSensor.LogicResourceSensor");
+                if (sensorType == null) return;
+                if (target.GetComponent(sensorType) == null) return;
+
+                var numberInput = AccessTools.Field(typeof(ThresholdSwitchSideScreen), "numberInput")?.GetValue(__instance);
+                SetNumberInputCharacterLimit(numberInput, 8);
             }
         }
 
         public static class ColoredRangeVisualizer_OnSpawn_Patch
         {
-            private static bool IsResourceSensorVisualizer(ColoredRangeVisualizer v)
+            private static bool IsRangeVisualizerWithVisCells(ColoredRangeVisualizer v)
             {
                 if (v == null) return false;
                 var t = v.GetType();
-                if (t.Assembly.GetName().Name.IndexOf("ResourceSensor", StringComparison.OrdinalIgnoreCase) < 0)
-                    return false;
-                return t.Name.IndexOf("Visualizer", StringComparison.OrdinalIgnoreCase) >= 0;
+                if (t == typeof(ColoredRangeVisualizer)) return false;
+                return AccessTools.Field(t, "visCells") != null || AccessTools.Field(t, "m_visCells") != null;
             }
 
             public static void Postfix(ColoredRangeVisualizer __instance)
             {
                 if (__instance == null) return;
-                if (!IsResourceSensorVisualizer(__instance)) return;
+                if (!IsRangeVisualizerWithVisCells(__instance)) return;
 
                 Action<object> handler = data =>
                 {
                     bool deselected = (data is bool b && !b) || (data == null);
-                    if (deselected)
-                        DistanceVisualizerHelper.ClearAndRefreshOnDeselect(__instance);
+                    if (deselected && __instance is Component c && c != null)
+                        DistanceVisualizerHelper.ClearVisualizerLikeRoomMode(c.gameObject);
                 };
                 lock (_deselectHandlers)
                     _deselectHandlers[__instance] = handler;
@@ -441,8 +506,23 @@ namespace ControlledMods.Patches.ResourceSensor
                 if (storage != null)
                     storage.storageFilters = LogicResourceSensorConfigHelper.GetStorageFilterList();
 
-                // Add our persisted storage scope toggle (OnlyStorage) so it can be saved and copied.
+                // Attach persisted scope component for our Atmosphere/Storage/Conduits toggles
                 go.AddOrGet<ControlledMods.ResourceSensor.ResourceSensorStorageScope>();
+
+                // If ControlledAutomation is loaded with inversion enabled, add SensorInverter
+                try
+                {
+                    var sensorInverterType = AccessTools.TypeByName("ControlledAutomation.Components.SensorInverter")
+                        ?? FindTypeInAssembly("ControlledAutomation", "ControlledAutomation.Components.SensorInverter");
+                    if (sensorInverterType == null) return; // ControlledAutomation not loaded
+                    var inversionHelperType = AccessTools.TypeByName("ControlledAutomation.Patches.InversionHelper")
+                        ?? FindTypeInAssembly("ControlledAutomation", "ControlledAutomation.Patches.InversionHelper");
+                    var isEnabledMethod = inversionHelperType != null ? AccessTools.Method(inversionHelperType, "IsInversionEnabled") : null;
+                    if (isEnabledMethod != null && isEnabledMethod.Invoke(null, null) is bool enabled && !enabled) return; // Inversion disabled in options
+                    if (go.GetComponent(sensorInverterType) == null)
+                        go.AddComponent(sensorInverterType);
+                }
+                catch { }
             }
         }
 
@@ -453,13 +533,8 @@ namespace ControlledMods.Patches.ResourceSensor
                 try
                 {
                     if (__instance == null) return;
-                    // If this selectable has Berkay's DistanceVisualizer, clear it when deselected.
-                    var dv = __instance.GetComponent<ColoredRangeVisualizer>();
-                    if (dv == null) return;
-                    var t = dv.GetType();
-                    if (t.Assembly.GetName().Name.IndexOf("ResourceSensor", StringComparison.OrdinalIgnoreCase) < 0) return;
-                    if (t.Name.IndexOf("DistanceVisualizer", StringComparison.OrdinalIgnoreCase) < 0) return;
-                    DistanceVisualizerHelper.ClearAndRefreshOnDeselect(dv);
+                    // Clear range overlay (same path as Room mode switch)
+                    DistanceVisualizerHelper.ClearVisualizerLikeRoomMode(__instance.gameObject);
                 }
                 catch { }
             }
@@ -487,7 +562,7 @@ namespace ControlledMods.Patches.ResourceSensor
                         return false;
                     }
 
-                    // Expand any category tags to discovered leaf resources (TreeFilterableSideScreen treats selecting a category as selecting all children)
+                    // Expand category tags to leaf resources (selecting a category means all children)
                     var effective = new HashSet<Tag>(tags);
                     try
                     {
@@ -506,7 +581,7 @@ namespace ControlledMods.Patches.ResourceSensor
 
                     float totalMass = 0f;
 
-                    // Atmosphere: world element (liquid/gas in tile) + pickupables (solids on floor)
+                    // Atmosphere: cell element mass + pickupables on the floor
                     if (scope == null || scope.IncludeAtmosphere)
                     {
                         if (Grid.IsValidCell(cell))
@@ -550,7 +625,7 @@ namespace ControlledMods.Patches.ResourceSensor
                         }
                     }
 
-                    // Conduits: gas/liquid/solid conduit contents at this cell
+                    // Conduits: gas/liquid/solid pipe contents at this cell
                     if (scope != null && scope.IncludeConduits && Grid.IsValidCell(cell))
                     {
                         var gasFlow = Game.Instance?.gasConduitFlow;
@@ -642,7 +717,7 @@ namespace ControlledMods.Patches.ResourceSensor
                         return false;
                     }
 
-                    // Count any building that has storage (lockers, loaders, receptacles, reservoirs, etc.)
+                    // Count any building with storage
                     if (!obj.TryGetComponent(out Storage storage))
                     {
                         __result = 0f;
@@ -694,6 +769,55 @@ namespace ControlledMods.Patches.ResourceSensor
                 }
                 catch { }
                 return true;
+            }
+        }
+
+        public static class LogicResourceSensor_GetRangeMaxInputField_Patch
+        {
+            public static void Postfix(ref float __result)
+            {
+                __result = 9999999f;
+            }
+        }
+
+        public static class LogicResourceSensor_GetRangeMax_Patch
+        {
+            public static void Postfix(ref float __result)
+            {
+                __result = 9999999f;
+            }
+        }
+
+        public static class LogicResourceSensor_GetRanges_Patch
+        {
+            public static void Postfix(ref object __result)
+            {
+                try
+                {
+                    var nonLinearSliderType = AccessTools.TypeByName("NonLinearSlider");
+                    var getDefaultRange = nonLinearSliderType != null ? AccessTools.Method(nonLinearSliderType, "GetDefaultRange", new[] { typeof(float) }) : null;
+                    if (getDefaultRange != null)
+                        __result = getDefaultRange.Invoke(null, new object[] { 9999999f });
+                }
+                catch { }
+            }
+        }
+
+        public static class LogicResourceSensor_ThresholdValueUnits_Patch
+        {
+            public static void Postfix(ref LocString __result)
+            {
+                __result = (LocString)"";
+            }
+        }
+
+        // Strip " kg" from threshold display (both textbox and tooltips)
+        public static class LogicResourceSensor_Format_Patch
+        {
+            public static bool Prefix(float value, ref string __result)
+            {
+                __result = value >= 1000000f ? value.ToString("0") : value.ToString("0.##");
+                return false;
             }
         }
     }
