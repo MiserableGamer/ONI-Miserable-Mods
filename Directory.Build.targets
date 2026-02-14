@@ -23,12 +23,15 @@
     <Message Text="[Build] Git branch: $(GitBranch), Configuration: $(Configuration)" Importance="high" />
   </Target>
 
-  <!-- Post-build: ILRepack to merge PLib into main DLL -->
+  <!-- Post-build: ILRepack to merge PLib into main DLL.
+    We output directly to $(TargetPath) using a copy of the primary so the merged assembly
+    keeps AssemblyName "LongerArms" (not "LongerArms.dll"). PLib uses GetName().Name
+    for the mod identity and config path; /out:...dll.merged was causing the .dll suffix. -->
   <Target Name="ILRepackMerge" AfterTargets="Build" Condition="Exists('$(TargetDir)PLib.dll')">
     <Message Text="[Build] Merging PLib.dll into $(TargetFileName)" Importance="high" />
-    <Exec Command="&quot;$(NuGetPackageRoot)ilrepack\2.0.34\tools\ILRepack.exe&quot; /ndebug /lib:&quot;$(MSBuildThisFileDirectory)lib&quot; /lib:&quot;$(NuGetPackageRoot)newtonsoft.json\13.0.4\lib\net45&quot; /out:&quot;$(TargetDir)$(TargetFileName).merged&quot; &quot;$(TargetPath)&quot; &quot;$(TargetDir)PLib.dll&quot;" ContinueOnError="true" />
-    <Delete Files="$(TargetPath)" Condition="Exists('$(TargetDir)$(TargetFileName).merged')" />
-    <Move SourceFiles="$(TargetDir)$(TargetFileName).merged" DestinationFiles="$(TargetPath)" Condition="Exists('$(TargetDir)$(TargetFileName).merged')" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(TargetDir)$(TargetName)_primary.dll" />
+    <Exec Command="&quot;$(NuGetPackageRoot)ilrepack\2.0.34\tools\ILRepack.exe&quot; /ndebug /lib:&quot;$(MSBuildThisFileDirectory)lib&quot; /lib:&quot;$(NuGetPackageRoot)newtonsoft.json\13.0.4\lib\net45&quot; /out:&quot;$(TargetPath)&quot; &quot;$(TargetDir)$(TargetName)_primary.dll&quot; &quot;$(TargetDir)PLib.dll&quot;" ContinueOnError="true" />
+    <Delete Files="$(TargetDir)$(TargetName)_primary.dll" Condition="Exists('$(TargetDir)$(TargetName)_primary.dll')" />
     <Delete Files="$(TargetDir)PLib.dll" Condition="Exists('$(TargetDir)PLib.dll')" />
   </Target>
 
