@@ -12,6 +12,7 @@ namespace ControlledAutomation
         {
             base.OnLoad(harmony);
             PUtil.InitLibrary(false);
+            ConfigMigrationHelper.Migrate(ConfigMigrationHelper.OldConfigFolderName, ConfigMigrationHelper.NewConfigFolderName);
             new POptions().RegisterOptions(this, typeof(ControlledAutomationOptions));
             
             MultipleElementSensorPatches.TryApplyPatches(harmony);
