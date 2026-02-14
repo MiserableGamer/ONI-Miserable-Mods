@@ -33,7 +33,7 @@ namespace ControlledAutomation.Components
         private static readonly EventSystem.IntraObjectHandler<SensorInverter> OnCopySettingsDelegate =
             new EventSystem.IntraObjectHandler<SensorInverter>((component, data) => component.OnCopySettings(data));
 
-        protected override void OnSpawn()
+        public override void OnSpawn()
         {
             base.OnSpawn();
             fastMap[gameObject] = this;
@@ -50,7 +50,7 @@ namespace ControlledAutomation.Components
             UpdatePortTooltips();
         }
 
-        protected override void OnCleanUp()
+        public override void OnCleanUp()
         {
             Unsubscribe((int)GameHashes.CopySettings, OnCopySettingsDelegate);
             fastMap.Remove(gameObject);

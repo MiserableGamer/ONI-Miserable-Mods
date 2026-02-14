@@ -10,7 +10,7 @@ namespace ControlledAutomation.UI
         private GameObject checkbox2;
         private RocketPlatformInverter target;
 
-        protected override void OnPrefabInit()
+        public override void OnPrefabInit()
         {
             var margin = new RectOffset(4, 4, 4, 4);
             var baseLayout = gameObject.GetComponent<BoxLayoutGroup>();
