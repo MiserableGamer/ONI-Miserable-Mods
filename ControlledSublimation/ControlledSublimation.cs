@@ -11,7 +11,7 @@ namespace ControlledSublimation
 		{
 			base.OnLoad(harmony);
 			PUtil.InitLibrary();
-			ConfigMigrationHelper.Migrate("ControlledSublimation.dll", "ControlledSublimation");
+			ConfigMigrationHelper.Migrate(ConfigMigrationHelper.OldConfigFolderName, ConfigMigrationHelper.NewConfigFolderName);
 
 			// Register options with shared config location
 			var options = new POptions();

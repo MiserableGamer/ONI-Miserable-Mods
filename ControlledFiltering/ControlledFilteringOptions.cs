@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using Newtonsoft.Json;
 using PeterHan.PLib.Options;
 
@@ -14,9 +16,36 @@ namespace ControlledFiltering
 			get
 			{
 				if (_instance == null)
-					_instance = POptions.ReadSettings<ControlledFilteringOptions>() ?? new ControlledFilteringOptions();
+				{
+					ConfigMigrationHelper.MigrateConfigFromFilePath(
+						POptions.GetConfigFilePath(typeof(ControlledFilteringOptions)));
+					_instance = SafeReadSettings() ?? new ControlledFilteringOptions();
+				}
 				return _instance;
 			}
+		}
+
+		public static void Reload()
+		{
+			ConfigMigrationHelper.MigrateConfigFromFilePath(
+				POptions.GetConfigFilePath(typeof(ControlledFilteringOptions)));
+			_instance = SafeReadSettings() ?? new ControlledFilteringOptions();
+		}
+
+		private static ControlledFilteringOptions SafeReadSettings()
+		{
+			try
+			{
+				string canonical = ConfigMigrationHelper.GetCanonicalConfigPath(
+					POptions.GetConfigFilePath(typeof(ControlledFilteringOptions)));
+				if (!string.IsNullOrEmpty(canonical) && File.Exists(canonical))
+				{
+					string json = File.ReadAllText(canonical);
+					return JsonConvert.DeserializeObject<ControlledFilteringOptions>(json);
+				}
+				return POptions.ReadSettings<ControlledFilteringOptions>();
+			}
+			catch (Exception) { return null; }
 		}
 
 		// By default, all are set to Non-Standard (true) to match vanilla behavior

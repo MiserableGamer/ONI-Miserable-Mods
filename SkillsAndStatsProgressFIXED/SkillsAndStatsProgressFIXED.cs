@@ -15,7 +15,7 @@ namespace SkillsAndStatsProgressFIXED
             base.OnLoad(harmony);
 
             PUtil.InitLibrary();
-            ConfigMigrationHelper.Migrate("SkillsAndStatsProgressFIXED.dll", "SkillsAndStatsProgressFIXED");
+            ConfigMigrationHelper.Migrate(ConfigMigrationHelper.OldConfigFolderName, ConfigMigrationHelper.NewConfigFolderName);
             new POptions().RegisterOptions(this, typeof(Config));
 
             Debug.Log("SkillsAndStatsProgressFIXED: OnLoad - " +
