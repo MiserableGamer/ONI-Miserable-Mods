@@ -47,10 +47,10 @@ namespace ControlledExtraction.Options
             ElementToggles[key] = enabled;
         }
 
-        // Derive path from PLib's config location so both files live side by side
+        // Derive path from PLib's config location so both files live side by side. Use canonical path (non-.dll folder).
         private static string GetFilePath()
         {
-            string mainConfigPath = POptions.GetConfigFilePath(typeof(ControlledExtractionOptions));
+            string mainConfigPath = ConfigMigrationHelper.GetCanonicalConfigPath(POptions.GetConfigFilePath(typeof(ControlledExtractionOptions)));
             string configDir = Path.GetDirectoryName(mainConfigPath);
             return Path.Combine(configDir, FILENAME);
         }

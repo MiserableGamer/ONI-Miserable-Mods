@@ -36,7 +36,7 @@ namespace ControlledExtraction.Components
             elementFilter = element;
         }
 
-        protected override void OnSpawn()
+        public override void OnSpawn()
         {
             base.OnSpawn();
             outputCell = Grid.OffsetCell(building.NaturalBuildingCell(), outputOffset);
@@ -55,7 +55,7 @@ namespace ControlledExtraction.Components
                 originalEmitMass = algaeDistillery.emitMass;
         }
 
-        protected override void OnCleanUp()
+        public override void OnCleanUp()
         {
             solidFlow?.RemoveConduitUpdater(ConduitUpdate);
 

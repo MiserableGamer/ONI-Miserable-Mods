@@ -15,6 +15,13 @@ namespace ControlledExtraction
         {
             base.OnLoad(harmony);
             PUtil.InitLibrary();
+            ConfigMigrationHelper.Migrate(ConfigMigrationHelper.OldConfigFolderName, ConfigMigrationHelper.NewConfigFolderName);
+            try
+            {
+                string path = POptions.GetConfigFilePath(typeof(ControlledExtractionOptions));
+                ConfigMigrationHelper.MigrateConfigFromFilePath(path);
+            }
+            catch { /* ignore */ }
             new POptions().RegisterOptions(this, typeof(ControlledExtractionOptions));
             harmony.PatchAll();
         }

@@ -63,7 +63,7 @@ namespace ControlledExtraction.Components
             return best;
         }
 
-        protected override void OnPrefabInit()
+        public override void OnPrefabInit()
         {
             base.OnPrefabInit();
             if (enabledIceOres == null)
@@ -76,7 +76,7 @@ namespace ControlledExtraction.Components
             Subscribe((int)GameHashes.CopySettings, OnCopySettingsHandler);
         }
 
-        protected override void OnSpawn()
+        public override void OnSpawn()
         {
             base.OnSpawn();
 
@@ -106,7 +106,7 @@ namespace ControlledExtraction.Components
             ApplyDeliveries();
         }
 
-        protected override void OnCleanUp()
+        public override void OnCleanUp()
         {
             DestroyExtraDeliveries();
             base.OnCleanUp();

@@ -40,13 +40,13 @@ namespace ControlledExtraction.Components
 
         public float ExtractionMultiplier => WaterInputRate / VANILLA_WATER_RATE;
 
-        protected override void OnPrefabInit()
+        public override void OnPrefabInit()
         {
             base.OnPrefabInit();
             Subscribe<ExtractionRateController>(-905833192, OnCopySettingsDelegate);
         }
 
-        protected override void OnSpawn()
+        public override void OnSpawn()
         {
             base.OnSpawn();
             oilWellCap = GetComponent<OilWellCap>();

@@ -19,7 +19,7 @@ namespace ControlledExtraction.Components
 
         private int outputCell = -1;
 
-        protected override void OnSpawn()
+        public override void OnSpawn()
         {
             base.OnSpawn();
             outputCell = building.GetUtilityOutputCell();
@@ -30,7 +30,7 @@ namespace ControlledExtraction.Components
                 Game.Instance.liquidConduitFlow.AddConduitUpdater(ConduitUpdate, ConduitFlowPriority.LastPostUpdate);
         }
 
-        protected override void OnCleanUp()
+        public override void OnCleanUp()
         {
             if (conduitType == ConduitType.Gas)
                 Game.Instance.gasConduitFlow?.RemoveConduitUpdater(ConduitUpdate);

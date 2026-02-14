@@ -32,7 +32,7 @@ namespace ControlledExtraction.UI
             if (uiBuilt) RefreshUI();
         }
 
-        protected override void OnPrefabInit()
+        public override void OnPrefabInit()
         {
             base.OnPrefabInit();
             BuildUI();

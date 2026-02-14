@@ -24,7 +24,7 @@ namespace ControlledExtraction.Components
         private int outputCell = -1;
         private ConduitFlow liquidFlow;
 
-        protected override void OnSpawn()
+        public override void OnSpawn()
         {
             base.OnSpawn();
 
@@ -48,7 +48,7 @@ namespace ControlledExtraction.Components
             liquidFlow.AddConduitUpdater(ConduitUpdate, ConduitFlowPriority.Dispense);
         }
 
-        protected override void OnCleanUp()
+        public override void OnCleanUp()
         {
             liquidFlow?.RemoveConduitUpdater(ConduitUpdate);
             base.OnCleanUp();

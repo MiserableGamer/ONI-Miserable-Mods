@@ -14,7 +14,7 @@ namespace ControlledExtraction.Components
         private int outputCell = -1;
         private ConduitFlow gasFlow;
 
-        protected override void OnSpawn()
+        public override void OnSpawn()
         {
             base.OnSpawn();
 
@@ -26,7 +26,7 @@ namespace ControlledExtraction.Components
             gasFlow.AddConduitUpdater(ConduitUpdate, ConduitFlowPriority.Dispense);
         }
 
-        protected override void OnCleanUp()
+        public override void OnCleanUp()
         {
             gasFlow?.RemoveConduitUpdater(ConduitUpdate);
             base.OnCleanUp();
