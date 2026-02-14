@@ -22,6 +22,11 @@ Increases the character limit for storage capacity input fields, allowing you to
 
 [📖 Read More](CapacityControl/README.md) | [Latest Release v1.0.1](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/CapacityControl-v1.0.1)
 
+### 🚿 Controlled Assignments
+Makes showers, sinks, and lubrication stations assignable to individual duplicants, just like beds and toilets. Works with both vanilla and modded buildings. Bionic-only buildings are restricted to bionic duplicants.
+
+[📖 Read More](ControlledAssignments/README.md) | [Latest Release v1.0.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledAssignments-v1.0.0)
+
 ### ⛽ Controlled Extraction
 Per-building control over Oil Well extraction rates. Adjust water input from 0.01 to 100 kg/s with proportional oil output and gas pressure scaling. Compatible with Ronivan's Legacy.
 
