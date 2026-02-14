@@ -11,7 +11,7 @@ Adds configurable high/low threshold sliders (like Smart Battery) to storage bui
 Adds an "Invert Signal" checkbox to storage buildings, sensors, and various other automation-enabled buildings, allowing you to swap Green/Red automation signals without needing a NOT gate.
 
 ### Adv. Thermo Sensor
-Adds a new temperature sensor building with range-based triggering, and a delay buffer:
+Adds a new temperature sensor building with range-based triggering:
 - Set a center temperature and define a range above/below
 - Triggers when temperature is inside (or outside, when inverted) the defined range
 - Supports typed input and nudge buttons like vanilla sensors
@@ -31,7 +31,6 @@ Adds a new temperature sensor building with range-based triggering, and a delay 
 - Compatible with most other automation mods
 ## Version History
 
-- **1.1.0** - Added delay buffer to Adv. Thermo Sensor
 - **1.0.0** - Initial release with threshold sliders and signal inversion
 
 ## Credits
