@@ -85,6 +85,7 @@ This mod is part of the [ONI 200+ Ultimate Mods collection](https://steamcommuni
 
 ## Version History
 
+- **1.0.4.88**: Config bugfix
 - **1.0.3.76**: Fix ladder bug, added safe mode
 - **1.0.2.64**: Diagonal bug fix
 - **1.0.1.56**: Code cleaning

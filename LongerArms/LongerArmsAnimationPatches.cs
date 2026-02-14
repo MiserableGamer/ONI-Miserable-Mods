@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
-using PeterHan.PLib.Options;
+
 using UnityEngine;
 
 namespace LongerArms
@@ -26,7 +26,7 @@ namespace LongerArms
 			}
 
 			// Read current reach settings to calculate appropriate animation update range
-			var options = POptions.ReadSettings<LongerArmsOptions>() ?? new LongerArmsOptions();
+			var options = LongerArmsOptions.Instance;
 			int maxReach = Math.Max(options.HorizontalReach, options.VerticalReach);
 
 			// Vanilla uses 4, we extend based on max reach (vanilla base 3 + additional reach + safety buffer)

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
-using PeterHan.PLib.Options;
+
 using UnityEngine;
 
 namespace LongerArms
@@ -193,7 +193,7 @@ namespace LongerArms
 				if (!OffsetsExpanded)
 				{
 					// Read options to get reach distances
-					var options = POptions.ReadSettings<LongerArmsOptions>() ?? new LongerArmsOptions();
+					var options = LongerArmsOptions.Instance;
 					int verticalReach = options.VerticalReach;
 					int horizontalReach = options.HorizontalReach;
 					bool safeMode = options.SafeMode;

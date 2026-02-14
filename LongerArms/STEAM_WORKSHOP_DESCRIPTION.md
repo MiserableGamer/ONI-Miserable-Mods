@@ -81,6 +81,7 @@ This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/
 
 [h2]Version History[/h2]
 [list]
+[*][b]1.0.4.88[/b]: Config bug fixed
 [*][b]1.0.3.76[/b]: Fix ladder bug, added safe mode
 [*][b]1.0.2.64[/b]: Diagonal bug fix
 [*][b]1.0.1.56[/b]: Code cleaning
