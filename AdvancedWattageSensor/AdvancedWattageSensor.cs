@@ -16,7 +16,6 @@ namespace AdvancedWattageSensor
             base.OnLoad(harmony);
 
             PUtil.InitLibrary();
-            ConfigMigrationHelper.Migrate(ConfigMigrationHelper.OldConfigFolderName, ConfigMigrationHelper.NewConfigFolderName);
             new POptions().RegisterOptions(this, typeof(AdvancedWattageSensorOptions));
             harmony.PatchAll();
         }
