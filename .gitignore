@@ -7,7 +7,6 @@
 # The promote script automatically removes the project from this list when you promote it to master.
 BlankProject/
 CommonLib/
-ControlledAssignments/
 ControlledLoaders/
 ControlledPerformance/
 ControlledVisuals/

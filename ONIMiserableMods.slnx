@@ -21,4 +21,6 @@
   <Project Path="ThresholdFixed/ThresholdFixed.csproj" Id="fe377519-31a0-4c07-9f63-a88d8a76b59a" />
 
 
+
+  <Project Path="ControlledAssignments/ControlledAssignments.csproj" Id="0543bc12-ae9e-4d51-a662-ebcaea6c0e4e" />
 </Solution>
