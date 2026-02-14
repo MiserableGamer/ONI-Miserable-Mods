@@ -6,9 +6,11 @@ Configure and improve behavior from supported ONI mods through one in-game optio
 
 [h2]Features[/h2]
 [list]
-[*]Direct Workshop links for supported mods in Mod Options
-[*]Restart button in the main menu
-[*]Safe mod detection (patches apply only when target mods are present)
+[*][b]In-Game Configuration[/b] - All settings accessible from the main menu Mod Options
+[*][b]Restart Button[/b] - Adds a Restart button to the main menu (above Quit) for quick game restarts after changing mods or settings
+[*][b]Smart Detection[/b] - Options only apply if the target mod is detected and enabled
+[*][b]No Dependencies[/b] - Works independently; target mods are optional, not required
+[*][b]Persistent Settings[/b] - Configuration saved between game sessions
 [/list]
 
 [h2]Supported Mods[/h2]
@@ -139,6 +141,7 @@ Please mention "ControlledMods" in your issue title or description.
 
 [h2]Version History[/h2]
 [list]
+[*][b]1.3.0[/b]: Restart button on the main menu (above Quit) for quick restarts
 [*][b]1.2.0[/b]: Resource Sensor – sidescreen with Atmosphere/Storage/Conduits scope checkboxes; counting for atmosphere, storage buildings, and conduits with category tag expansion; threshold max raised to 9,999,999 with units stripped; range visualizer clears on deselect; Copy Settings copies scope toggles; ControlledAutomation inversion support
 [*][b]1.1.0[/b]: KIN Underground Conduit – Logic Terminal crash fix, Copy Settings for conduit terminals/senders/receivers
 [*][b]1.0.0[/b]: Initial release
