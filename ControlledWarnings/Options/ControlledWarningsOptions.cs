@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using Newtonsoft.Json;
 using PeterHan.PLib.Options;
 
@@ -8,6 +10,44 @@ namespace ControlledWarnings.Options
     [ConfigFile(SharedConfigLocation: true)]
     public class ControlledWarningsOptions
     {
+        private static ControlledWarningsOptions _instance;
+        public static ControlledWarningsOptions Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    ConfigMigrationHelper.MigrateConfigFromFilePath(
+                        POptions.GetConfigFilePath(typeof(ControlledWarningsOptions)));
+                    _instance = SafeReadSettings() ?? new ControlledWarningsOptions();
+                }
+                return _instance;
+            }
+        }
+
+        public static void Reload()
+        {
+            ConfigMigrationHelper.MigrateConfigFromFilePath(
+                POptions.GetConfigFilePath(typeof(ControlledWarningsOptions)));
+            _instance = SafeReadSettings() ?? new ControlledWarningsOptions();
+        }
+
+        private static ControlledWarningsOptions SafeReadSettings()
+        {
+            try
+            {
+                string canonical = ConfigMigrationHelper.GetCanonicalConfigPath(
+                    POptions.GetConfigFilePath(typeof(ControlledWarningsOptions)));
+                if (!string.IsNullOrEmpty(canonical) && File.Exists(canonical))
+                {
+                    string json = File.ReadAllText(canonical);
+                    return JsonConvert.DeserializeObject<ControlledWarningsOptions>(json);
+                }
+                return POptions.ReadSettings<ControlledWarningsOptions>();
+            }
+            catch (Exception) { return null; }
+        }
+
         [Option("Enable Trapped Alerts", "Show notification when a duplicant is trapped", "Trapped Duplicant")]
         [JsonProperty]
         public bool EnableTrappedAlert { get; set; } = true;

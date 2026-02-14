@@ -16,24 +16,36 @@ namespace SkillsAndStatsProgressFIXED
             get
             {
                 if (_instance == null)
-                    _instance = SafReadSettings() ?? new Config();
+                {
+                    ConfigMigrationHelper.MigrateConfigFromFilePath(
+                        POptions.GetConfigFilePath(typeof(Config)));
+                    _instance = SafeReadSettings() ?? new Config();
+                }
                 return _instance;
             }
         }
 
         public static void Reload()
         {
-            _instance = SafReadSettings() ?? new Config();
+            ConfigMigrationHelper.MigrateConfigFromFilePath(
+                POptions.GetConfigFilePath(typeof(Config)));
+            _instance = SafeReadSettings() ?? new Config();
         }
 
-        private static Config SafReadSettings()
+        private static Config SafeReadSettings()
         {
             try
             {
+                string canonical = ConfigMigrationHelper.GetCanonicalConfigPath(
+                    POptions.GetConfigFilePath(typeof(Config)));
+                if (!string.IsNullOrEmpty(canonical) && File.Exists(canonical))
+                {
+                    string json = File.ReadAllText(canonical);
+                    return JsonConvert.DeserializeObject<Config>(json);
+                }
                 return POptions.ReadSettings<Config>();
             }
-            catch (DirectoryNotFoundException) { return null; }
-            catch (FileNotFoundException) { return null; }
+            catch (Exception) { return null; }
         }
 
         #region Display Options

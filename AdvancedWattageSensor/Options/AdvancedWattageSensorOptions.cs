@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using Newtonsoft.Json;
 using PeterHan.PLib.Options;
 
@@ -13,9 +15,36 @@ namespace AdvancedWattageSensor.Options
             get
             {
                 if (_instance == null)
-                    _instance = POptions.ReadSettings<AdvancedWattageSensorOptions>() ?? new AdvancedWattageSensorOptions();
+                {
+                    ConfigMigrationHelper.MigrateConfigFromFilePath(
+                        POptions.GetConfigFilePath(typeof(AdvancedWattageSensorOptions)));
+                    _instance = SafeReadSettings() ?? new AdvancedWattageSensorOptions();
+                }
                 return _instance;
             }
+        }
+
+        public static void Reload()
+        {
+            ConfigMigrationHelper.MigrateConfigFromFilePath(
+                POptions.GetConfigFilePath(typeof(AdvancedWattageSensorOptions)));
+            _instance = SafeReadSettings() ?? new AdvancedWattageSensorOptions();
+        }
+
+        private static AdvancedWattageSensorOptions SafeReadSettings()
+        {
+            try
+            {
+                string canonical = ConfigMigrationHelper.GetCanonicalConfigPath(
+                    POptions.GetConfigFilePath(typeof(AdvancedWattageSensorOptions)));
+                if (!string.IsNullOrEmpty(canonical) && File.Exists(canonical))
+                {
+                    string json = File.ReadAllText(canonical);
+                    return JsonConvert.DeserializeObject<AdvancedWattageSensorOptions>(json);
+                }
+                return POptions.ReadSettings<AdvancedWattageSensorOptions>();
+            }
+            catch (Exception) { return null; }
         }
 
         [Option("Warning Threshold (%)", "Percentage of threshold wattage at which the monitor display turns red.\nFor example, 10% means the display turns red when usage reaches 90% of the threshold.", "Power Monitor")]
