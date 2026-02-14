@@ -13,6 +13,7 @@ namespace MorningExercise
             base.OnLoad(harmony);
 
             PUtil.InitLibrary();
+            ConfigMigrationHelper.Migrate(ConfigMigrationHelper.OldConfigFolderName, ConfigMigrationHelper.NewConfigFolderName);
             new POptions().RegisterOptions(this, typeof(Options.MorningExerciseOptions));
             MorningExercisePatches.Options = POptions.ReadSettings<Options.MorningExerciseOptions>() ?? new Options.MorningExerciseOptions();
 

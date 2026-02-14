@@ -25,7 +25,7 @@ namespace ControlledWarnings
         {
             base.OnLoad(harmony);
             PUtil.InitLibrary();
-            ConfigMigrationHelper.Migrate("ControlledWarnings.dll", "ControlledWarnings");
+            ConfigMigrationHelper.Migrate(ConfigMigrationHelper.OldConfigFolderName, ConfigMigrationHelper.NewConfigFolderName);
             new POptions().RegisterOptions(this, typeof(Options.ControlledWarningsOptions));
             harmony.PatchAll();
             Debug.Log("[ControlledWarnings] Loaded");

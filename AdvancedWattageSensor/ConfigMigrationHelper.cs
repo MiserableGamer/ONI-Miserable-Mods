@@ -7,8 +7,8 @@ using UnityEngine;
 // Safe to remove once all users have migrated (a few releases after the fix).
 internal static class ConfigMigrationHelper
 {
-    internal const string OldConfigFolderName = "ControlledSublimation.dll";
-    internal const string NewConfigFolderName = "ControlledSublimation";
+    internal const string OldConfigFolderName = "AdvancedWattageSensor.dll";
+    internal const string NewConfigFolderName = "AdvancedWattageSensor";
     internal const string ConfigFileName = "config.json";
 
     internal static string GetCanonicalConfigPath(string configFilePath)
