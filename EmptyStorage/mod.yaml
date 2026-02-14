@@ -1,4 +1,5 @@
 title: Empty Storage
 description: Adds an "Empty Storage" button to storage buildings to quickly drop all contents
+staticID: MiserableGamer.EmptyStorage
 supportedContent: ALL
 

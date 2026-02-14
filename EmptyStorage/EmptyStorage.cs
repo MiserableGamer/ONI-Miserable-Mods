@@ -13,9 +13,9 @@ namespace EmptyStorage
 
 			// Initialize PLib
 			PUtil.InitLibrary();
+			ConfigMigrationHelper.Migrate("EmptyStorage.dll", "EmptyStorage");
 
 			// Register options with shared config location
-			// The [ConfigFile] attribute should use shared config location automatically
 			var options = new POptions();
 			options.RegisterOptions(this, typeof(EmptyStorageOptions));
 
