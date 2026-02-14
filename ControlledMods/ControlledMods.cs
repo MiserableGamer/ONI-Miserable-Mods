@@ -46,8 +46,9 @@ namespace ControlledMods
             // Register options - must be done in OnLoad for PLib UI to work
             new POptions().RegisterOptions(this, typeof(ControlledModsOptions));
 
-            // Apply patch to resize the options dialog
+            // Apply patches that don't depend on other mods
             OptionsDialogPatch.ApplyPatch(harmony);
+            MainMenuPatches.ApplyPatch(harmony);
 
             Log("Mod loaded - waiting for OnAllModsLoaded to detect target mods");
         }

@@ -5,6 +5,7 @@ Customize and override settings from other mods via an in-game options menu. Tak
 ## Features
 
 - **In-Game Configuration** - All settings accessible from the main menu Mod Options
+- **Restart Button** - Adds a Restart button to the main menu (above Quit) for quick game restarts after changing mods or settings
 - **Smart Detection** - Options only apply if the target mod is detected and enabled
 - **No Dependencies** - Works independently; target mods are optional, not required
 - **Persistent Settings** - Configuration saved between game sessions
@@ -106,6 +107,7 @@ This mod is part of the [ONI 200+ Ultimate Mods collection](https://steamcommuni
 
 ## Version History
 
+- **1.3.0**: Restart button on the main menu (above Quit) for quick restarts
 - **1.2.0**: Resource Sensor (Berkay's mod) – sidescreen with Atmosphere/Storage/Conduits scope checkboxes; counting for atmosphere, storage buildings, and conduits with category tag expansion; threshold max raised to 9,999,999 with units stripped; range visualizer clears on deselect; Copy Settings copies scope toggles; ControlledAutomation inversion support
 - **1.1.0**: KIN Underground Conduit – Logic Terminal crash fix, Copy Settings for conduit terminals/senders/receivers
 - **1.0.0**: Initial release
