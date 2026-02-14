@@ -35,7 +35,7 @@ Per-building control over Oil Well extraction rates. Adjust water input from 0.0
 ### 🗂️ Controlled Filtering
 Control which item categories appear as Standard vs Non-Standard in storage filter lists. Choose whether Clothing, Critter Eggs, and Sublimating items should be included in the "Select All Standard" selection.
 
-[📖 Read More](ControlledFiltering/README.md) | [Latest Release v1.0.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledFiltering-v1.0.0)
+[📖 Read More](ControlledFiltering/README.md) | [Latest Release v1.0.1](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledFiltering-v1.0.1)
 
 ### 🎛️ Controlled Mods
 A framework for customizing and overriding settings from other mods via an in-game options menu. Currently in development - support for various mods will be added in future updates.
