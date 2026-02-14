@@ -43,7 +43,7 @@ namespace EmptyStorage
 			SetOffsetTable(OffsetGroups.InvertedStandardTable);
 		}
 		
-		protected override void OnPrefabInit()
+		public override void OnPrefabInit()
 		{
 			base.OnPrefabInit();
 			this.workerStatusItem = Db.Get().DuplicantStatusItems.Emptying;
@@ -65,7 +65,7 @@ namespace EmptyStorage
 			// NOT calling Prioritizable.AddRef() here - this is the key difference!
 		}
 		
-		protected override void OnSpawn()
+		public override void OnSpawn()
 		{
 			base.OnSpawn();
 			
@@ -200,7 +200,7 @@ namespace EmptyStorage
 			}
 		}
 		
-		protected override void OnCompleteWork(WorkerBase worker)
+		public override void OnCompleteWork(WorkerBase worker)
 		{
 			Storage[] array = this.GetStorages();
 			for (int i = 0; i < array.Length; i++)

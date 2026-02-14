@@ -86,7 +86,7 @@ namespace MorningExercise
             }
         };
 
-        protected override void OnPrefabInit()
+        public override void OnPrefabInit()
         {
             base.OnPrefabInit();
             
@@ -138,14 +138,14 @@ namespace MorningExercise
             }
         }
 
-        protected override void OnSpawn()
+        public override void OnSpawn()
         {
             base.OnSpawn();
             AllExerciseWorkables.Add(this);
             CreateChore();
         }
 
-        protected override void OnCleanUp()
+        public override void OnCleanUp()
         {
             AllExerciseWorkables.Remove(this);
             CancelChore();
@@ -192,7 +192,7 @@ namespace MorningExercise
             }
         }
 
-        protected override void OnStartWork(WorkerBase worker)
+        public override void OnStartWork(WorkerBase worker)
         {
             base.OnStartWork(worker);
             
@@ -226,7 +226,7 @@ namespace MorningExercise
             }
         }
 
-        protected override void OnStopWork(WorkerBase worker)
+        public override void OnStopWork(WorkerBase worker)
         {
             base.OnStopWork(worker);
             
@@ -243,7 +243,7 @@ namespace MorningExercise
             }
         }
 
-        protected override void OnCompleteWork(WorkerBase worker)
+        public override void OnCompleteWork(WorkerBase worker)
         {
             base.OnCompleteWork(worker);
             

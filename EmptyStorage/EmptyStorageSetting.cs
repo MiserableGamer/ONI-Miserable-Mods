@@ -11,19 +11,19 @@ namespace EmptyStorage
 	[SerializationConfig(MemberSerialization.OptIn)]
 	public sealed class EmptyStorageSetting : KMonoBehaviour, ISaveLoadable
 	{
-		protected override void OnCleanUp()
+		public override void OnCleanUp()
 		{
 			base.Unsubscribe(493375141);
 			base.OnCleanUp();
 		}
 
-		protected override void OnPrefabInit()
+		public override void OnPrefabInit()
 		{
 			base.OnPrefabInit();
 			base.Subscribe<EmptyStorageSetting>(493375141, EmptyStorageSetting.OnRefreshUserMenuDelegate);
 		}
 
-		protected override void OnSpawn()
+		public override void OnSpawn()
 		{
 			base.OnSpawn();
 		}

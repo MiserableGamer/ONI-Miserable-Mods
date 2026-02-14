@@ -77,18 +77,18 @@ namespace ControlledOverlay
 		// Computed property for slider range
 		public float SliderRange => sliderMax - sliderMin;
 
-		protected override void OnPrefabInit()
+		public override void OnPrefabInit()
 		{
 			base.OnPrefabInit();
 		}
 
-		protected override void OnSpawn()
+		public override void OnSpawn()
 		{
 			base.OnSpawn();
 			Instance = this;
 		}
 
-		protected override void OnCleanUp()
+		public override void OnCleanUp()
 		{
 			if (Instance == this)
 			{

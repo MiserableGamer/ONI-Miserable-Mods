@@ -16,7 +16,7 @@ namespace MorningExercise
         
         private int cachedWorldId = -1;
 
-        protected override void OnSpawn()
+        public override void OnSpawn()
         {
             base.OnSpawn();
             TryGetComponent(out schedulable);
@@ -26,7 +26,7 @@ namespace MorningExercise
             cachedWorldId = this.GetMyWorldId();
         }
 
-        protected override void OnCleanUp()
+        public override void OnCleanUp()
         {
             CancelWaitingChore();
             base.OnCleanUp();
