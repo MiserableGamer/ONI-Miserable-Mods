@@ -42,7 +42,7 @@ namespace ControlledAutomation.Components
             return false;
         }
 
-        protected override void OnSpawn()
+        public override void OnSpawn()
         {
             base.OnSpawn();
             fastMap[gameObject] = this;
@@ -50,7 +50,7 @@ namespace ControlledAutomation.Components
             UpdatePortTooltips();
         }
 
-        protected override void OnCleanUp()
+        public override void OnCleanUp()
         {
             fastMap.Remove(gameObject);
             base.OnCleanUp();

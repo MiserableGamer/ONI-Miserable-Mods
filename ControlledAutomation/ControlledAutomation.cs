@@ -1,8 +1,10 @@
 using HarmonyLib;
+using KMod;
 using PeterHan.PLib.Core;
 using PeterHan.PLib.Options;
 using ControlledAutomation.Options;
 using ControlledAutomation.Patches;
+using System.Collections.Generic;
 
 namespace ControlledAutomation
 {
@@ -14,8 +16,15 @@ namespace ControlledAutomation
             PUtil.InitLibrary(false);
             ConfigMigrationHelper.Migrate(ConfigMigrationHelper.OldConfigFolderName, ConfigMigrationHelper.NewConfigFolderName);
             new POptions().RegisterOptions(this, typeof(ControlledAutomationOptions));
-            
+        }
+
+        public override void OnAllModsLoaded(Harmony harmony, IReadOnlyList<Mod> mods)
+        {
+            base.OnAllModsLoaded(harmony, mods);
+
+            // Apply conditional patches for other mods (assemblies are now loaded)
             MultipleElementSensorPatches.TryApplyPatches(harmony);
+            ResourceSensorPatches.TryApplyPatches(harmony);
         }
     }
 }

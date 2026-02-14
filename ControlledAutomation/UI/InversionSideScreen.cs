@@ -9,7 +9,7 @@ namespace ControlledAutomation.UI
         private GameObject checkbox;
         private SensorInverter target;
 
-        protected override void OnPrefabInit()
+        public override void OnPrefabInit()
         {
             var margin = new RectOffset(4, 4, 4, 4);
             var baseLayout = gameObject.GetComponent<BoxLayoutGroup>();
