@@ -50,7 +50,7 @@ Adds a text input field to the Temperature Overlay's relative temperature slider
 ### 💨 Controlled Sublimation
 Complete control over element sublimation and off-gassing, with separate settings for debris and storage. Configure Bleach Stone, Oxylite, Polluted Dirt, Slime, Polluted Water, and Polluted Mud individually.
 
-[📖 Read More](ControlledSublimation/README.md) | [Latest Release v1.0.1](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledSublimation-v1.0.1)
+[📖 Read More](ControlledSublimation/README.md) | [Latest Release v1.0.2](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledSublimation-v1.0.2)
 
 ### 📦 Controlled Storage
 Unified storage control: empty storage button, filtering options, capacity control, per-building delivery permissions (dupes and sweepers), and No-Sweep Zones. Copy delivery settings between buildings of the same type.
