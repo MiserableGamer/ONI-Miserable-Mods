@@ -13,6 +13,7 @@ namespace LongerArms
 			
 			// Initialize PLib
 			PUtil.InitLibrary();
+			ConfigMigrationHelper.Migrate("LongerArms.dll", "LongerArms");
 			
 			// Register options
 			var options = new POptions();
