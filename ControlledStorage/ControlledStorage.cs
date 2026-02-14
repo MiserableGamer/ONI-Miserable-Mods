@@ -20,6 +20,7 @@ namespace ControlledStorage
             base.OnLoad(harmony);
 
             PUtil.InitLibrary();
+            ConfigMigrationHelper.Migrate(ConfigMigrationHelper.OldConfigFolderName, ConfigMigrationHelper.NewConfigFolderName);
             new POptions().RegisterOptions(this, typeof(ControlledStorageOptions));
             ControlledStorageStrings.RegisterStrings();
             new PeterHan.PLib.PatchManager.PPatchManager(harmony).RegisterPatchClass(typeof(Patches.NoSweepZonePatches));

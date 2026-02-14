@@ -16,26 +16,44 @@ namespace ControlledStorage
             get
             {
                 if (_instance == null)
+                {
+                    try
+                    {
+                        string plibPath = POptions.GetConfigFilePath(typeof(ControlledStorageOptions));
+                        ConfigMigrationHelper.MigrateConfigFromFilePath(plibPath);
+                    }
+                    catch { /* ignore */ }
                     _instance = SafeReadSettings() ?? new ControlledStorageOptions();
+                }
                 return _instance;
             }
         }
-        
+
         // Reload settings (useful when options change)
         public static void Reload()
         {
+            try
+            {
+                string plibPath = POptions.GetConfigFilePath(typeof(ControlledStorageOptions));
+                ConfigMigrationHelper.MigrateConfigFromFilePath(plibPath);
+            }
+            catch { /* ignore */ }
             _instance = SafeReadSettings() ?? new ControlledStorageOptions();
         }
 
-        // PLib ReadSettings throws when config path doesn't exist (first run) - catch and use defaults
+        // PLib ReadSettings throws when config path doesn't exist (first run) - catch and use defaults. Use canonical path so we read from non-.dll folder.
         private static ControlledStorageOptions SafeReadSettings()
         {
             try
             {
+                string path = ConfigMigrationHelper.GetCanonicalConfigPath(POptions.GetConfigFilePath(typeof(ControlledStorageOptions)));
+                if (!string.IsNullOrEmpty(path) && File.Exists(path))
+                    return JsonConvert.DeserializeObject<ControlledStorageOptions>(File.ReadAllText(path));
                 return POptions.ReadSettings<ControlledStorageOptions>();
             }
             catch (DirectoryNotFoundException) { return null; }
             catch (FileNotFoundException) { return null; }
+            catch { return null; }
         }
 
         #region Empty Storage Options
