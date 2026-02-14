@@ -15,7 +15,7 @@ This package contains all released mods (excluding work-in-progress mods). Extra
 ### 🌳 Bonbon Tree Boost
 Enhances the Bonbon Tree with configurable production boosts and other improvements.
 
-[📖 Read More](BonbonTreeBoost/README.md) | [Latest Release v1.0.1](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/BonbonTreeBoost-v1.0.1) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
+[📖 Read More](BonbonTreeBoost/README.md) | [Latest Release v1.0.2](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/BonbonTreeBoost-v1.0.2) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
 
 ### 📏 Capacity Control
 Increases the character limit for storage capacity input fields, allowing you to type larger values when using mods that increase storage capacity.
