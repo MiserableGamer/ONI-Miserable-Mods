@@ -95,7 +95,7 @@ Adds a Morning Exercise schedule block and Manual Exerciser building, allowing D
 ### 🦠 No Disease
 Completely disables the disease system in Oxygen Not Included, removing all germs, sicknesses, and disease-related mechanics.
 
-[📖 Read More](NoDisease/README.md) | [Latest Release v1.0.1](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/NoDisease-v1.0.1)
+[📖 Read More](NoDisease/README.md) | [Latest Release v1.0.2](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/NoDisease-v1.0.2)
 
 ### 📊 Skills and Stats Progress FIXED
 Displays detailed skill XP progress, attribute experience, travel distance, speed info, radiation stats, and workable efficiency on the duplicant stats panel. A fixed and updated version of Mantakus's SkillsAndStatsProgress mod, rebuilt for the current game version. Fully configurable via Mod Options.
