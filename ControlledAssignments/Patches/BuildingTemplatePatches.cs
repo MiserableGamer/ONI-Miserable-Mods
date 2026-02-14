@@ -21,18 +21,23 @@ namespace ControlledAssignments.Patches
                 var ownable = go.AddOrGet<Ownable>();
                 ownable.slotID = AssignmentConstants.ShowerSlotId;
                 ownable.canBePublic = true;
+                go.AddTag(GameTags.NotRoomAssignable);
             }
             else if (go.GetComponent<HandSanitizer>() != null)
             {
                 var ownable = go.AddOrGet<Ownable>();
                 ownable.slotID = AssignmentConstants.SinkSlotId;
                 ownable.canBePublic = true;
+                go.AddTag(GameTags.NotRoomAssignable);
             }
             else if (go.GetComponent<OilChangerWorkableUse>() != null)
             {
                 var ownable = go.AddOrGet<Ownable>();
                 ownable.slotID = AssignmentConstants.LubricationStationSlotId;
                 ownable.canBePublic = true;
+                // Bionic buildings don't match standard room constraints, so without
+                // this tag the UI defaults to room assignment instead of the dupe list.
+                go.AddTag(GameTags.NotRoomAssignable);
             }
         }
     }

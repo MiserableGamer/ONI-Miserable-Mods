@@ -1,28 +1,27 @@
-using System;
 using HarmonyLib;
 
 namespace ControlledAssignments.Patches
 {
     /// <summary>
-    /// When an Ownable spawns on a bionic-only building that we made assignable,
-    /// add a precondition so only bionic dupes can be assigned.
-    /// Vanilla bionic buildings that already have Ownable (e.g. Gunk Extractor) handle
-    /// this themselves; this patch covers buildings where our mod adds the Ownable.
+    /// For bionic-only buildings that our mod makes assignable (e.g. Lubrication Station),
+    /// restrict assignment to bionic duplicants only.
+    /// This patches CanAssignTo directly so the check happens at evaluation time,
+    /// working reliably for both new and existing (save-loaded) buildings.
     /// </summary>
-    [HarmonyPatch(typeof(Ownable), nameof(Ownable.OnSpawn))]
-    public static class Ownable_OnSpawn_Patch
+    [HarmonyPatch(typeof(Assignable), nameof(Assignable.CanAssignTo))]
+    public static class Assignable_CanAssignTo_Patch
     {
-        internal static void Postfix(Ownable __instance)
+        internal static void Postfix(Assignable __instance, IAssignableIdentity identity, ref bool __result)
         {
-            if (__instance.slotID != AssignmentConstants.LubricationStationSlotId)
-                return;
+            if (!__result) return;
 
-            __instance.AddAssignPrecondition(OnlyBionicsPrecondition);
-        }
+            if (__instance.slotID != AssignmentConstants.LubricationStationSlotId) return;
 
-        private static bool OnlyBionicsPrecondition(MinionAssignablesProxy proxy)
-        {
-            return proxy.GetMinionModel() == BionicMinionConfig.MODEL;
+            if (identity is MinionAssignablesProxy proxy &&
+                proxy.GetMinionModel() != BionicMinionConfig.MODEL)
+            {
+                __result = false;
+            }
         }
     }
 }

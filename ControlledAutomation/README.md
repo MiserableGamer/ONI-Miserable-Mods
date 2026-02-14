@@ -43,7 +43,6 @@ Adds a new temperature sensor building with range-based triggering, and a delay 
 
 ## Version History
 
-- **1.2.0** - Improvement to SideScreen layouts
 - **1.1.0** - Added delay buffer to Adv. Thermo Sensor
 - **1.0.0** - Initial release with threshold sliders and signal inversion
 
