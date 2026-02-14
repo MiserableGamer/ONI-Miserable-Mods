@@ -416,6 +416,7 @@ DEV_RULES.txt
 /prime/
 /reference/
 /.cursor/commands/comment-cleanup.md
+.cursor/mcp.json
 
 # Memory Bank (AI assistant context - local only)
 memory-bank/
