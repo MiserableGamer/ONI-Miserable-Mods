@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using Newtonsoft.Json;
 using PeterHan.PLib.Options;
 
@@ -9,6 +11,44 @@ namespace MorningExercise.Options
     [RestartRequired]
     public class MorningExerciseOptions
     {
+        private static MorningExerciseOptions _instance;
+        public static MorningExerciseOptions Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    ConfigMigrationHelper.MigrateConfigFromFilePath(
+                        POptions.GetConfigFilePath(typeof(MorningExerciseOptions)));
+                    _instance = SafeReadSettings() ?? new MorningExerciseOptions();
+                }
+                return _instance;
+            }
+        }
+
+        public static void Reload()
+        {
+            ConfigMigrationHelper.MigrateConfigFromFilePath(
+                POptions.GetConfigFilePath(typeof(MorningExerciseOptions)));
+            _instance = SafeReadSettings() ?? new MorningExerciseOptions();
+        }
+
+        private static MorningExerciseOptions SafeReadSettings()
+        {
+            try
+            {
+                string canonical = ConfigMigrationHelper.GetCanonicalConfigPath(
+                    POptions.GetConfigFilePath(typeof(MorningExerciseOptions)));
+                if (!string.IsNullOrEmpty(canonical) && File.Exists(canonical))
+                {
+                    string json = File.ReadAllText(canonical);
+                    return JsonConvert.DeserializeObject<MorningExerciseOptions>(json);
+                }
+                return POptions.ReadSettings<MorningExerciseOptions>();
+            }
+            catch (Exception) { return null; }
+        }
+
         // Standard Duplicants section
         [JsonProperty]
         [Option("Enable Exercise", "Whether standard Duplicants are allowed to exercise", "1. Dupes")]
