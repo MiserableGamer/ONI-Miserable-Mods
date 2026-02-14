@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using Newtonsoft.Json;
 using PeterHan.PLib.Options;
 
@@ -10,42 +8,16 @@ namespace ControlledSublimation
 	[RestartRequired]
 	public sealed class ControlledSublimationOptions
 	{
+		// Singleton instance for easy access
 		private static ControlledSublimationOptions _instance;
 		public static ControlledSublimationOptions Instance
 		{
 			get
 			{
 				if (_instance == null)
-				{
-					ConfigMigrationHelper.MigrateConfigFromFilePath(
-						POptions.GetConfigFilePath(typeof(ControlledSublimationOptions)));
-					_instance = SafeReadSettings() ?? new ControlledSublimationOptions();
-				}
+					_instance = POptions.ReadSettings<ControlledSublimationOptions>() ?? new ControlledSublimationOptions();
 				return _instance;
 			}
-		}
-
-		public static void Reload()
-		{
-			ConfigMigrationHelper.MigrateConfigFromFilePath(
-				POptions.GetConfigFilePath(typeof(ControlledSublimationOptions)));
-			_instance = SafeReadSettings() ?? new ControlledSublimationOptions();
-		}
-
-		private static ControlledSublimationOptions SafeReadSettings()
-		{
-			try
-			{
-				string canonical = ConfigMigrationHelper.GetCanonicalConfigPath(
-					POptions.GetConfigFilePath(typeof(ControlledSublimationOptions)));
-				if (!string.IsNullOrEmpty(canonical) && File.Exists(canonical))
-				{
-					string json = File.ReadAllText(canonical);
-					return JsonConvert.DeserializeObject<ControlledSublimationOptions>(json);
-				}
-				return POptions.ReadSettings<ControlledSublimationOptions>();
-			}
-			catch (Exception) { return null; }
 		}
 
 		// ========== BLEACH STONE (Chlorine) ==========

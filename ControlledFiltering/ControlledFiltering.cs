@@ -11,7 +11,6 @@ namespace ControlledFiltering
 		{
 			base.OnLoad(harmony);
 			PUtil.InitLibrary();
-			ConfigMigrationHelper.Migrate(ConfigMigrationHelper.OldConfigFolderName, ConfigMigrationHelper.NewConfigFolderName);
 
 			var options = new POptions();
 			options.RegisterOptions(this, typeof(ControlledFilteringOptions));
