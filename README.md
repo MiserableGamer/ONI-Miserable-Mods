@@ -6,7 +6,7 @@ A collection of quality-of-life and enhancement mods for **Oxygen Not Included**
 
 Download all mods in one convenient package:
 
-[Latest Release v1.27.2](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/MiserableGamersMods-v1.27.2)
+[Latest Release v1.27.3](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/MiserableGamersMods-v1.27.3)
 
 This package contains all released mods (excluding work-in-progress mods). Extract and copy each mod folder to your ONI mods directory.
 
