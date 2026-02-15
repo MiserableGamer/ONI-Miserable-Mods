@@ -388,8 +388,9 @@ cursor-cost-summary/
 # Solution file - do not use (use ONIMiserableMods.slnx only)
 /ONI Miserable Mods.slnx
 
-# PowerShell scripts - ignore stray .ps1 files
+# PowerShell scripts and batch launchers - dev tooling only
 *.ps1
+*.bat
 /release-mod.ps1
 /release-mod.cmd
 /create-indexed-junctions.ps1
