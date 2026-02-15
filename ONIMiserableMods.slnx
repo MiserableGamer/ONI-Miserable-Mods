@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="AdvancedWattageSensor/AdvancedWattageSensor.csproj" />
   <Project Path="BonbonTreeBoost/BonbonTreeBoost.csproj" Id="573ce697-fd53-48de-98fe-0c0eb4ca8f04" />
   <Project Path="CapacityControl/CapacityControl.csproj" Id="b3c4d5e6-f7a8-9012-3456-789abcdef012" />
   <Project Path="ControlledAssignments/ControlledAssignments.csproj" />
