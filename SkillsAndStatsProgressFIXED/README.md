@@ -79,4 +79,5 @@ This mod is part of the [ONI 200+ Ultimate Mods collection](https://steamcommuni
 
 ## Version History
 
+- **1.0.1**: Fixed delta crash, and more bugfixes
 - **1.0.0**: Initial release - rebuilt from Mantakus's original mod for current game API

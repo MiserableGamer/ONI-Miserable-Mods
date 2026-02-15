@@ -168,14 +168,15 @@ namespace SkillsAndStatsProgressFIXED
                     }
 
                     text2 = "";
-                    if (Config.Cfg.EnableComplexFeature && component3 != null)
+                    DataEnum trackedEnum;
+                    if (Config.Cfg.EnableComplexFeature && component3 != null && DataHelper.TryConvertStringToEnum(s, out trackedEnum))
                     {
-                        string text4 = MinionManager.GetLastAttribSum(component3)[s].ToString();
+                        string text4 = MinionManager.GetLastAttribSum(component3)[trackedEnum].ToString();
                         SimpleRecord simpleRecord3;
                         string text5;
                         if (MinionManager.LastUpdChange.TryGetValue(component3, out simpleRecord3))
                         {
-                            int tempi2 = simpleRecord3[s];
+                            int tempi2 = simpleRecord3[trackedEnum];
                             text5 = Print(tempi2);
                         }
                         else
@@ -191,7 +192,7 @@ namespace SkillsAndStatsProgressFIXED
                                 text4,
                                 "/",
                                 text5,
-                                simpleRecord4[s].ToString(),
+                                simpleRecord4[trackedEnum].ToString(),
                                 ")"
                             });
                         }

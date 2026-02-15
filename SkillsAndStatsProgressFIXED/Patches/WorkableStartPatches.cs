@@ -1,5 +1,6 @@
 using HarmonyLib;
 using Klei.AI;
+using PeterHan.PLib.Core;
 
 namespace SkillsAndStatsProgressFIXED
 {
@@ -12,6 +13,18 @@ namespace SkillsAndStatsProgressFIXED
         }
 
         public static void Postfix(Workable __instance)
+        {
+            try
+            {
+                PostfixImpl(__instance);
+            }
+            catch (System.Exception e)
+            {
+                PUtil.LogWarning($"SkillsAndStatsProgressFIXED: error in WorkableStartPatches for {__instance?.GetType().Name}: {e.Message}");
+            }
+        }
+
+        private static void PostfixImpl(Workable __instance)
         {
             if (__instance.worker == null)
                 return;

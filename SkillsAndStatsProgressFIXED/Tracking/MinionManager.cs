@@ -55,20 +55,22 @@ namespace SkillsAndStatsProgressFIXED
 
         public static void RemoveDataOlderThen(int Time)
         {
-            if (L.Last == null)
-                return;
-
-            while (L.Last.Value.Time <= Time)
+            while (L.Last != null && L.Last.Value.Time <= Time)
             {
                 ComplexRecord value = L.Last.Value;
                 L.RemoveLast();
-                SimpleRecord simpleRecord = Change[value.Minion];
-                SimpleRecord simpleRecord2 = LastUpdChange[value.Minion];
-                foreach (object obj in Enum.GetValues(typeof(DataEnum)))
+
+                SimpleRecord simpleRecord;
+                SimpleRecord simpleRecord2;
+                if (Change.TryGetValue(value.Minion, out simpleRecord) &&
+                    LastUpdChange.TryGetValue(value.Minion, out simpleRecord2))
                 {
-                    DataEnum dataEnum = (DataEnum)obj;
-                    simpleRecord[dataEnum] -= value.Delta[dataEnum];
-                    simpleRecord2[dataEnum] -= value.Delta[dataEnum];
+                    foreach (object obj in Enum.GetValues(typeof(DataEnum)))
+                    {
+                        DataEnum dataEnum = (DataEnum)obj;
+                        simpleRecord[dataEnum] -= value.Delta[dataEnum];
+                        simpleRecord2[dataEnum] -= value.Delta[dataEnum];
+                    }
                 }
                 ComplexRecord.Recycle(value);
             }

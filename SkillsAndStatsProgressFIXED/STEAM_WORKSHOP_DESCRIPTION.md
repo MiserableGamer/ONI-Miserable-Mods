@@ -86,5 +86,6 @@ This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/
 
 [h2]Version History[/h2]
 [list]
+[*][b]1.0.1[/b]: Fixed delta crash, and more bugfixes
 [*][b]1.0.0[/b]: Initial release - rebuilt from Mantakus's original mod for current game API
 [/list]

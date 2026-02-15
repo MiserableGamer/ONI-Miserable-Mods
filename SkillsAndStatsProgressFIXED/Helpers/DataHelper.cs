@@ -45,5 +45,10 @@ namespace SkillsAndStatsProgressFIXED
         {
             return dt2[S];
         }
+
+        public static bool TryConvertStringToEnum(string S, out DataEnum result)
+        {
+            return dt2.TryGetValue(S, out result);
+        }
     }
 }
