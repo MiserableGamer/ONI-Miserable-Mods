@@ -3,8 +3,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-# In-development-only projects (on development branch only; ignore so they are not committed on master).
+# In-development-only projects and files (on development branch only; ignore so they are not committed on master).
 # The promote script automatically removes the project from this list when you promote it to master.
+project-versions.yaml
 BlankProject/
 CommonLib/
 ControlledFramerate/
