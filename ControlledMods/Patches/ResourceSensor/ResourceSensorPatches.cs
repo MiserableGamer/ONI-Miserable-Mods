@@ -99,6 +99,16 @@ namespace ControlledMods.Patches.ResourceSensor
             if (countBuilding != null)
                 harmony.Patch(countBuilding, prefix: new HarmonyMethod(typeof(LogicResourceSensor_CountBuilding_Patch), nameof(LogicResourceSensor_CountBuilding_Patch.Prefix)));
 
+            // Fix CountDistance: also check FoundationTile layer for tile-based storage (e.g. StorageTile)
+            var countDistance = AccessTools.Method(sensorType, "CountDistance", Type.EmptyTypes);
+            if (countDistance != null)
+                harmony.Patch(countDistance, prefix: new HarmonyMethod(typeof(LogicResourceSensor_CountDistance_Patch), nameof(LogicResourceSensor_CountDistance_Patch.Prefix)));
+
+            // Fix CountRoom: expand scan to include boundary tiles and check FoundationTile layer
+            var countRoom = AccessTools.Method(sensorType, "CountRoom", new[] { typeof(Room) });
+            if (countRoom != null)
+                harmony.Patch(countRoom, prefix: new HarmonyMethod(typeof(LogicResourceSensor_CountRoom_Patch), nameof(LogicResourceSensor_CountRoom_Patch.Prefix)));
+
             // Threshold: raise max to 9999999, strip units from display
             var getRangeMaxInputField = AccessTools.Method(sensorType, "GetRangeMaxInputField", Type.EmptyTypes);
             if (getRangeMaxInputField != null)
@@ -770,6 +780,204 @@ namespace ControlledMods.Patches.ResourceSensor
                 catch { }
                 return true;
             }
+        }
+
+        // CountDistance: also check FoundationTile layer for tile-based storage buildings
+        public static class LogicResourceSensor_CountDistance_Patch
+        {
+            public static bool Prefix(object __instance, ref float __result)
+            {
+                try
+                {
+                    if (__instance == null) return true;
+
+                    var cmp = __instance as Component;
+                    if (cmp == null) return true;
+
+                    var scope = cmp.GetComponent<ControlledMods.ResourceSensor.ResourceSensorStorageScope>();
+
+                    var logicPortsField = AccessTools.Field(__instance.GetType(), "logicPorts");
+                    var logicPorts = logicPortsField?.GetValue(__instance) as LogicPorts;
+                    if (logicPorts == null) return true;
+                    int cell = logicPorts.GetPortCell(LogicSwitch.PORT_ID);
+
+                    var visualizerField = AccessTools.Field(__instance.GetType(), "visualizer");
+                    var visualizer = visualizerField?.GetValue(__instance);
+                    var visCellsField = visualizer != null ? AccessTools.Field(visualizer.GetType(), "visCells") : null;
+                    var visCells = visCellsField?.GetValue(visualizer) as System.Collections.IList;
+
+                    var distanceProp = AccessTools.Property(__instance.GetType(), "Distance");
+                    int distance = distanceProp != null ? (int)distanceProp.GetValue(__instance) : 0;
+
+                    var includeStorageField = AccessTools.Field(__instance.GetType(), "includeStorage");
+                    bool includeStorage = includeStorageField != null && (bool)includeStorageField.GetValue(__instance);
+
+                    var visualiserDirtyField = AccessTools.Field(__instance.GetType(), "visualiserDirty");
+                    bool visualiserDirty = visualiserDirtyField != null && (bool)visualiserDirtyField.GetValue(__instance);
+
+                    var selectableField = AccessTools.Field(__instance.GetType(), "selectable");
+                    var selectable = selectableField?.GetValue(__instance) as KSelectable;
+
+                    visCells?.Clear();
+
+                    if (distance == 0)
+                    {
+                        if (visualiserDirty && selectable != null && selectable.IsSelected)
+                        {
+                            var refreshMethod = visualizer != null ? AccessTools.Method(visualizer.GetType(), "Refresh") : null;
+                            refreshMethod?.Invoke(visualizer, null);
+                        }
+
+                        // CountCell handles atmosphere/pickupables; also check FoundationTile at this cell
+                        var countCellMethod = AccessTools.Method(__instance.GetType(), "CountCell", new[] { typeof(int) });
+                        float cellMass = countCellMethod != null ? (float)countCellMethod.Invoke(__instance, new object[] { cell }) : 0f;
+
+                        float tileMass = 0f;
+                        if (includeStorage && (scope == null || scope.IncludeStorage))
+                            tileMass = CountFoundationTileStorage(__instance, cell);
+
+                        __result = cellMass + tileMass;
+                        return false;
+                    }
+
+                    HashSet<GameObject> countedBuildings = new HashSet<GameObject>();
+                    HashSet<GameObject> countedTiles = new HashSet<GameObject>();
+
+                    Grid.CellToXY(cell, out int cellX, out int cellY);
+                    int minX = cellX - distance;
+                    int maxX = cellX + distance;
+                    int minY = cellY - distance;
+                    int maxY = cellY + distance;
+
+                    float totalMass = 0f;
+                    var countCellM = AccessTools.Method(__instance.GetType(), "CountCell", new[] { typeof(int) });
+                    var countBuildingM = AccessTools.Method(__instance.GetType(), "CountBuilding", new[] { typeof(GameObject) });
+
+                    for (int x = minX; x <= maxX; x++)
+                    {
+                        for (int y = minY; y <= maxY; y++)
+                        {
+                            int searchCell = Grid.XYToCell(x, y);
+
+                            if (!Grid.IsSolidCell(searchCell))
+                            {
+                                visCells?.Add(searchCell);
+
+                                if (countCellM != null)
+                                    totalMass += (float)countCellM.Invoke(__instance, new object[] { searchCell });
+
+                                if (includeStorage)
+                                {
+                                    GameObject obj = Grid.Objects[searchCell, (int)ObjectLayer.Building];
+                                    if (obj != null && countedBuildings.Add(obj) && countBuildingM != null)
+                                        totalMass += (float)countBuildingM.Invoke(__instance, new object[] { obj });
+                                }
+                            }
+
+                            // Check FoundationTile layer for tile-based storage (e.g. StorageTile) on ALL cells
+                            if (includeStorage && (scope == null || scope.IncludeStorage))
+                            {
+                                GameObject tileObj = Grid.Objects[searchCell, (int)ObjectLayer.FoundationTile];
+                                if (tileObj != null && countedTiles.Add(tileObj) && countBuildingM != null)
+                                    totalMass += (float)countBuildingM.Invoke(__instance, new object[] { tileObj });
+                            }
+                        }
+                    }
+
+                    if (visualiserDirty && selectable != null && selectable.IsSelected)
+                    {
+                        var refreshMethod = visualizer != null ? AccessTools.Method(visualizer.GetType(), "Refresh") : null;
+                        refreshMethod?.Invoke(visualizer, null);
+                    }
+
+                    __result = totalMass;
+                    return false;
+                }
+                catch { }
+                return true;
+            }
+        }
+
+        // CountRoom: expand scan to include boundary tiles (floor/walls/ceiling) and check FoundationTile
+        public static class LogicResourceSensor_CountRoom_Patch
+        {
+            public static bool Prefix(object __instance, Room room, ref float __result)
+            {
+                try
+                {
+                    if (__instance == null || room == null || room.cavity == null) return true;
+
+                    var cmp = __instance as Component;
+                    if (cmp == null) return true;
+
+                    var scope = cmp.GetComponent<ControlledMods.ResourceSensor.ResourceSensorStorageScope>();
+
+                    var includeStorageField = AccessTools.Field(__instance.GetType(), "includeStorage");
+                    bool includeStorage = includeStorageField != null && (bool)includeStorageField.GetValue(__instance);
+
+                    int minX = room.cavity.minX;
+                    int maxX = room.cavity.maxX;
+                    int minY = room.cavity.minY;
+                    int maxY = room.cavity.maxY;
+
+                    HashSet<GameObject> countedBuildings = new HashSet<GameObject>();
+                    HashSet<GameObject> countedTiles = new HashSet<GameObject>();
+
+                    RoomProber roomProber = Game.Instance.roomProber;
+                    var countCellM = AccessTools.Method(__instance.GetType(), "CountCell", new[] { typeof(int) });
+                    var countBuildingM = AccessTools.Method(__instance.GetType(), "CountBuilding", new[] { typeof(GameObject) });
+
+                    float totalMass = 0f;
+
+                    // Expanded scan: 1 extra cell in each direction to catch boundary tiles
+                    for (int x = minX - 1; x <= maxX + 1; x++)
+                    {
+                        for (int y = minY - 1; y <= maxY + 1; y++)
+                        {
+                            int cell = Grid.XYToCell(x, y);
+
+                            // Original cavity logic for non-solid cells inside the room
+                            if (!Grid.IsSolidCell(cell) && roomProber.GetCavityForCell(cell) == room.cavity)
+                            {
+                                if (countCellM != null)
+                                    totalMass += (float)countCellM.Invoke(__instance, new object[] { cell });
+
+                                if (includeStorage)
+                                {
+                                    GameObject obj = Grid.Objects[cell, (int)ObjectLayer.Building];
+                                    if (obj != null && countedBuildings.Add(obj) && countBuildingM != null)
+                                        totalMass += (float)countBuildingM.Invoke(__instance, new object[] { obj });
+                                }
+                            }
+
+                            // Check FoundationTile layer for tile-based storage on ALL cells in the expanded area
+                            if (includeStorage && (scope == null || scope.IncludeStorage))
+                            {
+                                GameObject tileObj = Grid.Objects[cell, (int)ObjectLayer.FoundationTile];
+                                if (tileObj != null && countedTiles.Add(tileObj) && countBuildingM != null)
+                                    totalMass += (float)countBuildingM.Invoke(__instance, new object[] { tileObj });
+                            }
+                        }
+                    }
+
+                    __result = totalMass;
+                    return false;
+                }
+                catch { }
+                return true;
+            }
+        }
+
+        // Helper: count storage mass in a FoundationTile building at a single cell
+        private static float CountFoundationTileStorage(object sensorInstance, int cell)
+        {
+            GameObject tileObj = Grid.Objects[cell, (int)ObjectLayer.FoundationTile];
+            if (tileObj == null) return 0f;
+
+            var countBuildingM = AccessTools.Method(sensorInstance.GetType(), "CountBuilding", new[] { typeof(GameObject) });
+            if (countBuildingM == null) return 0f;
+
+            return (float)countBuildingM.Invoke(sensorInstance, new object[] { tileObj });
         }
 
         public static class LogicResourceSensor_GetRangeMaxInputField_Patch
