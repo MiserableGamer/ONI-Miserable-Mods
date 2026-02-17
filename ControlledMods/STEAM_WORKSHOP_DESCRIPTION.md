@@ -24,6 +24,13 @@ When the Resource Sensor mod is detected and the option is enabled:
 [*][b]Inversion[/b] - When ControlledAutomation is loaded with inversion enabled, the invert checkbox appears on the Resource Sensor
 [/list]
 
+[h3]Free Resource Buildings[/h3]
+When the Free Resource Buildings mod is detected and the option is enabled:
+[list]
+[*][b]Free Energy Generator wattage slider fix[/b] - The sidescreen wattage slider now actually controls power output (the original mod's slider changes a value that is never read for generation)
+[*][b]Power Sink building[/b] - Adds a Power Sink to the Power build menu (reverse of the Power Box): a 1×1 building that consumes power at a configurable rate via a sidescreen slider (0–40,000 W). Useful for testing power systems. Uses a red-tinted Power Box animation to distinguish it visually
+[/list]
+
 [h3]KIN Underground Conduit[/h3]
 Steam Workshop: [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3347169088]KIN Underground Conduit[/url]
 [list]
@@ -106,6 +113,8 @@ Please mention "ControlledMods" in your issue title or description.
 
 [h2]Version History[/h2]
 [list]
+[*][b]1.5.0[/b]: Free Resource Buildings – Free Energy Generator wattage slider now controls actual power output; Power Sink building added (configurable power consumer for testing)
+[*][b]1.4.0[/b]: Resource Sensor – Storage counting now includes tile-based storage (e.g. Storage Tiles) in both Distance and Room modes
 [*][b]1.3.0[/b]: Restart button on the main menu (above Quit) for quick restarts
 [*][b]1.2.0[/b]: Resource Sensor – sidescreen with Atmosphere/Storage/Conduits scope checkboxes; counting for atmosphere, storage buildings, and conduits with category tag expansion; threshold max raised to 9,999,999 with units stripped; range visualizer clears on deselect; Copy Settings copies scope toggles; ControlledAutomation inversion support
 [*][b]1.1.0[/b]: KIN Underground Conduit – Logic Terminal crash fix, Copy Settings for conduit terminals/senders/receivers
