@@ -26,34 +26,8 @@ When the Resource Sensor mod is detected and the option is enabled:
 
 [h3]KIN Underground Conduit[/h3]
 [list]
-[*]Adds Atmosphere / Storage / Conduits scope controls
-[*]Improves counting (including tile storage and conduit contents)
-[*]Raises threshold max to 9,999,999 and removes hardcoded unit text
-[*]Clears range visualizer correctly on deselect
-[*]Supports Copy Settings and ControlledAutomation inversion
-[/list]
-Compatible with Berkay's Resource Sensor and ResourceSensorFIXED.
-
-[h3]Free Resource Buildings[/h3]
-Steam Workshop: [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2839006500]Free Resource Buildings[/url]
-[list]
-[*]Fixes Free Energy Generator wattage slider to control real output
-[*]Adds Power Sink (1x1 configurable power consumer, 0-40,000 W)
-[/list]
-
-[h3]Customize Plants[/h3]
-Steam Workshop: [url=https://steamcommunity.com/sharedfiles/filedetails/?id=1818145851]Customize Plants[/url]
-[list]
-[*]Applies max_age to Vine Branch (ovagro), which vanilla Customize Plants misses
-[/list]
-
-[h3]Duplicant Room Sensor[/h3]
-Steam Workshop: [url=https://steamcommunity.com/sharedfiles/filedetails/?id=1921058858]Duplicant Room Sensor[/url]
-[list]
-[*]Per-sensor Range Limit toggle and Range Input (1-64)
-[*]Range-limited sensing respects walls/closed doors and stays room-bounded
-[*]Compatible with Peter Han's ShowRange visualization
-[*]Supports Copy Settings for range toggle/value
+[*][b]Free Energy Generator wattage slider fix[/b] - The sidescreen wattage slider now actually controls power output (the original mod's slider changes a value that is never read for generation)
+[*][b]Power Sink building[/b] - Adds a Power Sink to the Power build menu (reverse of the Power Box): a 1×1 building that consumes power at a configurable rate via a sidescreen slider (0–40,000 W). Useful for testing power systems. Uses a red-tinted Power Box animation to distinguish it visually
 [/list]
 
 [h3]KIN Underground Conduit[/h3]
@@ -128,6 +102,8 @@ Please mention "ControlledMods" in your issue title or description.
 
 [h2]Version History[/h2]
 [list]
+[*][b]1.5.0[/b]: Free Resource Buildings – Free Energy Generator wattage slider now controls actual power output; Power Sink building added (configurable power consumer for testing)
+[*][b]1.4.0[/b]: Resource Sensor – Storage counting now includes tile-based storage (e.g. Storage Tiles) in both Distance and Room modes
 [*][b]1.3.0[/b]: Restart button on the main menu (above Quit) for quick restarts
 [*][b]1.2.0[/b]: Resource Sensor – sidescreen with Atmosphere/Storage/Conduits scope checkboxes; counting for atmosphere, storage buildings, and conduits with category tag expansion; threshold max raised to 9,999,999 with units stripped; range visualizer clears on deselect; Copy Settings copies scope toggles; ControlledAutomation inversion support
 [*][b]1.1.0[/b]: KIN Underground Conduit – Logic Terminal crash fix, Copy Settings for conduit terminals/senders/receivers
