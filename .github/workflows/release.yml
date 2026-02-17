@@ -10,6 +10,8 @@ run-name: Release ${{ github.ref_name }}
 jobs:
   release:
     runs-on: windows-latest
+    permissions:
+      contents: write
     
     steps:
       - name: Checkout code
@@ -129,7 +131,7 @@ jobs:
 
       - name: Create Release
         if: steps.check_zip.outputs.zip_exists == 'true'
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: |
             ${{ steps.check_zip.outputs.zip_path }}
