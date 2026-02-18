@@ -1,5 +1,7 @@
 using TUNING;
 using UnityEngine;
+using ControlledMods.ModDetection;
+using ControlledMods.Options;
 
 namespace ControlledMods.Buildings
 {
@@ -8,12 +10,17 @@ namespace ControlledMods.Buildings
         public const string ID = "ControlledMods_PowerSink";
         public const float DEFAULT_WATTAGE = 2000f;
 
+        private static bool IsEnabled =>
+            FreeResourceBuildingsDetection.Loaded && ControlledModsOptions.Instance.AddPowerSinkBuilding;
+
         public override BuildingDef CreateBuildingDef()
         {
+            string anim = IsEnabled ? "free_energy_kanim" : "ladder_kanim";
+
             BuildingDef def = BuildingTemplates.CreateBuildingDef(
                 ID,
                 1, 1,
-                "free_energy_kanim",
+                anim,
                 100,
                 30f,
                 BUILDINGS.CONSTRUCTION_MASS_KG.TIER2,
@@ -41,12 +48,33 @@ namespace ControlledMods.Buildings
 
         public override void ConfigureBuildingTemplate(GameObject go, Tag prefab_tag)
         {
-            go.AddOrGet<PowerSink>();
+            if (IsEnabled)
+                go.AddOrGet<PowerSink>();
         }
 
         public override void DoPostConfigureComplete(GameObject go)
         {
-            go.AddOrGet<LogicOperationalController>();
+            if (IsEnabled)
+                go.AddOrGet<LogicOperationalController>();
+        }
+
+        public override void DoPostConfigurePreview(BuildingDef def, GameObject go)
+        {
+            base.DoPostConfigurePreview(def, go);
+            ApplyTint(go);
+        }
+
+        public override void DoPostConfigureUnderConstruction(GameObject go)
+        {
+            base.DoPostConfigureUnderConstruction(go);
+            ApplyTint(go);
+        }
+
+        private static void ApplyTint(GameObject go)
+        {
+            var kbac = go.GetComponent<KBatchedAnimController>();
+            if (kbac != null)
+                kbac.TintColour = PowerSink.SINK_TINT;
         }
     }
 }

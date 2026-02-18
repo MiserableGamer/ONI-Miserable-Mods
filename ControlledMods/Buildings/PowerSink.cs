@@ -8,7 +8,7 @@ namespace ControlledMods.Buildings
     {
         public const float MAX_CONSUMPTION = 40000f;
 
-        private static readonly Color SINK_TINT = new Color(1f, 0.35f, 0.35f, 1f);
+        public static readonly Color SINK_TINT = new Color(1f, 0.35f, 0.35f, 1f);
 
         [Serialize]
         [SerializeField]
@@ -20,8 +20,13 @@ namespace ControlledMods.Buildings
         [MyCmpGet]
         private Operational operational;
 
+        [MyCmpGet]
+        private KBatchedAnimController kbac;
+
         [MyCmpAdd]
         private CopyBuildingSettings copyBuildingSettings;
+
+        private bool tintApplied;
 
         private static readonly EventSystem.IntraObjectHandler<PowerSink> OnCopySettingsDelegate =
             new EventSystem.IntraObjectHandler<PowerSink>(
@@ -36,10 +41,7 @@ namespace ControlledMods.Buildings
         public override void OnSpawn()
         {
             base.OnSpawn();
-
-            var kbac = GetComponent<KBatchedAnimController>();
-            if (kbac != null)
-                kbac.TintColour = SINK_TINT;
+            ApplyTint();
 
             if (energyConsumer != null)
                 energyConsumer.BaseWattageRating = currentConsumption;
@@ -52,6 +54,18 @@ namespace ControlledMods.Buildings
 
             if (energyConsumer != null)
                 energyConsumer.BaseWattageRating = currentConsumption;
+
+            if (!tintApplied)
+                ApplyTint();
+        }
+
+        private void ApplyTint()
+        {
+            if (kbac != null)
+            {
+                kbac.TintColour = SINK_TINT;
+                tintApplied = true;
+            }
         }
 
         private void OnCopySettings(object data)

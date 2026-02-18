@@ -17,7 +17,7 @@ Customize and override settings from other mods via an in-game options menu. Tak
 When the Resource Sensor mod is detected and the option is enabled:
 [list]
 [*][b]Sidescreen[/b] - Three scope checkboxes: Atmosphere, Storage, Conduits (each can be toggled independently); "Include Storage Buildings" row hidden; Global mode row hidden
-[*][b]Counting[/b] - Atmosphere (cell element + pickupables), any building with a Storage component, and gas/liquid/solid conduits, based on the scope checkboxes; category tags in the element filter are expanded to discovered resources
+[*][b]Counting[/b] - Atmosphere (cell element + pickupables), any building with a Storage component (including tile-based storage like Storage Tiles), and gas/liquid/solid conduits, based on the scope checkboxes; category tags in the element filter are expanded to discovered resources
 [*][b]Threshold[/b] - Max raised to 9,999,999; units stripped from the threshold display (no "kg" in textbox or tooltips); input character limit raised to 8
 [*][b]Range visualizer[/b] - Clears when the building is deselected (same behavior as switching to Room mode)
 [*][b]Copy Settings[/b] - Copies the Atmosphere / Storage / Conduits scope toggles
@@ -108,6 +108,7 @@ This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/
 
 [h2]Version History[/h2]
 [list]
+[*][b]1.5.1[/b]: Fixed kanim loading bug
 [*][b]1.5.0[/b]: Free Resource Buildings – Free Energy Generator wattage slider now controls actual power output; Power Sink building added (configurable power consumer for testing)
 [*][b]1.4.0[/b]: Resource Sensor – Storage counting now includes tile-based storage (e.g. Storage Tiles) in both Distance and Room modes
 [*][b]1.3.0[/b]: Restart button on the main menu (above Quit) for quick restarts
