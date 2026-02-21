@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace ControlledMods.Buildings
 {
+#pragma warning disable CS0649 // Fields assigned by game via MyCmpGet/MyCmpAdd
+#pragma warning disable CS0169 // copyBuildingSettings added for Copy Settings UI only, not referenced in code
+
     [SerializationConfig(MemberSerialization.OptIn)]
     public class PowerSink : KMonoBehaviour, ISliderControl, ISingleSliderControl, ISim200ms
     {
@@ -97,4 +100,7 @@ namespace ControlledMods.Buildings
         public string GetSliderTooltip(int index) =>
             "Adjust how much power this building consumes";
     }
+
+#pragma warning restore CS0169
+#pragma warning restore CS0649
 }

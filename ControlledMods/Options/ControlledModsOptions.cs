@@ -122,6 +122,13 @@ namespace ControlledMods.Options
         [JsonProperty]
         public bool EnableCopySettingsForConduits { get; set; } = true;
 
+        [Option("Tint Logic Terminal light by signal",
+            "When enabled, the light on the Logic Terminal when a channel is selected reflects the logic output: green signal = standard light, red signal = light tinted red. " +
+            "Requires KIN Underground Conduit mod.",
+            "KIN Underground Conduit")]
+        [JsonProperty]
+        public bool TintLogicTerminalLight { get; set; } = true;
+
         // ========== Resource Sensor (Berkay) ==========
 
         [Option("Apply fixes to Resource Sensor",
@@ -129,6 +136,21 @@ namespace ControlledMods.Options
             "Resource Sensor")]
         [JsonProperty]
         public bool EnableResourceSensor { get; set; } = true;
+
+        // ========== Free Resource Buildings (castrolol) ==========
+
+        [Option("Fix Free Energy Generator wattage slider",
+            "When enabled and the Free Resource Buildings mod is loaded, the wattage slider on the Free Energy Generator actually controls power output (vanilla bug: slider had no effect).",
+            "Free Resource Buildings")]
+        [JsonProperty]
+        public bool FixFreeEnergyGeneratorSlider { get; set; } = true;
+
+        [Option("Add Power Sink building",
+            "When enabled and the Free Resource Buildings mod is loaded, adds a Power Sink building (the reverse of the Power Box) that consumes power at a configurable rate via a slider. " +
+            "Useful for testing power systems. Found in the Power category of the build menu.",
+            "Free Resource Buildings")]
+        [JsonProperty]
+        public bool AddPowerSinkBuilding { get; set; } = true;
 
         // ========== Add more mod option sections here ==========
 
