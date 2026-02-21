@@ -1,4 +1,4 @@
-title: "ControlledCrashes"
+title: "Controlled Crashes"
 description: "Prevents game crashes by catching exceptions and logging detailed diagnostic information"
 staticID: ControlledCrashes
 supportedContent: ALL
