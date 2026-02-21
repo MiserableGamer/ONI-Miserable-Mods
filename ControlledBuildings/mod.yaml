@@ -1,0 +1,3 @@
+title: 'Controlled Buildings'
+description: "Adjusts building footprints and placement rules to fix visual conflicts (e.g. Juicer reduced to 3x3 so ceiling trim fits in 4-high rooms)."
+staticID: MiserableGamer.ControlledBuildings

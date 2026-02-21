@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>ControlledBuildings</AssemblyName>
+    <RootNamespace>ControlledBuildings</RootNamespace>
+  </PropertyGroup>
+
+  <!-- Optional preview.jpg (add file yourself); preview.png supported via Directory.Build.props -->
+  <ItemGroup>
+    <Content Include="preview.jpg" CopyToOutputDirectory="PreserveNewest" Condition="Exists('$(MSBuildProjectDirectory)\preview.jpg')" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="artwork\" />
+  </ItemGroup>
+
+</Project>
