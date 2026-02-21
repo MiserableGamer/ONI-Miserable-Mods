@@ -89,13 +89,17 @@ Please mention "Controlled Sublimation" in your issue title or description.
 
 ## Mod Collection
 
-This mod is part of the [ONI 200+ Ultimate Mods collection](https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156) on Steam Workshop, featuring over 200 tested and compatible mods for Oxygen Not Included.
+This mod is part of the [ONI 235+ Ultimate Mods collection](https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156) on Steam Workshop, featuring over 235 tested and compatible mods for Oxygen Not Included.
 
 ## Credits
 
 - Built using [PLib](https://github.com/peterhaneve/ONIMods) by Peter Han
 - Uses [Harmony](https://github.com/pardeike/Harmony) for runtime patching
 
-## Version History
+## Changelog
 
-- **1.0.1.1**: Initial release with per-element debris/storage control
+### 1.1.0
+- Added Bleach Stone Sconce
+
+### 1.0.1
+- Initial release with per-element debris/storage control

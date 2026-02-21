@@ -1,5 +1,6 @@
 using HarmonyLib;
 using UnityEngine;
+using ControlledSublimation.Buildings;
 
 namespace ControlledSublimation.Patches
 {
@@ -44,10 +45,10 @@ namespace ControlledSublimation.Patches
 					if (pickupable != null && pickupable.storage != null)
 					{
 						var storagePrefabId = pickupable.storage.PrefabID();
-						// Oxysconce (Bleach Stone Sconce) is designed to emit - always allow
-						if (storagePrefabId == (Tag)"Oxysconce")
+						// Sconces are designed to emit - always allow
+						bool isSconce = storagePrefabId == (Tag)"Oxysconce" || storagePrefabId == (Tag)BleachStoneSconceConfig.ID;
+						if (isSconce)
 						{
-							// Apply rate multiplier via dt and allow
 							dt *= s.RateMultiplier;
 							return true;
 						}
