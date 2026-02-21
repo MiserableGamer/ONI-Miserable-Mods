@@ -27,6 +27,11 @@ Makes showers, sinks, and lubrication stations assignable to individual duplican
 
 [📖 Read More](ControlledAssignments/README.md) | [Latest Release v1.0.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledAssignments-v1.0.0)
 
+### 🏗️ Controlled Buildings
+Adjusts building footprints and placement rules to fix visual conflicts. Juicer footprint fix for ceiling trim; transit tubes draw in front of drywall, drywall buildable in same cell as tubes, build in/behind tiles, tighter bends; vanilla drywall hides conduits and wires.
+
+[📖 Read More](ControlledBuildings/README.md) | [Latest Release v1.0.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledBuildings-v1.0.0)
+
 ### ⛽ Controlled Extraction
 Per-building control over Oil Well extraction rates. Adjust water input from 0.01 to 100 kg/s with proportional oil output and gas pressure scaling. Compatible with Ronivan's Legacy.
 
@@ -36,6 +41,11 @@ Per-building control over Oil Well extraction rates. Adjust water input from 0.0
 Control which item categories appear as Standard vs Non-Standard in storage filter lists. Choose whether Clothing, Critter Eggs, and Sublimating items should be included in the "Select All Standard" selection.
 
 [📖 Read More](ControlledFiltering/README.md) | [Latest Release v1.0.1](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledFiltering-v1.0.1)
+
+### 🎞️ Controlled Framerate
+Adaptive game speed that automatically adjusts to maintain your target FPS. Built-in benchmark, per-save speed profiles, custom speed buttons, and a live speed monitor. Run your colony at the fastest speed your PC can handle without dropping frames.
+
+[📖 Read More](ControlledFramerate/README.md) | [Latest Release v1.0.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledFramerate-v1.0.0) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3670573352)
 
 ### 🎛️ Controlled Mods
 A framework for customizing and overriding settings from other mods via an in-game options menu. Currently in development - support for various mods will be added in future updates.
