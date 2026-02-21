@@ -172,7 +172,7 @@ When reporting issues, please mention the specific mod name in your issue title 
 
 ## 🎮 Mod Collection
 
-All mods are part of the [**ONI 200+ Ultimate Mods collection**](https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156) on Steam Workshop, featuring over 200 tested and compatible mods for Oxygen Not Included.
+All mods are part of the [**ONI 235+ Ultimate Mods collection**](https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156) on Steam Workshop, featuring over 200 tested and compatible mods for Oxygen Not Included.
 
 ## 🛠️ Building from Source
 
