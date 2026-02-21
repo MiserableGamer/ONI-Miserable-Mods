@@ -9,7 +9,6 @@ project-versions.yaml
 BlankProject/
 CommonLib/
 ControlledBuildings/
-ControlledFramerate/
 ControlledLoaders/
 ControlledMopping/
 ControlledPerformance/
