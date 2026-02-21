@@ -64,7 +64,7 @@ Please mention "Controlled Assignments" in your issue title or description.
 
 ## Mod Collection
 
-This mod is part of the [ONI 200+ Ultimate Mods collection](https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156) on Steam Workshop, featuring over 200 tested and compatible mods for Oxygen Not Included.
+This mod is part of the [ONI 235+ Ultimate Mods collection](https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156) on Steam Workshop, featuring over 235 tested and compatible mods for Oxygen Not Included.
 
 ## Credits
 
@@ -74,4 +74,5 @@ This mod is part of the [ONI 200+ Ultimate Mods collection](https://steamcommuni
 
 ## Version History
 
+- **1.0.1**: Added exercise machine from Morning Exercise
 - **1.0.0**: Initial release — assignable showers and sinks
