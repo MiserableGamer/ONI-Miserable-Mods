@@ -1,0 +1,3 @@
+title: 'Controlled Framerate'
+description: "Adaptive game speed that adjusts to maintain your target FPS. Includes benchmark tool, custom speed settings, and per-save profiles."
+staticID: MiserableGamer.ControlledFramerate

@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>ControlledFramerate</AssemblyName>
+    <RootNamespace>ControlledFramerate</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="preview.jpg" CopyToOutputDirectory="PreserveNewest" Condition="Exists('$(MSBuildProjectDirectory)\preview.jpg')" />
+  </ItemGroup>
+
+  <!-- Embed icon PNGs from Assets/ into the DLL as resources -->
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\*.png" />
+    <None Remove="Assets\*.pxz" />
+  </ItemGroup>
+
+</Project>
