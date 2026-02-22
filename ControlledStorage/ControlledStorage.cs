@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using HarmonyLib;
 using KMod;
 using PeterHan.PLib.Core;
@@ -5,6 +6,8 @@ using PeterHan.PLib.Options;
 using PeterHan.PLib.UI;
 using UnityEngine;
 using ControlledStorage.UI;
+using ControlledStorage.ModDetection;
+using ControlledStorage.Patches;
 
 namespace ControlledStorage
 {
@@ -26,6 +29,14 @@ namespace ControlledStorage
             new PeterHan.PLib.PatchManager.PPatchManager(harmony).RegisterPatchClass(typeof(Patches.NoSweepZonePatches));
             Patches.NoSweepZonePatches.OnModLoad(harmony);
             harmony.PatchAll();
+        }
+
+        public override void OnAllModsLoaded(Harmony harmony, IReadOnlyList<Mod> mods)
+        {
+            base.OnAllModsLoaded(harmony, mods);
+            UndergroundConduitDetection.Detect();
+            if (UndergroundConduitDetection.Loaded && ControlledStorageOptions.Instance.EnableDeliveryControlKINStorageSender)
+                KINUndergroundConduitPatches.ApplyPatches(harmony);
         }
     }
 
