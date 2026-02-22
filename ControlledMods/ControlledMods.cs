@@ -1,12 +1,18 @@
+using System.IO;
+using System.Reflection;
 using HarmonyLib;
 using KMod;
 using PeterHan.PLib.Core;
 using PeterHan.PLib.Options;
 using System.Collections.Generic;
+using UnityEngine;
 using ControlledMods.ModDetection;
 using ControlledMods.Options;
 using ControlledMods.Patches;
+using ControlledMods.Patches.FreeResourceBuildings;
+using ControlledMods.Patches.CustomizablePlants;
 using ControlledMods.Patches.ResourceSensor;
+using ControlledMods.Patches.SaveFileFixes;
 using ControlledMods.Patches.UndergroundConduit;
 
 namespace ControlledMods
@@ -15,6 +21,9 @@ namespace ControlledMods
     {
         // Set to true to enable debug logging, false for production
         public const bool EnableDebugLogs = true;
+
+        // Config save location fix for several mods — set to true to re-enable (registers Save File Fixes options and applies patches)
+        public const bool EnableSaveFileFixes = false;
 
         public static ControlledModsMod Instance { get; private set; }
         public static Harmony HarmonyInstance { get; private set; }
@@ -32,6 +41,33 @@ namespace ControlledMods
                 Debug.LogWarning($"[ControlledMods] {message}");
         }
 
+        /// <summary>Read version from mod_info.yaml next to our DLL (single source of truth; not AssemblyVersion).</summary>
+        private static string GetModVersionFromModInfo()
+        {
+            try
+            {
+                string dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                if (string.IsNullOrEmpty(dir)) return "?.?.?.?";
+                string path = Path.Combine(dir, "mod_info.yaml");
+                if (!File.Exists(path)) return "?.?.?.?";
+                foreach (string line in File.ReadAllLines(path))
+                {
+                    string trimmed = line.Trim();
+                    if (trimmed.StartsWith("version:", System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        string val = trimmed.Substring(8).Trim();
+                        if (!string.IsNullOrEmpty(val)) return val;
+                        break;
+                    }
+                }
+                return "?.?.?.?";
+            }
+            catch
+            {
+                return "?.?.?.?";
+            }
+        }
+
         public override void OnLoad(Harmony harmony)
         {
             Instance = this;
@@ -45,12 +81,16 @@ namespace ControlledMods
 
             // Register options - must be done in OnLoad for PLib UI to work
             new POptions().RegisterOptions(this, typeof(ControlledModsOptions));
+            // Save File Fixes section only when the feature is enabled (so it's hidden when disabled)
+            if (EnableSaveFileFixes)
+                new POptions().RegisterOptions(this, typeof(ControlledModsSaveFileFixOptions));
 
             // Apply patches that don't depend on other mods
             OptionsDialogPatch.ApplyPatch(harmony);
             MainMenuPatches.ApplyPatch(harmony);
 
-            Log("Mod loaded - waiting for OnAllModsLoaded to detect target mods");
+            string displayVersion = GetModVersionFromModInfo();
+            Log($"Mod loaded version {displayVersion} - waiting for OnAllModsLoaded to detect target mods");
         }
 
         public override void OnAllModsLoaded(Harmony harmony, IReadOnlyList<Mod> mods)
@@ -65,6 +105,23 @@ namespace ControlledMods
 
             if (ResourceSensorDetection.Loaded && ControlledModsOptions.Instance.EnableResourceSensor)
                 ResourceSensorPatches.ApplyPatches(harmony);
+
+            if (FreeResourceBuildingsDetection.Loaded)
+            {
+                FreeEnergyGeneratorPatches.ApplyPatches(harmony);
+
+                if (ControlledModsOptions.Instance.AddPowerSinkBuilding)
+                    PowerSinkRegistrationPatches.ApplyPatches(harmony);
+            }
+
+            if (CustomizablePlantsDetection.Loaded && ControlledModsOptions.Instance.EnableCustomizablePlantsVineBranchMaxAge)
+                VineBranchMaxAgePatches.ApplyPatches(harmony);
+
+            if (EnableSaveFileFixes)
+            {
+                CustomModPathPatches.Apply(harmony);
+                SaveFileFixApplier.Apply(harmony);
+            }
 
             Log("All conditional patches applied");
         }
