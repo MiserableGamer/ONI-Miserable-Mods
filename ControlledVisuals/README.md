@@ -21,7 +21,7 @@ Fixes a long-standing vanilla bug where items on conveyor rails sometimes render
 ## Installation
 
 ### Steam Workshop (Recommended)
-Subscribe on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=XXXXXXXXX) and enable in the Mods menu.
+Subscribe on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3672588272) and enable in the Mods menu.
 
 ### Manual Installation
 1. Download the [latest release](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases)
