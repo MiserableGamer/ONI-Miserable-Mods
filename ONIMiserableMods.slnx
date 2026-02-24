@@ -6,7 +6,6 @@
   <Project Path="ControlledExtraction/ControlledExtraction.csproj" Id="87e44818-ad26-4cff-9929-1433c82079cc" />
   <Project Path="ControlledFiltering/ControlledFiltering.csproj" Id="e6f7a8b9-c0d1-2345-6789-abcdef012345" />
   <Project Path="ControlledMods/ControlledMods.csproj" Id="18500b0e-6852-47ec-925c-0d76fb754264" />
-  <Project Path="ControlledMopping/ControlledMopping.csproj" />
   <Project Path="ControlledOverlay/ControlledOverlay.csproj" Id="d5e6f7a8-b9c0-1234-5678-9abcdef01234" />
   <Project Path="ControlledStorage/ControlledStorage.csproj" Id="a2b3c4d5-e6f7-8901-2345-67890abcdef1" />
   <Project Path="ControlledSublimation/ControlledSublimation.csproj" Id="c4d5e6f7-a8b9-0123-4567-89abcdef0123" />
@@ -23,7 +22,6 @@
 
 
 
-  <Project Path="ControlledBuildings/ControlledBuildings.csproj" Id="fd35eed6-f109-47af-84b5-a9e4ce84a9ab" />
 
   <Project Path="ControlledVisuals/ControlledVisuals.csproj" Id="9b27adb3-ec57-4965-b83b-a4b0681069bb" />
 </Solution>
