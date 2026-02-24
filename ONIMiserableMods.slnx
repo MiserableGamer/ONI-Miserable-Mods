@@ -24,4 +24,6 @@
 
 
   <Project Path="ControlledVisuals/ControlledVisuals.csproj" Id="9b27adb3-ec57-4965-b83b-a4b0681069bb" />
+
+  <Project Path="ControlledBuildings/ControlledBuildings.csproj" Id="e5b1b5cd-fc66-4096-8e9f-d7863121f72c" />
 </Solution>
