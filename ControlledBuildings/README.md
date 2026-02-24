@@ -75,4 +75,5 @@ This mod is part of the [ONI 235+ Ultimate Mods collection](https://steamcommuni
 
 ## Version History
 
+- **1.0.1**: Fixed Arbor Tree layering
 - **1.0.0**: Initial release

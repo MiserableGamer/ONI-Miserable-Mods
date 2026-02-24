@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using HarmonyLib;
 using UnityEngine;
 
@@ -8,6 +9,9 @@ namespace ControlledBuildings.Patches
     [HarmonyPatch(typeof(Assets), nameof(Assets.AddBuildingDef))]
     public static class Assets_AddBuildingDef_SceneLayer_Patch
     {
+        // Farm/planter/crop buildings must never be forced to Backwall so the plant remains visible (drawn on its normal layer instead of behind everything).
+        private static readonly HashSet<string> s_farmPlanterCropPrefabIds = new HashSet<string> { "PlanterBox", "FarmTile", "HydroponicFarm" };
+
         public static void Prefix(BuildingDef def)
         {
             if (def == null) return;
@@ -51,13 +55,16 @@ namespace ControlledBuildings.Patches
 
             // Force all other backwall/drywall to draw on Backwall layer: by ObjectLayer (e.g. aki's Backwalls)
             // or by GameTags.Backwall (any mod that tags as backwall but uses a different ObjectLayer).
+            // Exclude farm/planter/crop prefabs so they are never forced to Backwall and the plant remains visible.
             if (def.ObjectLayer == ObjectLayer.Backwall)
             {
+                if (s_farmPlanterCropPrefabIds.Contains(def.PrefabID)) return;
                 def.SceneLayer = Grid.SceneLayer.Backwall;
                 return;
             }
             if (def.BuildingComplete != null && def.BuildingComplete.HasTag(GameTags.Backwall))
             {
+                if (s_farmPlanterCropPrefabIds.Contains(def.PrefabID)) return;
                 def.SceneLayer = Grid.SceneLayer.Backwall;
                 return;
             }

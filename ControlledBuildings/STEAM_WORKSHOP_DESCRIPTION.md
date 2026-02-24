@@ -68,5 +68,6 @@ This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/
 
 [h2]Version History[/h2]
 [list]
+[*][b]1.0.1[/b]: Fixed Arbor Tree layering
 [*][b]1.0.0[/b]: Initial release
 [/list]
