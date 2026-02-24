@@ -33,8 +33,8 @@ namespace ControlledBuildings.Patches
                     return;
             }
 
-            // Vanilla drywall and backwall-type: ObjectLayer.Backwall; use BuildingBack so they draw in front of
-            // conduits/wires (GasConduits=6, Wires=12, etc.) but still behind transit tubes (BuildingFront=27).
+            // All drywall/backwall on the same layer: Backwall. Same ObjectLayer and SceneLayer so they behave
+            // identically (gas/atmosphere on top, behind transit tubes). Vanilla list + generic Backwall/ObjectLayer below.
             switch (def.PrefabID)
             {
                 case "ExteriorWall":
@@ -49,12 +49,11 @@ namespace ControlledBuildings.Patches
                 case "PropGravitasWallPurpleWhiteDiagonal":
                 case "PixelPack":
                     def.ObjectLayer = ObjectLayer.Backwall;
-                    def.SceneLayer = Grid.SceneLayer.BuildingBack;
+                    def.SceneLayer = Grid.SceneLayer.Backwall;
                     return;
             }
 
-            // Force all other backwall/drywall to draw on Backwall layer: by ObjectLayer (e.g. aki's Backwalls)
-            // or by GameTags.Backwall (any mod that tags as backwall but uses a different ObjectLayer).
+            // Other backwall/drywall: by ObjectLayer (e.g. aki's Backwalls) or GameTags.Backwall.
             // Exclude farm/planter/crop prefabs so they are never forced to Backwall and the plant remains visible.
             if (def.ObjectLayer == ObjectLayer.Backwall)
             {
