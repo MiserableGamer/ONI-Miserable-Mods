@@ -1,15 +1,8 @@
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace ControlledPower.Components
 {
-    /// <summary>
-    /// Registers this diode so CircuitManager patches can add the output circuit's load and potential
-    /// to the input circuit (and vice versa) for logic — wattage sensors on either side see combined values.
-    /// No sidescreen: linking is always on.
-    /// Diode draw/capacity is updated from CircuitManagerPatches.Sim200msFirst prefix (runs after previous
-    /// Sim200msLast so GetWattsUsedByCircuit is cumulative; no ISim200ms here to avoid ordering issues).
-    /// </summary>
+    // Tracks all spawned diodes and exposes input/output circuit IDs for patch logic.
     public class PowerDiodeLogicLink : KMonoBehaviour
     {
         internal static readonly List<PowerDiodeLogicLink> LinkedDiodes = new List<PowerDiodeLogicLink>();

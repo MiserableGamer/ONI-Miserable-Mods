@@ -4,30 +4,28 @@ using ControlledPower.Components;
 
 namespace ControlledPower.Buildings
 {
-        /// <summary>
-        /// Power Diode: same behaviour as large PowerTransformer. Uses power_diode_kanim.
-        /// 2x1, input left (0,0), output right (1,0).
-        /// </summary>
-        public class PowerDiodeConfig : IBuildingConfig
-        {
-            public const string ID = "PowerDiode";
+    // Power Diode based on vanilla transformer behavior.
+    // 2x1 footprint, input at (0,0), output at (1,0).
+    public class PowerDiodeConfig : IBuildingConfig
+    {
+        public const string ID = "PowerDiode";
 
-            public override BuildingDef CreateBuildingDef()
-            {
-                int width = 2;
-                int height = 1;
-                string anim = "power_diode_kanim";
+        public override BuildingDef CreateBuildingDef()
+        {
+            int width = 2;
+            int height = 1;
+            string anim = "power_diode_kanim";
             int hitpoints = 30;
             float construction_time = 30f;
             float[] tier = BUILDINGS.CONSTRUCTION_MASS_KG.TIER3;
             string[] materials = MATERIALS.RAW_METALS;
             float melting_point = 800f;
-            BuildLocationRule build_location_rule = BuildLocationRule.Anywhere;
+            BuildLocationRule buildLocationRule = BuildLocationRule.Anywhere;
             EffectorValues tier2 = NOISE_POLLUTION.NOISY.TIER5;
 
             BuildingDef def = BuildingTemplates.CreateBuildingDef(
                 ID, width, height, anim, hitpoints, construction_time,
-                tier, materials, melting_point, build_location_rule,
+                tier, materials, melting_point, buildLocationRule,
                 BUILDINGS.DECOR.PENALTY.TIER1, tier2, 0.2f);
 
             def.RequiresPowerInput = true;

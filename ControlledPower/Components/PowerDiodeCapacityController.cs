@@ -3,12 +3,7 @@ using UnityEngine;
 
 namespace ControlledPower.Components
 {
-    /// <summary>
-    /// Sets the diode's battery capacity and charge rate from the output circuit load + 5%,
-    /// capped by the input circuit's wire rating. Receives the load from PowerDiodeLogicLink (which
-    /// uses a per-frame cache so the value is cumulative across multiple diodes). Stores the
-    /// output circuit's total load so it persists and is available for display / logic.
-    /// </summary>
+    // Sizes diode battery capacity/charge from downstream circuit load.
     [SerializationConfig(MemberSerialization.OptIn)]
     public class PowerDiodeCapacityController : KMonoBehaviour
     {
@@ -17,37 +12,28 @@ namespace ControlledPower.Components
         private const float MinChargeW = 1f;
         private const float FallbackMaxWattage = 2000f;
 
-        [MyCmpGet] private Building building;
-        [MyCmpGet] private Battery battery;
+        [MyCmpGet] private Building _building;
+        [MyCmpGet] private Battery _battery;
 
         [Serialize]
         [SerializeField]
         private float _lastSeenLoadW;
 
-        /// <summary>
-        /// This diode's output circuit's total load (watts), updated from the per-frame cache.
-        /// Cumulative in a chain: each diode stores the load of its output segment (which already
-        /// includes downstream draws from last frame), so the next diode left reads that via the cache.
-        /// </summary>
+        // Cached total current load on this diode's output circuit.
         [Serialize]
         [SerializeField]
         private float _storedOutputCircuitLoadW;
 
-        /// <summary>
-        /// Exposed for UI/debug (e.g. Circuit Overview in the details sidescreen).
-        /// </summary>
+        // Exposed for UI/debug (Circuit Overview).
         public float StoredOutputCircuitLoadW => _storedOutputCircuitLoadW;
 
-        /// <summary>
-        /// Called by PowerDiodeLogicLink.Sim200ms with the cached watts for our output circuit.
-        /// Applies that load to battery capacity/charge and stores it.
-        /// </summary>
+        // Applies cached output load to battery capacity/charge and stores it.
         internal void ApplyOutputCircuitLoad(float outputCircuitWatts)
         {
-            if (building == null || battery == null || Game.Instance?.circuitManager == null)
+            if (_building == null || _battery == null || Game.Instance?.circuitManager == null)
                 return;
 
-            int inputCell = building.GetPowerInputCell();
+            int inputCell = _building.GetPowerInputCell();
             ushort inputCircuitId = (ushort)Game.Instance.circuitManager.GetCircuitID(inputCell);
             float maxW = Game.Instance.circuitManager.GetMaxSafeWattageForCircuit(inputCircuitId);
             if (maxW <= 0f)
@@ -60,15 +46,15 @@ namespace ControlledPower.Components
             }
 
             float loadW = outputCircuitWatts > 0f ? outputCircuitWatts : _lastSeenLoadW;
-            float maxCapacityJ = Mathf.Min(building.Def.GeneratorWattageRating * 1000f, maxW * 1000f);
+            float maxCapacityJ = Mathf.Min(_building.Def.GeneratorWattageRating * 1000f, maxW * 1000f);
             float targetW = loadW > 0f
                 ? Mathf.Clamp(loadW * LoadMargin, MinChargeW, maxW)
                 : maxW;
             float targetJ = Mathf.Max(MinCapacityJ, targetW);
             targetJ = Mathf.Clamp(targetJ, MinCapacityJ, maxCapacityJ);
 
-            battery.capacity = targetJ;
-            battery.chargeWattage = Mathf.Max(MinChargeW, targetW);
+            _battery.capacity = targetJ;
+            _battery.chargeWattage = Mathf.Max(MinChargeW, targetW);
         }
     }
 }

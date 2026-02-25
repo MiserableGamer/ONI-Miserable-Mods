@@ -1,14 +1,9 @@
-using System;
 using UnityEngine;
 
 namespace ControlledPower.Components
 {
-    /// <summary>
-    /// Virtual consumer on the diode's input circuit so vanilla GetWattsNeededWhenActive and
-    /// wattsUsed sum include downstream load. WattsNeededWhenActive is set periodically from
-    /// the output circuit's potential (in topological order); WattsUsed reflects current draw
-    /// from PowerDiodeCapacityController.
-    /// </summary>
+    // Virtual consumer registered on the input circuit.
+    // Used for diode-specific potential propagation without affecting actual power draw.
     public class PowerDiodeInputConsumer : KMonoBehaviour, IEnergyConsumer
     {
         public const int PowerSortOrderValue = 1000;
@@ -17,10 +12,7 @@ namespace ControlledPower.Components
         [MyCmpGet] private KSelectable _selectable;
         [MyCmpGet] private Operational _operational;
 
-        /// <summary>
-        /// Set by CircuitManagerPatches in topological order to the output circuit's
-        /// GetWattsNeededWhenActive (downstream potential).
-        /// </summary>
+        // Set by CircuitManagerPatches during Sim200msFirst.
         [SerializeField]
         private float _wattsNeededWhenActive;
 
@@ -39,17 +31,11 @@ namespace ControlledPower.Components
         public bool IsConnected => CircuitID != CircuitManager.INVALID_ID;
         public string Name => _selectable != null ? _selectable.GetName() : name;
 
-        /// <summary>
-        /// Always 0 so the sim never allocates power to this consumer (no PowerFromGenerator/PowerFromBatteries).
-        /// Displayed current load on the input circuit is augmented via GetWattsUsedByCircuit postfix instead.
-        /// </summary>
+        // Always 0 so this virtual consumer never changes real circuit current draw.
         public float WattsUsed => 0f;
 
         public float WattsNeededWhenActive => _wattsNeededWhenActive;
 
-        /// <summary>
-        /// Called by CircuitManagerPatches.Sim200msFirst in topological order.
-        /// </summary>
         internal void SetWattsNeededWhenActive(float value)
         {
             _wattsNeededWhenActive = value >= 0f ? value : 0f;
@@ -82,9 +68,9 @@ namespace ControlledPower.Components
                 IsPowered = false;
         }
 
-        public void SetConnectionStatus(CircuitManager.ConnectionStatus connection_status)
+        public void SetConnectionStatus(CircuitManager.ConnectionStatus connectionStatus)
         {
-            switch (connection_status)
+            switch (connectionStatus)
             {
                 case CircuitManager.ConnectionStatus.NotConnected:
                     IsPowered = false;

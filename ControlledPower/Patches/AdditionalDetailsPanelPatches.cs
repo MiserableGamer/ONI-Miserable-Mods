@@ -4,9 +4,7 @@ using UnityEngine;
 
 namespace ControlledPower.Patches
 {
-    /// <summary>
-    /// Adds power diode debug rows to the Circuit Overview: Output Current Load and Output Potential Load.
-    /// </summary>
+    // Adds debug rows to Circuit Overview for diode output current and potential.
     [HarmonyPatch(typeof(AdditionalDetailsPanel), "RefreshEnergyOverviewPanel", new[] { typeof(CollapsibleDetailContentPanel), typeof(GameObject) })]
     public static class AdditionalDetailsPanelPatches
     {
