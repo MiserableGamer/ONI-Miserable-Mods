@@ -24,7 +24,7 @@ Power diode for Oxygen Not Included: one-way power flow between circuits, with u
 ## Installation
 
 ### Steam Workshop (Recommended)
-Subscribe on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id={WORKSHOP_ID}) and enable in the Mods menu.
+Subscribe on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3673526385) and enable in the Mods menu.
 
 ### Manual Installation
 1. Download the [latest release](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases)

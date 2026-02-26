@@ -60,8 +60,7 @@ Adds a text input field to the Temperature Overlay's relative temperature slider
 ### ⚡ Controlled Power
 Adds a Power Diode building for one-way power flow, with upstream current and potential load reporting that includes downstream demand.
 
-[📖 Read More](ControlledPower/README.md) | [Latest Release v1.0.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledPower-v1.0.0)
-
+[📖 Read More](ControlledPower/README.md) | [Latest Release v1.0.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledPower-v1.0.0) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3673526385)
 ### 💨 Controlled Sublimation
 Complete control over element sublimation and off-gassing, with separate settings for debris and storage. Configure Bleach Stone, Oxylite, Polluted Dirt, Slime, Polluted Water, and Polluted Mud individually.
 
