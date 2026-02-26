@@ -26,18 +26,18 @@
     <Optimize>true</Optimize>
   </PropertyGroup>
 
-  <!-- NuGet Packages (shared across SDK projects) -->
-  <ItemGroup Condition="'$(UsingMicrosoftNETSdk)' == 'true'">
+  <!-- NuGet Packages (shared across SDK projects). Exclude SteamWorkshopUploader (standalone tool). -->
+  <ItemGroup Condition="'$(UsingMicrosoftNETSdk)' == 'true' and '$(MSBuildProjectName)' != 'SteamWorkshopUploader'">
     <PackageReference Include="ILRepack" Version="2.0.34" PrivateAssets="all" ExcludeAssets="runtime" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" PrivateAssets="all" />
     <PackageReference Include="PLib" Version="4.19.0" PrivateAssets="all" />
   </ItemGroup>
-  <ItemGroup Condition="'$(UsingMicrosoftNETSdk)' == 'true' and '$(MSBuildRuntimeType)' != 'Core'">
+  <ItemGroup Condition="'$(UsingMicrosoftNETSdk)' == 'true' and '$(MSBuildRuntimeType)' != 'Core' and '$(MSBuildProjectName)' != 'SteamWorkshopUploader'">
     <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2" PrivateAssets="all" />
   </ItemGroup>
 
-  <!-- Game References (shared; lib at solution root). Only for SDK projects to avoid duplicate refs in legacy projects. -->
-  <ItemGroup Condition="'$(UsingMicrosoftNETSdk)' == 'true'">
+  <!-- Game References (shared; lib at solution root). Exclude SteamWorkshopUploader (standalone tool). -->
+  <ItemGroup Condition="'$(UsingMicrosoftNETSdk)' == 'true' and '$(MSBuildProjectName)' != 'SteamWorkshopUploader'">
     <Reference Include="0Harmony" HintPath="$(MSBuildThisFileDirectory)lib\0Harmony.dll" Private="false" />
     <Reference Include="Assembly-CSharp" HintPath="$(MSBuildThisFileDirectory)lib\Assembly-CSharp.dll" Private="false" Publicize="true" />
     <Reference Include="Assembly-CSharp-firstpass" HintPath="$(MSBuildThisFileDirectory)lib\Assembly-CSharp-firstpass.dll" Private="false" Publicize="true" />
