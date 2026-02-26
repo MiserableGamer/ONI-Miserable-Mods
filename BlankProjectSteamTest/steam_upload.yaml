@@ -1,0 +1,11 @@
+# Steam upload metadata for GUI/script automation
+publishedFileId:
+visibility: unlisted
+modType:
+  - "tweaks"
+  - "ui"
+dlcCompatibility:
+  - "Base Game"
+  - "Spaced Out!"
+  - "The Frosty Planet Pack"
+  - "The Bionic Booster Pack"
