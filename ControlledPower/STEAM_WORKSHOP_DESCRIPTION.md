@@ -45,5 +45,6 @@ Power diode for ONI: one-way power flow between circuits, with upstream logic/lo
 
 [h2]Version History[/h2]
 [list]
+[*][b]1.1.0[/b]: Added upstream calculations enable/disable checkbox
 [*][b]1.0.0[/b]: Initial release
 [/list]

@@ -33,6 +33,10 @@ namespace ControlledPower.Patches
                 targetPanel.SetLabel("powerDiodeOutputPotentialLoad", $"Output Potential Load: {GameUtil.GetFormattedWattage(potentialW, GameUtil.WattageFormatterUnit.Automatic, true)}",
                     "Potential load (W) on this diode's output circuit if all consumers were active.");
 
+            string linkState = link.IsLogicLinkEnabled ? "Enabled" : "Disabled";
+            targetPanel.SetLabel("powerDiodeLogicLinkState", $"Logic Link: {linkState}",
+                "When disabled, this diode does not propagate backward logic sharing (upstream current/potential reporting).");
+
             targetPanel.Commit();
         }
     }

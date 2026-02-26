@@ -61,4 +61,8 @@ Please mention "Controlled Power" in your issue title or description when report
 
 ## Version History
 
-- **1.0.0**: Initial release
+### 1.1.0
+- Added upstream calculations enable/disable checkbox
+
+### 1.0.0
+- Initial release

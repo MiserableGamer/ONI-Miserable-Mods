@@ -15,6 +15,8 @@ namespace ControlledPower.Patches
     {
         [System.ThreadStatic]
         private static HashSet<ushort> _augmenting;
+        [System.ThreadStatic]
+        private static bool _bypassLogicLinkAdjustments;
 
         [HarmonyPatch(nameof(CircuitManager.Sim200msFirst))]
         [HarmonyPrefix]
@@ -60,7 +62,17 @@ namespace ControlledPower.Patches
                     continue;
                 if (oid == CircuitManager.INVALID_ID || cache.ContainsKey(oid))
                     continue;
-                float w = __instance.GetWattsUsedByCircuit(oid);
+                _bypassLogicLinkAdjustments = true;
+                float w;
+                try
+                {
+                    // Internal diode sizing must use raw circuit draw, not checkbox-adjusted display values.
+                    w = __instance.GetWattsUsedByCircuit(oid);
+                }
+                finally
+                {
+                    _bypassLogicLinkAdjustments = false;
+                }
                 if (w >= 0f)
                     cache[oid] = w;
             }
@@ -160,6 +172,25 @@ namespace ControlledPower.Patches
             return total;
         }
 
+        private static float GetBaseConsumerCurrent(CircuitManager circuitManager, ushort circuitId)
+        {
+            if (circuitManager == null || circuitId == CircuitManager.INVALID_ID)
+                return 0f;
+            var consumers = circuitManager.GetConsumersOnCircuit(circuitId);
+            if (consumers == null)
+                return 0f;
+            float total = 0f;
+            foreach (var c in consumers)
+            {
+                if (c == null || c is PowerDiodeInputConsumer)
+                    continue;
+                float w = c.WattsUsed;
+                if (w > 0f)
+                    total += w;
+            }
+            return total;
+        }
+
         private static float GetBranchPotential(
             CircuitManager circuitManager,
             ushort circuitId,
@@ -177,6 +208,8 @@ namespace ControlledPower.Patches
             foreach (var link in PowerDiodeLogicLink.LinkedDiodes)
             {
                 if (link == null || !link.GetCircuitIds(out ushort inputId, out ushort outputId))
+                    continue;
+                if (!link.IsLogicLinkEnabled)
                     continue;
                 if (inputId != circuitId || inputId == outputId)
                     continue;
@@ -208,6 +241,8 @@ namespace ControlledPower.Patches
                 {
                     if (link == null || !link.GetCircuitIds(out ushort inputId, out ushort outputId))
                         continue;
+                    if (!link.IsLogicLinkEnabled)
+                        continue;
                     if (inputId == outputId)
                         continue;
                     // Only add when we're the INPUT (add output's chain). Do not add when output — avoids double-count.
@@ -229,9 +264,10 @@ namespace ControlledPower.Patches
             if (__instance == null || originCircuitId == CircuitManager.INVALID_ID || __result < 0f)
                 return;
 
-            // Override only for diode input circuits with deterministic cumulative branch potential:
-            // local non-diode consumers + all downstream branches.
+            // Enabled diodes: deterministic cumulative branch potential
+            // (local non-diode consumers + downstream enabled diode branches).
             bool hasDiodeInput = false;
+            bool hasDisabledDiodeInput = false;
             float downstream = 0f;
             var memo = new Dictionary<ushort, float>();
             var visiting = new HashSet<ushort>();
@@ -243,24 +279,56 @@ namespace ControlledPower.Patches
                 if (inputId != originCircuitId || inputId == outputId || outputId == CircuitManager.INVALID_ID)
                     continue;
 
+                if (!link.IsLogicLinkEnabled)
+                {
+                    hasDisabledDiodeInput = true;
+                    continue;
+                }
+
                 hasDiodeInput = true;
                 downstream += GetBranchPotential(__instance, outputId, memo, visiting);
             }
 
-            if (!hasDiodeInput)
+            if (hasDiodeInput)
+            {
+                float localEnabled = GetBaseConsumerPotential(__instance, originCircuitId);
+                __result = Mathf.Max(0f, localEnabled + downstream);
                 return;
+            }
 
-            float local = GetBaseConsumerPotential(__instance, originCircuitId);
-            __result = Mathf.Max(0f, local + downstream);
+            if (hasDisabledDiodeInput)
+            {
+                // Link OFF means local circuit-only potential reporting.
+                __result = Mathf.Max(0f, GetBaseConsumerPotential(__instance, originCircuitId));
+            }
         }
 
         [HarmonyPatch(nameof(CircuitManager.GetWattsUsedByCircuit))]
         [HarmonyPostfix]
         public static void GetWattsUsedByCircuit_Postfix(CircuitManager __instance, ushort circuitID, ref float __result)
         {
-            // Intentionally no-op:
-            // Current load for transformer-based diode should come from vanilla battery/transformer flow.
-            // Augmenting here double-counts in multi-diode topologies.
+            if (_bypassLogicLinkAdjustments)
+                return;
+            if (__instance == null || circuitID == CircuitManager.INVALID_ID || __result < 0f)
+                return;
+
+            // Link OFF means local circuit-only current reporting on diode input circuits.
+            bool hasDisabledDiodeInput = false;
+            bool hasEnabledDiodeInput = false;
+            foreach (var link in PowerDiodeLogicLink.LinkedDiodes)
+            {
+                if (link == null || !link.GetCircuitIds(out ushort inputId, out ushort outputId))
+                    continue;
+                if (inputId != circuitID || inputId == outputId || outputId == CircuitManager.INVALID_ID)
+                    continue;
+                if (link.IsLogicLinkEnabled)
+                    hasEnabledDiodeInput = true;
+                else
+                    hasDisabledDiodeInput = true;
+            }
+
+            if (!hasEnabledDiodeInput && hasDisabledDiodeInput)
+                __result = Mathf.Max(0f, GetBaseConsumerCurrent(__instance, circuitID));
         }
     }
 }

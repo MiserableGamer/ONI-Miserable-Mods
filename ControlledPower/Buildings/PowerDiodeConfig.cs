@@ -60,6 +60,7 @@ namespace ControlledPower.Buildings
             go.AddComponent<PowerDiodeCapacityController>();
             go.AddComponent<PowerDiodeLogicLink>();
             go.AddComponent<PowerDiodeInputConsumer>();
+            go.AddOrGet<CopyBuildingSettings>();
         }
 
         public override void DoPostConfigureComplete(GameObject go)

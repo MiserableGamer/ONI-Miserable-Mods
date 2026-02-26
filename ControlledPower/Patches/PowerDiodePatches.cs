@@ -1,4 +1,5 @@
 using ControlledPower.Buildings;
+using ControlledPower.UI;
 using HarmonyLib;
 using STRINGS;
 
@@ -8,6 +9,7 @@ namespace ControlledPower.Patches
     public static class PowerDiodePatches
     {
         private static bool _buildingAddedToPlanScreen;
+        private static bool _sideScreenRegistered;
 
         [HarmonyPatch(typeof(GeneratedBuildings), nameof(GeneratedBuildings.LoadGeneratedBuildings))]
         [HarmonyPrefix]
@@ -32,6 +34,16 @@ namespace ControlledPower.Patches
             if (tech == null || tech.unlockedItemIDs.Contains(PowerDiodeConfig.ID))
                 return;
             tech.AddUnlockedItemIDs(new[] { PowerDiodeConfig.ID });
+        }
+
+        [HarmonyPatch(typeof(DetailsScreen), "OnPrefabInit")]
+        [HarmonyPostfix]
+        public static void DetailsScreen_OnPrefabInit_Postfix(DetailsScreen __instance)
+        {
+            if (_sideScreenRegistered)
+                return;
+            SideScreenHelper.AddSideScreen<PowerDiodeLinkSideScreen>("PowerDiodeLinkSideScreen", __instance);
+            _sideScreenRegistered = true;
         }
     }
 }

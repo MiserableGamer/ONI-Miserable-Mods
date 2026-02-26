@@ -11,6 +11,8 @@ namespace ControlledPower.Components
         private const float MinCapacityJ = 1000f;  // 1 kJ floor
         private const float MinChargeW = 1f;
         private const float FallbackMaxWattage = 2000f;
+        private const float SimStepSeconds = 0.2f;
+        private const float LoadDecayHalfLifeSeconds = 20f;
 
         [MyCmpGet] private Building _building;
         [MyCmpGet] private Battery _battery;
@@ -41,11 +43,23 @@ namespace ControlledPower.Components
 
             if (outputCircuitWatts > 0f)
             {
-                _lastSeenLoadW = outputCircuitWatts;
+                // Fast-up, slow-down tracking:
+                // - rises immediately to match higher demand
+                // - decays gradually when demand stays lower
+                float decayPerTick = Mathf.Pow(0.5f, SimStepSeconds / LoadDecayHalfLifeSeconds);
+                float decayedRememberedLoad = _lastSeenLoadW * decayPerTick;
+                _lastSeenLoadW = Mathf.Max(outputCircuitWatts, decayedRememberedLoad);
                 _storedOutputCircuitLoadW = outputCircuitWatts;
             }
+            else if (_lastSeenLoadW > 0f)
+            {
+                float decayPerTick = Mathf.Pow(0.5f, SimStepSeconds / LoadDecayHalfLifeSeconds);
+                _lastSeenLoadW *= decayPerTick;
+            }
 
-            float loadW = outputCircuitWatts > 0f ? outputCircuitWatts : _lastSeenLoadW;
+            float loadW = outputCircuitWatts > 0f
+                ? _lastSeenLoadW
+                : _lastSeenLoadW;
             float maxCapacityJ = Mathf.Min(_building.Def.GeneratorWattageRating * 1000f, maxW * 1000f);
             float targetW = loadW > 0f
                 ? Mathf.Clamp(loadW * LoadMargin, MinChargeW, maxW)
