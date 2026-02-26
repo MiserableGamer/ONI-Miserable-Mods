@@ -7,7 +7,7 @@
     <!-- Do not inherit game refs / mod packages from Directory.Build.props -->
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Steamworks.NET" Version="20.2.0" />
+    <PackageReference Include="Steamworks.NET" Version="12.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="steam_appid.txt" CopyToOutputDirectory="PreserveNewest" />
