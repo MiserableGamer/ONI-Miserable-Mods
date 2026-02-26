@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Content Include="preview.jpg" CopyToOutputDirectory="PreserveNewest" Condition="Exists('$(MSBuildProjectDirectory)\preview.jpg')" />
+    <Content Include="preview.png" />
   </ItemGroup>
 
 </Project>
