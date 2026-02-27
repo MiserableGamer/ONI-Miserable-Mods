@@ -32,6 +32,13 @@ Minimal impact - hooks into the existing trapped duplicant diagnostic cycle.
 [h2]Source Code[/h2]
 [url=https://github.com/MiserableGamer/ONI-Miserable-Mods]GitHub Repository[/url]
 
+[h2]My Workshop & Collections[/h2]
+[list]
+[*][url=https://steamcommunity.com/id/miserablegamer/myworkshopfiles/?appid=457140]My Workshop[/url] – All my ONI mods on Steam
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156]ONI 235+ Ultimate Mods collection[/url] – 235+ tested, compatible mods for Oxygen Not Included
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3672308653]The Controlled Series[/url] – Collection of Controlled mods
+[/list]
+
 [h2]Support[/h2]
 [list]
 [*][b]Discord[/b]: [url=https://discord.com/channels/1452947938304200861/1452947939927392398]Join our Discord[/url]
@@ -40,6 +47,8 @@ Minimal impact - hooks into the existing trapped duplicant diagnostic cycle.
 
 [h2]Version History[/h2]
 [list]
+[*][b]1.1.0[/b] - Added FastTrack compatibility
+[*][b]1.0.3[/b] - yaml bugfix
 [*][b]1.0.1[/b] - Reworked detection method
 [*][b]1.0.0[/b] - Initial release
 [/list]

@@ -1,0 +1,12 @@
+# Steam upload metadata for GUI/script automation
+publishedFileId: 3649415088
+displayName: "Controlled Warnings"
+visibility: public
+modType:
+  - "tweaks"
+  - "ui"
+dlcCompatibility:
+  - "Base Game"
+  - "Spaced Out!"
+  - "The Frosty Planet Pack"
+  - "The Bionic Booster Pack"

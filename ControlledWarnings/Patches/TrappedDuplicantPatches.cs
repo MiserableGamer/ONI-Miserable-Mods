@@ -15,7 +15,8 @@ namespace ControlledWarnings.Patches
             var minions = Components.LiveMinionIdentities.GetWorldItems(worldId, false);
             if (minions == null) return;
 
-            foreach (MinionIdentity minion in minions)
+            var minionsCopy = new List<MinionIdentity>(minions);
+            foreach (MinionIdentity minion in minionsCopy)
             {
                 if (minion == null) continue;
 

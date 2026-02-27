@@ -41,6 +41,12 @@ Subscribe on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails
 
 [GitHub Repository](https://github.com/MiserableGamer/ONI-Miserable-Mods)
 
+## My Workshop & Collections
+
+- [My Workshop](https://steamcommunity.com/id/miserablegamer/myworkshopfiles/?appid=457140) – All my ONI mods on Steam
+- [ONI 235+ Ultimate Mods collection](https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156) – 235+ tested, compatible mods for Oxygen Not Included
+- [The Controlled Series](https://steamcommunity.com/sharedfiles/filedetails/?id=3672308653) – Collection of Controlled mods
+
 ## Support
 
 - **Discord**: [Join our Discord](https://discord.com/channels/1452947938304200861/1452947939927392398)
@@ -48,5 +54,9 @@ Subscribe on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails
 
 ## Version History
 
+### 1.1.0
+- Added FastTrack compatibility
+
+- **1.0.3** - yaml bugfix
 - **1.0.1** - Reworked detection method
 - **1.0.0** - Initial release
