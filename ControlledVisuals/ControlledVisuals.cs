@@ -1,7 +1,10 @@
 using HarmonyLib;
 using PeterHan.PLib.Core;
+using PeterHan.PLib.Options;
 using ControlledVisuals.Helper;
+using ControlledVisuals.Options;
 using ControlledVisuals.Patches;
+using CVOptions = ControlledVisuals.Options.ControlledVisualsOptions;
 
 namespace ControlledVisuals
 {
@@ -14,8 +17,9 @@ namespace ControlledVisuals
             PUtil.InitLibrary();
 
             ConfigMigrationHelper.Migrate(ConfigMigrationHelper.OldConfigFolderName, ConfigMigrationHelper.NewConfigFolderName);
+            new POptions().RegisterOptions(this, typeof(CVOptions));
 
-            // Conduit animation options removed for now - mod only applies conveyor-behind-drywall fix
+            // Conduit throttling patch remains disabled; only the active fixes are applied via PatchAll.
             // ConduitFlowVisualizerPatches.ApplyPatches(harmony);
 
             harmony.PatchAll();

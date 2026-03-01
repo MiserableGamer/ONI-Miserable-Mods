@@ -5,17 +5,26 @@ Fixes a long-standing vanilla bug where items on conveyor rails sometimes render
 ## Features
 
 - **Conveyor Items Behind Drywall** - Items on rails consistently render behind drywall, tiles, and other buildings
-- **No Gameplay Impact** - Only fixes rendering order; conveyor mechanics are unchanged
+- **Optional Clean Edges Conversion** - Ports and modernizes the legacy CleanEdges behavior to clean up many neutronium edge tiles
+- **One-Time Per Save** - Clean Edges tracks save conversion state and runs only once per save when enabled
+- **One-Shot Reconvert** - Optional "Reconvert on Next Save Load" toggle reapplies Clean Edges once, then auto-resets
+- **No Gameplay Impact (Conveyor Fix)** - Conveyor rendering fix is visual-only; rail mechanics are unchanged
 - **Works Everywhere** - Loaders, rails, and bridges; moving and stationary items
 
 ## How to Use
 
 1. **Enable the Mod** - Enable Controlled Visuals in your mod list
-2. **No Configuration** - The fix is always active; conveyor items will render correctly behind walls
+2. **Conveyor Fix** - This visual fix is always active; conveyor items render correctly behind walls
+3. **Clean Edges (Optional)** - Open Mod Options and enable "Enable Clean Edges" if you want one-time edge conversion on that save
+4. **Tune Settings (Optional)** - Configure border size and abyssalite mass in Mod Options before first conversion
+5. **Reconvert (Optional)** - Enable "Reconvert on Next Save Load" to apply updated border settings to an already converted save
 
 ### Tips
 
-- No configuration needed—the fix is always active
+- Conveyor render-layer fix is always active
+- Clean Edges is disabled by default and only runs when you enable it
+- Clean Edges conversion is tracked per save to avoid rerunning each load
+- Reconvert on Next Save Load is a one-shot action and resets to off after a successful reconvert
 - Works with all solid conveyor buildings (loaders, bridges, rails)
 
 ## Installation
@@ -65,15 +74,19 @@ Found a bug or have a feature request? Please report it on GitHub using our issu
 
 Please mention "ControlledVisuals" in your issue title or description.
 
-## Mod Collection
+## My Workshop & Collections
 
-This mod is part of the [ONI 235+ Ultimate Mods collection](https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156) on Steam Workshop, featuring over 235 tested and compatible mods for Oxygen Not Included.
+- [My Workshop](https://steamcommunity.com/id/miserablegamer/myworkshopfiles/?appid=457140) – All my ONI mods on Steam
+- [ONI 235+ Ultimate Mods collection](https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156) – 235+ tested, compatible mods for Oxygen Not Included
+- [The Controlled Series](https://steamcommunity.com/sharedfiles/filedetails/?id=3672308653) – Collection of Controlled mods
 
 ## Credits
 
 - Built using [PLib](https://github.com/peterhaneve/ONIMods) by Peter Han
 - Uses [Harmony](https://github.com/pardeike/Harmony) for runtime patching
+- Clean Edges functionality is based on the original mod by [ParallaxMurderer](https://steamcommunity.com/sharedfiles/filedetails/?id=2311196403)
 
 ## Version History
 
+- **1.1.0**: Added Clean Edges functionality
 - **1.0.0**: Conveyor items behind drywall fix
