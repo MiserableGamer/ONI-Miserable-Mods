@@ -119,6 +119,19 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
             settings.LastReachableRebuildTime = -9999f;
         }
 
+        private static void InvalidateShowRangeCache(DuplicantRoomSensorRangeSettings settings)
+        {
+            if (settings == null)
+                return;
+
+            settings.LastShowRangeEnabled = false;
+            settings.LastShowRangeRange = int.MinValue;
+            settings.LastShowRangeOriginCell = Grid.InvalidCell;
+            settings.LastShowRangeReachableCount = -1;
+            settings.LastShowRangeReachableXor = int.MinValue;
+            settings.LastShowRangeReachableSum = long.MinValue;
+        }
+
         private static void EnsureRows(ThresholdSwitchSideScreen screen)
         {
             if (screen == null)
@@ -312,10 +325,12 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
         {
             if (!Grid.IsValidCell(cell))
                 return false;
-            if (Grid.Element[cell]?.IsSolid == true)
+            // Use game solidity (not just element solidity) so tile buildings like Mesh Tile block traversal.
+            if (Grid.IsSolidCell(cell))
                 return false;
 
-            var building = Grid.Objects[cell, (int)ObjectLayer.Building];
+            var building = Grid.Objects[cell, (int)ObjectLayer.Building]
+                ?? Grid.Objects[cell, (int)ObjectLayer.FoundationTile];
             if (building != null && building.TryGetComponent<Door>(out var door))
             {
                 bool isOpen = false;
@@ -330,6 +345,58 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
                 }
 
                 if (!isOpen)
+                    return false;
+            }
+            else if (Grid.HasDoor[cell])
+            {
+                // If a door exists but couldn't be resolved, be conservative and block.
+                return false;
+            }
+
+            return true;
+        }
+
+        private static bool HasLineOfSight(int originCell, int targetCell)
+        {
+            if (!Grid.IsValidCell(originCell) || !Grid.IsValidCell(targetCell))
+                return false;
+            if (originCell == targetCell)
+                return true;
+
+            Grid.CellToXY(originCell, out int x0, out int y0);
+            Grid.CellToXY(targetCell, out int x1, out int y1);
+
+            int dx = Mathf.Abs(x1 - x0);
+            int dy = Mathf.Abs(y1 - y0);
+            int sx = x0 < x1 ? 1 : -1;
+            int sy = y0 < y1 ? 1 : -1;
+            int err = dx - dy;
+
+            int x = x0;
+            int y = y0;
+            while (!(x == x1 && y == y1))
+            {
+                int e2 = err * 2;
+                if (e2 > -dy)
+                {
+                    err -= dy;
+                    x += sx;
+                }
+                if (e2 < dx)
+                {
+                    err += dx;
+                    y += sy;
+                }
+
+                int cell = Grid.XYToCell(x, y);
+                if (!Grid.IsValidCell(cell))
+                    return false;
+
+                // Target cell itself can be visible; blockers only apply to cells along the ray.
+                if (cell == targetCell)
+                    return true;
+
+                if (!IsCellPassable(cell))
                     return false;
             }
 
@@ -395,34 +462,27 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
             if (Game.Instance.roomProber.GetCavityForCell(originCell) != cavity)
                 return;
 
-            var queue = new Queue<int>();
-            queue.Enqueue(originCell);
-            reachable.Add(originCell);
-
-            while (queue.Count > 0)
+            for (int y = minY; y <= maxY; y++)
             {
-                int cell = queue.Dequeue();
-                TryEnqueue(Grid.CellLeft(cell));
-                TryEnqueue(Grid.CellRight(cell));
-                TryEnqueue(Grid.CellAbove(cell));
-                TryEnqueue(Grid.CellBelow(cell));
-            }
+                for (int x = minX; x <= maxX; x++)
+                {
+                    int dx = Mathf.Abs(x - originX);
+                    int dy = Mathf.Abs(y - originY);
+                    if (dx + dy > range)
+                        continue;
 
-            void TryEnqueue(int candidate)
-            {
-                if (!Grid.IsValidCell(candidate))
-                    return;
-                if (reachable.Contains(candidate))
-                    return;
-                if (!InBounds(candidate))
-                    return;
-                if (!IsCellPassable(candidate))
-                    return;
-                if (Game.Instance.roomProber.GetCavityForCell(candidate) != cavity)
-                    return;
+                    int candidate = Grid.XYToCell(x, y);
+                    if (!Grid.IsValidCell(candidate))
+                        continue;
+                    if (!IsCellPassable(candidate))
+                        continue;
+                    if (Game.Instance.roomProber.GetCavityForCell(candidate) != cavity)
+                        continue;
+                    if (!HasLineOfSight(originCell, candidate))
+                        continue;
 
-                reachable.Add(candidate);
-                queue.Enqueue(candidate);
+                    reachable.Add(candidate);
+                }
             }
         }
 
@@ -494,7 +554,8 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
             }
         }
 
-        private static void UpdateShowRangeVisualizer(GameObject target, DuplicantRoomSensorRangeSettings settings)
+        private static void UpdateShowRangeVisualizer(GameObject target, DuplicantRoomSensorRangeSettings settings,
+            CavityInfo cachedCavity = null, int cachedOriginCell = -1, int cachedRange = -1, HashSet<int> cachedReachable = null)
         {
             if (target == null || settings == null)
                 return;
@@ -507,18 +568,72 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
                 if (!TryResolveShowRangeTypes())
                     return;
 
-                int targetRange = settings.GetClampedRange();
                 bool shouldEnable = settings.EnableRangeLimit;
-                if (settings.LastShowRangeEnabled == shouldEnable && settings.LastShowRangeRange == targetRange)
+                int targetRange = cachedRange >= 0 ? Mathf.Clamp(cachedRange, DuplicantRoomSensorRangeSettings.MinRange, DuplicantRoomSensorRangeSettings.MaxRange) : settings.GetClampedRange();
+                int originCell = cachedOriginCell;
+                HashSet<int> reachable = cachedReachable;
+                int reachableCount = 0;
+                int reachableXor = 0;
+                long reachableSum = 0L;
+
+                if (shouldEnable)
+                {
+                    if (originCell == Grid.InvalidCell)
+                        originCell = Grid.PosToCell(target);
+
+                    CavityInfo cavity = cachedCavity;
+                    if (cavity == null)
+                    {
+                        Room room = Game.Instance.roomProber.GetRoomOfGameObject(target);
+                        cavity = room != null ? room.cavity : null;
+                    }
+
+                    if (cavity == null || !Grid.IsValidCell(originCell))
+                    {
+                        shouldEnable = false;
+                    }
+                    else
+                    {
+                        if (reachable == null)
+                            reachable = GetOrBuildReachableCells(settings, cavity, originCell, targetRange);
+                        if (reachable == null || reachable.Count == 0)
+                        {
+                            shouldEnable = false;
+                        }
+                        else
+                        {
+                            foreach (int cell in reachable)
+                            {
+                                reachableCount++;
+                                reachableXor ^= cell;
+                                reachableSum += cell;
+                            }
+                        }
+                    }
+                }
+
+                if (settings.LastShowRangeEnabled == shouldEnable
+                    && settings.LastShowRangeRange == targetRange
+                    && settings.LastShowRangeOriginCell == originCell
+                    && settings.LastShowRangeReachableCount == reachableCount
+                    && settings.LastShowRangeReachableXor == reachableXor
+                    && settings.LastShowRangeReachableSum == reachableSum)
                     return;
 
                 var simParams = target.GetComponent(_showRangeSimParamsType) ?? target.AddComponent(_showRangeSimParamsType);
 
-                Array visualizerArray = Array.CreateInstance(_showRangeSimVisualizerType, shouldEnable ? 1 : 0);
+                Array visualizerArray = Array.CreateInstance(_showRangeSimVisualizerType, shouldEnable ? reachableCount : 0);
                 if (shouldEnable)
                 {
-                    object simVisualizer = Activator.CreateInstance(_showRangeSimVisualizerType, new object[] { new CellOffset(0, 0), targetRange });
-                    visualizerArray.SetValue(simVisualizer, 0);
+                    Grid.CellToXY(originCell, out int originX, out int originY);
+                    int i = 0;
+                    foreach (int cell in reachable)
+                    {
+                        Grid.CellToXY(cell, out int x, out int y);
+                        var offset = new CellOffset(x - originX, y - originY);
+                        object simVisualizer = Activator.CreateInstance(_showRangeSimVisualizerType, new object[] { offset, 0 });
+                        visualizerArray.SetValue(simVisualizer, i++);
+                    }
                 }
 
                 _showRangeVisualizersField?.SetValue(simParams, visualizerArray);
@@ -527,6 +642,10 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
 
                 settings.LastShowRangeEnabled = shouldEnable;
                 settings.LastShowRangeRange = targetRange;
+                settings.LastShowRangeOriginCell = originCell;
+                settings.LastShowRangeReachableCount = reachableCount;
+                settings.LastShowRangeReachableXor = reachableXor;
+                settings.LastShowRangeReachableSum = reachableSum;
                 ForceShowRangeRefresh();
             }
             catch
@@ -545,8 +664,7 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
                 var settings = go.AddOrGet<DuplicantRoomSensorRangeSettings>();
                 settings.RangeCells = settings.GetClampedRange();
                 InvalidateRangeCache(settings);
-                settings.LastShowRangeEnabled = false;
-                settings.LastShowRangeRange = int.MinValue;
+                InvalidateShowRangeCache(settings);
                 UpdateShowRangeVisualizer(go, settings);
             }
         }
@@ -570,8 +688,7 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
                     var settings = new_target.AddOrGet<DuplicantRoomSensorRangeSettings>();
                     settings.RangeCells = settings.GetClampedRange();
                     InvalidateRangeCache(settings);
-                    settings.LastShowRangeEnabled = false;
-                    settings.LastShowRangeRange = int.MinValue;
+                    InvalidateShowRangeCache(settings);
 
                     SyncRowVisibility(__instance, true);
                     BindRowHandlers(__instance, new_target, settings);
@@ -636,6 +753,9 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
                         int originCell = Grid.PosToCell(component.gameObject);
                         int range = settings.GetClampedRange();
                         HashSet<int> reachable = GetOrBuildReachableCells(settings, room.cavity, originCell, range);
+                        var selected = component.GetComponent<KSelectable>();
+                        if (selected != null && selected.IsSelected)
+                            UpdateShowRangeVisualizer(component.gameObject, settings, room.cavity, originCell, range, reachable);
 
                         int currentCount = 0;
                         IDictionary cavityMap = TryGetCavityMap();

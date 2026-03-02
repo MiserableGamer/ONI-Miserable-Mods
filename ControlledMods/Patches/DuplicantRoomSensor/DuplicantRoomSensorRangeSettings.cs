@@ -52,6 +52,18 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
         [System.NonSerialized]
         public int LastShowRangeRange = int.MinValue;
 
+        [System.NonSerialized]
+        public int LastShowRangeOriginCell = Grid.InvalidCell;
+
+        [System.NonSerialized]
+        public int LastShowRangeReachableCount = -1;
+
+        [System.NonSerialized]
+        public int LastShowRangeReachableXor = int.MinValue;
+
+        [System.NonSerialized]
+        public long LastShowRangeReachableSum = long.MinValue;
+
         public override void OnPrefabInit()
         {
             base.OnPrefabInit();
@@ -92,6 +104,10 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
             LastReachableRebuildTime = -9999f;
             LastShowRangeEnabled = false;
             LastShowRangeRange = int.MinValue;
+            LastShowRangeOriginCell = Grid.InvalidCell;
+            LastShowRangeReachableCount = -1;
+            LastShowRangeReachableXor = int.MinValue;
+            LastShowRangeReachableSum = long.MinValue;
         }
     }
 }
