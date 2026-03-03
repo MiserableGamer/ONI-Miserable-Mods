@@ -27,6 +27,7 @@ DEV_RULES.txt
 UPLOAD_INSTRUCTIONS.md
 STEAM_UPLOAD_README.md
 **/ORGANIZE_FILES.md
+BRANCH_AND_PUSH_RULES.md
 memory-bank/
 .claude/
 .serena/
