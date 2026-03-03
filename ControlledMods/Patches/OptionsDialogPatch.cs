@@ -1,6 +1,5 @@
 using HarmonyLib;
 using UnityEngine;
-using UnityEngine.UI;
 using System;
 using System.Reflection;
 
@@ -15,7 +14,7 @@ namespace ControlledMods.Patches
         private const float TARGET_WIDTH = 900f;
         private const float TARGET_HEIGHT = 700f;
 
-        // Call this from OnLoad to apply the patch. Only patches our own assembly so we only resize our options dialog.
+        // Call this from OnLoad to apply the patch.
         public static void ApplyPatch(Harmony harmony)
         {
             try
@@ -95,6 +94,7 @@ namespace ControlledMods.Patches
                             sizeProperty.SetValue(__instance, new Vector2(TARGET_WIDTH * 0.8f, TARGET_HEIGHT * 0.6f));
                             ControlledModsMod.Log($"Set Size to: {TARGET_WIDTH * 0.8f}x{TARGET_HEIGHT * 0.6f}");
                         }
+
                     }
                 }
             }

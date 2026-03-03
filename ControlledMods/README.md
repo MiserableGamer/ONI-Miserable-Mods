@@ -4,28 +4,15 @@ Configure and improve behavior from supported ONI mods through a single in-game 
 
 ## Features
 
-- **In-Game Configuration** - All settings accessible from the main menu Mod Options
-- **Restart Button** - Adds a Restart button to the main menu (above Quit) for quick game restarts after changing mods or settings
-- **Smart Detection** - Options only apply if the target mod is detected and enabled
-- **No Dependencies** - Works independently; target mods are optional, not required
-- **Persistent Settings** - Configuration saved between game sessions
+- In-game settings in Mod Options
+- Direct Workshop links for supported mods in Mod Options
+- Restart button added to the main menu
+- Safe mod detection (patches apply only when target mods are present)
+- Saved settings between sessions
 
 ## Supported Mods
 
-### Resource Sensor (Berkay's mod)
-
-When the Resource Sensor mod is detected and the option is enabled:
-
-- **Sidescreen** - Three scope checkboxes: **Atmosphere**, **Storage**, **Conduits** (each can be toggled independently); "Include Storage Buildings" row hidden; Global mode row hidden
-- **Counting** - Atmosphere (cell element + pickupables), any building with a Storage component, and gas/liquid/solid conduits, based on the scope checkboxes; category tags in the element filter are expanded to discovered resources
-- **Threshold** - Max raised to 9,999,999; units stripped from the threshold display (no "kg" in textbox or tooltips); input character limit raised to 8
-- **Range visualizer** - Clears when the building is deselected (same behavior as switching to Room mode)
-- **Copy Settings** - Copies the Atmosphere / Storage / Conduits scope toggles
-- **Inversion** - When ControlledAutomation is loaded with inversion enabled, the invert checkbox appears on the Resource Sensor
-
-Compatible with Berkay's Resource Sensor and ResourceSensorFIXED.
-
-### KIN Underground Conduit
+### [Resource Sensor (Berkay's mod)](https://steamcommunity.com/sharedfiles/filedetails/?id=2911545239)
 
 - Adds **Atmosphere / Storage / Conduits** scope controls
 - Improves counting (includes tile storage and conduit contents)
@@ -48,19 +35,26 @@ Compatible with Berkay's Resource Sensor and ResourceSensorFIXED.
 
 - Per-sensor **Range Limit** toggle and configurable **Range Input** (1-64)
 - Range-limited sensing respects walls/closed doors and stays room-bounded
-- Compatible with Peter Han's ShowRange visualization
-- Supports **Copy Settings** for range toggle/value
+
+### [Darkness Not Excluded (Relit)](https://steamcommunity.com/sharedfiles/filedetails/?id=3609476592)
+
+- Helps reduce light bleed through solid tiles in darkness visuals
 
 ### [KIN Underground Conduit](https://steamcommunity.com/sharedfiles/filedetails/?id=3347169088)
 
 - Fixes Power Terminal / Logic Terminal InvalidCastException crash
 - Enables **Copy Settings** for terminals, senders, and receivers
 
+### [Signs, Tags and Ribbons](https://steamcommunity.com/sharedfiles/filedetails/?id=2883096049)
+
+- Adds **Raw Natural Gas** to the Small Element Tag variant list
+- Friendly tooltips on variant buttons (e.g. "Raw Natural Gas", "Brine")
+
 ## How to Use
 
 1. Subscribe and enable ControlledMods
 2. Enable any target mods you want to control
-3. Open **Mod Options -> ControlledMods**
+3. Open **ControlledMods -> Mod Options**
 4. Configure settings
 5. Restart game
 
@@ -85,10 +79,6 @@ Subscribe on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails
 
 - Conditional patching only
 - No continuous polling loops
-
-## Support & Issues
-
-Need help, found a bug, or have a suggestion? We're here to help!
 
 ### Community
 
@@ -119,6 +109,13 @@ Please mention "ControlledMods" in your issue title or description.
 
 ## Version History
 
+- **1.10.0**: Added support for Signs Tags and Ribbons
+- **1.9.0**: Added support for Darkness Not Excluded (relit)
+- **1.8.1**: Fixed Line of Sight ranging of Duplicant Room Sensor
+- **1.8.0**: Enhanced functionality of Pholith's Duplicant Room Sensor
+- **1.7.0**: Added VineBranch max_age compatibility for Customizable Plants mod
+- **1.6.0**: Added colour visualisations to Logic Terminals for logic state
+- **1.5.1**: Fixed kanim loading bug
 - **1.5.0**: Free Resource Buildings – Free Energy Generator wattage slider now controls actual power output; Power Sink building added (configurable power consumer for testing)
 - **1.4.0**: Resource Sensor – Storage counting now includes tile-based storage (e.g. Storage Tiles) in both Distance and Room modes
 - **1.3.0**: Restart button on the main menu (above Quit) for quick restarts
