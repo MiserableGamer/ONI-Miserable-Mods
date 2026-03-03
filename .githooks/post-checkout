@@ -1,4 +1,6 @@
 #!/bin/sh
 # After checkout, regenerate the solution when on master so it matches projects on disk.
 # Install: git config core.hooksPath .githooks
+# We always exit 0 so a script failure never blocks checkout.
 cd "$(git rev-parse --show-toplevel)" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "scripts/regenerate-solution.ps1" -OnlyIfMaster
+exit 0
