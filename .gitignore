@@ -28,22 +28,11 @@ UPLOAD_INSTRUCTIONS.md
 STEAM_UPLOAD_README.md
 **/ORGANIZE_FILES.md
 BRANCH_AND_PUSH_RULES.md
-memory-bank/
-.claude/
-.serena/
-/jarvis/
 
-# Encrypted / sensitive
-steam_credentials.encrypted
 *.vdf
 
-# Indexed reference code (junctions / local paths)
-/source/
-/prime/
-/reference/
 .cursor/rules/
 .cursor/mcp.json
-/mcp.json
 
 # -----------------------------------------------------------------------------
 # Release folder (master): ignore temp subdirs, track zip artifacts
@@ -129,9 +118,3 @@ coverage*.xml
 *.plg
 *.opt
 *.vbw
-
-# Repo-specific excludes (legacy / one-off)
-/.github/RELEASE_GUIDE.md
-/HeatingSystemTroubleshooting.html
-/esphome/common.yaml
-/esphome/underbed-lights.yaml
