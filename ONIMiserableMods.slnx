@@ -1,29 +1,13 @@
 <Solution>
-  <Project Path="AdvancedWattageSensor/AdvancedWattageSensor.csproj" />
   <Project Path="BonbonTreeBoost/BonbonTreeBoost.csproj" Id="573ce697-fd53-48de-98fe-0c0eb4ca8f04" />
   <Project Path="CapacityControl/CapacityControl.csproj" Id="b3c4d5e6-f7a8-9012-3456-789abcdef012" />
-  <Project Path="ControlledAssignments/ControlledAssignments.csproj" />
-  <Project Path="ControlledAutomation/ControlledAutomation.csproj" Id="7a836259-5127-4912-ad82-c9a62d8de9de" />
-  <Project Path="ControlledBuildings/ControlledBuildings.csproj" />
-  <Project Path="ControlledCrashes/ControlledCrashes.csproj" Id="1c2d3e4f-5a6b-7c8d-9e0f-1a2b3c4d5e6f" />
-  <Project Path="ControlledExtraction/ControlledExtraction.csproj" Id="87e44818-ad26-4cff-9929-1433c82079cc" />
-  <Project Path="ControlledFiltering/ControlledFiltering.csproj" Id="e6f7a8b9-c0d1-2345-6789-abcdef012345" />
-  <Project Path="ControlledFramerate/ControlledFramerate.csproj" />
-  <Project Path="ControlledMods/ControlledMods.csproj" Id="18500b0e-6852-47ec-925c-0d76fb754264" />
-  <Project Path="ControlledOverlay/ControlledOverlay.csproj" Id="d5e6f7a8-b9c0-1234-5678-9abcdef01234" />
-  <Project Path="ControlledPower/ControlledPower.csproj" />
   <Project Path="ControlledStorage/ControlledStorage.csproj" Id="a2b3c4d5-e6f7-8901-2345-67890abcdef1" />
-  <Project Path="ControlledSublimation/ControlledSublimation.csproj" Id="c4d5e6f7-a8b9-0123-4567-89abcdef0123" />
-  <Project Path="ControlledVisuals/ControlledVisuals.csproj" />
-  <Project Path="ControlledWarnings/ControlledWarnings.csproj" Id="41e14026-7052-4de3-b022-5ca6f2ad31d9" />
   <Project Path="CopyMaterialsTool/CopyMaterialsTool.csproj" Id="ae6fe0c2-fa12-42c8-909a-5fea7b5aecdf" />
   <Project Path="CopyTileTool/CopyTileTool.csproj" Id="f7a8b9c0-d1e2-3456-789a-bcdef0123456" />
   <Project Path="DebugFogOfWar/DebugFogOfWar.csproj" Id="487e310e-c312-450b-9a7f-a82d485041b1" />
   <Project Path="EmptyStorage/EmptyStorage.csproj" Id="f878a2e5-8d49-4761-95ff-0cf0da70cd2e" />
-  <Project Path="HighPrecisionTemperatureFIXED/HighPrecisionTemperatureFIXED.csproj" Id="dd857d1c-8632-4d95-8421-ed6effac596a" />
   <Project Path="LongerArms/LongerArms.csproj" Id="a1b2c3d4-e5f6-7890-abcd-ef1234567890" />
   <Project Path="MorningExercise/MorningExercise.csproj" Id="e8f3b4c1-2d5a-4f8e-9c1b-3a7d6e9f0123" />
   <Project Path="NoDisease/NoDisease.csproj" Id="9a8b7c6d-5e4f-3a2b-1c0d-9e8f7a6b5c4d" />
-  <Project Path="SkillsAndStatsProgressFIXED/SkillsAndStatsProgressFIXED.csproj" />
   <Project Path="ThresholdFixed/ThresholdFixed.csproj" Id="fe377519-31a0-4c07-9f63-a88d8a76b59a" />
 </Solution>
