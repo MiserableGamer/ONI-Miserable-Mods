@@ -179,24 +179,36 @@ jobs:
               }
             }
           } else {
-            # Find the mod section by looking for patterns that identify each mod
+            # Find the mod section by matching the ### header text (without emoji)
             $modPatterns = @{
-              "MorningExercise" = "Morning Exercise"
-              "CopyMaterialsTool" = "Copy Materials Tool"
-              "ControlledStorage" = "Controlled Storage"
-              "EmptyStorage" = "Empty Storage"
-              "LongerArms" = "Longer Arms"
-              "DebugFogOfWar" = "Debug Fog of War"
+              "AdvancedWattageSensor" = "Advanced Wattage Sensor"
               "BonbonTreeBoost" = "Bonbon Tree Boost"
-              "ThresholdFixed" = "Threshold Fixed"
-              "ResourceLimpet" = "Resource Limpet"
-              "NoDisease" = "No Disease"
               "CapacityControl" = "Capacity Control"
-              "ControlledSublimation" = "Controlled Sublimation"
-              "ControlledOverlay" = "Controlled Overlay"
+              "ControlledAssignments" = "Controlled Assignments"
+              "ControlledAutomation" = "Controlled Automation"
+              "ControlledBuildings" = "Controlled Buildings"
+              "ControlledCrashes" = "Controlled Crashes"
+              "ControlledExtraction" = "Controlled Extraction"
               "ControlledFiltering" = "Controlled Filtering"
-              "ControlledMods" = "ControlledMods"
+              "ControlledFramerate" = "Controlled Framerate"
+              "ControlledMods" = "Controlled Mods"
+              "ControlledOverlay" = "Controlled Overlay"
+              "ControlledPower" = "Controlled Power"
+              "ControlledStorage" = "Controlled Storage"
+              "ControlledSublimation" = "Controlled Sublimation"
+              "ControlledVisuals" = "Controlled Visuals"
+              "ControlledWarnings" = "Controlled Warnings"
+              "CopyMaterialsTool" = "Copy Materials Tool"
               "CopyTileTool" = "Copy Tile Tool"
+              "DebugFogOfWar" = "Debug Fog of War"
+              "EmptyStorage" = "Empty Storage"
+              "HighPrecisionTemperatureFIXED" = "High Precision Temperature FIXED"
+              "LongerArms" = "Longer Arms"
+              "MorningExercise" = "Morning Exercise"
+              "NoDisease" = "No Disease"
+              "ResourceLimpet" = "Resource Limpet"
+              "SkillsAndStatsProgressFIXED" = "Skills and Stats Progress FIXED"
+              "ThresholdFixed" = "Threshold Fixed"
             }
             
             $modPattern = $modPatterns[$modName]

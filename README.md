@@ -25,17 +25,17 @@ Increases the character limit for storage capacity input fields, allowing you to
 ### 🚿 Controlled Assignments
 Makes showers, sinks, and lubrication stations assignable to individual duplicants, just like beds and toilets. Works with both vanilla and modded buildings. Bionic-only buildings are restricted to bionic duplicants.
 
-[📖 Read More](ControlledAssignments/README.md) | [Latest Release v1.0.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledAssignments-v1.0.0)
+[📖 Read More](ControlledAssignments/README.md) | [Latest Release v1.0.1](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledAssignments-v1.0.1)
 
 ### 🏗️ Controlled Buildings
 Adjusts building footprints and placement rules to fix visual conflicts. Juicer footprint fix for ceiling trim; transit tubes draw in front of drywall, drywall buildable in same cell as tubes, build in/behind tiles, tighter bends; vanilla drywall hides conduits and wires.
 
-[📖 Read More](ControlledBuildings/README.md) | [Latest Release v1.0.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledBuildings-v1.0.0)
+[📖 Read More](ControlledBuildings/README.md) | [Latest Release v1.0.2](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledBuildings-v1.0.2)
 
 ### ⛽ Controlled Extraction
 Per-building control over Oil Well extraction rates. Adjust water input from 0.01 to 100 kg/s with proportional oil output and gas pressure scaling. Compatible with Ronivan's Legacy.
 
-[📖 Read More](ControlledExtraction/README.md) | [Latest Release v1.0.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledExtraction-v1.0.0)
+[📖 Read More](ControlledExtraction/README.md) | [Latest Release v1.1.1](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledExtraction-v1.1.1)
 
 ### 🗂️ Controlled Filtering
 Control which item categories appear as Standard vs Non-Standard in storage filter lists. Choose whether Clothing, Critter Eggs, and Sublimating items should be included in the "Select All Standard" selection.
@@ -50,7 +50,7 @@ Adaptive game speed that automatically adjusts to maintain your target FPS. Buil
 ### 🎛️ Controlled Mods
 A framework for customizing and overriding settings from other mods via an in-game options menu. Currently in development - support for various mods will be added in future updates.
 
-[📖 Read More](ControlledMods/README.md) | [Latest Release v1.2.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledMods-v1.2.0)
+[📖 Read More](ControlledMods/README.md) | [Latest Release v1.10.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledMods-v1.10.0)
 
 ### 🌡️ Controlled Overlay
 Adds a text input field to the Temperature Overlay's relative temperature slider, allowing you to type exact temperature values instead of struggling with the slider.
@@ -60,7 +60,7 @@ Adds a text input field to the Temperature Overlay's relative temperature slider
 ### ⚡ Controlled Power
 Adds a Power Diode building for one-way power flow, with upstream current and potential load reporting that includes downstream demand.
 
-[📖 Read More](ControlledPower/README.md) | [Latest Release v1.0.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledPower-v1.0.0)
+[📖 Read More](ControlledPower/README.md) | [Latest Release v1.1.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledPower-v1.1.0)
 
 ### 💨 Controlled Sublimation
 Complete control over element sublimation and off-gassing, with separate settings for debris and storage. Configure Bleach Stone, Oxylite, Polluted Dirt, Slime, Polluted Water, and Polluted Mud individually.
@@ -75,12 +75,12 @@ Unified storage control: empty storage button, filtering options, capacity contr
 ### 🎬 Controlled Visuals
 Fixes a vanilla bug where items on conveyor rails sometimes render in front of drywall. Conveyor contents now always draw behind walls, tiles, and other buildings as intended.
 
-[📖 Read More](ControlledVisuals/README.md) | [Latest Release v1.0.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledVisuals-v1.0.0) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3672588272)
+[📖 Read More](ControlledVisuals/README.md) | [Latest Release v1.1.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledVisuals-v1.1.0) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3672588272)
 
 ### ⚠️ Controlled Warnings
 Enhanced alerts for critical situations. Adds left-side notifications when duplicants get trapped, with escalation to critical (red) alerts if they're also suffocating. Click to jump to location.
 
-[📖 Read More](ControlledWarnings/README.md) | [Latest Release v1.0.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledWarnings-v1.0.0)
+[📖 Read More](ControlledWarnings/README.md) | [Latest Release v1.1.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledWarnings-v1.1.0)
 
 ### 📋 Copy Materials Tool
 Extends the "Copy Settings" tool to also copy construction materials between buildings of the same type, with full support for conduits and bridges.
@@ -125,7 +125,7 @@ Completely disables the disease system in Oxygen Not Included, removing all germ
 ### 📊 Skills and Stats Progress FIXED
 Displays detailed skill XP progress, attribute experience, travel distance, speed info, radiation stats, and workable efficiency on the duplicant stats panel. A fixed and updated version of Mantakus's SkillsAndStatsProgress mod, rebuilt for the current game version. Fully configurable via Mod Options.
 
-[📖 Read More](SkillsAndStatsProgressFIXED/README.md)
+[📖 Read More](SkillsAndStatsProgressFIXED/README.md) | [Latest Release v1.0.1](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/SkillsAndStatsProgressFIXED-v1.0.1)
 
 ### 🧱 Threshold Fixed
 Fixes threshold walls to properly detect creature confinement, allowing them to function as intended.
