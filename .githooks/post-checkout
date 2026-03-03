@@ -1,0 +1,4 @@
+#!/bin/sh
+# After checkout, regenerate the solution when on master so it matches projects on disk.
+# Install: git config core.hooksPath .githooks
+cd "$(git rev-parse --show-toplevel)" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "scripts/regenerate-solution.ps1" -OnlyIfMaster
