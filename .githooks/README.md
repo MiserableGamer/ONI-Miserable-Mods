@@ -12,7 +12,7 @@ Or manually:
 git config core.hooksPath .githooks
 ```
 
-Then, after switching to master, run `.\scripts\regenerate-solution.ps1 -OnlyIfMaster` if the solution was wrong, and close/reopen the solution in your IDE.
+Then, after switching to master, run `d:\mcp\oni-serena\scripts\regenerate-solution.ps1 -OnlyIfMaster` if the solution was wrong, and close/reopen the solution in your IDE. (Scripts live in `d:\mcp\oni-serena\scripts`.)
 
 - **post-checkout**: After switching branches, if you're on `master`, regenerates `ONIMiserableMods.slnx` from the projects on disk so the solution always matches the branch. Close and reopen the solution in your IDE after switching to master if the project list was wrong.
 - **post-merge**: After a merge (e.g. when the GUI promotes a project from development to master by merging), regenerates the solution on master so newly promoted projects are included automatically. Close and reopen the solution to see the new project.
