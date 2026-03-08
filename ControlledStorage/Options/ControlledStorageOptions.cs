@@ -143,12 +143,6 @@ namespace ControlledStorage
 
         public bool EnableDeliveryControl => EnableDeliveryControlStorage || EnableDeliveryControlFridges || EnableDeliveryControlLoaders;
 
-        [Option("Delivery Control Debug Logs",
-            "Log sweeper loop and fetch target details to Player.log. Set to true to diagnose the same-bin loop issue.",
-            "Delivery Control")]
-        [JsonProperty]
-        public bool EnableDeliveryControlDebugLogs { get; set; } = false;
-
         #endregion
 
         #region No-Sweep Zone Options (Phase 4)
