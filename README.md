@@ -15,7 +15,7 @@ This package contains all released mods (excluding work-in-progress mods). Extra
 ### 🌳 Bonbon Tree Boost
 Enhances the Bonbon Tree with configurable production boosts and other improvements.
 
-[📖 Read More](BonbonTreeBoost/README.md) | [Latest Release v1.0.2](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/BonbonTreeBoost-v1.0.2) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
+[📖 Read More](BonbonTreeBoost/README.md) | [Latest Release v2.0.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/BonbonTreeBoost-v2.0.0) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
 
 ### 📏 Capacity Control
 Increases the character limit for storage capacity input fields, allowing you to type larger values when using mods that increase storage capacity.
@@ -70,7 +70,7 @@ Complete control over element sublimation and off-gassing, with separate setting
 ### 📦 Controlled Storage
 Unified storage control: empty storage button, filtering options, capacity control, per-building delivery permissions (dupes and sweepers), and No-Sweep Zones. Copy delivery settings between buildings of the same type.
 
-[📖 Read More](ControlledStorage/README.md) | [Latest Release v1.1.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledStorage-v1.1.0)
+[📖 Read More](ControlledStorage/README.md) | [Latest Release v1.0.4](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledStorage-v1.0.4)
 
 ### 🎬 Controlled Visuals
 Fixes a vanilla bug where items on conveyor rails sometimes render in front of drywall. Conveyor contents now always draw behind walls, tiles, and other buildings as intended.
