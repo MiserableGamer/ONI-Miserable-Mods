@@ -53,7 +53,7 @@ namespace ControlledStorage.Patches
 
         private static void Log(string msg)
         {
-            if (ControlledStorageOptions.Instance?.EnableDeliveryControlDebugLogs == true)
+            if (DeliveryControlDebugLogs)
                 Debug.Log("[ControlledStorage.DeliveryControl] " + msg);
         }
 
@@ -81,7 +81,7 @@ namespace ControlledStorage.Patches
             internal static void Prefix(List<Pickupable> pickupables, Storage destination)
             {
                 _sweeperContext = true;
-                if (ControlledStorageOptions.Instance?.EnableDeliveryControlDebugLogs != true || destination == null) return;
+                if (!DeliveryControlDebugLogs || destination == null) return;
                 int sameBinCount = 0;
                 if (pickupables != null)
                 {
