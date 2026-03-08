@@ -3,10 +3,7 @@ using TUNING;
 
 namespace ControlledStorage.Patches
 {
-    /// <summary>
-    /// Modifies SPECIAL_STORAGE based on user options.
-    /// Runs early during game initialization before storage screens are created.
-    /// </summary>
+    // SPECIAL_STORAGE must be modified before storage screens are created.
     [HarmonyPatch(typeof(Game), nameof(Game.OnPrefabInit))]
     public static class Game_OnPrefabInit_Patch
     {
@@ -14,10 +11,7 @@ namespace ControlledStorage.Patches
         {
             var options = ControlledStorageOptions.Instance;
 
-            // Remove categories from SPECIAL_STORAGE based on user preferences.
-            // When removed from SPECIAL_STORAGE, they appear as standard items
-            // and are included in "Select All".
-
+            // When removed from SPECIAL_STORAGE, they appear as standard and are included in "Select All".
             if (!options.ClothingIsNonStandard)
             {
                 STORAGEFILTERS.SPECIAL_STORAGE.Remove(GameTags.Clothes);

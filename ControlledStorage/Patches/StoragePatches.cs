@@ -3,27 +3,19 @@ using UnityEngine;
 
 namespace ControlledStorage.Patches
 {
-    /// <summary>
-    /// Suppress the vanilla "Colony Lacks Required Skill" warning for our EmptyStorageWorkable.
-    /// We show our own targeted warnings instead (one for dupes, one for bionics).
-    /// </summary>
+    // Suppress vanilla "Colony Lacks Required Skill" so we can show our own targeted warnings (dupes vs bionics).
     [HarmonyPatch(typeof(Workable), nameof(Workable.SetShouldShowSkillPerkStatusItem))]
     public static class Workable_SetShouldShowSkillPerkStatusItem_Patch
     {
         internal static bool Prefix(Workable __instance)
         {
-            // If this is our EmptyStorageWorkable, skip the vanilla warning entirely
             if (__instance is EmptyStorageWorkable)
-            {
-                return false;  // Skip original method
-            }
-            return true;  // Run original for all other workables
+                return false;
+            return true;
         }
     }
     
-    /// <summary>
-    /// Patches to add EmptyStorageSetting component to storage buildings.
-    /// </summary>
+    // Add EmptyStorageSetting (and delivery control by type) to storage buildings.
     [HarmonyPatch(typeof(Storage), nameof(Storage.OnPrefabInit))]
     public static class Storage_OnPrefabInit_Patch
     {
@@ -121,9 +113,7 @@ namespace ControlledStorage.Patches
         }
     }
 
-    /// <summary>
-    /// Patch to allow bionic dupes with Tidying Booster to empty solid storage.
-    /// </summary>
+    // Bionic dupes with Tidying Booster can empty storage without the Tidy skill (options allow it).
     [HarmonyPatch(typeof(MinionResume), nameof(MinionResume.HasPerk), typeof(HashedString))]
     public static class MinionResume_HasPerk_Patch
     {

@@ -1,8 +1,6 @@
 namespace ControlledStorage
 {
-    /// <summary>
-    /// Localization strings for ControlledStorage mod.
-    /// </summary>
+    // Localization strings for this mod.
     public static class ControlledStorageStrings
     {
         public static class UI
@@ -41,9 +39,7 @@ namespace ControlledStorage
             }
         }
 
-        /// <summary>
-        /// Register all strings with the game.
-        /// </summary>
+        // Registers our strings with the game's Strings table.
         public static void RegisterStrings()
         {
             // UI strings
