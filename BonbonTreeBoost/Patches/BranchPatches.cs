@@ -1,5 +1,6 @@
 using HarmonyLib;
 using UnityEngine;
+using PeterHan.PLib.Core;
 using PeterHan.PLib.Options;
 
 namespace BonbonTreeBoost
@@ -19,7 +20,7 @@ namespace BonbonTreeBoost
             }
             catch (System.Exception ex)
             {
-                Debug.LogWarning($"[BonbonTreeBoost] Failed to read config file, using defaults: {ex.Message}");
+                PUtil.LogWarning($"[BonbonTreeBoost] Failed to read config file, using defaults: {ex.Message}");
                 options = new BonbonTreeBoostOptions();
             }
 
@@ -51,7 +52,7 @@ namespace BonbonTreeBoost
             }
             catch (System.Exception ex)
             {
-                Debug.LogWarning($"[BonbonTreeBoost] Failed to read config file, using defaults: {ex.Message}");
+                PUtil.LogWarning($"[BonbonTreeBoost] Failed to read config file, using defaults: {ex.Message}");
                 options = new BonbonTreeBoostOptions();
             }
 
@@ -97,14 +98,14 @@ namespace BonbonTreeBoost
             }
             catch (System.Exception ex)
             {
-                Debug.LogWarning($"[BonbonTreeBoost] Failed to read config file, using defaults: {ex.Message}");
+                PUtil.LogWarning($"[BonbonTreeBoost] Failed to read config file, using defaults: {ex.Message}");
                 options = new BonbonTreeBoostOptions();
             }
 
-            if (!options.AllowBranchHarvesting)
+            if (options.DoNotHarvestBranches)
             {
                 if (DebugFlags.EnableDebugLogs)
-                    Debug.Log("[BonbonTreeBoost] Branch harvesting is disabled - branch will not be made harvestable");
+                    PUtil.LogWarning("[BonbonTreeBoost] Do Not Harvest Branches is enabled - branch will not be made harvestable");
                 return false;
             }
 

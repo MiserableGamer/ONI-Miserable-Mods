@@ -2,24 +2,21 @@ using HarmonyLib;
 using UnityEngine;
 using Klei.AI;
 using Klei;
+using PeterHan.PLib.Core;
 using PeterHan.PLib.Options;
 using System.Reflection;
 
 namespace BonbonTreeBoost
 {
-    // FERTILIZER CODE COMMENTED OUT - TO BE DEALT WITH LATER
-    /*
-    [HarmonyPatch(typeof(Assets), nameof(Assets.AddPrefab))]
-    public static class Assets_AddPrefab_Patch
+    // Scale nectar storage capacity so higher production rates don't require constant dupe/port attendance.
+    [HarmonyPatch(typeof(SpaceTreeConfig), nameof(SpaceTreeConfig.CreatePrefab))]
+    public static class SpaceTreeConfig_CreatePrefab_Patch
     {
-        private const float BASE_FERTILIZER_RATE = 0.16666667f; // SpaceTreeConfig.SNOW_RATE
+        private const float BASE_NECTAR_CAPACITY_KG = 20f; // Vanilla trunk storage (wiki)
 
-        public static void Postfix(KPrefabID prefab)
+        public static void Postfix(GameObject __result)
         {
-            if (prefab == null)
-                return;
-
-            if (prefab.PrefabID().ToString() != "SpaceTree")
+            if (__result == null)
                 return;
 
             BonbonTreeBoostOptions options;
@@ -29,161 +26,54 @@ namespace BonbonTreeBoost
             }
             catch (System.Exception ex)
             {
-                Debug.LogWarning($"[BonbonTreeBoost] Failed to read config file, using defaults: {ex.Message}");
+                PUtil.LogWarning($"[BonbonTreeBoost] Failed to read config for nectar capacity, using defaults: {ex.Message}");
                 return;
             }
 
-            var fertilizationMonitor = prefab.gameObject.GetComponent<FertilizationMonitor>();
-            if (fertilizationMonitor == null)
-                return;
+            // Use same effective production scale as duration patch (including Production Balance and Advantage Multiplier)
+            // so capacity matches whichever tree type has higher effective rate.
+            int balanceMode = Mathf.Clamp(options.ProductionBalance, 1, 3);
+            float advantageMultiplier = options.ProductionAdvantageMultiplier;
 
-            var defProperty = typeof(FertilizationMonitor).GetProperty("Def", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            if (defProperty == null)
-                return;
+            float effectiveDomestic = options.DomesticProductionMultiplier;
 
-            var def = defProperty.GetValue(fertilizationMonitor) as FertilizationMonitor.Def;
-            if (def == null || def.consumedElements == null || def.consumedElements.Length == 0)
-                return;
-
-            for (int i = 0; i < def.consumedElements.Length; i++)
+            float effectiveWild;
+            switch (balanceMode)
             {
-                var consumeInfo = def.consumedElements[i];
-                // Always restore to base rate first, then apply multiplier
-                // This ensures changes are reverted when mod is disabled (multiplier = 1.0)
-                consumeInfo.massConsumptionRate = BASE_FERTILIZER_RATE * options.FertilizerConsumptionRate;
-                def.consumedElements[i] = consumeInfo;
+                case 1: // Domestic advantage
+                    effectiveWild = options.WildProductionMultiplier * 4f / advantageMultiplier;
+                    break;
+                case 2: // Equal production
+                    effectiveWild = options.WildProductionMultiplier * 4f;
+                    break;
+                case 3: // Wild advantage
+                    effectiveWild = options.WildProductionMultiplier * 4f * advantageMultiplier;
+                    break;
+                default:
+                    effectiveWild = options.WildProductionMultiplier;
+                    break;
             }
+
+            float capacityScale = Mathf.Max(effectiveDomestic, effectiveWild);
+            if (capacityScale <= 1f)
+                return;
+
+            var storage = __result.GetComponent<Storage>();
+            if (storage == null)
+                storage = __result.GetComponentInChildren<Storage>();
+            if (storage == null)
+                return;
+
+            float newCapacity = BASE_NECTAR_CAPACITY_KG * capacityScale;
+            storage.capacityKg = newCapacity;
+
+            // UI "EFFECTS" line "Nectar: X kg" reads from DirectlyEdiblePlant_StorageElement.storageCapacity
+            var nectarStorage = __result.GetComponent<DirectlyEdiblePlant_StorageElement>();
+            if (nectarStorage != null)
+                nectarStorage.storageCapacity = newCapacity;
 
             if (DebugFlags.EnableDebugLogs)
-                Debug.Log($"[BonbonTreeBoost] Applied fertilizer consumption multiplier {options.FertilizerConsumptionRate} to SpaceTree prefab via Assets.AddPrefab (base: {BASE_FERTILIZER_RATE}, result: {BASE_FERTILIZER_RATE * options.FertilizerConsumptionRate})");
-        }
-    }
-
-    [HarmonyPatch(typeof(FertilizationMonitor.Instance), "StartAbsorbing")]
-    public static class FertilizationMonitor_Instance_StartAbsorbing_Patch
-    {
-        public static void Prefix(FertilizationMonitor.Instance __instance, out bool __state)
-        {
-            __state = false;
-            if (__instance == null || __instance.gameObject == null)
-                return;
-
-            var prefabId = __instance.gameObject.GetComponent<KPrefabID>();
-            if (prefabId == null || prefabId.PrefabID().ToString() != "SpaceTree")
-                return;
-
-            // Check handle before
-            var absorberHandleField = typeof(FertilizationMonitor.Instance).GetField("absorberHandle", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            if (absorberHandleField != null)
-            {
-                var handle = absorberHandleField.GetValue(__instance);
-                if (handle != null)
-                {
-                    var isValidMethod = handle.GetType().GetMethod("IsValid", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                    if (isValidMethod != null)
-                        __state = (bool)(isValidMethod.Invoke(handle, null) ?? false);
-                }
-            }
-        }
-
-        public static void Postfix(FertilizationMonitor.Instance __instance, bool __state)
-        {
-            if (__instance == null || __instance.gameObject == null)
-                return;
-
-            var prefabId = __instance.gameObject.GetComponent<KPrefabID>();
-            if (prefabId == null || prefabId.PrefabID().ToString() != "SpaceTree")
-                return;
-
-            if (DebugFlags.EnableDebugLogs)
-            {
-                var absorberHandleField = typeof(FertilizationMonitor.Instance).GetField("absorberHandle", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                bool isValidAfter = false;
-                if (absorberHandleField != null)
-                {
-                    var handle = absorberHandleField.GetValue(__instance);
-                    if (handle != null)
-                    {
-                        var isValidMethod = handle.GetType().GetMethod("IsValid", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                        if (isValidMethod != null)
-                            isValidAfter = (bool)(isValidMethod.Invoke(handle, null) ?? false);
-                    }
-                }
-
-                // Check def and storage to see why it might have failed
-                var defProperty = typeof(FertilizationMonitor.Instance).GetProperty("def", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                bool hasDef = defProperty != null && defProperty.GetValue(__instance) != null;
-                
-                var storageField = typeof(FertilizationMonitor.Instance).GetField("storage", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                bool hasStorage = storageField != null && storageField.GetValue(__instance) != null;
-
-                Debug.Log($"[BonbonTreeBoost] StartAbsorbing: before={__state}, after={isValidAfter}, hasDef={hasDef}, hasStorage={hasStorage}");
-            }
-        }
-    }
-
-    [HarmonyPatch(typeof(FertilizationMonitor.Instance), "UpdateFertilization")]
-    public static class FertilizationMonitor_Instance_UpdateFertilization_Patch
-    {
-        public static void Postfix(FertilizationMonitor.Instance __instance, float dt)
-        {
-            if (__instance == null || __instance.gameObject == null)
-                return;
-
-            var prefabId = __instance.gameObject.GetComponent<KPrefabID>();
-            if (prefabId == null || prefabId.PrefabID().ToString() != "SpaceTree")
-                return;
-
-            var spaceTreeSMI = __instance.gameObject.GetSMI<SpaceTreePlant.Instance>();
-            if (spaceTreeSMI != null && spaceTreeSMI.IsInsideState(spaceTreeSMI.sm.production.producing))
-            {
-                // When tree is in production.producing state, ensure fertilizer absorption is active
-                // Check if we need to transition to absorbing state
-                var smField = typeof(FertilizationMonitor.Instance).GetField("sm", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                if (smField != null)
-                {
-                    var sm = smField.GetValue(__instance);
-                    var hasCorrectFertilizerField = sm.GetType().GetField("hasCorrectFertilizer", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                    if (hasCorrectFertilizerField != null)
-                    {
-                        var hasCorrectFertilizerParam = hasCorrectFertilizerField.GetValue(sm);
-                        var getValueMethod = hasCorrectFertilizerParam.GetType().GetMethod("Get", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                        bool hasCorrectFertilizer = false;
-                        if (getValueMethod != null)
-                        {
-                            hasCorrectFertilizer = (bool)(getValueMethod.Invoke(hasCorrectFertilizerParam, new object[] { __instance }) ?? false);
-                        }
-
-                        if (hasCorrectFertilizer)
-                        {
-                            // We have correct fertilizer and are in production state, ensure we're absorbing
-                            var absorberHandleField = typeof(FertilizationMonitor.Instance).GetField("absorberHandle", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                            if (absorberHandleField != null)
-                            {
-                                var handle = absorberHandleField.GetValue(__instance);
-                                if (handle != null)
-                                {
-                                    var isValidMethod = handle.GetType().GetMethod("IsValid", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                                    bool isValid = false;
-                                    if (isValidMethod != null)
-                                        isValid = (bool)(isValidMethod.Invoke(handle, null) ?? false);
-
-                                    if (!isValid)
-                                    {
-                                        var startAbsorbingMethod = typeof(FertilizationMonitor.Instance).GetMethod("StartAbsorbing", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                                        if (startAbsorbingMethod != null)
-                                        {
-                                            startAbsorbingMethod.Invoke(__instance, null);
-                                            if (DebugFlags.EnableDebugLogs)
-                                                Debug.Log($"[BonbonTreeBoost] Forced StartAbsorbing for SpaceTree in production state (hasCorrectFertilizer=true)");
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+                PUtil.LogWarning($"[BonbonTreeBoost] Scaled Space Tree nectar storage: {BASE_NECTAR_CAPACITY_KG} -> {newCapacity} kg (scale {capacityScale}x)");
         }
     }
 
@@ -206,7 +96,7 @@ namespace BonbonTreeBoost
             }
             catch (System.Exception ex)
             {
-                Debug.LogWarning($"[BonbonTreeBoost] Failed to read config file, using defaults: {ex.Message}");
+                PUtil.LogWarning($"[BonbonTreeBoost] Failed to read config file, using defaults: {ex.Message}");
                 return;
             }
 
@@ -224,7 +114,6 @@ namespace BonbonTreeBoost
                 Debug.Log($"[BonbonTreeBoost] Applied fertilizer consumption multiplier {options.FertilizerConsumptionRate} to SpaceTree prefab via ExtendPlantToFertilizable (base: {BASE_FERTILIZER_RATE}, result: {BASE_FERTILIZER_RATE * options.FertilizerConsumptionRate})");
         }
     }
-    */
 
     [HarmonyPatch(typeof(SpaceTreePlant.Instance), "get_OptimalProductionDuration")]
     public static class SpaceTreePlant_Instance_OptimalProductionDuration_Patch
@@ -257,7 +146,7 @@ namespace BonbonTreeBoost
             }
             catch (System.Exception ex)
             {
-                Debug.LogWarning($"[BonbonTreeBoost] Failed to read config file, using defaults: {ex.Message}");
+                PUtil.LogWarning($"[BonbonTreeBoost] Failed to read config file, using defaults: {ex.Message}");
                 return;
             }
 
@@ -270,29 +159,34 @@ namespace BonbonTreeBoost
             int balanceMode = Mathf.Clamp(options.ProductionBalance, 1, 3);
             float advantageMultiplier = options.ProductionAdvantageMultiplier;
             
-            float originalResult = __result;
+            // Game uses OptimalProductionDuration in a way that makes rate ~ 1/duration²,
+            // so halving duration gives 4x rate. Apply sqrt(multiplier) so 2x option => 2x rate.
+            float durationDivisor;
             if (isWild)
             {
                 switch (balanceMode)
                 {
                     case 1: // Domestic advantage
-                        __result /= (productionMultiplier * 4f / advantageMultiplier);
+                        durationDivisor = Mathf.Sqrt(productionMultiplier * 4f / advantageMultiplier);
                         break;
                     case 2: // Equal production
-                        __result /= (productionMultiplier * 4f);
+                        durationDivisor = Mathf.Sqrt(productionMultiplier * 4f);
                         break;
                     case 3: // Wild advantage
-                        __result /= (productionMultiplier * 4f * advantageMultiplier);
+                        durationDivisor = Mathf.Sqrt(productionMultiplier * 4f * advantageMultiplier);
                         break;
                     default:
-                        __result /= productionMultiplier;
+                        durationDivisor = Mathf.Sqrt(productionMultiplier);
                         break;
                 }
             }
             else
             {
-                __result /= productionMultiplier;
+                durationDivisor = Mathf.Sqrt(productionMultiplier);
             }
+
+            float originalResult = __result;
+            __result /= durationDivisor;
             
             if (DebugFlags.EnableDebugLogs)
                 Debug.Log($"[BonbonTreeBoost] Applied {(isWild ? "wild" : "domestic")} production multiplier {productionMultiplier} with balance mode {balanceMode} (advantage: {advantageMultiplier}x) to OptimalProductionDuration: {originalResult} -> {__result}");
@@ -332,7 +226,7 @@ namespace BonbonTreeBoost
             }
             catch (System.Exception ex)
             {
-                Debug.LogWarning($"[BonbonTreeBoost] Failed to read config file, using defaults: {ex.Message}");
+                PUtil.LogWarning($"[BonbonTreeBoost] Failed to read config file, using defaults: {ex.Message}");
                 options = new BonbonTreeBoostOptions();
             }
 

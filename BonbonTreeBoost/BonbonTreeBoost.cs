@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using UnityEngine;
 using PeterHan.PLib.Core;
 using PeterHan.PLib.Options;
@@ -7,7 +7,7 @@ namespace BonbonTreeBoost
 {
     internal static class DebugFlags
     {
-        public static readonly bool EnableDebugLogs = true; // Set to false to disable debug logs
+        public static readonly bool EnableDebugLogs = false; // Set to true to enable debug logs
     }
 
     // Stores growth multipliers to avoid modifying base fields (which causes tooltip crashes)
@@ -56,15 +56,12 @@ namespace BonbonTreeBoost
         [Limit(0.5, 10.0)]
         public float ProductionAdvantageMultiplier { get; set; } = 2.0f;
 
-        [Option("Allow Branch Harvesting", "If disabled, branches cannot be harvested for wood. Dupes will only harvest nectar from the trunk.", "Branch Settings")]
-        public bool AllowBranchHarvesting { get; set; } = true;
+        [Option("Do Not Harvest Branches", "When enabled, dupes will not harvest branches for wood (same as using the vanilla tool to set a branch to not harvest).", "Branch Settings")]
+        public bool DoNotHarvestBranches { get; set; } = false;
 
-                // FERTILIZER OPTION COMMENTED OUT - TO BE DEALT WITH LATER
-                /*
-                [Option("Fertilizer Consumption Rate", "Multiplier for Snow fertilizer consumption (domesticated trees only). Set to 0 to disable fertilizer consumption.", "Domesticated Trees")]
-                [Limit(0.0, 10.0)]
-                public float FertilizerConsumptionRate { get; set; } = 2.0f;
-                */
+        [Option("Fertilizer Consumption Rate", "Multiplier for Snow fertilizer consumption (domesticated trees only). Set to 0 to disable fertilizer consumption.", "Domesticated Trees")]
+        [Limit(0.0, 10.0)]
+        public float FertilizerConsumptionRate { get; set; } = 2.0f;
     }
 
     public sealed class BonbonTreeBoostMod : KMod.UserMod2
@@ -74,7 +71,8 @@ namespace BonbonTreeBoost
             base.OnLoad(harmony);
             PUtil.InitLibrary();
             new POptions().RegisterOptions(this, typeof(BonbonTreeBoostOptions));
-            Debug.Log("[BonbonTreeBoost] Loaded successfully");
+            harmony.PatchAll();
+            PUtil.LogWarning("[BonbonTreeBoost] Loaded successfully");
         }
     }
 }

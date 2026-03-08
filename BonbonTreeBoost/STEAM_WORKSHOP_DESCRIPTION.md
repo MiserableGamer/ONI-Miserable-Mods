@@ -4,13 +4,12 @@ Configure the Bonbon Tree (Space Tree) nectar production, growth speed, and fert
 
 [h2]Features[/h2]
 [list]
-[*][b]Separate Wild and Domestic Settings[/b] - Configure wild and domesticated trees independently
-[*][b]Configurable Nectar Production[/b] - Adjust multipliers for Space Tree sugar water production (1.0x to 10.0x)
-[*][b]Independent Growth Rate Control[/b] - Control trunk and branch growth rates separately (0.1x to 10.0x)
-[*][b]Fertilizer Consumption Adjustment[/b] - Modify Snow fertilizer consumption for domesticated trees (0.0x to 10.0x)
-[*][b]Production Balance Control[/b] - Choose whether wild or domestic trees produce more
-[*][b]Branch Harvesting Control[/b] - Enable or disable wood harvesting from branches
-[*][b]Works with Existing Saves[/b] - Changes apply to existing trees, new trees, and all saves
+[*][b]Wild trees[/b] — Nectar production, trunk growth, and branch growth multipliers
+[*][b]Domesticated trees[/b] — Nectar production, trunk and branch growth, and fertilizer consumption
+[*][b]Production balance[/b] — Choose whether wild or domestic trees produce more (or equal)
+[*][b]Production advantage[/b] — When one type is favoured, how much more it produces
+[*][b]Do not harvest branches[/b] — Option to stop dupes harvesting branches for wood
+[*][b]Works with existing saves[/b] — Changes apply after a restart
 [/list]
 
 [h2]How to Use[/h2]
@@ -38,21 +37,6 @@ Configure the Bonbon Tree (Space Tree) nectar production, growth speed, and fert
 [*][b]Other Mods[/b] - Compatible with most mods
 [/list]
 
-[h2]Performance[/h2]
-[b]Minimal Performance Impact[/b]
-[list]
-[*][b]Configuration Only[/b] - Settings applied when trees are created
-[*][b]No Continuous Monitoring[/b] - Changes are one-time modifications
-[*][b]Event-Driven[/b] - Only triggers on tree creation/spawn
-[/list]
-
-[h2]Future Updates[/h2]
-[list]
-[*]Additional tree customization options
-[*]Support for other DLC plants
-[*]Per-save configuration
-[/list]
-
 [h2]Support & Issues[/h2]
 Need help, found a bug, or have a suggestion? We're here to help!
 
@@ -73,8 +57,12 @@ Found a bug or have a feature request? Please report it on GitHub using our issu
 
 Please mention "Bonbon Tree Boost" in your issue title or description.
 
-[h2]Mod Collection[/h2]
-This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156]ONI 200+ Ultimate Mods collection[/url] on Steam Workshop, featuring over 200 tested and compatible mods for Oxygen Not Included.
+[h2]My Workshop & Collections[/h2]
+[list]
+[*][url=https://steamcommunity.com/id/miserablegamer/myworkshopfiles/?appid=457140]My Workshop[/url] – All my ONI mods on Steam
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156]ONI 235+ Ultimate Mods collection[/url] – 235+ tested, compatible mods for Oxygen Not Included
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3672308653]The Controlled Series[/url] – Collection of Controlled mods
+[/list]
 
 [h2]Credits[/h2]
 [list]
@@ -84,7 +72,6 @@ This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/
 
 [h2]Version History[/h2]
 [list]
-[*][b]2.0.0.66[/b]: Complete rewrite - separate wild/domestic settings, production balance system, branch harvesting control
-[*][b]1.0.1.11[/b]: Initial release
-[*][b]1.0.1.4[/b]: Bug fixes and code cleaning
+[*][b]2.0.0[/b]: Rewrote most of the code, new options and controls
+[*][b]1.0.1[/b]: Initial release and bug fixes
 [/list]

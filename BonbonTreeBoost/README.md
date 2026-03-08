@@ -4,13 +4,12 @@ Configure the Bonbon Tree (Space Tree) nectar production, growth speed, and fert
 
 ## Features
 
-- **Separate Wild and Domestic Settings** - Configure wild and domesticated trees independently
-- **Configurable Nectar Production** - Adjust multipliers for Space Tree sugar water production (1.0x to 10.0x)
-- **Independent Growth Rate Control** - Control trunk and branch growth rates separately (0.1x to 10.0x)
-- **Fertilizer Consumption Adjustment** - Modify Snow fertilizer consumption for domesticated trees (0.0x to 10.0x)
-- **Production Balance Control** - Choose whether wild or domestic trees produce more
-- **Branch Harvesting Control** - Enable or disable wood harvesting from branches
-- **Works with Existing Saves** - Changes apply to existing trees, new trees, and all saves
+- **Wild trees** — Nectar production, trunk growth, and branch growth multipliers
+- **Domesticated trees** — Nectar production, trunk and branch growth, and fertilizer consumption
+- **Production balance** — Choose whether wild or domestic trees produce more (or equal)
+- **Production advantage** — When one type is favoured, how much more it produces
+- **Do not harvest branches** — Option to stop dupes harvesting branches for wood
+- **Works with existing saves** — Changes apply after a restart
 
 ## How to Use
 
@@ -77,9 +76,11 @@ Found a bug or have a feature request? Please report it on GitHub using our issu
 
 Please mention "Bonbon Tree Boost" in your issue title or description.
 
-## Mod Collection
+## My Workshop & Collections
 
-This mod is part of the [ONI 200+ Ultimate Mods collection](https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156) on Steam Workshop, featuring over 200 tested and compatible mods for Oxygen Not Included.
+- [My Workshop](https://steamcommunity.com/id/miserablegamer/myworkshopfiles/?appid=457140) – All my ONI mods on Steam
+- [ONI 235+ Ultimate Mods collection](https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156) – 235+ tested, compatible mods for Oxygen Not Included
+- [The Controlled Series](https://steamcommunity.com/sharedfiles/filedetails/?id=3672308653) – Collection of Controlled mods
 
 ## Credits
 
@@ -88,6 +89,5 @@ This mod is part of the [ONI 200+ Ultimate Mods collection](https://steamcommuni
 
 ## Version History
 
-- **2.0.0.66**: Complete rewrite - separate wild/domestic settings, production balance system, branch harvesting control
-- **1.0.1.11**: Initial release
-- **1.0.1.4**: Bug fixes and code cleaning
+- **2.0.0**: Rewrote most of the code, new options and controls
+- **1.0.1**: Initial release and bug fixes
