@@ -135,25 +135,13 @@ namespace ControlledStorage
         [JsonProperty]
         public bool EnableDeliveryControlFridges { get; set; } = true;
 
-        [Option("Enable for KIN Underground Conduit Storage Sender",
-            "When KIN Underground Conduit mod is installed, add delivery control to its Storage Sender building. No effect if that mod is not loaded.",
+        [Option("Enable for Loaders", 
+            "Add delivery control sidescreen to conveyor loaders (SolidConduitInbox).", 
             "Delivery Control")]
         [JsonProperty]
-        public bool EnableDeliveryControlKINStorageSender { get; set; } = true;
+        public bool EnableDeliveryControlLoaders { get; set; } = true;
 
-        public bool EnableDeliveryControl => EnableDeliveryControlStorage || EnableDeliveryControlFridges || EnableDeliveryControlKINStorageSender;
-
-        [Option("Delivery Control Debug Logs",
-            "Log sweeper loop and fetch target details to Player.log. Set to true to diagnose the same-bin loop issue.",
-            "Delivery Control")]
-        [JsonProperty]
-        public bool EnableDeliveryControlDebugLogs { get; set; } = false;
-
-        [Option("Delivery Control Debug Logs",
-            "Log sweeper loop and fetch target details to Player.log. Set to true to diagnose the same-bin loop issue.",
-            "Delivery Control")]
-        [JsonProperty]
-        public bool EnableDeliveryControlDebugLogs { get; set; } = false;
+        public bool EnableDeliveryControl => EnableDeliveryControlStorage || EnableDeliveryControlFridges || EnableDeliveryControlLoaders;
 
         #endregion
 

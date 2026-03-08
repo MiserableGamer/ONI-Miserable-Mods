@@ -9,6 +9,9 @@ namespace ControlledStorage.Patches
 {
     public static class DeliveryControlPatches
     {
+        /// <summary>Set to true to log sweeper/fetch details to Player.log. Not in mod options; change here for dev debugging.</summary>
+        private const bool DeliveryControlDebugLogs = false;
+
         [ThreadStatic]
         private static bool _sweeperContext;
 
@@ -50,7 +53,7 @@ namespace ControlledStorage.Patches
 
         private static void Log(string msg)
         {
-            if (ControlledStorageOptions.Instance?.EnableDeliveryControlDebugLogs == true)
+            if (DeliveryControlDebugLogs)
                 Debug.Log("[ControlledStorage.DeliveryControl] " + msg);
         }
 
@@ -78,7 +81,7 @@ namespace ControlledStorage.Patches
             internal static void Prefix(List<Pickupable> pickupables, Storage destination)
             {
                 _sweeperContext = true;
-                if (ControlledStorageOptions.Instance?.EnableDeliveryControlDebugLogs != true || destination == null) return;
+                if (!DeliveryControlDebugLogs || destination == null) return;
                 int sameBinCount = 0;
                 if (pickupables != null)
                 {

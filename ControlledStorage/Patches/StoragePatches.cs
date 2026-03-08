@@ -110,6 +110,17 @@ namespace ControlledStorage.Patches
         }
     }
 
+    // Conveyor loader: add delivery control so dupes/sweepers can be restricted like storage bins.
+    [HarmonyPatch(typeof(SolidConduitInboxConfig), nameof(SolidConduitInboxConfig.DoPostConfigureComplete))]
+    public static class SolidConduitInboxConfig_DoPostConfigureComplete_Patch
+    {
+        internal static void Postfix(GameObject go)
+        {
+            if (ControlledStorageOptions.Instance.EnableDeliveryControlLoaders)
+                go.AddOrGet<StorageDeliveryControl>();
+        }
+    }
+
     /// <summary>
     /// Patch to allow bionic dupes with Tidying Booster to empty solid storage.
     /// </summary>
