@@ -8,11 +8,11 @@ using System.Reflection;
 
 namespace BonbonTreeBoost
 {
-    // Scale nectar storage capacity so higher production rates don't require constant dupe/port attendance.
+    // Scale nectar storage so higher production doesn't require constant draining.
     [HarmonyPatch(typeof(SpaceTreeConfig), nameof(SpaceTreeConfig.CreatePrefab))]
     public static class SpaceTreeConfig_CreatePrefab_Patch
     {
-        private const float BASE_NECTAR_CAPACITY_KG = 20f; // Vanilla trunk storage (wiki)
+        private const float BASE_NECTAR_CAPACITY_KG = 20f;
 
         public static void Postfix(GameObject __result)
         {
@@ -30,8 +30,7 @@ namespace BonbonTreeBoost
                 return;
             }
 
-            // Use same effective production scale as duration patch (including Production Balance and Advantage Multiplier)
-            // so capacity matches whichever tree type has higher effective rate.
+            // Same effective scale as duration patch so capacity matches the higher of wild/domestic rate.
             int balanceMode = Mathf.Clamp(options.ProductionBalance, 1, 3);
             float advantageMultiplier = options.ProductionAdvantageMultiplier;
 
@@ -40,13 +39,13 @@ namespace BonbonTreeBoost
             float effectiveWild;
             switch (balanceMode)
             {
-                case 1: // Domestic advantage
+                case 1:
                     effectiveWild = options.WildProductionMultiplier * 4f / advantageMultiplier;
                     break;
-                case 2: // Equal production
+                case 2:
                     effectiveWild = options.WildProductionMultiplier * 4f;
                     break;
-                case 3: // Wild advantage
+                case 3:
                     effectiveWild = options.WildProductionMultiplier * 4f * advantageMultiplier;
                     break;
                 default:
@@ -67,7 +66,6 @@ namespace BonbonTreeBoost
             float newCapacity = BASE_NECTAR_CAPACITY_KG * capacityScale;
             storage.capacityKg = newCapacity;
 
-            // UI "EFFECTS" line "Nectar: X kg" reads from DirectlyEdiblePlant_StorageElement.storageCapacity
             var nectarStorage = __result.GetComponent<DirectlyEdiblePlant_StorageElement>();
             if (nectarStorage != null)
                 nectarStorage.storageCapacity = newCapacity;
@@ -100,9 +98,8 @@ namespace BonbonTreeBoost
                 return;
             }
 
-            // Apply multiplier to the base rate (0.16666667f from SpaceTreeConfig)
-            // When multiplier is 1.0, this restores to base rate, allowing mod removal/disable to revert changes
-            const float BASE_FERTILIZER_RATE = 0.16666667f; // SpaceTreeConfig.SNOW_RATE
+            // 1.0 restores vanilla rate so disabling the mod reverts behaviour.
+            const float BASE_FERTILIZER_RATE = 0.16666667f;
             for (int i = 0; i < fertilizers.Length; i++)
             {
                 var consumeInfo = fertilizers[i];
@@ -111,7 +108,7 @@ namespace BonbonTreeBoost
             }
 
             if (DebugFlags.EnableDebugLogs)
-                Debug.Log($"[BonbonTreeBoost] Applied fertilizer consumption multiplier {options.FertilizerConsumptionRate} to SpaceTree prefab via ExtendPlantToFertilizable (base: {BASE_FERTILIZER_RATE}, result: {BASE_FERTILIZER_RATE * options.FertilizerConsumptionRate})");
+                Debug.Log($"[BonbonTreeBoost] Fertilizer rate: {options.FertilizerConsumptionRate}x (base {BASE_FERTILIZER_RATE})");
         }
     }
 
@@ -159,20 +156,19 @@ namespace BonbonTreeBoost
             int balanceMode = Mathf.Clamp(options.ProductionBalance, 1, 3);
             float advantageMultiplier = options.ProductionAdvantageMultiplier;
             
-            // Game uses OptimalProductionDuration in a way that makes rate ~ 1/duration²,
-            // so halving duration gives 4x rate. Apply sqrt(multiplier) so 2x option => 2x rate.
+            // Rate ~ 1/duration² in game; sqrt(multiplier) gives 2x option => 2x rate.
             float durationDivisor;
             if (isWild)
             {
                 switch (balanceMode)
                 {
-                    case 1: // Domestic advantage
+                    case 1:
                         durationDivisor = Mathf.Sqrt(productionMultiplier * 4f / advantageMultiplier);
                         break;
-                    case 2: // Equal production
+                    case 2:
                         durationDivisor = Mathf.Sqrt(productionMultiplier * 4f);
                         break;
-                    case 3: // Wild advantage
+                    case 3:
                         durationDivisor = Mathf.Sqrt(productionMultiplier * 4f * advantageMultiplier);
                         break;
                     default:
@@ -185,11 +181,10 @@ namespace BonbonTreeBoost
                 durationDivisor = Mathf.Sqrt(productionMultiplier);
             }
 
-            float originalResult = __result;
             __result /= durationDivisor;
-            
+
             if (DebugFlags.EnableDebugLogs)
-                Debug.Log($"[BonbonTreeBoost] Applied {(isWild ? "wild" : "domestic")} production multiplier {productionMultiplier} with balance mode {balanceMode} (advantage: {advantageMultiplier}x) to OptimalProductionDuration: {originalResult} -> {__result}");
+                Debug.Log($"[BonbonTreeBoost] OptimalProductionDuration: {(isWild ? "wild" : "domestic")} {productionMultiplier}x, balance {balanceMode}, result {__result}");
         }
     }
 
@@ -249,8 +244,8 @@ namespace BonbonTreeBoost
                 {
                     float currentValue = baseModifier.Value;
                     baseModifier.SetValue(currentValue * domesticMultiplier);
-                        if (DebugFlags.EnableDebugLogs)
-                            Debug.Log($"[BonbonTreeBoost] Applied domestic multiplier {domesticMultiplier} to baseGrowingRate: {currentValue} -> {baseModifier.Value}");
+                    if (DebugFlags.EnableDebugLogs)
+                        Debug.Log($"[BonbonTreeBoost] Applied domestic multiplier {domesticMultiplier} to baseGrowingRate: {currentValue} -> {baseModifier.Value}");
                 }
             }
 
@@ -261,8 +256,8 @@ namespace BonbonTreeBoost
                 {
                     float currentValue = wildModifier.Value;
                     wildModifier.SetValue(currentValue * wildMultiplier);
-                        if (DebugFlags.EnableDebugLogs)
-                            Debug.Log($"[BonbonTreeBoost] Applied wild multiplier {wildMultiplier} to wildGrowingRate: {currentValue} -> {wildModifier.Value}");
+                    if (DebugFlags.EnableDebugLogs)
+                        Debug.Log($"[BonbonTreeBoost] Applied wild multiplier {wildMultiplier} to wildGrowingRate: {currentValue} -> {wildModifier.Value}");
                 }
             }
         }

@@ -3,10 +3,7 @@ using UnityEngine;
 
 namespace ControlledStorage
 {
-    /// <summary>
-    /// Component that controls dupe and auto-sweeper access to storage buildings.
-    /// Provides 4 settings: dupe deposit, dupe extract, sweeper deposit, sweeper extract.
-    /// </summary>
+    // Dupe/sweeper deposit and extract toggles; patches enforce at chore/fetch level.
     [SerializationConfig(MemberSerialization.OptIn)]
     [AddComponentMenu("KMonoBehaviour/scripts/StorageDeliveryControl")]
     public class StorageDeliveryControl : KMonoBehaviour, ISaveLoadable
@@ -94,9 +91,7 @@ namespace ControlledStorage
             storage.allowItemRemoval = allowDupeExtract || allowSweeperExtract;
         }
 
-        /// <summary>
-        /// Copy only our checkbox settings from source to target. Used by the Copy Delivery Settings tool.
-        /// </summary>
+        // Used by Copy Delivery Settings so only our four toggles are copied.
         public static void CopyDeliveryControlOnly(StorageDeliveryControl source, StorageDeliveryControl target)
         {
             if (source == null || target == null) return;
@@ -106,9 +101,7 @@ namespace ControlledStorage
             target.AllowSweeperExtract = source.AllowSweeperExtract;
         }
 
-        /// <summary>
-        /// Called when copying settings from another building.
-        /// </summary>
+        // CopySettings event from CopyBuildingSettings.
         private void OnCopySettings(object data)
         {
             var source = ((GameObject)data)?.GetComponent<StorageDeliveryControl>();
@@ -138,5 +131,4 @@ namespace ControlledStorage
             base.OnCleanUp();
         }
     }
-
 }

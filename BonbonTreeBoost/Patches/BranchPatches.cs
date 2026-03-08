@@ -105,7 +105,7 @@ namespace BonbonTreeBoost
             if (options.DoNotHarvestBranches)
             {
                 if (DebugFlags.EnableDebugLogs)
-                    PUtil.LogWarning("[BonbonTreeBoost] Do Not Harvest Branches is enabled - branch will not be made harvestable");
+                    PUtil.LogWarning("[BonbonTreeBoost] DoNotHarvestBranches enabled, blocking harvest");
                 return false;
             }
 

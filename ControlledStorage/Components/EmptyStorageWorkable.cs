@@ -5,11 +5,7 @@ using UnityEngine;
 
 namespace ControlledStorage
 {
-    /// <summary>
-    /// Custom workable for emptying storage that does NOT register with the priority system on init.
-    /// This avoids issues where DropAllWorkable's automatic Prioritizable registration
-    /// interferes with bionic lubricant refill chores.
-    /// </summary>
+    // Empty Storage button and chore; avoids Prioritizable on init so bionic lubricant chores aren't affected.
     [AddComponentMenu("KMonoBehaviour/Workable/EmptyStorageWorkable")]
     public class EmptyStorageWorkable : Workable
     {
@@ -63,9 +59,7 @@ namespace ControlledStorage
             }
         }
 
-        /// <summary>
-        /// Initialize or reinitialize workable settings based on current options.
-        /// </summary>
+        // Options can change; reapply skill requirement and status items.
         public void InitializeWorkable()
         {
             workerStatusItem = Db.Get().DuplicantStatusItems.Emptying;
@@ -132,9 +126,7 @@ namespace ControlledStorage
                 OverlayModes.None.ID);
         }
         
-        /// <summary>
-        /// Check if any non-bionic dupes lack the Groundskeeper skill perk.
-        /// </summary>
+        // Used to decide whether to show "dupes lack skill" status.
         private static bool HasDupesWithoutSkill()
         {
             var skillPerkId = Db.Get().SkillPerks.IncreaseStrengthGroundskeeper.Id;
@@ -158,9 +150,7 @@ namespace ControlledStorage
             return false;
         }
         
-        /// <summary>
-        /// Check if there are any bionic dupes in the colony without the Tidying Booster.
-        /// </summary>
+        // Used to decide whether to show "bionics need Tidying Booster" status.
         private static bool HasBionicsWithoutTidyingBooster()
         {
             Tag tidyingBoosterTag = new Tag("Booster_Tidy1");
@@ -189,9 +179,7 @@ namespace ControlledStorage
             return storages ??= GetComponents<Storage>();
         }
 
-        /// <summary>
-        /// Toggle emptying - creates chore if none exists, cancels if one does.
-        /// </summary>
+        // Toggle: create chore if none, cancel if one exists.
         public void DropAll()
         {
             // Guard against double execution
@@ -381,10 +369,7 @@ namespace ControlledStorage
 
         public bool HasActiveChore() => Chore != null;
         
-        /// <summary>
-        /// Override the vanilla UpdateStatusItem to prevent showing "Colony Lacks Skill" warning.
-        /// We show our own custom status items in RefreshStatusItem instead.
-        /// </summary>
+        // Don't call base so vanilla "Colony Lacks Skill" doesn't show; we use RefreshStatusItem instead.
         public override void UpdateStatusItem(object data = null)
         {
             // Don't call base - we handle skill status items ourselves in RefreshStatusItem

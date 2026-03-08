@@ -7,10 +7,11 @@ namespace BonbonTreeBoost
 {
     internal static class DebugFlags
     {
-        public static readonly bool EnableDebugLogs = false; // Set to true to enable debug logs
+        // Keep false for release; set true only when debugging.
+        public static readonly bool EnableDebugLogs = false;
     }
 
-    // Stores growth multipliers to avoid modifying base fields (which causes tooltip crashes)
+    // Holds growth multipliers so we don't mutate base game fields (avoids tooltip crashes).
     public class GrowthMultiplierData : KMonoBehaviour
     {
         public float WildTrunkMultiplier { get; set; } = 1.0f;

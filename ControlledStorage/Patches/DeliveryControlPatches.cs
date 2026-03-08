@@ -9,7 +9,7 @@ namespace ControlledStorage.Patches
 {
     public static class DeliveryControlPatches
     {
-        /// <summary>Set to true to log sweeper/fetch details to Player.log. Not in mod options; change here for dev debugging.</summary>
+        // Set to true to log sweeper/fetch details to Player.log; not in mod options (change here for dev debugging).
         private const bool DeliveryControlDebugLogs = false;
 
         [ThreadStatic]
