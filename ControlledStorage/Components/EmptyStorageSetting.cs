@@ -3,7 +3,10 @@ using STRINGS;
 
 namespace ControlledStorage
 {
-    // Adds Empty Storage button; immediate vs task-based depends on options.
+    /// <summary>
+    /// Component that adds the "Empty Storage" button to the user menu.
+    /// Handles both immediate emptying and task-based emptying based on options.
+    /// </summary>
     [SerializationConfig(MemberSerialization.OptIn)]
     public sealed class EmptyStorageSetting : KMonoBehaviour, ISaveLoadable
     {

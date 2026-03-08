@@ -3,7 +3,10 @@ using TMPro;
 
 namespace ControlledStorage.Patches
 {
-    // Vanilla 6-char limit blocks modded capacities; we use options to allow more characters.
+    /// <summary>
+    /// Increases the character limit on the capacity control text input field.
+    /// Vanilla limits to 6 characters, preventing larger capacity values with mods.
+    /// </summary>
     [HarmonyPatch(typeof(CapacityControlSideScreen), nameof(CapacityControlSideScreen.OnSpawn))]
     public static class CapacityControlSideScreen_OnSpawn_Patch
     {
@@ -11,6 +14,7 @@ namespace ControlledStorage.Patches
         {
             int characterLimit = ControlledStorageOptions.Instance.TotalCharacterLimit;
 
+            // Use Harmony Traverse for cleaner field access
             var numberInput = Traverse.Create(__instance)
                 .Field("numberInput")
                 .GetValue();
