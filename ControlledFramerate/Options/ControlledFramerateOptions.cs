@@ -36,6 +36,9 @@ namespace ControlledFramerate.Options
 
         [JsonProperty]
         public bool AdaptiveEnabled { get; set; } = false;
+
+        [JsonProperty]
+        public bool MonitorEnabled { get; set; } = false;
     }
 
     [JsonObject(MemberSerialization.OptIn)]

@@ -101,7 +101,7 @@ namespace ControlledFramerate.UI
 
         private void BuildPanel()
         {
-            panelGO = new GameObject("SpeedMonitorContainer");
+            panelGO = new GameObject("FramerateMonitorContainer");
             panelGO.transform.SetParent(transform, false);
 
             panelRect = panelGO.AddComponent<RectTransform>();
@@ -201,7 +201,7 @@ namespace ControlledFramerate.UI
             titleGO.AddComponent<RectTransform>();
             var titleText = titleGO.AddComponent<TextMeshProUGUI>();
             ApplyFont(titleText);
-            titleText.text = "Speed Monitor";
+            titleText.text = "Framerate Monitor";
             titleText.fontSize = 14;
             titleText.fontStyle = FontStyles.Normal;
             titleText.color = Color.white;
@@ -277,7 +277,7 @@ namespace ControlledFramerate.UI
 
         private void RefreshPanel()
         {
-            bool shouldShow = SpeedStateManager.CurrentMode == SpeedStateManager.SpeedMode.Adaptive
+            bool shouldShow = SpeedStateManager.FramerateMonitorVisible
                 && !SpeedStateManager.IsBenchmarkRunning
                 && SpeedControlScreen.Instance != null;
 
@@ -294,7 +294,6 @@ namespace ControlledFramerate.UI
             PositionBelowResources();
 
             float fps = FpsMonitor.IsValid ? FpsMonitor.SmoothedFps : 0f;
-            float currentSpeed = AdaptiveSpeedController.CurrentAdaptiveSpeed;
             var opts = ControlledFramerateOptions.Instance;
             int selectedBtn = SpeedControlScreen.Instance.GetSpeed();
             float ceiling = SpeedStateManager.GetSpeedForButton(selectedBtn);
@@ -311,10 +310,16 @@ namespace ControlledFramerate.UI
             }
 
             if (speedValue != null)
-                speedValue.text = $"{currentSpeed:F1}x";
+            {
+                float displaySpeed = SpeedStateManager.CurrentMode == SpeedStateManager.SpeedMode.Adaptive
+                    ? AdaptiveSpeedController.CurrentAdaptiveSpeed
+                    : Time.timeScale;
+                speedValue.text = $"{displaySpeed:F1}x";
+            }
 
             if (modeValue != null)
-                modeValue.text = "Adaptive";
+                modeValue.text = SpeedStateManager.CurrentMode == SpeedStateManager.SpeedMode.Adaptive
+                    ? "Adaptive" : "Fixed";
 
             if (targetFpsValue != null)
             {
@@ -489,7 +494,7 @@ namespace ControlledFramerate.UI
             if (opts.MinimumFps >= opts.DesiredFps)
                 opts.MinimumFps = System.Math.Max(5, opts.DesiredFps - 5);
             ControlledFramerateOptions.Save();
-            ControlledFramerateMod.Log($"[SpeedMonitor] Target FPS decreased to {opts.DesiredFps}");
+            ControlledFramerateMod.Log($"[FramerateMonitor] Target FPS decreased to {opts.DesiredFps}");
             TopBarButtons.UpdateSpeedTooltips();
         }
 
@@ -498,7 +503,7 @@ namespace ControlledFramerate.UI
             var opts = ControlledFramerateOptions.Instance;
             opts.DesiredFps = System.Math.Min(120, opts.DesiredFps + 5);
             ControlledFramerateOptions.Save();
-            ControlledFramerateMod.Log($"[SpeedMonitor] Target FPS increased to {opts.DesiredFps}");
+            ControlledFramerateMod.Log($"[FramerateMonitor] Target FPS increased to {opts.DesiredFps}");
             TopBarButtons.UpdateSpeedTooltips();
         }
 
@@ -510,7 +515,7 @@ namespace ControlledFramerate.UI
             float newVal = Mathf.Max(1f, current - 0.5f);
             SetSpeedForButton(selectedBtn, newVal);
             ControlledFramerateOptions.Save();
-            ControlledFramerateMod.Log($"[SpeedMonitor] Ceiling (button {selectedBtn}) decreased to {newVal:F1}x");
+            ControlledFramerateMod.Log($"[FramerateMonitor] Ceiling (button {selectedBtn}) decreased to {newVal:F1}x");
             TopBarButtons.UpdateSpeedTooltips();
         }
 
@@ -522,7 +527,7 @@ namespace ControlledFramerate.UI
             float newVal = Mathf.Min(20f, current + 0.5f);
             SetSpeedForButton(selectedBtn, newVal);
             ControlledFramerateOptions.Save();
-            ControlledFramerateMod.Log($"[SpeedMonitor] Ceiling (button {selectedBtn}) increased to {newVal:F1}x");
+            ControlledFramerateMod.Log($"[FramerateMonitor] Ceiling (button {selectedBtn}) increased to {newVal:F1}x");
             TopBarButtons.UpdateSpeedTooltips();
         }
 

@@ -68,6 +68,7 @@ namespace ControlledFramerate.Patches
                     Core.FpsMonitor.Reset();
                     Core.AdaptiveSpeedController.Reset();
                     UI.BenchmarkOverlay.Hide();
+                    UI.ToolbarPopupMenu.Hide();
                     UI.TopBarButtons.DestroyButtons();
                     UI.AdaptiveStatusPanel.DestroyInstance();
                 }

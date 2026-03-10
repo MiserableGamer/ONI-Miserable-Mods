@@ -1,0 +1,13 @@
+# Steam upload metadata for GUI/script automation
+publishedFileId: 3670573352
+displayName: "Controlled Framerate"
+visibility: public
+modType:
+  - "new features"
+  - "tweaks"
+  - "ui"
+dlcCompatibility:
+  - "Base Game"
+  - "Spaced Out!"
+  - "The Frosty Planet Pack"
+  - "The Bionic Booster Pack"

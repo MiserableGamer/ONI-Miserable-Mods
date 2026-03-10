@@ -4,13 +4,15 @@ namespace ControlledFramerate.Strings
     {
         public const string ModPrefix = "[ControlledFramerate] ";
 
-        public const string BenchmarkButtonText = "BENCH";
-        public const string AdaptiveButtonText = "ADAPT";
+        public const string MenuTooltip = "Controlled Framerate options";
 
-        public const string BenchmarkTooltip = "Run FPS benchmark to find optimal speeds for this save";
-        public const string AdaptiveTooltipDisabled = "Adaptive speed (run benchmark first to enable)";
-        public const string AdaptiveTooltipOff = "Enable adaptive speed (adjusts game speed to maintain target FPS)";
-        public const string AdaptiveTooltipOn = "Disable adaptive speed (use fixed speeds)";
+        public const string PopupRunBenchmark = "Run Benchmark";
+        public const string PopupCancelBenchmark = "Cancel Benchmark";
+        public const string PopupAdaptiveOn = "Adaptive Mode: ON";
+        public const string PopupAdaptiveOff = "Adaptive Mode: OFF";
+        public const string PopupAdaptiveDisabled = "Adaptive Mode (run benchmark first)";
+        public const string PopupMonitorOn = "Framerate Monitor: ON";
+        public const string PopupMonitorOff = "Framerate Monitor: OFF";
 
         public const string BenchmarkOverlayTitle = "FPS Benchmark";
         public const string BenchmarkTesting = "Testing speed {0:F1}x...";

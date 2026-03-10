@@ -9,19 +9,15 @@ namespace ControlledFramerate.UI
 {
     public static class TopBarButtons
     {
-        private static MultiToggle benchmarkButton;
-        private static MultiToggle adaptiveButton;
-        private static ToolTip benchmarkTooltip;
-        private static ToolTip adaptiveTooltip;
-
-        private static GameObject benchmarkGO;
-        private static GameObject adaptiveGO;
+        private static MultiToggle menuButton;
+        private static ToolTip menuTooltip;
+        private static GameObject menuGO;
 
         public static void CreateButtons(TopLeftControlScreen instance)
         {
             try
             {
-                if (benchmarkGO != null && benchmarkGO)
+                if (menuGO != null && menuGO)
                     return;
 
                 DestroyButtons();
@@ -29,31 +25,19 @@ namespace ControlledFramerate.UI
                 var templateGO = instance.sandboxToggle.gameObject;
                 var parentGO = instance.sandboxToggle.transform.parent.gameObject;
 
-                benchmarkGO = Util.KInstantiateUI(templateGO, parentGO, true);
-                var benchTransform = benchmarkGO.transform;
+                menuGO = Util.KInstantiateUI(templateGO, parentGO, true);
+                var menuTransform = menuGO.transform;
 
-                SetButtonIcon(benchTransform, SpriteHelper.Load("icon_benchmark"));
-                benchmarkGO.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 40f);
-                benchmarkGO.TryGetComponent(out benchmarkButton);
-                benchmarkGO.TryGetComponent(out benchmarkTooltip);
-                if (benchmarkTooltip != null)
-                    benchmarkTooltip.SetSimpleTooltip(ControlledFramerateStrings.BenchmarkTooltip);
+                SetButtonIcon(menuTransform, SpriteHelper.Load("icon_benchmark"));
+                menuGO.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 32f);
+                menuGO.TryGetComponent(out menuButton);
+                menuGO.TryGetComponent(out menuTooltip);
+                if (menuTooltip != null)
+                    menuTooltip.SetSimpleTooltip(ControlledFramerateStrings.MenuTooltip);
 
-                benchTransform.SetSiblingIndex(0);
+                menuTransform.SetAsLastSibling();
 
-                benchmarkButton.onClick = (System.Action)Delegate.Combine(benchmarkButton.onClick, new System.Action(OnBenchmarkClicked));
-
-                adaptiveGO = Util.KInstantiateUI(templateGO, parentGO, true);
-                var adaptTransform = adaptiveGO.transform;
-
-                SetButtonIcon(adaptTransform, SpriteHelper.Load("icon_adaptive"));
-                adaptiveGO.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 40f);
-                adaptiveGO.TryGetComponent(out adaptiveButton);
-                adaptiveGO.TryGetComponent(out adaptiveTooltip);
-
-                adaptTransform.SetSiblingIndex(1);
-
-                adaptiveButton.onClick = (System.Action)Delegate.Combine(adaptiveButton.onClick, new System.Action(OnAdaptiveClicked));
+                menuButton.onClick = (System.Action)Delegate.Combine(menuButton.onClick, new System.Action(OnMenuClicked));
 
                 RefreshButtonStates();
             }
@@ -65,68 +49,24 @@ namespace ControlledFramerate.UI
 
         public static void DestroyButtons()
         {
-            if (benchmarkGO != null) { UnityEngine.Object.Destroy(benchmarkGO); benchmarkGO = null; }
-            if (adaptiveGO != null) { UnityEngine.Object.Destroy(adaptiveGO); adaptiveGO = null; }
-            benchmarkButton = null;
-            adaptiveButton = null;
-            benchmarkTooltip = null;
-            adaptiveTooltip = null;
+            ToolbarPopupMenu.Hide();
+            if (menuGO != null) { UnityEngine.Object.Destroy(menuGO); menuGO = null; }
+            menuButton = null;
+            menuTooltip = null;
         }
 
-        private static void OnBenchmarkClicked()
+        private static void OnMenuClicked()
         {
-            KMonoBehaviour.PlaySound(GlobalAssets.GetSound("HUD_Click"));
-
-            if (BenchmarkEngine.IsRunning)
-            {
-                BenchmarkEngine.Cancel();
-            }
-            else
-            {
-                BenchmarkOverlay.ShowConfig();
-            }
-
+            var rt = menuGO != null ? menuGO.GetComponent<RectTransform>() : null;
+            if (rt != null)
+                ToolbarPopupMenu.Toggle(rt);
             RefreshButtonStates();
-        }
-
-        private static void OnAdaptiveClicked()
-        {
-            if (!SpeedStateManager.HasBenchmarkData) return;
-
-            KMonoBehaviour.PlaySound(GlobalAssets.GetSound("HUD_Click"));
-            SpeedStateManager.ToggleAdaptive();
-            RefreshButtonStates();
-            UpdateSpeedTooltips();
         }
 
         public static void RefreshButtonStates()
         {
-            if (benchmarkButton != null)
-            {
-                benchmarkButton.ChangeState(BenchmarkEngine.IsRunning ? 2 : 1);
-            }
-
-            if (adaptiveButton != null)
-            {
-                if (!SpeedStateManager.HasBenchmarkData)
-                {
-                    adaptiveButton.ChangeState(0);
-                    if (adaptiveTooltip != null)
-                        adaptiveTooltip.SetSimpleTooltip(ControlledFramerateStrings.AdaptiveTooltipDisabled);
-                }
-                else if (SpeedStateManager.CurrentMode == SpeedStateManager.SpeedMode.Adaptive)
-                {
-                    adaptiveButton.ChangeState(2);
-                    if (adaptiveTooltip != null)
-                        adaptiveTooltip.SetSimpleTooltip(ControlledFramerateStrings.AdaptiveTooltipOn);
-                }
-                else
-                {
-                    adaptiveButton.ChangeState(1);
-                    if (adaptiveTooltip != null)
-                        adaptiveTooltip.SetSimpleTooltip(ControlledFramerateStrings.AdaptiveTooltipOff);
-                }
-            }
+            if (menuButton != null)
+                menuButton.ChangeState(ToolbarPopupMenu.IsOpen ? 2 : 1);
 
             UpdateSpeedTooltips();
         }

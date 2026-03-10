@@ -76,9 +76,11 @@ Found a bug or have a feature request? Please report it on GitHub using our issu
 
 Please mention "Controlled Framerate" in your issue title or description.
 
-## Mod Collection
+## My Workshop & Collections
 
-This mod is part of the [ONI 235+ Ultimate Mods collection](https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156) on Steam Workshop, featuring over 235 tested and compatible mods for Oxygen Not Included.
+- [My Workshop](https://steamcommunity.com/id/miserablegamer/myworkshopfiles/?appid=457140) – All my ONI mods on Steam
+- [ONI 235+ Ultimate Mods collection](https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156) – 235+ tested, compatible mods for Oxygen Not Included
+- [The Controlled Series](https://steamcommunity.com/sharedfiles/filedetails/?id=3672308653) – Collection of Controlled mods
 
 ## Credits
 
@@ -87,4 +89,5 @@ This mod is part of the [ONI 235+ Ultimate Mods collection](https://steamcommuni
 
 ## Version History
 
+- **1.1.0**: Reworked the menu buttons; Monitor now available in fixed or adaptive modes
 - **1.0.0**: Initial release — adaptive speed control, benchmark tool, per-save profiles, live speed monitor

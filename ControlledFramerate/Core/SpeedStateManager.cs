@@ -14,6 +14,7 @@ namespace ControlledFramerate
         public static SpeedMode CurrentMode { get; set; } = SpeedMode.Fixed;
         public static bool HasBenchmarkData { get; internal set; } = false;
         public static bool IsBenchmarkRunning { get; set; } = false;
+        public static bool FramerateMonitorVisible { get; set; } = false;
 
         // Freeze adaptive adjustments while saving
         public static bool IsSaving { get; set; } = false;
@@ -47,6 +48,7 @@ namespace ControlledFramerate
                 HasBenchmarkData = true;
 
                 CurrentMode = profile.AdaptiveEnabled ? SpeedMode.Adaptive : SpeedMode.Fixed;
+                FramerateMonitorVisible = profile.MonitorEnabled;
 
                 ControlledFramerateMod.Log(string.Format(
                     Strings.ControlledFramerateStrings.SaveProfileLoaded,
@@ -58,6 +60,7 @@ namespace ControlledFramerate
             {
                 HasBenchmarkData = false;
                 CurrentMode = SpeedMode.Fixed;
+                FramerateMonitorVisible = false;
 
                 ControlledFramerateMod.Log(string.Format(
                     Strings.ControlledFramerateStrings.SaveProfileNotFound,
@@ -106,6 +109,25 @@ namespace ControlledFramerate
             SaveAdaptiveState();
         }
 
+        public static void ToggleMonitor()
+        {
+            FramerateMonitorVisible = !FramerateMonitorVisible;
+            ControlledFramerateMod.Log(FramerateMonitorVisible
+                ? "Framerate monitor enabled" : "Framerate monitor disabled");
+            SaveMonitorState();
+        }
+
+        private static void SaveMonitorState()
+        {
+            var opts = ControlledFramerateOptions.Instance;
+            var profile = opts.GetCurrentSaveProfile();
+            if (profile != null)
+            {
+                profile.MonitorEnabled = FramerateMonitorVisible;
+                ControlledFramerateOptions.Save();
+            }
+        }
+
         private static void SaveAdaptiveState()
         {
             var opts = ControlledFramerateOptions.Instance;
@@ -124,6 +146,7 @@ namespace ControlledFramerate
             IsBenchmarkRunning = false;
             IsSaving = false;
             SaveGraceEndTime = 0f;
+            FramerateMonitorVisible = false;
         }
     }
 }
