@@ -45,7 +45,7 @@ Control which item categories appear as Standard vs Non-Standard in storage filt
 ### 🎞️ Controlled Framerate
 Adaptive game speed that automatically adjusts to maintain your target FPS. Built-in benchmark, per-save speed profiles, custom speed buttons, and a live speed monitor. Run your colony at the fastest speed your PC can handle without dropping frames.
 
-[📖 Read More](ControlledFramerate/README.md) | [Latest Release v1.0.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledFramerate-v1.0.0) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3670573352)
+[📖 Read More](ControlledFramerate/README.md) | [Latest Release v1.1.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledFramerate-v1.1.0) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3670573352)
 
 ### 🎛️ Controlled Mods
 A framework for customizing and overriding settings from other mods via an in-game options menu. Currently in development - support for various mods will be added in future updates.
