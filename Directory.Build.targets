@@ -8,6 +8,8 @@
     <!-- Local mods folder for testing -->
     <LocalModsRoot>C:\Users\leomo\Documents\Klei\OxygenNotIncluded\mods\local\</LocalModsRoot>
     <LocalModFolder>$(LocalModsRoot)$(MSBuildProjectName)\</LocalModFolder>
+    <!-- Build/version scripts live outside the repo -->
+    <ScriptsRoot>D:\mcp\oni-serena\scripts\</ScriptsRoot>
   </PropertyGroup>
 
   <!-- Detect git branch before build -->
@@ -23,20 +25,34 @@
     <Message Text="[Build] Git branch: $(GitBranch), Configuration: $(Configuration)" Importance="high" />
   </Target>
 
-  <!-- Post-build: ILRepack to merge PLib into main DLL.
-    We output directly to $(TargetPath) using a copy of the primary so the merged assembly
-    keeps AssemblyName "LongerArms" (not "LongerArms.dll"). PLib uses GetName().Name
-    for the mod identity and config path; /out:...dll.merged was causing the .dll suffix. -->
-  <Target Name="ILRepackMerge" AfterTargets="Build" Condition="Exists('$(TargetDir)PLib.dll')">
-    <Message Text="[Build] Merging PLib.dll into $(TargetFileName)" Importance="high" />
-    <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(TargetDir)$(TargetName)_primary.dll" />
-    <Exec Command="&quot;$(NuGetPackageRoot)ilrepack\2.0.34\tools\ILRepack.exe&quot; /ndebug /lib:&quot;$(MSBuildThisFileDirectory)lib&quot; /lib:&quot;$(NuGetPackageRoot)newtonsoft.json\13.0.4\lib\net45&quot; /out:&quot;$(TargetPath)&quot; &quot;$(TargetDir)$(TargetName)_primary.dll&quot; &quot;$(TargetDir)PLib.dll&quot;" ContinueOnError="true" />
-    <Delete Files="$(TargetDir)$(TargetName)_primary.dll" Condition="Exists('$(TargetDir)$(TargetName)_primary.dll')" />
-    <Delete Files="$(TargetDir)PLib.dll" Condition="Exists('$(TargetDir)PLib.dll')" />
+  <!-- Pre-build: sync version from central project-versions.yaml to mod_info.yaml (development only).
+    Catches manual major/minor/patch bumps so the build always uses the version from the central file. -->
+  <Target Name="SyncVersionFromCentral" BeforeTargets="PreBuildEvent" DependsOnTargets="DetectGitBranch" Condition="'$(IsDevelopmentBranch)' == 'true' AND Exists('$(MSBuildThisFileDirectory)project-versions.yaml')">
+    <Exec Command="powershell -ExecutionPolicy Bypass -File &quot;$(ScriptsRoot)sync-version.ps1&quot; -ProjectName &quot;$(MSBuildProjectName)&quot; -ProjectDir &quot;$(MSBuildProjectDirectory)&quot; -SolutionDir &quot;$(MSBuildThisFileDirectory.TrimEnd('\'))&quot;" ContinueOnError="true" IgnoreExitCode="true" />
   </Target>
 
-  <!-- Post-build: Deploy to local mods folder for testing (development only; master does not deploy to mods/local) -->
-  <Target Name="DeployToLocalMods" AfterTargets="ILRepackMerge" DependsOnTargets="DetectGitBranch" Condition="'$(IsDevelopmentBranch)' == 'true'">
+  <!-- Post-build: ILRepack to merge PLib and MiserableUtils into main DLL.
+    We output directly to $(TargetPath) using a copy of the primary so the merged assembly
+    keeps AssemblyName (e.g. "ControlledMods"). PLib uses GetName().Name for the mod identity
+    and config path; /out:...dll.merged was causing the .dll suffix.
+    MiserableUtils is a library only - skip ILRepack when building it. -->
+  <Target Name="ILRepackMerge" AfterTargets="Build" Condition="'$(MSBuildProjectName)' != 'MiserableUtils'">
+    <ItemGroup>
+      <MergeDll Include="$(TargetDir)PLib.dll" Condition="Exists('$(TargetDir)PLib.dll')" />
+      <MergeDll Include="$(TargetDir)MiserableUtils.dll" Condition="Exists('$(TargetDir)MiserableUtils.dll') and '$(MSBuildProjectName)' != 'MiserableUtils'" />
+    </ItemGroup>
+    <PropertyGroup>
+      <MergeDllList>@(MergeDll)</MergeDllList>
+    </PropertyGroup>
+    <Message Text="[Build] Merging @(MergeDll) into $(TargetFileName)" Importance="high" Condition="'$(MergeDllList)' != ''" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(TargetDir)$(TargetName)_primary.dll" Condition="'$(MergeDllList)' != ''" />
+    <Exec Command="&quot;$(NuGetPackageRoot)ilrepack\2.0.34\tools\ILRepack.exe&quot; /ndebug /lib:&quot;$(MSBuildThisFileDirectory)lib&quot; /lib:&quot;$(NuGetPackageRoot)newtonsoft.json\13.0.4\lib\net45&quot; /out:&quot;$(TargetPath)&quot; &quot;$(TargetDir)$(TargetName)_primary.dll&quot; @(MergeDll->'&quot;%(FullPath)&quot;', ' ')" Condition="'$(MergeDllList)' != ''" ContinueOnError="true" />
+    <Delete Files="$(TargetDir)$(TargetName)_primary.dll" Condition="Exists('$(TargetDir)$(TargetName)_primary.dll')" />
+    <Delete Files="@(MergeDll)" Condition="Exists('%(FullPath)')" />
+  </Target>
+
+  <!-- Post-build: Deploy to local mods folder for testing (development only; exclude SteamWorkshopUploader, MiserableUtils) -->
+  <Target Name="DeployToLocalMods" AfterTargets="ILRepackMerge" DependsOnTargets="DetectGitBranch" Condition="'$(IsDevelopmentBranch)' == 'true' and '$(MSBuildProjectName)' != 'SteamWorkshopUploader' and '$(MSBuildProjectName)' != 'MiserableUtils'">
     <Message Text="[Build] Deploying to $(LocalModFolder)" Importance="high" />
     
     <!-- Create folder if needed -->
@@ -57,14 +73,16 @@
     </ItemGroup>
     <Copy SourceFiles="@(AnimFiles)" DestinationFolder="$(LocalModFolder)anim\%(RecursiveDir)" Condition="'@(AnimFiles)' != ''" />
     
-    <!-- Cleanup: Remove stray PLib.dll if it got copied -->
+    <!-- Cleanup: Remove stray merged DLLs if they got copied -->
     <Delete Files="$(LocalModFolder)PLib.dll" Condition="Exists('$(LocalModFolder)PLib.dll')" />
+    <Delete Files="$(LocalModFolder)MiserableUtils.dll" Condition="Exists('$(LocalModFolder)MiserableUtils.dll')" />
   </Target>
 
-  <!-- Version increment: After successful build + deploy (development + Debug only). Runs only when build succeeded. -->
-  <Target Name="IncrementVersionAfterBuild" AfterTargets="DeployToLocalMods" DependsOnTargets="DetectGitBranch" Condition="'$(IsDevelopmentBranch)' == 'true' AND '$(Configuration)' == 'Debug'">
+  <!-- Version increment: After successful build + deploy (development + Debug only). Runs only when build succeeded.
+    Increments build number in project-versions.yaml (source of truth) then syncs to mod_info.yaml. -->
+  <Target Name="IncrementVersionAfterBuild" AfterTargets="DeployToLocalMods" DependsOnTargets="DetectGitBranch" Condition="'$(IsDevelopmentBranch)' == 'true' AND '$(Configuration)' == 'Debug' AND '$(MSBuildProjectName)' != 'MiserableUtils'">
     <Message Text="[Build] Build succeeded - incrementing version (development + Debug)" Importance="high" />
-    <Exec Command="powershell -ExecutionPolicy Bypass -File &quot;$(MSBuildThisFileDirectory)scripts\increment-version.ps1&quot; -ProjectDir &quot;$(MSBuildProjectDirectory)&quot;" ContinueOnError="true" IgnoreExitCode="true" />
+    <Exec Command="powershell -ExecutionPolicy Bypass -File &quot;$(ScriptsRoot)increment-version.ps1&quot; -ProjectName &quot;$(MSBuildProjectName)&quot; -ProjectDir &quot;$(MSBuildProjectDirectory)&quot; -SolutionDir &quot;$(MSBuildThisFileDirectory.TrimEnd('\'))&quot;" ContinueOnError="true" IgnoreExitCode="true" />
     <!-- Sync updated mod_info.yaml to local mod folder so both source and deployed copy match -->
     <Copy SourceFiles="$(MSBuildProjectDirectory)\mod_info.yaml" DestinationFolder="$(LocalModFolder)" Condition="Exists('$(MSBuildProjectDirectory)\mod_info.yaml')" />
   </Target>

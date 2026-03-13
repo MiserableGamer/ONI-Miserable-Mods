@@ -2,7 +2,6 @@
   <!-- 
     Shared build properties for all ONIMiserableMods projects.
     Individual projects only need to define AssemblyName and RootNamespace.
-    Required for SDK-style projects (e.g. ControlledCrashes) so ResolvePackageAssets gets TargetFramework.
   -->
 
   <PropertyGroup>
@@ -12,6 +11,10 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <EnableDefaultItems>true</EnableDefaultItems>
     <DebugType>portable</DebugType>
+    <!-- Force all build output into the project directory, not the solution root -->
+    <BaseOutputPath>$(MSBuildProjectDirectory)\bin\</BaseOutputPath>
+    <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)\obj\</BaseIntermediateOutputPath>
+    <MSBuildProjectExtensionsPath>$(BaseIntermediateOutputPath)</MSBuildProjectExtensionsPath>
   </PropertyGroup>
 
   <!-- Debug configuration -->
@@ -26,7 +29,7 @@
     <Optimize>true</Optimize>
   </PropertyGroup>
 
-  <!-- NuGet Packages (shared across SDK projects). Exclude SteamWorkshopUploader (standalone tool). -->
+  <!-- NuGet Packages (shared across all projects). Exclude SteamWorkshopUploader (standalone tool). -->
   <ItemGroup Condition="'$(UsingMicrosoftNETSdk)' == 'true' and '$(MSBuildProjectName)' != 'SteamWorkshopUploader'">
     <PackageReference Include="ILRepack" Version="2.0.34" PrivateAssets="all" ExcludeAssets="runtime" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" PrivateAssets="all" />
@@ -36,13 +39,13 @@
     <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2" PrivateAssets="all" />
   </ItemGroup>
 
-  <!-- Game References (shared; lib at solution root). Exclude SteamWorkshopUploader (standalone tool). -->
-  <ItemGroup Condition="'$(UsingMicrosoftNETSdk)' == 'true' and '$(MSBuildProjectName)' != 'SteamWorkshopUploader'">
+  <!-- Game References (shared). Exclude SteamWorkshopUploader (standalone tool, no game refs). -->
+  <ItemGroup Condition="'$(MSBuildProjectName)' != 'SteamWorkshopUploader'">
     <Reference Include="0Harmony" HintPath="$(MSBuildThisFileDirectory)lib\0Harmony.dll" Private="false" />
-    <Reference Include="Assembly-CSharp" HintPath="$(MSBuildThisFileDirectory)lib\Assembly-CSharp.dll" Private="false" Publicize="true" />
-    <Reference Include="Assembly-CSharp-firstpass" HintPath="$(MSBuildThisFileDirectory)lib\Assembly-CSharp-firstpass.dll" Private="false" Publicize="true" />
-    <Reference Include="CommonLib" HintPath="$(MSBuildThisFileDirectory)lib\CommonLib.dll" Private="false" />
-    <Reference Include="FMODUnity" HintPath="$(MSBuildThisFileDirectory)lib\FMODUnity.dll" Private="false" />
+    <Reference Include="Assembly-CSharp" HintPath="$(MSBuildThisFileDirectory)lib\Assembly-CSharp.dll" Private="false" Condition="'$(UsingMicrosoftNETSdk)' != 'true'" />
+    <Reference Include="Assembly-CSharp" HintPath="$(MSBuildThisFileDirectory)lib\Assembly-CSharp.dll" Private="false" Publicize="true" Condition="'$(UsingMicrosoftNETSdk)' == 'true'" />
+    <Reference Include="Assembly-CSharp-firstpass" HintPath="$(MSBuildThisFileDirectory)lib\Assembly-CSharp-firstpass.dll" Private="false" Condition="'$(UsingMicrosoftNETSdk)' != 'true'" />
+    <Reference Include="Assembly-CSharp-firstpass" HintPath="$(MSBuildThisFileDirectory)lib\Assembly-CSharp-firstpass.dll" Private="false" Publicize="true" Condition="'$(UsingMicrosoftNETSdk)' == 'true'" />
     <Reference Include="Unity.TextMeshPro" HintPath="$(MSBuildThisFileDirectory)lib\Unity.TextMeshPro.dll" Private="false" />
     <Reference Include="UnityEngine" HintPath="$(MSBuildThisFileDirectory)lib\UnityEngine.dll" Private="false" />
     <Reference Include="UnityEngine.CoreModule" HintPath="$(MSBuildThisFileDirectory)lib\UnityEngine.CoreModule.dll" Private="false" />

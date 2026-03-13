@@ -22,4 +22,6 @@
 
 
 
+
+  <Project Path="MiserableUtils/MiserableUtils.csproj" />
 </Solution>
