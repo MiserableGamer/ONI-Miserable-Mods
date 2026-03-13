@@ -1,0 +1,11 @@
+# Steam upload metadata for GUI/script automation
+publishedFileId: 3672588272
+displayName: "Controlled Visuals"
+visibility: public
+modType:
+  - "tweaks"
+dlcCompatibility:
+  - "Base Game"
+  - "Spaced Out!"
+  - "The Frosty Planet Pack"
+  - "The Bionic Booster Pack"

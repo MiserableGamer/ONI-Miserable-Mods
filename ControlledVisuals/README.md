@@ -1,33 +1,37 @@
 # Controlled Visuals
 
-A performance optimization mod for Oxygen Not Included that allows you to reduce the visual quality of pipe animations to improve frame rates in large colonies.
+Fixes a long-standing vanilla bug where items on conveyor rails sometimes render in front of drywall and other buildings. Conveyor contents now always draw behind walls as intended.
 
 ## Features
 
-- **Configurable Pipe Animation Quality** - Choose between Full, Reduced, or Minimal quality for liquid and gas pipe flow animations
-- **Smart Zoom Detection** - Automatically reduces animation updates further when zoomed out (since you can't see the detail anyway)
-- **No Gameplay Impact** - Only affects visual rendering, not actual pipe mechanics
+- **Conveyor Items Behind Drywall** - Items on rails consistently render behind drywall, tiles, and other buildings
+- **Optional Clean Edges Conversion** - Ports and modernizes the legacy CleanEdges behavior to clean up many neutronium edge tiles
+- **One-Time Per Save** - Clean Edges tracks save conversion state and runs only once per save when enabled
+- **One-Shot Reconvert** - Optional "Reconvert on Next Save Load" toggle reapplies Clean Edges once, then auto-resets
+- **No Gameplay Impact (Conveyor Fix)** - Conveyor rendering fix is visual-only; rail mechanics are unchanged
+- **Works Everywhere** - Loaders, rails, and bridges; moving and stationary items
+- **Multi-temp displays** - Shows K / F / C, with your Options chosen preference as the primary, and the remaining two in brackets
 
 ## How to Use
 
-1. Enable the mod in your mod list
-2. Access the mod options (gear icon in the mod list)
-3. Select your preferred **Pipe Animation Quality**:
-   - **Full**: Unchanged from base game (every frame)
-   - **Reduced**: Updates at 10 FPS (every 0.1 seconds)
-   - **Minimal**: Updates at 2 FPS (every 0.5 seconds)
-4. Restart the game for changes to take effect
+1. **Enable the Mod** - Enable Controlled Visuals in your mod list
+2. **Conveyor Fix** - This visual fix is always active; conveyor items render correctly behind walls
+3. **Clean Edges (Optional)** - Open Mod Options and enable "Enable Clean Edges" if you want one-time edge conversion on that save
+4. **Tune Settings (Optional)** - Configure border size and abyssalite mass in Mod Options before first conversion
+5. **Reconvert (Optional)** - Enable "Reconvert on Next Save Load" to apply updated border settings to an already converted save
 
 ### Tips
 
-- Start with **Reduced** quality - most players won't notice the difference
-- Use **Minimal** for very large colonies with extensive pipe networks
-- The mod automatically reduces updates to 1 FPS when zoomed far out regardless of setting
+- Conveyor render-layer fix is always active
+- Clean Edges is disabled by default and only runs when you enable it
+- Clean Edges conversion is tracked per save to avoid rerunning each load
+- Reconvert on Next Save Load is a one-shot action and resets to off after a successful reconvert
+- Works with all solid conveyor buildings (loaders, bridges, rails)
 
 ## Installation
 
 ### Steam Workshop (Recommended)
-Subscribe on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=XXXXXXXXX) and enable in the Mods menu.
+Subscribe on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3672588272) and enable in the Mods menu.
 
 ### Manual Installation
 1. Download the [latest release](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases)
@@ -41,22 +45,15 @@ Subscribe on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails
 - **DLC Support** - Works with base game and all DLC
 - **Other Mods** - Compatible with most mods
 
-## Performance Impact
+## Performance
 
-**Medium Performance Improvement**
+**Minimal Performance Impact**
+- **Per-Tick Layer Check** - Only corrects render layer for items that need it
+- **No Gameplay Logic** - Purely a visual fix; no simulation changes
 
-The performance benefit depends on your colony size and pipe network complexity:
-- Small colonies (< 50 dupes): Minimal improvement
-- Medium colonies (50-100 dupes): Noticeable improvement
-- Large colonies (100+ dupes with extensive piping): Significant improvement
+## Future Updates
 
-The mod works by throttling how often the pipe flow mesh is recalculated and redrawn, which can be CPU-intensive in colonies with thousands of pipe segments.
-
-## Technical Details
-
-- Throttles `ConduitFlowVisualizer.Render` updates based on configured quality
-- Redraws the last calculated mesh between updates instead of recalculating
-- Automatically detects zoom level and reduces updates further when zoomed out
+- Additional visual fixes may be added in future updates
 
 ## Support & Issues
 
@@ -64,30 +61,34 @@ Need help, found a bug, or have a suggestion? We're here to help!
 
 ### Community
 
-- **💬 Discord**: [Join our Discord server](https://discord.com/channels/1452947938304200861/1452947939927392398) for discussions, questions, and community support
-- **📝 GitHub Discussions**: [Discuss on GitHub](https://github.com/MiserableGamer/ONI-Miserable-Mods/discussions) - share ideas, ask questions, or get help with modding
+- **Discord**: [Join our Discord server](https://discord.com/channels/1452947938304200861/1452947939927392398) for discussions, questions, and community support
+- **GitHub Discussions**: [Discuss on GitHub](https://github.com/MiserableGamer/ONI-Miserable-Mods/discussions) - share ideas, ask questions, or get help with modding
 
 ### Reporting Issues
 
 Found a bug or have a feature request? Please report it on GitHub using our issue templates:
 
-- **🐛 Bug Reports**: [Report a Bug](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=bug_report.yml) - Use this for crashes, errors, or unexpected behavior
-- **💡 Feature Requests**: [Suggest a Feature](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=feature_request.yml) - Have an idea for a new feature or improvement?
-- **❓ Questions**: [Ask a Question](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=question.yml) - Need help understanding how something works?
-- **📝 Other Issues**: [Other Issue](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=other.yml) - Something else that doesn't fit the above categories
+- **Bug Reports**: [Report a Bug](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=bug_report.yml) - Use this for crashes, errors, or unexpected behavior
+- **Feature Requests**: [Suggest a Feature](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=feature_request.yml) - Have an idea for a new feature or improvement?
+- **Questions**: [Ask a Question](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=question.yml) - Need help understanding how something works?
+- **Other Issues**: [Other Issue](https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=other.yml) - Something else that doesn't fit the above categories
 
 Please mention "ControlledVisuals" in your issue title or description.
 
-## Mod Collection
+## My Workshop & Collections
 
-This mod is part of the [ONI 200+ Ultimate Mods collection](https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156) on Steam Workshop, featuring over 200 tested and compatible mods for Oxygen Not Included.
+- [My Workshop](https://steamcommunity.com/id/miserablegamer/myworkshopfiles/?appid=457140) – All my ONI mods on Steam
+- [ONI 235+ Ultimate Mods collection](https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156) – 235+ tested, compatible mods for Oxygen Not Included
+- [The Controlled Series](https://steamcommunity.com/sharedfiles/filedetails/?id=3672308653) – Collection of Controlled mods
 
 ## Credits
 
-- Inspired by [Fast Track](https://github.com/peterhaneve/ONIMods) by Peter Han
 - Built using [PLib](https://github.com/peterhaneve/ONIMods) by Peter Han
 - Uses [Harmony](https://github.com/pardeike/Harmony) for runtime patching
+- Clean Edges functionality is based on the original mod by [ParallaxMurderer](https://steamcommunity.com/sharedfiles/filedetails/?id=2311196403)
 
 ## Version History
 
-- **1.0.0**: Initial release - Configurable pipe animation quality
+- **1.2.0**: Added multi-temp display
+- **1.1.0**: Added Clean Edges functionality
+- **1.0.0**: Conveyor items behind drywall fix

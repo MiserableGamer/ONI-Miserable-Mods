@@ -9,6 +9,7 @@ namespace ControlledVisuals.Strings
                 public static class OPTIONS
                 {
                     public static LocString CATEGORY_VISUAL = "Visual";
+                    public static LocString CATEGORY_WORLD = "World";
 
                     public static class CONDUITANIMATION
                     {

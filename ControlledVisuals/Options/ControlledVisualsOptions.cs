@@ -8,9 +8,6 @@ namespace ControlledVisuals.Options
     [RestartRequired]
     public sealed class ControlledVisualsOptions : SingletonOptions<ControlledVisualsOptions>
     {
-        [Option("STRINGS.UI.CONTROLLEDVISUALS.OPTIONS.CONDUITANIMATION.NAME",
-                "STRINGS.UI.CONTROLLEDVISUALS.OPTIONS.CONDUITANIMATION.TOOLTIP",
-                "STRINGS.UI.CONTROLLEDVISUALS.OPTIONS.CATEGORY_VISUAL")]
         [JsonProperty]
         public ConduitAnimationQuality ConduitAnimation { get; set; }
 
