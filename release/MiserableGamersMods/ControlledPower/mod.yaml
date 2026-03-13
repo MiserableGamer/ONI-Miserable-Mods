@@ -1,0 +1,3 @@
+title: 'Controlled Power'
+description: "Power diode: one-way power flow between circuits. Optional link for logic sensors so wattage sensors on either side see combined usage."
+staticID: MiserableGamer.ControlledPower
