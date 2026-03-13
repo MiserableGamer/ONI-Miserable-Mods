@@ -10,25 +10,25 @@ namespace ControlledAutomation.UI
         private GameObject checkbox2;
         private RocketPlatformInverter target;
 
-        protected override void OnPrefabInit()
+        public override void OnPrefabInit()
         {
-            var margin = new RectOffset(4, 4, 4, 4);
             var baseLayout = gameObject.GetComponent<BoxLayoutGroup>();
             if (baseLayout != null)
             {
                 baseLayout.Params = new BoxLayoutParams()
                 {
                     Alignment = TextAnchor.MiddleLeft,
-                    Margin = margin,
+                    Margin = SideScreenLayout.PanelMargin,
                 };
             }
 
             PPanel mainPanel = new PPanel("MainPanel")
             {
                 Direction = PanelDirection.Vertical,
-                Margin = margin,
-                Spacing = 4,
-                FlexSize = Vector2.right
+                Margin = SideScreenLayout.PanelMargin,
+                Spacing = SideScreenLayout.CheckboxPanelSpacing,
+                FlexSize = Vector2.right,
+                Alignment = TextAnchor.UpperLeft
             };
 
             PCheckBox checkboxField1 = new PCheckBox("InvertOutput1Checkbox")
@@ -36,7 +36,10 @@ namespace ControlledAutomation.UI
                 Text = STRINGS.CONTROLLEDAUTOMATION.ROCKET_INVERT_OUTPUT_1,
                 ToolTip = STRINGS.CONTROLLEDAUTOMATION.ROCKET_INVERT_OUTPUT_1_TOOLTIP,
                 OnChecked = OnCheck1,
-                TextStyle = PUITuning.Fonts.TextDarkStyle
+                TextStyle = PUITuning.Fonts.TextDarkStyle,
+                TextAlignment = SideScreenLayout.CheckboxTextAlignment,
+                CheckSize = SideScreenLayout.CheckboxSize,
+                FlexSize = SideScreenLayout.CheckboxFlexSize
             };
             checkboxField1.AddOnRealize((obj) => checkbox1 = obj);
             mainPanel.AddChild(checkboxField1);
@@ -46,7 +49,10 @@ namespace ControlledAutomation.UI
                 Text = STRINGS.CONTROLLEDAUTOMATION.ROCKET_INVERT_OUTPUT_2,
                 ToolTip = STRINGS.CONTROLLEDAUTOMATION.ROCKET_INVERT_OUTPUT_2_TOOLTIP,
                 OnChecked = OnCheck2,
-                TextStyle = PUITuning.Fonts.TextDarkStyle
+                TextStyle = PUITuning.Fonts.TextDarkStyle,
+                TextAlignment = SideScreenLayout.CheckboxTextAlignment,
+                CheckSize = SideScreenLayout.CheckboxSize,
+                FlexSize = SideScreenLayout.CheckboxFlexSize
             };
             checkboxField2.AddOnRealize((obj) => checkbox2 = obj);
             mainPanel.AddChild(checkboxField2);

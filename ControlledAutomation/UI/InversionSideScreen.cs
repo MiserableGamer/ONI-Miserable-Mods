@@ -9,25 +9,25 @@ namespace ControlledAutomation.UI
         private GameObject checkbox;
         private SensorInverter target;
 
-        protected override void OnPrefabInit()
+        public override void OnPrefabInit()
         {
-            var margin = new RectOffset(4, 4, 4, 4);
             var baseLayout = gameObject.GetComponent<BoxLayoutGroup>();
             if (baseLayout != null)
             {
                 baseLayout.Params = new BoxLayoutParams()
                 {
                     Alignment = TextAnchor.MiddleLeft,
-                    Margin = margin,
+                    Margin = SideScreenLayout.PanelMargin,
                 };
             }
 
             PPanel panel = new PPanel("MainPanel")
             {
                 Direction = PanelDirection.Horizontal,
-                Margin = margin,
-                Spacing = 4,
-                FlexSize = Vector2.right
+                Margin = SideScreenLayout.PanelMargin,
+                Spacing = SideScreenLayout.CheckboxPanelSpacing,
+                FlexSize = Vector2.right,
+                Alignment = TextAnchor.MiddleLeft
             };
 
             PCheckBox checkboxField = new PCheckBox("InvertCheckbox")
@@ -35,7 +35,10 @@ namespace ControlledAutomation.UI
                 Text = STRINGS.CONTROLLEDAUTOMATION.INVERT_CHECKBOX,
                 ToolTip = STRINGS.CONTROLLEDAUTOMATION.INVERT_CHECKBOX_TOOLTIP,
                 OnChecked = OnCheck,
-                TextStyle = PUITuning.Fonts.TextDarkStyle
+                TextStyle = PUITuning.Fonts.TextDarkStyle,
+                TextAlignment = SideScreenLayout.CheckboxTextAlignment,
+                CheckSize = SideScreenLayout.CheckboxSize,
+                FlexSize = SideScreenLayout.CheckboxFlexSize
             };
             checkboxField.AddOnRealize((obj) => checkbox = obj);
             panel.AddChild(checkboxField);

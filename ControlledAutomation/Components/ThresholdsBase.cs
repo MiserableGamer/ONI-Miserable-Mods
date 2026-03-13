@@ -93,7 +93,7 @@ namespace ControlledAutomation.Components
             return activated;
         }
 
-        protected override void OnSpawn()
+        public override void OnSpawn()
         {
             base.OnSpawn();
             fastMap[gameObject] = this;
@@ -102,7 +102,7 @@ namespace ControlledAutomation.Components
             UpdateLogicPortTooltip();
         }
 
-        protected override void OnCleanUp()
+        public override void OnCleanUp()
         {
             Unsubscribe((int)GameHashes.CopySettings, OnCopySettingsDelegate);
             fastMap.Remove(gameObject);
