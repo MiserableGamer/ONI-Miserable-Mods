@@ -28,7 +28,7 @@ namespace ControlledMods.Patches.FreeResourceBuildings
                 postfix: new HarmonyMethod(typeof(PowerSinkRegistrationPatches),
                     nameof(Db_Initialize_Postfix)));
 
-            ControlledModsMod.Log("Power Sink registration patches applied");
+            ControlledModsMod.Log("Power Sink patches applied");
         }
 
         private static void Localization_Initialize_Postfix()

@@ -41,7 +41,7 @@ namespace ControlledMods.Patches.FreeResourceBuildings
                         nameof(FreeEnergyGenerator_EnergySim200ms_Patch.Prefix)),
                     finalizer: new HarmonyMethod(typeof(FreeEnergyGenerator_EnergySim200ms_Patch),
                         nameof(FreeEnergyGenerator_EnergySim200ms_Patch.Finalizer)));
-                ControlledModsMod.Log("Patched FreeEnergyGenerator.EnergySim200ms (def-swap)");
+                ControlledModsMod.Log("Free Resource Buildings patches applied");
             }
             else
             {
@@ -55,10 +55,10 @@ namespace ControlledMods.Patches.FreeResourceBuildings
                 harmony.Patch(wattageRatingGetter,
                     postfix: new HarmonyMethod(typeof(Generator_WattageRating_Patch),
                         nameof(Generator_WattageRating_Patch.Postfix)));
-                ControlledModsMod.Log("Patched Generator.WattageRating for display");
+                ControlledModsMod.Log("Free Resource Buildings patches applied");
             }
 
-            ControlledModsMod.Log("Free Energy Generator patches applied");
+            ControlledModsMod.Log("Free Resource Buildings patches applied");
         }
 
         // Prefix: swap building def wattage to the slider value before the original method runs

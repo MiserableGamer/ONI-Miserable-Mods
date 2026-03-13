@@ -32,7 +32,7 @@ namespace ControlledMods.Patches.DarknessNotExcludedRelit
                     actualOrImpliedLightLevel,
                     prefix: new HarmonyMethod(typeof(DarknessBehavior_ActualOrImpliedLightLevel_Patch), nameof(DarknessBehavior_ActualOrImpliedLightLevel_Patch.Prefix))
                 );
-                ControlledModsMod.Log("Darkness Not Excluded Relit compatibility patches applied");
+                ControlledModsMod.Log("Darkness Not Excluded Relit patches applied");
             }
             else
             {

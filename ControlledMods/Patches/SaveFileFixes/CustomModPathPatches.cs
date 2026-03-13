@@ -39,7 +39,7 @@ namespace ControlledMods.Patches.SaveFileFixes
                 if (streamReaderCtor != null)
                     harmony.Patch(streamReaderCtor, new HarmonyMethod(typeof(CustomModPathPatches), nameof(StreamReaderCtor_Prefix)));
 
-                ControlledModsMod.Log($"[SaveFileFixes] Custom mod path redirects applied: {Redirects.Count}");
+                ControlledModsMod.Log("Save File Fixes patches applied");
             }
             catch (Exception ex)
             {

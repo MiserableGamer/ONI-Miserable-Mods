@@ -47,6 +47,12 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
         public float LastReachableRebuildTime = -9999f;
 
         [System.NonSerialized]
+        public int LastCurrentCount = -1;
+
+        [System.NonSerialized]
+        public bool LastWasInRoom = false;
+
+        [System.NonSerialized]
         public bool LastShowRangeEnabled = false;
 
         [System.NonSerialized]
@@ -102,6 +108,8 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
             CachedMaxY = int.MinValue;
             CachedReachableCells.Clear();
             LastReachableRebuildTime = -9999f;
+            LastCurrentCount = -1;
+            LastWasInRoom = false;
             LastShowRangeEnabled = false;
             LastShowRangeRange = int.MinValue;
             LastShowRangeOriginCell = Grid.InvalidCell;

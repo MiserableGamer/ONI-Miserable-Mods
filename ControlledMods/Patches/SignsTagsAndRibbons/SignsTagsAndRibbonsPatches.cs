@@ -43,7 +43,19 @@ namespace ControlledMods.Patches.SignsTagsAndRibbons
             { "art_super_coolant", "Super Coolant" },
             { "art_visco_gel", "Visco-Gel" },
             { "art_water", "Water" },
-            { "art_raw_methane_gas", "Raw Natural Gas" }
+            { "art_raw_methane_gas", "Raw Natural Gas" },
+            { "art_ammonia_gas", "Ammonia" },
+            { "art_ammonium_water", "Ammonium Water" },
+            { "art_biodiesel", "Biodiesel" },
+            { "art_isopropane_gas", "Isopropane" },
+            { "art_liquid_nitrogen", "Liquid Nitrogen" },
+            { "art_liquid_phosphorus", "Liquid Phosphorus" },
+            { "art_liquid_sucrose", "Liquid Sucrose" },
+            { "art_mercury", "Mercury" },
+            { "art_nectar", "Nectar" },
+            { "art_phyto_oil", "Phyto Oil" },
+            { "art_renewable_diesel", "Renewable Diesel" },
+            { "art_vegetable_oil", "Vegetable Oil" }
         };
 
         public static string GetFriendlyName(string animName)
@@ -63,8 +75,25 @@ namespace ControlledMods.Patches.SignsTagsAndRibbons
     /// </summary>
     public static class SignsTagsAndRibbonsPatches
     {
-        private const string VariantAnimName = "art_raw_methane_gas";
         private const string AdditionalKanimName = "additional_small_element_tags_kanim";
+
+        /// <summary>Additional variant anim names we append to the Small Element Tag list (must exist in our kanim). Alphanumeric order.</summary>
+        private static readonly string[] AdditionalVariantNames =
+        {
+            "art_ammonia_gas",
+            "art_ammonium_water",
+            "art_biodiesel",
+            "art_isopropane_gas",
+            "art_liquid_nitrogen",
+            "art_liquid_phosphorus",
+            "art_liquid_sucrose",
+            "art_mercury",
+            "art_nectar",
+            "art_phyto_oil",
+            "art_raw_methane_gas",
+            "art_renewable_diesel",
+            "art_vegetable_oil"
+        };
 
         /// <summary>Cached for tooltip postfix so we don't do reflection per button (avoids delay when opening side screen).</summary>
         private static FieldInfo _cachedButtonsField;
@@ -89,7 +118,16 @@ namespace ControlledMods.Patches.SignsTagsAndRibbons
             if (doPost != null)
                 harmony.Patch(doPost, postfix: new HarmonyMethod(typeof(SignsTagsAndRibbonsPatches), nameof(DoPostConfigureComplete_Postfix)));
 
-            ControlledModsMod.Log("SignsTagsAndRibbons: patches applied (add Raw Natural Gas variant)");
+            // Apply to existing prefabs on saveload: when any SelectableSign spawns (including from save), fix Small Element Tags
+            var selectableType = AccessTools.TypeByName("SignsTagsAndRibbons.SelectableSign");
+            if (selectableType != null)
+            {
+                var onSpawn = AccessTools.Method(selectableType, "OnSpawn");
+                if (onSpawn != null)
+                    harmony.Patch(onSpawn, postfix: new HarmonyMethod(typeof(SignsTagsAndRibbonsPatches), nameof(SelectableSign_OnSpawn_Postfix)));
+            }
+
+            ControlledModsMod.Log("Signs, Tags and Ribbons patches applied");
 
             // Tooltips on variant buttons: add ToolTip with friendly name from lookup
             var signSideScreenType = AccessTools.TypeByName("SignsTagsAndRibbons.SignSideScreen");
@@ -124,6 +162,19 @@ namespace ControlledMods.Patches.SignsTagsAndRibbons
         {
             if (go == null || !ShouldInject())
                 return;
+            ApplyVariantAndKanimToSign(go);
+        }
+
+        private const string SmallElementTagPrefabId = "SmallElementTag";
+
+        /// <summary>Runs on prefab template (DoPostConfigureComplete) and on every spawn (OnSpawn), including saveload. Ensures Small Element Tags have our variant and our kanim.</summary>
+        private static void ApplyVariantAndKanimToSign(UnityEngine.GameObject go)
+        {
+            if (go == null || !ShouldInject())
+                return;
+            var kpid = go.GetComponent<KPrefabID>();
+            if (kpid == null || kpid.PrefabTag.Name != SmallElementTagPrefabId)
+                return;
             var selectableType = AccessTools.TypeByName("SignsTagsAndRibbons.SelectableSign");
             if (selectableType == null)
                 return;
@@ -134,10 +185,29 @@ namespace ControlledMods.Patches.SignsTagsAndRibbons
             if (listField == null)
                 return;
             var list = listField.GetValue(selectable) as List<string>;
-            if (list == null)
+            if (list != null)
+            {
+                foreach (var name in AdditionalVariantNames)
+                {
+                    if (!list.Contains(name))
+                        list.Add(name);
+                }
+            }
+            var ourKanim = Assets.GetAnim(AdditionalKanimName);
+            if (ourKanim == null)
                 return;
-            if (!list.Contains(VariantAnimName))
-                list.Add(VariantAnimName);
+            var kbac = go.GetComponent<KBatchedAnimController>();
+            if (kbac != null)
+                kbac.AnimFiles = new KAnimFile[] { ourKanim };
+        }
+
+        /// <summary>When a SelectableSign spawns (new build or saveload), apply our variant and kanim to Small Element Tags so existing saves get the new variant.</summary>
+        public static void SelectableSign_OnSpawn_Postfix(object __instance)
+        {
+            if (__instance == null)
+                return;
+            var go = (__instance as UnityEngine.Component)?.gameObject;
+            ApplyVariantAndKanimToSign(go);
         }
 
         /// <summary>Add tooltip to variant button with friendly name from SmallElementTagVariantNames lookup. Uses cached reflection to avoid delay when opening side screen.</summary>

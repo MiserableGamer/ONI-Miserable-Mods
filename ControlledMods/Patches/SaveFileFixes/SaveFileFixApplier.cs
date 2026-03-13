@@ -92,7 +92,7 @@ namespace ControlledMods.Patches.SaveFileFixes
                     if (getConfigPath != null)
                     {
                         harmony.Patch(getConfigPath, postfix: new HarmonyMethod(typeof(SaveFileFixApplier), nameof(GetConfigPath_Postfix)));
-                        ControlledModsMod.Log($"[SaveFileFixes] Patched GetConfigPath in {asm.GetName().Name}");
+                        ControlledModsMod.Log("Save File Fixes patches applied");
                     }
                     // Also patch WriteSettings(object, string path, bool) so saves go to shared even if path was cached
                     MethodInfo writeSettings = AccessTools.Method(poptions, "WriteSettings",
@@ -100,7 +100,7 @@ namespace ControlledMods.Patches.SaveFileFixes
                     if (writeSettings != null)
                     {
                         harmony.Patch(writeSettings, prefix: new HarmonyMethod(typeof(SaveFileFixApplier), nameof(WriteSettings_Prefix)));
-                        ControlledModsMod.Log($"[SaveFileFixes] Patched WriteSettings in {asm.GetName().Name}");
+                        ControlledModsMod.Log("Save File Fixes patches applied");
                     }
                 }
                 catch (Exception ex)

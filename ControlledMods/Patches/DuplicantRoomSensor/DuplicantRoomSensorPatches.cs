@@ -5,14 +5,15 @@ using System.Reflection;
 using HarmonyLib;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using ControlledMods.ModDetection;
+using ControlledMods.Options;
 
 namespace ControlledMods.Patches.DuplicantRoomSensor
 {
     public static class DuplicantRoomSensorPatches
     {
         private static readonly Color ShowRangeDefaultColor = new Color(0f, 1f, 0.8f, 1f);
-        private const float ReachableRebuildIntervalSeconds = 2f;
         private static Type _dupRoomSensorType;
         private static Type _dupRoomCavityMapType;
         private static FieldInfo _dupRoomCavityMapField;
@@ -21,17 +22,38 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
         private static Type _showRangeRendererType;
         private static bool _showRangeTypesResolved;
 
+        // Cached reflection for sensor fields (resolved once in ApplyPatches)
+        private static FieldInfo _sensorSelectableField;
+        private static FieldInfo _sensorCurrentCountField;
+        private static FieldInfo _sensorCountThresholdField;
+        private static FieldInfo _sensorActivateOnGreaterThanField;
+        private static MethodInfo _sensorSetStateMethod;
+        private static FieldInfo _sensorRoomStatusGUIDField;
+        private static PropertyInfo _doorIsOpenProp;
+        private static Func<Door, bool> _doorIsOpenGetter;
+
+        // Cached reflection for ThresholdSwitchSideScreen fields
+        private static FieldInfo _tsssAboveToggleField;
+        private static FieldInfo _tsssNumberInputField;
+        private static FieldInfo _tsssThresholdSliderField;
+        private static FieldInfo _tsssTargetField;
+
         private static FieldInfo _showRangeVisualizersField;
         private static FieldInfo _showRangeWorstCaseRadiusField;
         private static FieldInfo _showRangeHighlightColorField;
         private static FieldInfo _showRangeRendererLastCellField;
         private static FieldInfo _showRangeRendererLastTransformField;
+        private static Array _emptyVisualizerArray;
+        private static UnityEngine.Object[] _cachedShowRangeRenderers;
         private static readonly Dictionary<ThresholdSwitchSideScreen, KToggle> _rangeLimitToggles = new Dictionary<ThresholdSwitchSideScreen, KToggle>();
         private static readonly Dictionary<ThresholdSwitchSideScreen, KNumberInputField> _rangeInputs = new Dictionary<ThresholdSwitchSideScreen, KNumberInputField>();
         private static readonly Dictionary<ThresholdSwitchSideScreen, GameObject> _rangeToggleRows = new Dictionary<ThresholdSwitchSideScreen, GameObject>();
         private static readonly Dictionary<ThresholdSwitchSideScreen, GameObject> _rangeInputRows = new Dictionary<ThresholdSwitchSideScreen, GameObject>();
+        private static readonly Dictionary<ThresholdSwitchSideScreen, GameObject> _rangeShowButtonRows = new Dictionary<ThresholdSwitchSideScreen, GameObject>();
+        private static readonly Dictionary<ThresholdSwitchSideScreen, GameObject> _rangeSpacerRows = new Dictionary<ThresholdSwitchSideScreen, GameObject>();
         private static readonly Dictionary<ThresholdSwitchSideScreen, System.Action> _rangeToggleHandlers = new Dictionary<ThresholdSwitchSideScreen, System.Action>();
         private static readonly Dictionary<ThresholdSwitchSideScreen, System.Action> _rangeInputHandlers = new Dictionary<ThresholdSwitchSideScreen, System.Action>();
+        private static readonly Dictionary<ThresholdSwitchSideScreen, System.Action> _rangeShowButtonHandlers = new Dictionary<ThresholdSwitchSideScreen, System.Action>();
 
         public static void ApplyPatches(Harmony harmony)
         {
@@ -46,6 +68,26 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
             }
 
             var sensorType = AccessTools.TypeByName("DuplicantRoomSensor.LogicDuplicantCountSensor");
+            if (sensorType != null)
+            {
+                _sensorSelectableField = AccessTools.Field(sensorType, "selectable");
+                _sensorCurrentCountField = AccessTools.Field(sensorType, "currentCount");
+                _sensorCountThresholdField = AccessTools.Field(sensorType, "countThreshold");
+                _sensorActivateOnGreaterThanField = AccessTools.Field(sensorType, "activateOnGreaterThan");
+                _sensorSetStateMethod = AccessTools.Method(sensorType, "SetState", new[] { typeof(bool) });
+                _sensorRoomStatusGUIDField = AccessTools.Field(sensorType, "roomStatusGUID");
+            }
+
+            _doorIsOpenProp = AccessTools.Property(typeof(Door), "IsOpen")
+                ?? AccessTools.Property(typeof(Door), "isOpen");
+            if (_doorIsOpenProp?.GetGetMethod() is MethodInfo doorGetter)
+                _doorIsOpenGetter = (Func<Door, bool>)Delegate.CreateDelegate(typeof(Func<Door, bool>), doorGetter);
+
+            _tsssAboveToggleField = AccessTools.Field(typeof(ThresholdSwitchSideScreen), "aboveToggle");
+            _tsssNumberInputField = AccessTools.Field(typeof(ThresholdSwitchSideScreen), "numberInput");
+            _tsssThresholdSliderField = AccessTools.Field(typeof(ThresholdSwitchSideScreen), "thresholdSlider");
+            _tsssTargetField = AccessTools.Field(typeof(ThresholdSwitchSideScreen), "target");
+
             var sim1000ms = AccessTools.Method(sensorType, "Sim1000ms", new[] { typeof(float) });
             if (sim1000ms != null)
             {
@@ -64,7 +106,11 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
                 harmony.Patch(updateTargetThresholdLabel, postfix: new HarmonyMethod(typeof(ThresholdSwitchSideScreen_UpdateTargetThresholdLabel_Patch), nameof(ThresholdSwitchSideScreen_UpdateTargetThresholdLabel_Patch.Postfix)));
             }
 
-            ControlledModsMod.Log("DuplicantRoomSensor compatibility patches applied");
+            var unselect = AccessTools.Method(typeof(KSelectable), "Unselect", Type.EmptyTypes);
+            if (unselect != null)
+                harmony.Patch(unselect, postfix: new HarmonyMethod(typeof(KSelectable_Unselect_DupRoom_Patch), nameof(KSelectable_Unselect_DupRoom_Patch.Postfix)));
+
+            ControlledModsMod.Log("Duplicant Room Sensor patches applied");
         }
 
         private static Type FindTypeInAssembly(string assemblyNameContains, string fullTypeName)
@@ -117,6 +163,32 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
             settings.CachedMaxY = int.MinValue;
             settings.CachedReachableCells.Clear();
             settings.LastReachableRebuildTime = -9999f;
+            settings.LastCurrentCount = -1;
+            settings.LastWasInRoom = false;
+        }
+
+        /// <summary>Clears the ShowRange visualizer for a Duplicant Room Sensor (e.g. when sidescreen closes or building is deselected).</summary>
+        private static void ClearShowRangeVisualizer(GameObject building)
+        {
+            if (building == null || !ShowRangeDetection.Loaded || !TryResolveShowRangeTypes())
+                return;
+            var settings = building.GetComponent<DuplicantRoomSensorRangeSettings>();
+            if (settings == null)
+                return;
+            try
+            {
+                var simParams = building.GetComponent(_showRangeSimParamsType);
+                if (simParams != null && _showRangeVisualizersField != null)
+                {
+                    if (_emptyVisualizerArray == null)
+                        _emptyVisualizerArray = Array.CreateInstance(_showRangeSimVisualizerType, 0);
+                    _showRangeVisualizersField.SetValue(simParams, _emptyVisualizerArray);
+                    _showRangeWorstCaseRadiusField?.SetValue(simParams, 0);
+                }
+                InvalidateShowRangeCache(settings);
+                ForceShowRangeRefresh();
+            }
+            catch { }
         }
 
         private static void InvalidateShowRangeCache(DuplicantRoomSensorRangeSettings settings)
@@ -141,8 +213,8 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
                 && _rangeInputs.TryGetValue(screen, out var existingInput) && existingInput != null)
                 return;
 
-            var aboveToggle = AccessTools.Field(typeof(ThresholdSwitchSideScreen), "aboveToggle")?.GetValue(screen) as KToggle;
-            var numberInput = AccessTools.Field(typeof(ThresholdSwitchSideScreen), "numberInput")?.GetValue(screen) as KNumberInputField;
+            var aboveToggle = _tsssAboveToggleField?.GetValue(screen) as KToggle;
+            var numberInput = _tsssNumberInputField?.GetValue(screen) as KNumberInputField;
             if (aboveToggle == null || numberInput == null)
                 return;
 
@@ -162,7 +234,7 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
                 toggleRow.name = "ControlledMods_DupRoomRangeToggle";
             }
             int startIndex = numberInputRowTemplate.transform.GetSiblingIndex() + 1;
-            var thresholdSlider = AccessTools.Field(typeof(ThresholdSwitchSideScreen), "thresholdSlider")?.GetValue(screen) as NonLinearSlider;
+            var thresholdSlider = _tsssThresholdSliderField?.GetValue(screen) as NonLinearSlider;
             var sliderRow = thresholdSlider != null ? thresholdSlider.transform.parent : null;
             if (sliderRow != null && sliderRow.parent == parent)
                 startIndex = sliderRow.GetSiblingIndex() + 1;
@@ -176,6 +248,26 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
                 rangeInputRow.name = "ControlledMods_DupRoomRangeInput";
             }
             rangeInputRow.transform.SetSiblingIndex(startIndex + 1);
+
+            var spacerRow = parent.Find("ControlledMods_DupRoomRangeSpacer")?.gameObject;
+            if (spacerRow == null)
+            {
+                spacerRow = new GameObject("ControlledMods_DupRoomRangeSpacer", typeof(RectTransform));
+                spacerRow.transform.SetParent(parent, false);
+                var spacerLE = spacerRow.AddComponent<LayoutElement>();
+                spacerLE.minHeight = 8f;
+            }
+            spacerRow.transform.SetSiblingIndex(startIndex + 2);
+
+            var showRangeButtonRow = parent.Find("ControlledMods_DupRoomShowRangeButton")?.gameObject;
+            if (showRangeButtonRow == null)
+            {
+                showRangeButtonRow = UnityEngine.Object.Instantiate(toggleTemplate, parent);
+                showRangeButtonRow.name = "ControlledMods_DupRoomShowRangeButton";
+            }
+            showRangeButtonRow.transform.SetSiblingIndex(startIndex + 3);
+
+            _rangeSpacerRows[screen] = spacerRow;
 
             var toggle = toggleRow.GetComponent<KToggle>() ?? toggleRow.GetComponentInChildren<KToggle>(true);
             if (toggle == null)
@@ -197,10 +289,22 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
             input.maxValue = DuplicantRoomSensorRangeSettings.MaxRange;
             input.decimalPlaces = 0;
 
+            var showRangeButton = showRangeButtonRow.GetComponent<KToggle>() ?? showRangeButtonRow.GetComponentInChildren<KToggle>(true);
+            var showRangeButtonText = showRangeButtonRow.GetComponentInChildren<TMP_Text>(true);
+            if (showRangeButtonText != null)
+            {
+                showRangeButtonText.text = "Show Range";
+                showRangeButtonText.enableWordWrapping = false;
+                showRangeButtonText.overflowMode = TMPro.TextOverflowModes.Overflow;
+            }
+            var showRangeButtonLE = showRangeButtonRow.GetComponent<LayoutElement>() ?? showRangeButtonRow.AddComponent<LayoutElement>();
+            showRangeButtonLE.minWidth = 120f;
+
             _rangeLimitToggles[screen] = toggle;
             _rangeInputs[screen] = input;
             _rangeToggleRows[screen] = toggleRow;
             _rangeInputRows[screen] = rangeInputRow;
+            _rangeShowButtonRows[screen] = showRangeButtonRow;
         }
 
         private static void BindRowHandlers(ThresholdSwitchSideScreen screen, GameObject target, DuplicantRoomSensorRangeSettings settings)
@@ -262,6 +366,24 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
                     }
                 }
             }
+
+            if (_rangeShowButtonRows.TryGetValue(screen, out var showRangeButtonRow) && showRangeButtonRow != null)
+            {
+                var showRangeButton = showRangeButtonRow.GetComponent<KToggle>() ?? showRangeButtonRow.GetComponentInChildren<KToggle>(true);
+                if (showRangeButton != null)
+                {
+                    if (_rangeShowButtonHandlers.TryGetValue(screen, out var oldHandler))
+                        showRangeButton.onClick -= oldHandler;
+                    System.Action showRangeHandler = () =>
+                    {
+                        bool currentlyOn = settings.LastShowRangeEnabled;
+                        UpdateShowRangeVisualizer(target, settings, forceEnabled: !currentlyOn);
+                        showRangeButton.isOn = !currentlyOn;
+                    };
+                    _rangeShowButtonHandlers[screen] = showRangeHandler;
+                    showRangeButton.onClick += showRangeHandler;
+                }
+            }
         }
 
         private static void SyncRowVisibility(ThresholdSwitchSideScreen screen, bool visible)
@@ -273,6 +395,10 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
                 toggleRow.SetActive(visible);
             if (_rangeInputRows.TryGetValue(screen, out var inputRow) && inputRow != null)
                 inputRow.SetActive(visible);
+            if (_rangeShowButtonRows.TryGetValue(screen, out var showButtonRow) && showButtonRow != null)
+                showButtonRow.SetActive(visible);
+            if (_rangeSpacerRows.TryGetValue(screen, out var spacerRow) && spacerRow != null)
+                spacerRow.SetActive(visible);
         }
 
         private static void SyncRowState(ThresholdSwitchSideScreen screen, GameObject target, DuplicantRoomSensorRangeSettings settings)
@@ -303,7 +429,16 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
                 }
             }
 
-            UpdateShowRangeVisualizer(target, settings);
+            EnsureShowRangeVisualizersNotNull(target);
+            if (ControlledModsOptions.Instance.ShowRangeOnSidescreenOpen)
+                UpdateShowRangeVisualizer(target, settings);
+
+            if (_rangeShowButtonRows.TryGetValue(screen, out var showButtonRow) && showButtonRow != null)
+            {
+                var showBtn = showButtonRow.GetComponent<KToggle>() ?? showButtonRow.GetComponentInChildren<KToggle>(true);
+                if (showBtn != null)
+                    showBtn.isOn = settings.LastShowRangeEnabled;
+            }
         }
 
         private static IDictionary TryGetCavityMap()
@@ -325,24 +460,16 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
         {
             if (!Grid.IsValidCell(cell))
                 return false;
-            // Use game solidity (not just element solidity) so tile buildings like Mesh Tile block traversal.
-            if (Grid.IsSolidCell(cell))
+            // Use element solidity (like ShowRange) so mesh/airflow tiles are passable for visualization.
+            var elem = Grid.Element[cell];
+            if (elem != null && elem.IsSolid)
                 return false;
 
             var building = Grid.Objects[cell, (int)ObjectLayer.Building]
                 ?? Grid.Objects[cell, (int)ObjectLayer.FoundationTile];
             if (building != null && building.TryGetComponent<Door>(out var door))
             {
-                bool isOpen = false;
-                try
-                {
-                    var isOpenProp = AccessTools.Property(door.GetType(), "IsOpen") ?? AccessTools.Property(door.GetType(), "isOpen");
-                    if (isOpenProp != null && isOpenProp.GetValue(door) is bool open)
-                        isOpen = open;
-                }
-                catch
-                {
-                }
+                bool isOpen = _doorIsOpenGetter != null ? _doorIsOpenGetter(door) : false;
 
                 if (!isOpen)
                     return false;
@@ -403,6 +530,8 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
             return true;
         }
 
+        private const float ReachableCellTtlSeconds = 5f;
+
         private static HashSet<int> GetOrBuildReachableCells(DuplicantRoomSensorRangeSettings settings, CavityInfo cavity, int originCell, int range)
         {
             if (settings == null)
@@ -416,8 +545,11 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
             bool sameKey = settings.CachedOriginCell == originCell && settings.CachedRange == range
                 && settings.CachedMinX == minX && settings.CachedMaxX == maxX
                 && settings.CachedMinY == minY && settings.CachedMaxY == maxY;
-            bool fresh = (Time.unscaledTime - settings.LastReachableRebuildTime) < ReachableRebuildIntervalSeconds;
-            if (sameKey && fresh)
+
+            // Force rebuild if TTL expired (catches door open/close changes that don't alter cavity bounds)
+            bool ttlExpired = Time.unscaledTime - settings.LastReachableRebuildTime > ReachableCellTtlSeconds;
+
+            if (sameKey && !ttlExpired)
                 return settings.CachedReachableCells;
 
             settings.CachedReachableCells.Clear();
@@ -538,24 +670,52 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
 
             try
             {
-                var renderers = Resources.FindObjectsOfTypeAll(_showRangeRendererType);
-                if (renderers == null)
+                if (_cachedShowRangeRenderers == null)
+                    _cachedShowRangeRenderers = Resources.FindObjectsOfTypeAll(_showRangeRendererType);
+                if (_cachedShowRangeRenderers == null)
                     return;
 
-                for (int i = 0; i < renderers.Length; i++)
+                bool anyValid = false;
+                for (int i = 0; i < _cachedShowRangeRenderers.Length; i++)
                 {
-                    object renderer = renderers[i];
-                    _showRangeRendererLastCellField?.SetValue(renderer, Grid.InvalidCell);
-                    _showRangeRendererLastTransformField?.SetValue(renderer, null);
+                    var robj = _cachedShowRangeRenderers[i] as UnityEngine.Object;
+                    if (robj == null)
+                        continue;
+                    anyValid = true;
+                    _showRangeRendererLastCellField?.SetValue(robj, Grid.InvalidCell);
+                    _showRangeRendererLastTransformField?.SetValue(robj, null);
                 }
+                if (!anyValid)
+                    _cachedShowRangeRenderers = null;
             }
             catch
             {
+                _cachedShowRangeRenderers = null;
             }
         }
 
+        /// <summary>Ensures SimVisualizerParams.visualizers is never null to prevent NRE in ShowRange's UpdateLocation.
+        /// Call when sidescreen opens so the component is safe before ShowRange's OnPostRender runs.</summary>
+        private static void EnsureShowRangeVisualizersNotNull(GameObject target)
+        {
+            if (target == null || !ShowRangeDetection.Loaded || !TryResolveShowRangeTypes())
+                return;
+            try
+            {
+                var simParams = target.GetComponent(_showRangeSimParamsType);
+                if (simParams != null && _showRangeVisualizersField != null
+                    && _showRangeVisualizersField.GetValue(simParams) == null)
+                {
+                    if (_emptyVisualizerArray == null)
+                        _emptyVisualizerArray = Array.CreateInstance(_showRangeSimVisualizerType, 0);
+                    _showRangeVisualizersField.SetValue(simParams, _emptyVisualizerArray);
+                }
+            }
+            catch { }
+        }
+
         private static void UpdateShowRangeVisualizer(GameObject target, DuplicantRoomSensorRangeSettings settings,
-            CavityInfo cachedCavity = null, int cachedOriginCell = -1, int cachedRange = -1, HashSet<int> cachedReachable = null)
+            CavityInfo cachedCavity = null, int cachedOriginCell = -1, int cachedRange = -1, HashSet<int> cachedReachable = null, bool? forceEnabled = null)
         {
             if (target == null || settings == null)
                 return;
@@ -568,7 +728,7 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
                 if (!TryResolveShowRangeTypes())
                     return;
 
-                bool shouldEnable = settings.EnableRangeLimit;
+                bool shouldEnable = forceEnabled ?? settings.EnableRangeLimit;
                 int targetRange = cachedRange >= 0 ? Mathf.Clamp(cachedRange, DuplicantRoomSensorRangeSettings.MinRange, DuplicantRoomSensorRangeSettings.MaxRange) : settings.GetClampedRange();
                 int originCell = cachedOriginCell;
                 HashSet<int> reachable = cachedReachable;
@@ -618,7 +778,17 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
                     && settings.LastShowRangeReachableCount == reachableCount
                     && settings.LastShowRangeReachableXor == reachableXor
                     && settings.LastShowRangeReachableSum == reachableSum)
+                {
+                    var existingParams = target.GetComponent(_showRangeSimParamsType);
+                    if (existingParams != null && _showRangeVisualizersField != null
+                        && _showRangeVisualizersField.GetValue(existingParams) == null)
+                    {
+                        if (_emptyVisualizerArray == null)
+                            _emptyVisualizerArray = Array.CreateInstance(_showRangeSimVisualizerType, 0);
+                        _showRangeVisualizersField.SetValue(existingParams, _emptyVisualizerArray);
+                    }
                     return;
+                }
 
                 var simParams = target.GetComponent(_showRangeSimParamsType) ?? target.AddComponent(_showRangeSimParamsType);
 
@@ -687,8 +857,6 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
 
                     var settings = new_target.AddOrGet<DuplicantRoomSensorRangeSettings>();
                     settings.RangeCells = settings.GetClampedRange();
-                    InvalidateRangeCache(settings);
-                    InvalidateShowRangeCache(settings);
 
                     SyncRowVisibility(__instance, true);
                     BindRowHandlers(__instance, new_target, settings);
@@ -709,7 +877,7 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
                     if (__instance == null)
                         return;
 
-                    var target = AccessTools.Field(typeof(ThresholdSwitchSideScreen), "target")?.GetValue(__instance) as GameObject;
+                    var target = _tsssTargetField?.GetValue(__instance) as GameObject;
                     if (!IsDuplicantRoomSensorTarget(target, out _))
                     {
                         SyncRowVisibility(__instance, false);
@@ -729,6 +897,10 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
 
         public static class LogicDuplicantCountSensor_Sim1000ms_Patch
         {
+            private static readonly object[] _setStateTrue = new object[] { true };
+            private static readonly object[] _setStateFalse = new object[] { false };
+            private static StatusItem _notInAnyRoomStatus;
+
             public static bool Prefix(object __instance, float dt)
             {
                 try
@@ -741,11 +913,11 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
                         return true;
 
                     Room room = Game.Instance.roomProber.GetRoomOfGameObject(component.gameObject);
-                    var selectable = AccessTools.Field(__instance.GetType(), "selectable")?.GetValue(__instance) as KSelectable;
+                    var selectable = _sensorSelectableField?.GetValue(__instance) as KSelectable;
                     if (selectable == null)
                     {
                         selectable = component.GetComponent<KSelectable>();
-                        AccessTools.Field(__instance.GetType(), "selectable")?.SetValue(__instance, selectable);
+                        _sensorSelectableField?.SetValue(__instance, selectable);
                     }
 
                     if (room != null && room.cavity != null)
@@ -753,8 +925,7 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
                         int originCell = Grid.PosToCell(component.gameObject);
                         int range = settings.GetClampedRange();
                         HashSet<int> reachable = GetOrBuildReachableCells(settings, room.cavity, originCell, range);
-                        var selected = component.GetComponent<KSelectable>();
-                        if (selected != null && selected.IsSelected)
+                        if (ControlledModsOptions.Instance.ShowRangeOnSidescreenOpen && selectable != null && selectable.IsSelected)
                             UpdateShowRangeVisualizer(component.gameObject, settings, room.cavity, originCell, range, reachable);
 
                         int currentCount = 0;
@@ -765,27 +936,46 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
                             currentCount = CountDupesInRange(dupes, reachable);
                         }
 
-                        AccessTools.Field(__instance.GetType(), "currentCount")?.SetValue(__instance, currentCount);
+                        bool countChanged = currentCount != settings.LastCurrentCount || !settings.LastWasInRoom;
+                        settings.LastCurrentCount = currentCount;
+                        settings.LastWasInRoom = true;
 
-                        int threshold = AccessTools.Field(__instance.GetType(), "countThreshold")?.GetValue(__instance) is int t ? t : 0;
-                        bool activateOnGreaterThan = AccessTools.Field(__instance.GetType(), "activateOnGreaterThan")?.GetValue(__instance) is bool b && b;
-                        bool state = !activateOnGreaterThan ? (currentCount < threshold) : (currentCount > threshold);
-                        AccessTools.Method(__instance.GetType(), "SetState", new[] { typeof(bool) })?.Invoke(__instance, new object[] { state });
-
-                        if (selectable != null && selectable.HasStatusItem(Db.Get().BuildingStatusItems.NotInAnyRoom))
+                        if (countChanged)
                         {
-                            var guid = AccessTools.Field(__instance.GetType(), "roomStatusGUID")?.GetValue(__instance) is Guid g ? g : Guid.Empty;
+                            _sensorCurrentCountField?.SetValue(__instance, currentCount);
+
+                            int threshold = _sensorCountThresholdField?.GetValue(__instance) is int t ? t : 0;
+                            bool activateOnGreaterThan = _sensorActivateOnGreaterThanField?.GetValue(__instance) is bool b && b;
+                            bool state = !activateOnGreaterThan ? (currentCount < threshold) : (currentCount > threshold);
+                            _sensorSetStateMethod?.Invoke(__instance, state ? _setStateTrue : _setStateFalse);
+                        }
+
+                        if (_notInAnyRoomStatus == null) _notInAnyRoomStatus = Db.Get().BuildingStatusItems.NotInAnyRoom;
+                        if (selectable != null && selectable.HasStatusItem(_notInAnyRoomStatus))
+                        {
+                            var guid = _sensorRoomStatusGUIDField?.GetValue(__instance) is Guid g ? g : Guid.Empty;
                             selectable.RemoveStatusItem(guid, false);
                         }
                     }
                     else
                     {
-                        if (selectable != null && !selectable.HasStatusItem(Db.Get().BuildingStatusItems.NotInAnyRoom))
+                        if (!settings.LastWasInRoom && settings.LastCurrentCount == 0)
                         {
-                            Guid guid = selectable.AddStatusItem(Db.Get().BuildingStatusItems.NotInAnyRoom, null);
-                            AccessTools.Field(__instance.GetType(), "roomStatusGUID")?.SetValue(__instance, guid);
+                            // Already in not-in-room state with count 0, skip redundant work
                         }
-                        AccessTools.Method(__instance.GetType(), "SetState", new[] { typeof(bool) })?.Invoke(__instance, new object[] { false });
+                        else
+                        {
+                            settings.LastCurrentCount = 0;
+                            settings.LastWasInRoom = false;
+
+                            if (_notInAnyRoomStatus == null) _notInAnyRoomStatus = Db.Get().BuildingStatusItems.NotInAnyRoom;
+                            if (selectable != null && !selectable.HasStatusItem(_notInAnyRoomStatus))
+                            {
+                                Guid guid = selectable.AddStatusItem(_notInAnyRoomStatus, null);
+                                _sensorRoomStatusGUIDField?.SetValue(__instance, guid);
+                            }
+                            _sensorSetStateMethod?.Invoke(__instance, _setStateFalse);
+                        }
                     }
 
                     return false;
@@ -794,6 +984,15 @@ namespace ControlledMods.Patches.DuplicantRoomSensor
                 {
                     return true;
                 }
+            }
+        }
+
+        public static class KSelectable_Unselect_DupRoom_Patch
+        {
+            public static void Postfix(KSelectable __instance)
+            {
+                if (__instance == null) return;
+                ClearShowRangeVisualizer(__instance.gameObject);
             }
         }
     }
