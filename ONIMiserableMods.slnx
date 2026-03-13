@@ -21,5 +21,4 @@
   <Project Path="ThresholdFixed/ThresholdFixed.csproj" Id="fe377519-31a0-4c07-9f63-a88d8a76b59a" />
 
 
-  <Project Path="ControlledFramerate/ControlledFramerate.csproj" Id="6f78ec5e-a56a-448b-b57c-e7df89080ed9" />
 </Solution>
