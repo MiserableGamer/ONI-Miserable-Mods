@@ -75,7 +75,7 @@ Unified storage control: empty storage button, filtering options, capacity contr
 ### 🎬 Controlled Visuals
 Fixes a vanilla bug where items on conveyor rails sometimes render in front of drywall. Conveyor contents now always draw behind walls, tiles, and other buildings as intended.
 
-[📖 Read More](ControlledVisuals/README.md) | [Latest Release v1.1.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledVisuals-v1.1.0) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3672588272)
+[📖 Read More](ControlledVisuals/README.md) | [Latest Release v1.2.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledVisuals-v1.2.0) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3672588272)
 
 ### ⚠️ Controlled Warnings
 Enhanced alerts for critical situations. Adds left-side notifications when duplicants get trapped, with escalation to critical (red) alerts if they're also suffocating. Click to jump to location.
