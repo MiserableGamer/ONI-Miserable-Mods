@@ -50,7 +50,7 @@ Adaptive game speed that automatically adjusts to maintain your target FPS. Buil
 ### 🎛️ Controlled Mods
 A framework for customizing and overriding settings from other mods via an in-game options menu. Currently in development - support for various mods will be added in future updates.
 
-[📖 Read More](ControlledMods/README.md) | [Latest Release v1.11.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledMods-v1.11.0)
+[📖 Read More](ControlledMods/README.md) | [Latest Release v1.12.1](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledMods-v1.12.1)
 
 ### 🌡️ Controlled Overlay
 Adds a text input field to the Temperature Overlay's relative temperature slider, allowing you to type exact temperature values instead of struggling with the slider.
