@@ -27,7 +27,6 @@ namespace MiserableUtils.UI
             _collapsed = startCollapsed;
             _headerName = headerName ?? "CollapsibleSection_Header";
 
-            // Snapshot originally-inactive children
             for (int i = 0; i < parentTransform.childCount; i++)
             {
                 var child = parentTransform.GetChild(i);
@@ -39,10 +38,10 @@ namespace MiserableUtils.UI
             header.transform.SetParent(parentTransform, false);
             header.transform.SetAsFirstSibling();
 
-            var headerRT = header.AddComponent<RectTransform>();
-            headerRT.anchorMin = new Vector2(0f, 1f);
-            headerRT.anchorMax = Vector2.one;
-            headerRT.pivot = new Vector2(0.5f, 1f);
+            // Don't set custom anchors/pivot -- let the parent's layout group manage positioning.
+            // Custom anchors (e.g. top-anchored) fight VerticalLayoutGroup and can push content
+            // off-screen when other mods add UI elements to the same panel.
+            header.AddComponent<RectTransform>();
 
             var headerLE = header.AddComponent<LayoutElement>();
             headerLE.minHeight = 28f;
@@ -116,6 +115,18 @@ namespace MiserableUtils.UI
                 }
                 child.gameObject.SetActive(!_collapsed);
             }
+
+            RebuildLayout(_parentTransform);
+        }
+
+        private static void RebuildLayout(Transform target)
+        {
+            if (target == null) return;
+            LayoutRebuilder.ForceRebuildLayoutImmediate(target as RectTransform);
+            // Walk up to the nearest ScrollRect so it recalculates content bounds
+            var scroll = target.GetComponentInParent<ScrollRect>();
+            if (scroll != null && scroll.content != null)
+                LayoutRebuilder.ForceRebuildLayoutImmediate(scroll.content);
         }
     }
 }
