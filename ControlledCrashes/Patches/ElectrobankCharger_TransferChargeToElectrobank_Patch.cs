@@ -4,104 +4,69 @@ using UnityEngine;
 
 namespace ControlledCrashes.Patches
 {
-    /// <summary>
-    /// Fixes NullReferenceException in ElectrobankCharger.Instance.TransferChargeToElectrobank
-    /// when entering the full state. The crash occurs in Electrobank.Replace when trying to
-    /// replace an empty electrobank with a charged one, but the storage, electrobank GameObject,
-    /// or required components are null.
-    /// 
-    /// The crash occurs when:
-    /// 1. ElectrobankCharger enters the full state
-    /// 2. Enter action calls TransferChargeToElectrobank
-    /// 3. Which calls Electrobank.ReplaceEmptyWithCharged
-    /// 4. Which calls Electrobank.Replace
-    /// 5. Something is null (storage, electrobank GameObject, or component)
-    /// </summary>
+    // Fixes NullReferenceException in ElectrobankCharger.Instance.TransferChargeToElectrobank when
+    // entering the full state. The crash occurs in Electrobank.Replace when targetElectrobank (the
+    // actual parameter used, NOT storage.items[0]) is null, destroyed, or missing PrimaryElement/
+    // Pickupable. targetElectrobank can become stale when items are removed during charging (e.g.
+    // by dupes or mods like ControlledLoaders). When we skip or suppress, we must call
+    // DequeueElectrobank to reset state; otherwise the building gets stuck in a glitch loop.
     [HarmonyPatch(typeof(ElectrobankCharger.Instance), "TransferChargeToElectrobank")]
     public class ElectrobankCharger_TransferChargeToElectrobank_Patch
     {
+        private static void SkipAndReset(ElectrobankCharger.Instance instance, string entityKey, string issue)
+        {
+            int instanceId = instance?.gameObject?.GetInstanceID() ?? instance?.master?.gameObject?.GetInstanceID() ?? 0;
+            int count = CrashTracker.IncrementCrash(entityKey);
+            string entityInfo = CrashTracker.GetEntityInfo(instance?.master?.gameObject);
+
+            Debug.LogWarning("[ControlledCrashes] [" + CrashTracker.GetTimestamp() + "] [HIGH] ElectrobankCharger.TransferChargeToElectrobank crash:");
+            Debug.LogWarning("  Entity: " + entityInfo);
+            Debug.LogWarning("  Issue: " + issue);
+            Debug.LogWarning(string.Format("  Crash Count: {0} time(s)", count));
+            Debug.LogWarning("  Resetting state and skipping to prevent crash");
+
+            instance?.DequeueElectrobank();
+        }
+
         public static bool Prefix(ElectrobankCharger.Instance __instance)
         {
             try
             {
-                // Null check: instance must exist
                 if (__instance == null)
                 {
                     Debug.LogWarning("[ControlledCrashes] [" + CrashTracker.GetTimestamp() + "] ElectrobankCharger.TransferChargeToElectrobank: Instance is null");
                     return false;
                 }
 
-                // Null check: storage must exist
-                var storage = __instance.Storage;
-                if (storage == null)
+                // Validate targetElectrobank - the actual parameter used by TransferChargeToElectrobank,
+                // NOT storage.items[0]. targetElectrobank can differ (first EmptyPortableBattery) or
+                // become stale when items are removed during charging.
+                var target = __instance.targetElectrobank;
+                if (target == null)
                 {
                     int instanceId = __instance?.gameObject?.GetInstanceID() ?? __instance?.master?.gameObject?.GetInstanceID() ?? 0;
-                    string entityKey = string.Format("ElectrobankCharger_StorageNull_{0}", instanceId);
-                    int count = CrashTracker.IncrementCrash(entityKey);
-                    string entityInfo = CrashTracker.GetEntityInfo(__instance?.master?.gameObject);
-
-                    Debug.LogWarning("[ControlledCrashes] [" + CrashTracker.GetTimestamp() + "] [HIGH] ElectrobankCharger.TransferChargeToElectrobank crash:");
-                    Debug.LogWarning("  Entity: " + entityInfo);
-                    Debug.LogWarning("  Issue: Storage is null");
-                    Debug.LogWarning(string.Format("  Crash Count: {0} time(s)", count));
-                    Debug.LogWarning("  Skipping to prevent crash");
-
+                    SkipAndReset(__instance, string.Format("ElectrobankCharger_TargetNull_{0}", instanceId),
+                        "targetElectrobank is null or destroyed (item removed during charging?)");
                     return false;
                 }
 
-                // Null check: storage must have items
-                if (storage.items == null || storage.items.Count == 0)
-                {
-                    // No items to transfer - this is normal, not an error
-                    return false;
-                }
-
-                // Null check: first item must exist and be valid
-                var firstItem = storage.items[0];
-                if (firstItem == null)
+                // Electrobank.Replace requires PrimaryElement and Pickupable; null access throws
+                if (target.GetComponent<PrimaryElement>() == null)
                 {
                     int instanceId = __instance?.gameObject?.GetInstanceID() ?? __instance?.master?.gameObject?.GetInstanceID() ?? 0;
-                    string entityKey = string.Format("ElectrobankCharger_ItemNull_{0}", instanceId);
-                    int count = CrashTracker.IncrementCrash(entityKey);
-                    string entityInfo = CrashTracker.GetEntityInfo(__instance?.master?.gameObject);
-
-                    Debug.LogWarning("[ControlledCrashes] [" + CrashTracker.GetTimestamp() + "] [HIGH] ElectrobankCharger.TransferChargeToElectrobank crash:");
-                    Debug.LogWarning("  Entity: " + entityInfo);
-                    Debug.LogWarning("  Issue: First storage item is null");
-                    Debug.LogWarning(string.Format("  Crash Count: {0} time(s)", count));
-                    Debug.LogWarning("  Skipping to prevent crash");
-
+                    SkipAndReset(__instance, string.Format("ElectrobankCharger_NoPrimaryElement_{0}", instanceId),
+                        "targetElectrobank missing PrimaryElement component");
                     return false;
                 }
 
-                // Check if the item is still in storage (might have been removed)
-                if (!storage.items.Contains(firstItem))
-                {
-                    // Item was removed from storage - skip replacement
-                    return false;
-                }
-
-                // Check if item has required components for replacement
-                var prefabId = firstItem.GetComponent<KPrefabID>();
-                if (prefabId == null)
+                if (target.GetComponent<Pickupable>() == null)
                 {
                     int instanceId = __instance?.gameObject?.GetInstanceID() ?? __instance?.master?.gameObject?.GetInstanceID() ?? 0;
-                    string entityKey = string.Format("ElectrobankCharger_NoPrefabID_{0}", instanceId);
-                    int count = CrashTracker.IncrementCrash(entityKey);
-                    string entityInfo = CrashTracker.GetEntityInfo(__instance?.master?.gameObject);
-                    string itemInfo = CrashTracker.GetEntityInfo(firstItem);
-
-                    Debug.LogWarning("[ControlledCrashes] [" + CrashTracker.GetTimestamp() + "] [HIGH] ElectrobankCharger.TransferChargeToElectrobank crash:");
-                    Debug.LogWarning("  Entity: " + entityInfo);
-                    Debug.LogWarning("  Item: " + itemInfo);
-                    Debug.LogWarning("  Issue: Item missing KPrefabID component");
-                    Debug.LogWarning(string.Format("  Crash Count: {0} time(s)", count));
-                    Debug.LogWarning("  Skipping to prevent crash");
-
+                    SkipAndReset(__instance, string.Format("ElectrobankCharger_NoPickupable_{0}", instanceId),
+                        "targetElectrobank missing Pickupable component");
                     return false;
                 }
 
-                // All checks passed - allow original method to run
                 return true;
             }
             catch (Exception ex)
@@ -115,8 +80,9 @@ namespace ControlledCrashes.Patches
                 Debug.LogWarning("  Entity: " + entityInfo);
                 Debug.LogWarning("  Exception: " + ex.Message);
                 Debug.LogWarning(string.Format("  Crash Count: {0} time(s)", count));
-                Debug.LogWarning("  Skipping to prevent crash");
+                Debug.LogWarning("  Resetting state and skipping to prevent crash");
 
+                __instance?.DequeueElectrobank();
                 return false;
             }
         }
@@ -135,11 +101,11 @@ namespace ControlledCrashes.Patches
                 Debug.LogWarning("  Entity: " + entityInfo);
                 Debug.LogWarning("  Storage: " + storageInfo);
                 Debug.LogWarning("  Exception: NullReferenceException in Electrobank.Replace");
-                Debug.LogWarning("  Cause: Storage item or component is null during replacement");
+                Debug.LogWarning("  Cause: targetElectrobank or component is null during replacement");
                 Debug.LogWarning(string.Format("  Crash Count: {0} time(s)", count));
-                Debug.LogWarning("  Note: This can happen when items are removed from storage during charging");
+                Debug.LogWarning("  Resetting state to prevent glitch loop");
 
-                // Suppress the exception - return false to indicate failure
+                __instance?.DequeueElectrobank();
                 return null;
             }
 

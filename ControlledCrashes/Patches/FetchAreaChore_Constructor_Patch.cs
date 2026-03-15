@@ -38,7 +38,10 @@ namespace ControlledCrashes.Patches
                     if (method != null)
                     {
                         string assemblyName = method.DeclaringType?.Assembly?.GetName()?.Name;
-                        if (assemblyName != null && assemblyName != "Assembly-CSharp" && 
+                        // Exclude game/Unity assemblies: Assembly-CSharp-firstpass is Unity's first-pass
+                        // (Plugins, Standard Assets); UpdateBucketWithUpdater, BucketGroup, etc. live there
+                        if (assemblyName != null && assemblyName != "Assembly-CSharp" &&
+                            assemblyName != "Assembly-CSharp-firstpass" &&
                             assemblyName != "ControlledCrashes" && assemblyName != "0Harmony")
                         {
                             Debug.LogWarning(string.Format("  SUSPECT MOD FOUND: {0} - Method: {1}.{2}", 
