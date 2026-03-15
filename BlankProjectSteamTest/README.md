@@ -10,7 +10,7 @@ Temporary no-op mod used to validate Promote/Release + Steam Workshop upload aut
 ## Installation
 
 ### Steam Workshop (Recommended)
-Subscribe on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3685466587) and enable in the Mods menu.
+Subscribe on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id={WORKSHOP_ID}) and enable in the Mods menu.
 
 ## My Workshop & Collections
 
