@@ -3,9 +3,4 @@ publishedFileId:
 displayName: "Blank Project Steam Test"
 visibility: unlisted
 modType:
-  - "language"
-  - "new features"
-  - "tweaks"
 dlcCompatibility:
-  - "Base Game"
-  - "The Frosty Planet Pack"
