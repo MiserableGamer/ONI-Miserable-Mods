@@ -3,8 +3,9 @@ publishedFileId: 3685476798
 displayName: "Blank Project Steam Test"
 visibility: unlisted
 modType:
-  - "worldgen"
-  - "tweaks"
+  - "language"
+  - "new features"
+  - "ui"
 dlcCompatibility:
-  - "Base Game"
-  - "The Frosty Planet Pack"
+  - "Spaced Out!"
+  - "The Bionic Booster Pack"
