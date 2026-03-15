@@ -1,10 +1,11 @@
 ﻿# Steam upload metadata for GUI/script automation
-publishedFileId: 3685466587
+publishedFileId: 
 displayName: "Blank Project Steam Test"
 visibility: private
 modType:
-  - "worldgen"
-  - "tweaks"
+  - "language"
+  - "new features"
+  - "ui"
 dlcCompatibility:
-  - "Base Game"
-  - "The Frosty Planet Pack"
+  - "Spaced Out!"
+  - "The Bionic Booster Pack"
