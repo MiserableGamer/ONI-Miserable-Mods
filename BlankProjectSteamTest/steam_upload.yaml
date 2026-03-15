@@ -1,0 +1,12 @@
+# Steam upload metadata for GUI/script automation
+publishedFileId:
+displayName: "Blank Project Steam Test"
+visibility: unlisted
+modType:
+  - "tweaks"
+  - "ui"
+dlcCompatibility:
+  - "Base Game"
+  - "Spaced Out!"
+  - "The Frosty Planet Pack"
+  - "The Bionic Booster Pack"
