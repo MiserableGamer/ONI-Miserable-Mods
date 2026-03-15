@@ -1,6 +1,6 @@
-﻿supportedContent: VANILLA_ID,EXPANSION1_ID
+supportedContent: VANILLA_ID,EXPANSION1_ID
 minimumSupportedBuild: 700386
-version: 1.0.4.81
+version: 1.0.5.82
 APIVersion: 2
 
 
