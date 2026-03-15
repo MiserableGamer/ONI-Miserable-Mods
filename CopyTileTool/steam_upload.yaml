@@ -1,0 +1,12 @@
+﻿# Steam upload metadata for GUI/script automation
+publishedFileId: 3638197489
+displayName: "Copy Tile Tool"
+visibility: public
+modType:
+  - "new features"
+  - "tweaks"
+dlcCompatibility:
+  - "Base Game"
+  - "Spaced Out!"
+  - "The Frosty Planet Pack"
+  - "The Bionic Booster Pack"

@@ -1,4 +1,4 @@
-# Copy Materials Tool
+﻿# Copy Materials Tool
 
 A Quality of Life mod for Oxygen Not Included that extends the "Copy Settings" tool to also copy construction materials between buildings of the same type.
 
@@ -31,7 +31,7 @@ A Quality of Life mod for Oxygen Not Included that extends the "Copy Settings" t
 ## Installation
 
 ### Steam Workshop (Recommended)
-1. Subscribe to the mod on the Steam Workshop
+1. Subscribe on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3626072188) and enable in the Mods menu
 2. Launch Oxygen Not Included
 3. Enable the mod in the Mods menu
 
@@ -157,3 +157,4 @@ Please mention "Copy Materials Tool" in your issue title or description so we ca
 - **1.0.0.0**: Initial release
 - **0.1.1.11**: Code cleaning
 - **0.1.0.10**: Test release
+

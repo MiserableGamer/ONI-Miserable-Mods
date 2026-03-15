@@ -1,4 +1,4 @@
-# Copy Tile Tool
+﻿# Copy Tile Tool
 
 Replace tiles in bulk by selecting a destination type, then a source type to replace, then drag-selecting an area.
 
@@ -27,7 +27,7 @@ Replace tiles in bulk by selecting a destination type, then a source type to rep
 ## Installation
 
 ### Steam Workshop (Recommended)
-Subscribe on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=XXXXXXXXX) and enable in the Mods menu.
+Subscribe on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3638197489) and enable in the Mods menu.
 
 ### Manual Installation
 1. Download the [latest release](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases)
@@ -88,3 +88,4 @@ This mod is part of the [ONI 200+ Ultimate Mods collection](https://steamcommuni
 - **1.0.2.38**: Fixed mixed tiles appearing after rebuild
 - **1.0.1.0**: Fixed tile replacement not queuing new build after deconstruction
 - **1.0.0.0**: Initial release
+

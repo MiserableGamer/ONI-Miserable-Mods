@@ -1,4 +1,4 @@
-# Controlled Buildings
+﻿# Controlled Buildings
 
 Adjusts building footprints and placement rules to fix visual conflicts with decorative elements like ceiling trim.
 
@@ -20,7 +20,7 @@ The Juicer's visual animation is 4 cells tall, but the actual collision/placemen
 ## Installation
 
 ### Steam Workshop (Recommended)
-Subscribe on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id={WORKSHOP_ID}) and enable in the Mods menu.
+Subscribe on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3670726296) and enable in the Mods menu.
 
 ### Manual Installation
 1. Download the [latest release](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases)
@@ -80,3 +80,4 @@ Please mention "Controlled Buildings" in your issue title or description.
 - **1.0.2**: Fixed atmosphere gas appearing behind drywall
 - **1.0.1**: Fixed Arbor Tree layering
 - **1.0.0**: Initial release
+
