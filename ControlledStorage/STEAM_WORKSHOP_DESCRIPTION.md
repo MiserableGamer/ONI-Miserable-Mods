@@ -24,7 +24,7 @@ A unified storage control mod that combines and enhances multiple storage-relate
 
 [h3]Delivery Control[/h3]
 [olist]
-[*][b]Select a storage building[/b] with Delivery Control enabled
+[*][b]Select a storage or loader building[/b] with Delivery Control enabled
 [*][b]Toggle permissions[/b] for dupe deposit, dupe extract, sweeper deposit, and sweeper extract
 [*][b]Copy settings[/b] to other buildings of the same type using the Copy Delivery Settings button
 [/olist]
@@ -71,7 +71,7 @@ Configure via [b]Options > Mods > Controlled Storage[/b]:
 [list]
 [*][b]Enable for Storage Bins[/b] - Add delivery control to Storage Bins and Smart Storage Bins
 [*][b]Enable for Fridges[/b] - Add delivery control to Refrigerators and Ration Boxes
-[*][b]Debug Logs[/b] - Log sweeper/fetch details to Player.log for troubleshooting
+[*][b]Enable for Loaders[/b] - Add delivery control to conveyor loaders (Solid Conduit Inbox)
 [/list]
 
 [h3]No-Sweep Zones[/h3]
@@ -120,8 +120,12 @@ Found a bug or have a feature request? Please report it on GitHub using our issu
 
 Please mention "Controlled Storage" in your issue title or description.
 
-[h2]Mod Collection[/h2]
-This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156]ONI 200+ Ultimate Mods collection[/url] on Steam Workshop, featuring over 200 tested and compatible mods for Oxygen Not Included.
+[h2]My Workshop & Collections[/h2]
+[list]
+[*][url=https://steamcommunity.com/id/miserablegamer/myworkshopfiles/?appid=457140]My Workshop[/url] – All my ONI mods on Steam
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156]ONI 235+ Ultimate Mods collection[/url] – 235+ tested, compatible mods for Oxygen Not Included
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3672308653]The Controlled Series[/url] – Collection of Controlled mods
+[/list]
 
 [h2]Credits[/h2]
 [list]
@@ -136,4 +140,6 @@ This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/
 [*][b]1.0.1[/b]: Bugfix for Copy errors
 [*][b]1.0.2[/b]: Bugfix for Sweeper Loop error
 [*][b]1.0.3[/b]: Removed duplicate overlay icon
+[*][b]1.0.4[/b]: Applied Delivery Control to Loaders with option
+[*][b]1.0.5[/b]: Improved No Sweep Zones to cover edibles on a different chore path
 [/list]

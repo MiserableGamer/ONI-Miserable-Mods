@@ -102,7 +102,7 @@ namespace ControlledStorage.Patches
         }
     }
 
-    // Conveyor loader: add delivery control so dupes/sweepers can be restricted like storage bins.
+    // Conveyor loader (Inbox): add delivery control so dupes/sweepers can be restricted.
     [HarmonyPatch(typeof(SolidConduitInboxConfig), nameof(SolidConduitInboxConfig.DoPostConfigureComplete))]
     public static class SolidConduitInboxConfig_DoPostConfigureComplete_Patch
     {
