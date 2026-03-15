@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="BlankProjectSteamTest/BlankProjectSteamTest.csproj" />
   <Project Path="BonbonTreeBoost/BonbonTreeBoost.csproj" Id="573ce697-fd53-48de-98fe-0c0eb4ca8f04" />
   <Project Path="CapacityControl/CapacityControl.csproj" Id="b3c4d5e6-f7a8-9012-3456-789abcdef012" />
   <Project Path="ControlledAutomation/ControlledAutomation.csproj" Id="7a836259-5127-4912-ad82-c9a62d8de9de" />
@@ -16,12 +17,8 @@
   <Project Path="EmptyStorage/EmptyStorage.csproj" Id="f878a2e5-8d49-4761-95ff-0cf0da70cd2e" />
   <Project Path="HighPrecisionTemperatureFIXED/HighPrecisionTemperatureFIXED.csproj" Id="dd857d1c-8632-4d95-8421-ed6effac596a" />
   <Project Path="LongerArms/LongerArms.csproj" Id="a1b2c3d4-e5f6-7890-abcd-ef1234567890" />
+  <Project Path="MiserableUtils/MiserableUtils.csproj" />
   <Project Path="MorningExercise/MorningExercise.csproj" Id="e8f3b4c1-2d5a-4f8e-9c1b-3a7d6e9f0123" />
   <Project Path="NoDisease/NoDisease.csproj" Id="9a8b7c6d-5e4f-3a2b-1c0d-9e8f7a6b5c4d" />
   <Project Path="ThresholdFixed/ThresholdFixed.csproj" Id="fe377519-31a0-4c07-9f63-a88d8a76b59a" />
-
-
-
-
-  <Project Path="MiserableUtils/MiserableUtils.csproj" />
 </Solution>
