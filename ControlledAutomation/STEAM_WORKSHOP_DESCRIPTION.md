@@ -57,6 +57,7 @@ Inspired by [url=https://steamcommunity.com/sharedfiles/filedetails/?id=29593403
 
 [h2]Version History[/h2]
 [list]
+[*][b]1.2.0[/b] - Improvement to SideScreen layouts
 [*][b]1.1.0[/b] - Added delay buffer to Adv. Thermo Sensor
 [*][b]1.0.0[/b] - Initial release with threshold sliders and signal inversion
 [/list]
