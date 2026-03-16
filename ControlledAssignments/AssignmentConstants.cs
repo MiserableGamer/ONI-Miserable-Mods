@@ -10,5 +10,11 @@ namespace ControlledAssignments
 
         public const string LubricationStationSlotId = "LubricationStation";
         public const string LubricationStationSlotName = "Lubrication Station";
+
+        public const string ExerciserSlotId = "Exerciser";
+        public const string ExerciserSlotName = "Exerciser";
+
+        // ManualExerciser is from MorningExercise mod (soft dependency — detected by PrefabID)
+        public const string ManualExerciserPrefabId = "ManualExerciser";
     }
 }
