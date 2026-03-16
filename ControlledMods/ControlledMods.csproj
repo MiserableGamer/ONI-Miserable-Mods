@@ -8,4 +8,8 @@
     <RootNamespace>ControlledMods</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MiserableUtils\MiserableUtils.csproj" />
+  </ItemGroup>
+
 </Project>
