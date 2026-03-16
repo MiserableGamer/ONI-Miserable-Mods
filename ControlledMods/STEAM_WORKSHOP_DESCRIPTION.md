@@ -6,38 +6,23 @@ Configure and improve behavior from supported ONI mods through one in-game optio
 
 [h2]Features[/h2]
 [list]
-[*][b]In-Game Configuration[/b] - All settings accessible from the main menu Mod Options
-[*][b]Restart Button[/b] - Adds a Restart button to the main menu (above Quit) for quick game restarts after changing mods or settings
-[*][b]Smart Detection[/b] - Options only apply if the target mod is detected and enabled
-[*][b]No Dependencies[/b] - Works independently; target mods are optional, not required
-[*][b]Persistent Settings[/b] - Configuration saved between game sessions
+[*]Direct Workshop links for supported mods in Mod Options
+[*]Restart button in the main menu and pause menu
+[*]Safe mod detection (patches apply only when target mods are present)
 [/list]
 
 [h2]Supported Mods[/h2]
 
 [h3]Resource Sensor[/h3]
-When the Resource Sensor mod is detected and the option is enabled:
+Steam Workshop: [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2911545239]Resource Sensor[/url]
 [list]
-[*][b]Sidescreen[/b] - Three scope checkboxes: Atmosphere, Storage, Conduits (each can be toggled independently); "Include Storage Buildings" row hidden; Global mode row hidden
-[*][b]Counting[/b] - Atmosphere (cell element + pickupables), any building with a Storage component, and gas/liquid/solid conduits, based on the scope checkboxes; category tags in the element filter are expanded to discovered resources
-[*][b]Threshold[/b] - Max raised to 9,999,999; units stripped from the threshold display (no "kg" in textbox or tooltips); input character limit raised to 8
-[*][b]Range visualizer[/b] - Clears when the building is deselected (same behavior as switching to Room mode)
-[*][b]Copy Settings[/b] - Copies the Atmosphere / Storage / Conduits scope toggles
-[*][b]Inversion[/b] - When ControlledAutomation is loaded with inversion enabled, the invert checkbox appears on the Resource Sensor
+[*]Adds Atmosphere / Storage / Conduits scope controls
+[*]Improves counting (including tile storage and conduit contents)
+[*]Raises threshold max to 9,999,999 and removes hardcoded unit text
+[*]Clears range visualizer correctly on deselect
+[*]Supports Copy Settings and ControlledAutomation inversion
 [/list]
-
-[h3]Free Resource Buildings[/h3]
-When the Free Resource Buildings mod is detected and the option is enabled:
-[list]
-[*][b]Free Energy Generator wattage slider fix[/b] - The sidescreen wattage slider now actually controls power output (the original mod's slider changes a value that is never read for generation)
-[*][b]Power Sink building[/b] - Adds a Power Sink to the Power build menu (reverse of the Power Box): a 1×1 building that consumes power at a configurable rate via a sidescreen slider (0–40,000 W). Useful for testing power systems. Uses a red-tinted Power Box animation to distinguish it visually
-[/list]
-
-[h3]KIN Underground Conduit[/h3]
-[list]
-[*][b]Fix Power Terminal and Logic Terminal crash[/b] - Prevents InvalidCastException when a logic wire is built in the same cell as a Power Terminal or Logic Terminal (optional, on by default)
-[*][b]Copy Settings[/b] - Enables the vanilla Copy Settings tool for conduit terminals, senders, and receivers; channel is copied when you paste settings
-[/list]
+Compatible with Berkay's Resource Sensor and ResourceSensorFIXED.
 
 [h3]Free Resource Buildings[/h3]
 Steam Workshop: [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2839006500]Free Resource Buildings[/url]
@@ -82,43 +67,9 @@ Steam Workshop: [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2883
 [h2]How to Use[/h2]
 [olist]
 [*][b]Subscribe/Install[/b] - Enable the mod in the Mods menu
-[*][b]Enable Target Mods[/b] - Enable the mod(s) you want to customize (e.g., KIN Underground Conduit)
-[*][b]Open Options[/b] - Click "Mod Options" from the main menu and find "ControlledMods"
-[*][b]Configure[/b] - Adjust settings as desired
-[*][b]Restart[/b] - Restart the game for changes to take effect
+[*][b]Enable Target Mods[/b] - Enable the mods you want to control
+[*][b]Open Mods[/b] - ControlledMods -> Mod Options -> enable required patches
 [/olist]
-
-[h3]Tips[/h3]
-[list]
-[*]Settings are grouped by target mod - expand each section to see available options
-[*]Hover over options for detailed descriptions and default values
-[*]Changes require a game restart to apply
-[/list]
-
-[h2]Compatibility[/h2]
-[list]
-[*][b]Oxygen Not Included[/b] - Build 700386 or later
-[*][b]Mod API[/b] - Version 2
-[*][b]DLC Support[/b] - Works with base game and all DLC (including Bionic Booster Pack)
-[*][b]Target Mods[/b] - Does not require target mods to be installed; safely ignored if not present
-[/list]
-
-[h2]Performance[/h2]
-[b]Minimal Performance Impact[/b]
-[list]
-[*][b]Conditional patches[/b] - Patches apply only when the target mod is detected and the relevant option is enabled
-[*][b]No polling[/b] - No per-frame or sim tick work; logic runs only on paste (Copy Settings) or when the game triggers the patched events
-[/list]
-
-[h2]Future Updates[/h2]
-[list]
-[*]Support for additional mods (suggest your favorites!)
-[*]More building customization options
-[*]Additional configurable values per mod
-[/list]
-
-[h2]Support & Issues[/h2]
-Need help, found a bug, or have a suggestion? We're here to help!
 
 [h3]Community[/h3]
 [list]
@@ -152,10 +103,22 @@ Please mention "ControlledMods" in your issue title or description.
 
 [h2]Version History[/h2]
 [list]
-[*][b]1.5.0[/b]: Free Resource Buildings – Free Energy Generator wattage slider now controls actual power output; Power Sink building added (configurable power consumer for testing)
-[*][b]1.4.0[/b]: Resource Sensor – Storage counting now includes tile-based storage (e.g. Storage Tiles) in both Distance and Room modes
-[*][b]1.3.0[/b]: Restart button on the main menu (above Quit) for quick restarts
-[*][b]1.2.0[/b]: Resource Sensor – sidescreen with Atmosphere/Storage/Conduits scope checkboxes; counting for atmosphere, storage buildings, and conduits with category tag expansion; threshold max raised to 9,999,999 with units stripped; range visualizer clears on deselect; Copy Settings copies scope toggles; ControlledAutomation inversion support
-[*][b]1.1.0[/b]: KIN Underground Conduit – Logic Terminal crash fix, Copy Settings for conduit terminals/senders/receivers
+[*][b]1.13.1[/b]: Added a crash handler and filter for channels
+[*][b]1.12.1[/b]: Fixed Resource Sensor bug; added pause menu restart with auto resume save file facility
+[*][b]1.11.0[/b]: Performance improvements
+[*][b]1.10.2[/b]: More fixes for Duplicant Room Sensor
+[*][b]1.10.1[/b]: Added more Small Element Tags to Signs Tags and Ribbons
+[*][b]1.10.0[/b]: Added support for Signs Tags and Ribbons
+[*][b]1.9.0[/b]: Added support for Darkness Not Excluded (relit)
+[*][b]1.8.1[/b]: Fixed Line of Sight ranging of Duplicant Room Sensor
+[*][b]1.8.0[/b]: Pholith's Duplicant Room Sensor support added
+[*][b]1.7.0[/b]: Added VineBranch max_age compatibility for Customizable Plants mod
+[*][b]1.6.0[/b]: Added colour visualisations to Logic Terminals for logic state
+[*][b]1.5.1[/b]: Fixed kanim loading bug
+[*][b]1.5.0[/b]: Free Resource Buildings support added – PowerBox output slider now functions; Power Sink building added
+[*][b]1.4.0[/b]: Resource Sensor – Storage counting now includes tile-based storage
+[*][b]1.3.0[/b]: Restart button on the main menu for quick restarts
+[*][b]1.2.0[/b]: Resource Sensor support added
+[*][b]1.1.0[/b]: KIN Underground Conduit support added
 [*][b]1.0.0[/b]: Initial release
 [/list]
