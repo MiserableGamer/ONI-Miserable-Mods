@@ -39,6 +39,16 @@ namespace ControlledAssignments.Patches
                 // this tag the UI defaults to room assignment instead of the dupe list.
                 go.AddTag(GameTags.NotRoomAssignable);
             }
+            // ManualExerciser is from our MorningExercise mod — detected by PrefabID
+            // because ExerciseWorkable is not a vanilla type (no hard reference).
+            // If MorningExercise isn't installed, this building never registers and won't match.
+            else if (def.PrefabID == AssignmentConstants.ManualExerciserPrefabId)
+            {
+                var ownable = go.AddOrGet<Ownable>();
+                ownable.slotID = AssignmentConstants.ExerciserSlotId;
+                ownable.canBePublic = true;
+                go.AddTag(GameTags.NotRoomAssignable);
+            }
         }
     }
 }
