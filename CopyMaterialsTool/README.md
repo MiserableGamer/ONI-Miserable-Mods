@@ -31,9 +31,6 @@ A Quality of Life mod for Oxygen Not Included that extends the "Copy Settings" t
 ## Installation
 
 ### Steam Workshop (Recommended)
-Subscribe on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3626072188) and enable in the Mods menu.
-
-### Steam Workshop (Manual Steps)
 1. Subscribe on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3626072188) and enable in the Mods menu
 2. Launch Oxygen Not Included
 3. Enable the mod in the Mods menu
