@@ -53,7 +53,7 @@ namespace ControlledStorage.Patches
 
         private static void Log(string msg)
         {
-            if (ControlledStorageOptions.Instance?.EnableDeliveryControlDebugLogs == true)
+            if (DeliveryControlDebugLogs)
                 Debug.Log("[ControlledStorage.DeliveryControl] " + msg);
         }
 
@@ -73,6 +73,33 @@ namespace ControlledStorage.Patches
             }
         }
 
+        // Upstream chokepoint: dupes call CouldBePickedUpByMinion, sweepers call CouldBePickedUpByTransferArm.
+        // Blocking here covers all FetchChore/FetchAreaChore paths for dupes without affecting sweepers.
+        [HarmonyPatch(typeof(Pickupable), nameof(Pickupable.CouldBePickedUpByMinion), new Type[] { typeof(int) })]
+        public static class Pickupable_CouldBePickedUpByMinion_NoSweep_Patch
+        {
+            internal static bool Prepare() => ControlledStorageOptions.Instance.EnableNoSweepZones;
+
+            internal static void Postfix(Pickupable __instance, ref bool __result)
+            {
+                if (!__result) return;
+                var instance = NoSweepZoneSaveState.Instance;
+                if (instance == null) return;
+
+                if (instance.NoSweep.ContainsCell(__instance.cachedCell))
+                {
+                    __result = false;
+                    return;
+                }
+                if (__instance.transform != null)
+                {
+                    int posCell = Grid.PosToCell(__instance.transform.position);
+                    if (posCell != __instance.cachedCell && Grid.IsValidCell(posCell) && instance.NoSweep.ContainsCell(posCell))
+                        __result = false;
+                }
+            }
+        }
+
         [HarmonyPatch(typeof(FetchManager), "FindFetchTarget", new Type[] { typeof(List<Pickupable>), typeof(Storage), typeof(FetchChore) })]
         public static class FetchManager_FindFetchTarget_Sweeper_Patch
         {
@@ -81,7 +108,7 @@ namespace ControlledStorage.Patches
             internal static void Prefix(List<Pickupable> pickupables, Storage destination)
             {
                 _sweeperContext = true;
-                if (ControlledStorageOptions.Instance?.EnableDeliveryControlDebugLogs != true || destination == null) return;
+                if (!DeliveryControlDebugLogs || destination == null) return;
                 int sameBinCount = 0;
                 if (pickupables != null)
                 {
@@ -155,7 +182,8 @@ namespace ControlledStorage.Patches
         [HarmonyPatch(typeof(FetchManager), "IsFetchablePickup")]
         public static class FetchManager_IsFetchablePickup_Patch
         {
-            internal static bool Prepare() => ControlledStorageOptions.Instance.EnableDeliveryControl;
+            internal static bool Prepare() => ControlledStorageOptions.Instance.EnableDeliveryControl
+                || ControlledStorageOptions.Instance.EnableNoSweepZones;
 
             internal static void Postfix(Pickupable pickup, FetchChore chore, Storage destination, ref bool __result)
             {
@@ -164,10 +192,22 @@ namespace ControlledStorage.Patches
                 if (ControlledStorageOptions.Instance.EnableNoSweepZones)
                 {
                     var instance = NoSweepZoneSaveState.Instance;
-                    if (instance != null && instance.NoSweep.ContainsCell(pickup.cachedCell))
+                    if (instance != null)
                     {
-                        __result = false;
-                        return;
+                        if (instance.NoSweep.ContainsCell(pickup.cachedCell))
+                        {
+                            __result = false;
+                            return;
+                        }
+                        if (pickup.transform != null)
+                        {
+                            int posCell = Grid.PosToCell(pickup.transform.position);
+                            if (posCell != pickup.cachedCell && Grid.IsValidCell(posCell) && instance.NoSweep.ContainsCell(posCell))
+                            {
+                                __result = false;
+                                return;
+                            }
+                        }
                     }
                 }
                 if (destination != null)
@@ -187,6 +227,105 @@ namespace ControlledStorage.Patches
                         __result = false;
                 }
             }
+        }
+
+        // Sensor paths (ClosestEdibleSensor, ClosestPickupableSensor) use IsFetchablePickup_Exclude
+        // which receives KPrefabID, not Pickupable. All callers are dupe-only so no sweeper exemption needed.
+        // Must check Pickupable.cachedCell in addition to transform position — they can differ.
+        [HarmonyPatch(typeof(FetchManager), nameof(FetchManager.IsFetchablePickup_Exclude), new[] {
+            typeof(KPrefabID), typeof(Storage), typeof(float), typeof(HashSet<Tag>), typeof(Tag[]), typeof(Storage)
+        })]
+        public static class FetchManager_IsFetchablePickup_Exclude_NoSweep_Patch
+        {
+            internal static bool Prepare() => ControlledStorageOptions.Instance.EnableNoSweepZones;
+
+            internal static void Postfix(KPrefabID pickup_id, Storage source, ref bool __result)
+            {
+                if (!__result) return;
+                var instance = NoSweepZoneSaveState.Instance;
+                if (instance == null) return;
+
+                if (pickup_id != null)
+                {
+                    var pickupable = pickup_id.GetComponent<Pickupable>();
+                    if (pickupable != null && instance.NoSweep.ContainsCell(pickupable.cachedCell))
+                    {
+                        __result = false;
+                        return;
+                    }
+                    if (pickup_id.transform != null)
+                    {
+                        int posCell = Grid.PosToCell(pickup_id.transform.GetPosition());
+                        if (Grid.IsValidCell(posCell) && instance.NoSweep.ContainsCell(posCell))
+                        {
+                            __result = false;
+                            return;
+                        }
+                    }
+                }
+
+                if (source != null && source.transform != null)
+                {
+                    int sourceCell = Grid.PosToCell(source.transform.GetPosition());
+                    if (Grid.IsValidCell(sourceCell) && instance.NoSweep.ContainsCell(sourceCell))
+                        __result = false;
+                }
+            }
+        }
+
+        // When an item's cell changes, check if it entered or left a No Sweep Zone.
+        // On entry: mark unfetchable (via FetchableMonitor re-eval) + cancel active dupe chores.
+        // On exit: mark fetchable again. Sweepers are unaffected throughout.
+        [HarmonyPatch(typeof(Pickupable), "OnCellChange")]
+        public static class Pickupable_OnCellChange_NoSweep_Patch
+        {
+            internal static bool Prepare() => ControlledStorageOptions.Instance.EnableNoSweepZones;
+
+            internal static void Postfix(Pickupable __instance)
+            {
+                var instance = NoSweepZoneSaveState.Instance;
+                if (instance == null || !instance.NoSweep.HasCells) return;
+
+                int cell = __instance.cachedCell;
+                if (!Grid.IsValidCell(cell)) return;
+
+                bool inZone = instance.NoSweep.ContainsCell(cell);
+                NoSweepZoneChoreInvalidation.UpdatePickupableZoneTracking(__instance, inZone);
+            }
+        }
+
+        // Makes zone items unfetchable in FetchableMonitor, removing them from FetchManager.
+        // Dupes use FetchManager to find targets — removing items eliminates chore oscillation.
+        // Sweepers call CouldBePickedUpByTransferArm which also calls IsFetchable(),
+        // so we skip the zone check when _sweeperContext is set (during SolidTransferArm.AsyncUpdate).
+        [HarmonyPatch(typeof(FetchableMonitor.Instance), "IsFetchable", new Type[0])]
+        public static class FetchableMonitor_IsFetchable_NoSweep_Patch
+        {
+            internal static bool Prepare() => ControlledStorageOptions.Instance.EnableNoSweepZones;
+
+            internal static void Postfix(FetchableMonitor.Instance __instance, ref bool __result)
+            {
+                if (!__result) return;
+                if (_sweeperContext) return;
+                var zone = NoSweepZoneSaveState.Instance;
+                if (zone == null || !zone.NoSweep.HasCells) return;
+                var pickupable = __instance.pickupable;
+                if (pickupable != null && zone.NoSweep.ContainsCell(pickupable.cachedCell))
+                    __result = false;
+            }
+        }
+
+        // Sets _sweeperContext during SolidTransferArm.AsyncUpdate so that IsFetchable checks
+        // (called via CouldBePickedUpByTransferArm in the sweeper's AsyncUpdateVisitor) skip
+        // the No Sweep Zone filter. Without this, sweepers cannot see zone items at all.
+        [HarmonyPatch(typeof(SolidTransferArm), "AsyncUpdate")]
+        public static class SolidTransferArm_AsyncUpdate_SweeperContext_Patch
+        {
+            internal static bool Prepare() => ControlledStorageOptions.Instance.EnableNoSweepZones;
+
+            internal static void Prefix() => _sweeperContext = true;
+
+            internal static void Postfix() => _sweeperContext = false;
         }
 
         // Add deposit precondition at chore creation - chore filtered for dupes/sweepers before assignment, no errand flashing

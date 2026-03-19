@@ -104,7 +104,8 @@ namespace ControlledStorage.NoSweepZone
                 for (int y = y0; y <= y1; y++)
                 {
                     int cell = Grid.XYToCell(x, y);
-                    if (Grid.IsValidCell(cell) && Grid.IsVisible(cell) && Grid.Element[cell].id != SimHashes.Unobtanium)
+                    // Don't use Grid.IsVisible — it excludes fog/unexplored cells, so items there would never be in the zone and would get picked up.
+                    if (Grid.IsValidCell(cell) && Grid.Element[cell].id != SimHashes.Unobtanium)
                     {
                         if (selectedMode == NoSweepZoneMode.Set)
                             state.AddCell(cell);
@@ -113,6 +114,11 @@ namespace ControlledStorage.NoSweepZone
                     }
                 }
             }
+
+            if (selectedMode == NoSweepZoneMode.Set)
+                NoSweepZoneChoreInvalidation.InvalidateFetchChoresInZone();
+
+            NoSweepZoneChoreInvalidation.RefreshFetchabilityInArea(x0, y0, x1, y1);
         }
     }
 }
