@@ -80,8 +80,12 @@ Found a bug or have a feature request? Please report it on GitHub using our issu
 
 Please mention "Morning Exercise" in your issue title or description.
 
-[h2]Mod Collection[/h2]
-This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156]ONI 200+ Ultimate Mods collection[/url] on Steam Workshop, featuring over 200 tested and compatible mods for Oxygen Not Included.
+[h2]My Workshop & Collections[/h2]
+[list]
+[*][url=https://steamcommunity.com/id/miserablegamer/myworkshopfiles/?appid=457140]My Workshop[/url] – All my ONI mods on Steam
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156]ONI 235+ Ultimate Mods collection[/url] – 235+ tested, compatible mods for Oxygen Not Included
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3672308653]The Controlled Series[/url] – Collection of Controlled mods
+[/list]
 
 [h2]Credits[/h2]
 [list]
@@ -91,8 +95,8 @@ This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/
 
 [h2]Version History[/h2]
 [list]
-[*][b]1.0.0[/b]: Initial release
-[*][b]1.0.1[/b]: Dupes now go to relax after exercising or if already buffed
-[*][b]1.0.2[/b]: Code cleaning
 [*][b]1.0.3[/b]: Code cleaning
+[*][b]1.0.2[/b]: Code cleaning
+[*][b]1.0.1[/b]: Dupes now go to relax after exercising or if already buffed
+[*][b]1.0.0[/b]: Initial release
 [/list]

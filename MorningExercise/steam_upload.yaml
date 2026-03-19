@@ -4,7 +4,6 @@ displayName: "Morning Exercise"
 visibility: public
 modType:
   - "new features"
-  - "tweaks"
 dlcCompatibility:
   - "Base Game"
   - "Spaced Out!"
