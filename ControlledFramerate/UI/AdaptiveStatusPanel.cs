@@ -30,7 +30,9 @@ namespace ControlledFramerate.UI
         private TextMeshProUGUI speedValue;
         private TextMeshProUGUI modeValue;
         private TextMeshProUGUI targetFpsValue;
-        private TextMeshProUGUI ceilingValue;
+        private TextMeshProUGUI standardValue;
+        private TextMeshProUGUI mediumValue;
+        private TextMeshProUGUI maxValue;
 
         public static void Create()
         {
@@ -150,7 +152,9 @@ namespace ControlledFramerate.UI
             speedValue = CreateRow("Speed", "—");
             modeValue = CreateRow("Mode", "—");
             targetFpsValue = CreateAdjustableRow("Target", "—", OnTargetFpsMinus, OnTargetFpsPlus);
-            ceilingValue = CreateAdjustableRow("Ceiling", "—", OnCeilingMinus, OnCeilingPlus);
+            standardValue = CreateAdjustableRow("Standard", "—", OnStandardMinus, OnStandardPlus);
+            mediumValue = CreateAdjustableRow("Medium", "—", OnMediumMinus, OnMediumPlus);
+            maxValue = CreateAdjustableRow("Max", "—", OnMaxMinus, OnMaxPlus);
 
             panelGO.SetActive(false);
         }
@@ -295,9 +299,6 @@ namespace ControlledFramerate.UI
 
             float fps = FpsMonitor.IsValid ? FpsMonitor.SmoothedFps : 0f;
             var opts = ControlledFramerateOptions.Instance;
-            int selectedBtn = SpeedControlScreen.Instance.GetSpeed();
-            float ceiling = SpeedStateManager.GetSpeedForButton(selectedBtn);
-
             if (fpsValue != null)
             {
                 fpsValue.text = FpsMonitor.IsValid ? $"{fps:F0}" : "...";
@@ -330,8 +331,14 @@ namespace ControlledFramerate.UI
                     targetFpsValue.color = new Color(0.75f, 0.75f, 0.75f);
             }
 
-            if (ceilingValue != null)
-                ceilingValue.text = $"{ceiling:F1}x";
+            if (standardValue != null)
+                standardValue.text = $"{opts.SlowSpeed:F1}x";
+
+            if (mediumValue != null)
+                mediumValue.text = $"{opts.MediumSpeed:F1}x";
+
+            if (maxValue != null)
+                maxValue.text = $"{opts.FastSpeed:F1}x";
         }
 
         private TextMeshProUGUI CreateRow(string label, string initialValue)
@@ -507,28 +514,75 @@ namespace ControlledFramerate.UI
             TopBarButtons.UpdateSpeedTooltips();
         }
 
-        private void OnCeilingMinus()
+        private void OnStandardMinus()
+        {
+            AdjustSpeedSettings(0, -0.5f);
+        }
+
+        private void OnStandardPlus()
+        {
+            AdjustSpeedSettings(0, +0.5f);
+        }
+
+        private void OnMediumMinus()
+        {
+            AdjustSpeedSettings(1, -0.5f);
+        }
+
+        private void OnMediumPlus()
+        {
+            AdjustSpeedSettings(1, +0.5f);
+        }
+
+        private void OnMaxMinus()
+        {
+            AdjustSpeedSettings(2, -0.5f);
+        }
+
+        private void OnMaxPlus()
+        {
+            AdjustSpeedSettings(2, +0.5f);
+        }
+
+        private void AdjustSpeedSettings(int levelIndex, float delta)
         {
             var opts = ControlledFramerateOptions.Instance;
-            int selectedBtn = SpeedControlScreen.Instance != null ? SpeedControlScreen.Instance.GetSpeed() : 2;
-            float current = SpeedStateManager.GetSpeedForButton(selectedBtn);
-            float newVal = Mathf.Max(1f, current - 0.5f);
-            SetSpeedForButton(selectedBtn, newVal);
+            float slow = opts.SlowSpeed;
+            float medium = opts.MediumSpeed;
+            float fast = opts.FastSpeed;
+
+            switch (levelIndex)
+            {
+                case 0:
+                    slow = ClampSpeed(slow + delta);
+                    if (medium < slow) medium = slow;
+                    if (fast < medium) fast = medium;
+                    break;
+                case 1:
+                    medium = ClampSpeed(medium + delta);
+                    if (medium < slow) medium = slow;
+                    if (fast < medium) fast = medium;
+                    break;
+                case 2:
+                    fast = ClampSpeed(fast + delta);
+                    if (fast < medium) fast = medium;
+                    break;
+                default:
+                    return;
+            }
+
+            SetSpeedForButton(0, slow);
+            SetSpeedForButton(1, medium);
+            SetSpeedForButton(2, fast);
             ControlledFramerateOptions.Save();
-            ControlledFramerateMod.Log($"[FramerateMonitor] Ceiling (button {selectedBtn}) decreased to {newVal:F1}x");
+            ControlledFramerateMod.Log(
+                $"[FramerateMonitor] Speeds updated (S/M/X): {slow:F1}x / {medium:F1}x / {fast:F1}x");
             TopBarButtons.UpdateSpeedTooltips();
         }
 
-        private void OnCeilingPlus()
+        private static float ClampSpeed(float speed)
         {
-            var opts = ControlledFramerateOptions.Instance;
-            int selectedBtn = SpeedControlScreen.Instance != null ? SpeedControlScreen.Instance.GetSpeed() : 2;
-            float current = SpeedStateManager.GetSpeedForButton(selectedBtn);
-            float newVal = Mathf.Min(20f, current + 0.5f);
-            SetSpeedForButton(selectedBtn, newVal);
-            ControlledFramerateOptions.Save();
-            ControlledFramerateMod.Log($"[FramerateMonitor] Ceiling (button {selectedBtn}) increased to {newVal:F1}x");
-            TopBarButtons.UpdateSpeedTooltips();
+            return Mathf.Clamp(speed, 0.5f, 20f);
         }
 
         private static void SetSpeedForButton(int buttonIndex, float speed)

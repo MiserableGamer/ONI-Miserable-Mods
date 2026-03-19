@@ -8,7 +8,7 @@ Adaptive game speed that automatically adjusts to maintain your target FPS. Run 
 [*] [b]Built-in Benchmark[/b] - Automated benchmark tests speeds from your configured maximum down to 1x, measuring FPS at each step to find the fastest sustainable speed for your colony
 [*] [b]Per-Save Profiles[/b] - Benchmark results and speed settings are stored per save, so each colony gets its own optimal speeds
 [*] [b]Custom Speed Buttons[/b] - Overrides the game's three speed buttons (Slow/Medium/Fast) with your benchmarked or manually configured speeds
-[*] [b]Live Speed Monitor[/b] - Collapsible side panel showing real-time FPS, current speed, mode, target FPS, and speed ceiling with inline adjustment buttons
+[*] [b]Live Speed Monitor[/b] - Collapsible side panel showing real-time FPS, current speed, mode, target FPS, and Standard/Medium/Max speed controls with inline adjustment buttons
 [*] [b]Adaptive Mode Persistence[/b] - Remembers whether Adaptive mode was enabled and restores it automatically when you reload a save
 [*] [b]Mod Compatibility[/b] - Detects other speed-modifying mods and adjusts behaviour to avoid conflicts
 [/list]
@@ -18,7 +18,7 @@ Adaptive game speed that automatically adjusts to maintain your target FPS. Run 
 [*] [b]Run a Benchmark[/b] - Click the benchmark button in the top bar to open the configuration screen. Set your target FPS, maximum speed to test, step size, and acceptable threshold, then click Start
 [*] [b]Review Results[/b] - After the benchmark completes, review the results showing your max sustainable speed, proposed speed button values, and FPS statistics. Accept to apply or discard to keep current settings
 [*] [b]Enable Adaptive Mode[/b] - Click the adaptive mode button in the top bar to toggle automatic speed adjustment. The game will continuously adjust speed to stay near your target FPS
-[*] [b]Fine-tune Settings[/b] - Use the +/- buttons on the Speed Monitor panel to adjust your target FPS and speed ceiling on the fly without re-running the benchmark
+[*] [b]Fine-tune Settings[/b] - Use the +/- buttons on the Speed Monitor panel to adjust your target FPS and Standard/Medium/Max speed levels on the fly without re-running the benchmark
 [/olist]
 
 [h3]Tips[/h3]
@@ -110,6 +110,7 @@ Please mention "Controlled Framerate" in your issue title or description.
 
 [h2]Version History[/h2]
 [list]
+[*] [b]1.2.0[/b]: Added more specific speed controls to the Speed Monitor
 [*] [b]1.1.0[/b]: Reworked the menu buttons; Monitor now available in fixed or adaptive modes
 [*] [b]1.0.0[/b]: Initial release — adaptive speed control, benchmark tool, per-save profiles, live speed monitor
 [/list]
