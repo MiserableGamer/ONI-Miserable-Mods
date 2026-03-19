@@ -118,8 +118,6 @@ Found a bug or have a feature request? Please report it on GitHub using our issu
 [*][b]Other Issues[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=other.yml]Other Issue[/url] - Something else that doesn't fit the above categories
 [/list]
 
-Please mention "Controlled Storage" in your issue title or description.
-
 [h2]My Workshop & Collections[/h2]
 [list]
 [*][url=https://steamcommunity.com/id/miserablegamer/myworkshopfiles/?appid=457140]My Workshop[/url] – All my ONI mods on Steam
@@ -136,11 +134,11 @@ Please mention "Controlled Storage" in your issue title or description.
 
 [h2]Version History[/h2]
 [list]
-[*][b]1.0.0[/b]: Initial release
-[*][b]1.0.1[/b]: Bugfix for Copy errors
-[*][b]1.0.2[/b]: Bugfix for Sweeper Loop error
-[*][b]1.0.3[/b]: Removed duplicate overlay icon
-[*][b]1.0.4[/b]: Applied Delivery Control to Loaders with option
-[*][b]1.0.5[/b]: Improved No Sweep Zones to cover edibles on a different chore path
 [*][b]1.1.0[/b]: Improved No Sweep Zones code
+[*][b]1.0.5[/b]: Improved No Sweep Zones to cover edibles on a different chore path
+[*][b]1.0.4[/b]: Applied Delivery Control to Loaders with option
+[*][b]1.0.3[/b]: Removed duplicate overlay icon
+[*][b]1.0.2[/b]: Bugfix for Sweeper Loop error
+[*][b]1.0.1[/b]: Bugfix for Copy errors
+[*][b]1.0.0[/b]: Initial release
 [/list]
