@@ -147,15 +147,7 @@ Need help, found a bug, or have a suggestion? We're here to help!
 [/list]
 
 [h3]Reporting Issues[/h3]
-Found a bug or have a feature request? Please report it on GitHub using our issue templates:
-[list]
-[*][b]Bug Reports[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=bug_report.yml]Report a Bug[/url] - Use this for crashes, errors, or unexpected behavior
-[*][b]Feature Requests[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=feature_request.yml]Suggest a Feature[/url] - Have an idea for a new feature or improvement?
-[*][b]Questions[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=question.yml]Ask a Question[/url] - Need help understanding how something works?
-[*][b]Other Issues[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=other.yml]Other Issue[/url] - Something else that doesn't fit the above categories
-[/list]
-
-Please mention "Controlled Extraction" in your issue title or description.
+Use [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues]GitHub Issues[/url] (templates: bug, feature, question). Mention [b]Controlled Extraction[/b] in the title.
 
 [h2]My Workshop & Collections[/h2]
 [list]
