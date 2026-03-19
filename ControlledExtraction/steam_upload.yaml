@@ -1,6 +1,11 @@
 ﻿# Steam upload metadata for GUI/script automation
 publishedFileId: 3648996222
-displayName: "ControlledExtraction"
+displayName: "Controlled Extraction"
 visibility: public
 modType:
+  - "tweaks"
 dlcCompatibility:
+  - "Base Game"
+  - "Spaced Out!"
+  - "The Frosty Planet Pack"
+  - "The Bionic Booster Pack"
