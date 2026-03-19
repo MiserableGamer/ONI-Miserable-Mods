@@ -53,7 +53,7 @@ namespace ControlledStorage.Patches
 
         private static void Log(string msg)
         {
-            if (ControlledStorageOptions.Instance?.EnableDeliveryControlDebugLogs == true)
+            if (DeliveryControlDebugLogs)
                 Debug.Log("[ControlledStorage.DeliveryControl] " + msg);
         }
 
@@ -73,6 +73,33 @@ namespace ControlledStorage.Patches
             }
         }
 
+        // Upstream chokepoint: dupes call CouldBePickedUpByMinion, sweepers call CouldBePickedUpByTransferArm.
+        // Blocking here covers all FetchChore/FetchAreaChore paths for dupes without affecting sweepers.
+        [HarmonyPatch(typeof(Pickupable), nameof(Pickupable.CouldBePickedUpByMinion), new Type[] { typeof(int) })]
+        public static class Pickupable_CouldBePickedUpByMinion_NoSweep_Patch
+        {
+            internal static bool Prepare() => ControlledStorageOptions.Instance.EnableNoSweepZones;
+
+            internal static void Postfix(Pickupable __instance, ref bool __result)
+            {
+                if (!__result) return;
+                var instance = NoSweepZoneSaveState.Instance;
+                if (instance == null) return;
+
+                if (instance.NoSweep.ContainsCell(__instance.cachedCell))
+                {
+                    __result = false;
+                    return;
+                }
+                if (__instance.transform != null)
+                {
+                    int posCell = Grid.PosToCell(__instance.transform.position);
+                    if (posCell != __instance.cachedCell && Grid.IsValidCell(posCell) && instance.NoSweep.ContainsCell(posCell))
+                        __result = false;
+                }
+            }
+        }
+
         [HarmonyPatch(typeof(FetchManager), "FindFetchTarget", new Type[] { typeof(List<Pickupable>), typeof(Storage), typeof(FetchChore) })]
         public static class FetchManager_FindFetchTarget_Sweeper_Patch
         {
@@ -81,7 +108,7 @@ namespace ControlledStorage.Patches
             internal static void Prefix(List<Pickupable> pickupables, Storage destination)
             {
                 _sweeperContext = true;
-                if (ControlledStorageOptions.Instance?.EnableDeliveryControlDebugLogs != true || destination == null) return;
+                if (!DeliveryControlDebugLogs || destination == null) return;
                 int sameBinCount = 0;
                 if (pickupables != null)
                 {
@@ -165,7 +192,7 @@ namespace ControlledStorage.Patches
                 if (ControlledStorageOptions.Instance.EnableNoSweepZones)
                 {
                     var instance = NoSweepZoneSaveState.Instance;
-                    if (instance != null && instance.NoSweep.ContainsCell(pickup.cachedCell))
+                    if (instance != null)
                     {
                         if (instance.NoSweep.ContainsCell(pickup.cachedCell))
                         {
@@ -198,6 +225,43 @@ namespace ControlledStorage.Patches
                     var component2 = sourceStorage.GetComponent<StorageDeliveryControl>();
                     if (component2 != null && !component2.AllowDupeExtract)
                         __result = false;
+                }
+            }
+        }
+
+        // Sensor paths (ClosestEdibleSensor, ClosestPickupableSensor) use IsFetchablePickup_Exclude
+        // which receives KPrefabID, not Pickupable. All callers are dupe-only so no sweeper exemption needed.
+        // Must check Pickupable.cachedCell in addition to transform position — they can differ.
+        [HarmonyPatch(typeof(FetchManager), nameof(FetchManager.IsFetchablePickup_Exclude), new[] {
+            typeof(KPrefabID), typeof(Storage), typeof(float), typeof(HashSet<Tag>), typeof(Tag[]), typeof(Storage)
+        })]
+        public static class FetchManager_IsFetchablePickup_Exclude_NoSweep_Patch
+        {
+            internal static bool Prepare() => ControlledStorageOptions.Instance.EnableNoSweepZones;
+
+            internal static void Postfix(KPrefabID pickup_id, Storage source, ref bool __result)
+            {
+                if (!__result) return;
+                var instance = NoSweepZoneSaveState.Instance;
+                if (instance == null) return;
+
+                if (pickup_id != null)
+                {
+                    var pickupable = pickup_id.GetComponent<Pickupable>();
+                    if (pickupable != null && instance.NoSweep.ContainsCell(pickupable.cachedCell))
+                    {
+                        __result = false;
+                        return;
+                    }
+                    if (pickup_id.transform != null)
+                    {
+                        int posCell = Grid.PosToCell(pickup_id.transform.GetPosition());
+                        if (Grid.IsValidCell(posCell) && instance.NoSweep.ContainsCell(posCell))
+                        {
+                            __result = false;
+                            return;
+                        }
+                    }
                 }
 
                 if (source != null && source.transform != null)
@@ -262,34 +326,6 @@ namespace ControlledStorage.Patches
             internal static void Prefix() => _sweeperContext = true;
 
             internal static void Postfix() => _sweeperContext = false;
-        }
-
-        // Add deposit precondition at chore creation - chore filtered for dupes/sweepers before assignment, no errand flashing
-        // Use TargetMethod to find the FetchChore(..., Storage destination, ...) constructor - signatures vary by game version
-        [HarmonyPatch(typeof(FetchChore))]
-        public static class FetchChore_Constructor_Patch
-        {
-            internal static bool Prepare() => ControlledStorageOptions.Instance.EnableDeliveryControl;
-
-            internal static MethodBase TargetMethod()
-            {
-                foreach (var ctor in typeof(FetchChore).GetConstructors())
-                {
-                    var ps = ctor.GetParameters();
-                    if (ps.Length >= 2 && ps[1].ParameterType == typeof(Storage))
-                        return ctor;
-                }
-                return null;
-            }
-
-            internal static void Postfix(FetchChore __instance)
-            {
-                var dest = __instance.destination;
-                if (dest == null) return;
-                var control = dest.GetComponent<StorageDeliveryControl>();
-                if (control != null)
-                    __instance.AddPrecondition(DeliveryControlDepositPrecondition, control);
-            }
         }
 
         // Add deposit precondition at chore creation - chore filtered for dupes/sweepers before assignment, no errand flashing
