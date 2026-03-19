@@ -70,7 +70,7 @@ Complete control over element sublimation and off-gassing, with separate setting
 ### 📦 Controlled Storage
 Unified storage control: empty storage button, filtering options, capacity control, per-building delivery permissions (dupes and sweepers), and No-Sweep Zones. Copy delivery settings between buildings of the same type.
 
-[📖 Read More](ControlledStorage/README.md) | [Latest Release v1.0.5](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledStorage-v1.0.5)
+[📖 Read More](ControlledStorage/README.md) | [Latest Release v1.1.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledStorage-v1.1.0)
 
 ### 🎬 Controlled Visuals
 Fixes a vanilla bug where items on conveyor rails sometimes render in front of drywall. Conveyor contents now always draw behind walls, tiles, and other buildings as intended.
