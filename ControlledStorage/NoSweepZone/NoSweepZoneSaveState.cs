@@ -41,7 +41,16 @@ namespace ControlledStorage.NoSweepZone
             {
                 _inZonePickupables.Remove(pickupable);
             }
-            pickupable.Trigger((int)GameHashes.TagsChanged, null);
+            // TagsChanged must use Boxed<TagChangedEventData> (not null). Do not use Tag.Invalid:
+            // GameUtil.CreateHasTagHandler rebuilds from Tag.Invalid via component.GetComponent<KPrefabID>(),
+            // which NREs when that returns null on some subscribers.
+            // Use this prefab's tag with added=false so CreateHasTagHandler never runs callbacks
+            // (they require value.added) but FetchableMonitor still re-evaluates IsFetchable.
+            var kp = pickupable.KPrefabID;
+            if (kp == null) return;
+            var boxed = Boxed<TagChangedEventData>.Get(new TagChangedEventData(kp.PrefabTag, false));
+            pickupable.Trigger((int)GameHashes.TagsChanged, boxed);
+            Boxed<TagChangedEventData>.Release(boxed);
         }
 
         /// <summary>
