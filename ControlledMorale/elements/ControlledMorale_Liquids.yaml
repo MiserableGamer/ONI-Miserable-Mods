@@ -1,0 +1,94 @@
+---
+elements:
+  - elementId: ControlledMoraleBeer
+    maxMass: 1000
+    liquidCompression: 1.01
+    speed: 125
+    minHorizontalFlow: 0.1
+    minVerticalFlow: 0.1
+    specificHeatCapacity: 2.400
+    thermalConductivity: 0.6
+    solidSurfaceAreaMultiplier: 1
+    liquidSurfaceAreaMultiplier: 25
+    gasSurfaceAreaMultiplier: 1
+    lowTemp: 250.15
+    highTemp: 400.15
+    lowTempTransitionTarget: Ice
+    highTempTransitionTarget: Steam
+    defaultTemperature: 293.15
+    defaultMass: 1000
+    molarMass: 20
+    toxicity: 0
+    lightAbsorptionFactor: 0.25
+    radiationAbsorptionFactor: 0.15
+    radiationPer1000Mass: 0
+    materialCategory: Liquid
+    tags:
+      - Mixture
+    isDisabled: false
+    state: Liquid
+    localizationID: STRINGS.ELEMENTS.CONTROLLEDMORALE.BEER.NAME
+    description: STRINGS.ELEMENTS.CONTROLLEDMORALE.BEER.DESC
+    dlcId: ""
+
+  - elementId: ControlledMoraleWine
+    maxMass: 1000
+    liquidCompression: 1.01
+    speed: 125
+    minHorizontalFlow: 0.1
+    minVerticalFlow: 0.1
+    specificHeatCapacity: 2.600
+    thermalConductivity: 0.55
+    solidSurfaceAreaMultiplier: 1
+    liquidSurfaceAreaMultiplier: 25
+    gasSurfaceAreaMultiplier: 1
+    lowTemp: 250.15
+    highTemp: 400.15
+    lowTempTransitionTarget: Ice
+    highTempTransitionTarget: Steam
+    defaultTemperature: 293.15
+    defaultMass: 1000
+    molarMass: 22
+    toxicity: 0
+    lightAbsorptionFactor: 0.2
+    radiationAbsorptionFactor: 0.15
+    radiationPer1000Mass: 0
+    materialCategory: Liquid
+    tags:
+      - Mixture
+    isDisabled: false
+    state: Liquid
+    localizationID: STRINGS.ELEMENTS.CONTROLLEDMORALE.WINE.NAME
+    description: STRINGS.ELEMENTS.CONTROLLEDMORALE.WINE.DESC
+    dlcId: ""
+
+  - elementId: ControlledMoraleSpirits
+    maxMass: 1000
+    liquidCompression: 1.01
+    speed: 125
+    minHorizontalFlow: 0.1
+    minVerticalFlow: 0.1
+    specificHeatCapacity: 2.200
+    thermalConductivity: 0.5
+    solidSurfaceAreaMultiplier: 1
+    liquidSurfaceAreaMultiplier: 25
+    gasSurfaceAreaMultiplier: 1
+    lowTemp: 250.15
+    highTemp: 400.15
+    lowTempTransitionTarget: Ice
+    highTempTransitionTarget: Steam
+    defaultTemperature: 293.15
+    defaultMass: 1000
+    molarMass: 24
+    toxicity: 0
+    lightAbsorptionFactor: 0.15
+    radiationAbsorptionFactor: 0.12
+    radiationPer1000Mass: 0
+    materialCategory: Liquid
+    tags:
+      - Mixture
+    isDisabled: false
+    state: Liquid
+    localizationID: STRINGS.ELEMENTS.CONTROLLEDMORALE.SPIRITS.NAME
+    description: STRINGS.ELEMENTS.CONTROLLEDMORALE.SPIRITS.DESC
+    dlcId: ""

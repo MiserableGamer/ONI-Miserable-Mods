@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>ControlledMorale</AssemblyName>
+    <RootNamespace>ControlledMorale</RootNamespace>
+  </PropertyGroup>
+</Project>
