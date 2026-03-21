@@ -23,4 +23,6 @@
 
 
   <Project Path="ControlledFramerate/ControlledFramerate.csproj" Id="c2f8d10a-993a-4c06-a54b-c3666a9a2b75" />
+
+  <Project Path="ControlledMorale/ControlledMorale.csproj" Id="f7d9b784-d646-42db-b3b0-436cca3d32e9" />
 </Solution>
