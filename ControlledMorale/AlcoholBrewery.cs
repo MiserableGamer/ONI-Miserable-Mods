@@ -219,6 +219,7 @@ namespace ControlledMorale
             private const string AnimWorkingLoop = "working";
             private const string AnimWorkingPost = "working_post";
 
+#pragma warning disable CS0649 // State fields wired by GameStateMachine when building the graph
             public State nonoperational;
             public OperationalStates operational;
 
@@ -231,6 +232,7 @@ namespace ControlledMorale
                 public State working_post;
                 public State output_waiting;
             }
+#pragma warning restore CS0649
 
             public override void InitializeStates(out BaseState default_state)
             {
