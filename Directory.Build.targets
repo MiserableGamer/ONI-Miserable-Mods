@@ -31,6 +31,17 @@
     <Exec Command="powershell -ExecutionPolicy Bypass -File &quot;$(ScriptsRoot)sync-version.ps1&quot; -ProjectName &quot;$(MSBuildProjectName)&quot; -ProjectDir &quot;$(MSBuildProjectDirectory)&quot; -SolutionDir &quot;$(MSBuildThisFileDirectory.TrimEnd('\'))&quot;" ContinueOnError="true" IgnoreExitCode="true" />
   </Target>
 
+  <!-- After Build: copy elements/ and anim/ into $(TargetDir). SDK Content globs from props are unreliable for these; Workshop/Release must match local deploy. -->
+  <Target Name="CopyModAssetsToOutput" AfterTargets="Build" BeforeTargets="ILRepackMerge" Condition="'$(MSBuildProjectName)' != 'SteamWorkshopUploader' and '$(MSBuildProjectName)' != 'MiserableUtils'">
+    <ItemGroup>
+      <_AnimForOutput Include="$(MSBuildProjectDirectory)\anim\**\*.*" Condition="Exists('$(MSBuildProjectDirectory)\anim')" />
+      <_ElementsForOutput Include="$(MSBuildProjectDirectory)\elements\**\*.*" Condition="Exists('$(MSBuildProjectDirectory)\elements')" />
+    </ItemGroup>
+    <Copy SourceFiles="@(_AnimForOutput)" DestinationFolder="$(TargetDir)anim\%(RecursiveDir)" SkipUnchangedFiles="true" Condition="'@(_AnimForOutput)' != ''" />
+    <Copy SourceFiles="@(_ElementsForOutput)" DestinationFolder="$(TargetDir)elements\%(RecursiveDir)" SkipUnchangedFiles="true" Condition="'@(_ElementsForOutput)' != ''" />
+    <Message Text="[Build] Copied elements/anim to $(TargetDir)" Importance="high" Condition="'@(_ElementsForOutput)' != '' or '@(_AnimForOutput)' != ''" />
+  </Target>
+
   <!-- Post-build: ILRepack to merge PLib and MiserableUtils into main DLL.
     We output directly to $(TargetPath) using a copy of the primary so the merged assembly
     keeps AssemblyName (e.g. "ControlledMods"). PLib uses GetName().Name for the mod identity
