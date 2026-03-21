@@ -16,18 +16,18 @@ namespace ControlledMorale
             if (beer == null || wine == null || spirits == null)
                 return;
 
-            registered = true;
             Tag beerTag = beer.tag;
             Tag wineTag = wine.tag;
             Tag spiritsTag = spirits.tag;
             Tag waterTag = SimHashes.Water.CreateTag();
             Tag ethanolTag = ElementLoader.FindElementByHash(SimHashes.Ethanol).tag;
             Tag sucroseTag = ElementLoader.FindElementByHash(SimHashes.Sucrose).tag;
-            Tag fabricatorTag = TagManager.Create(AlcoholBreweryConfig.ID);
+            // Match vanilla fabricator lists (e.g. MicrobeMusher, MilkPress) — same Tag as building PrefabTag.
+            var fabricators = new List<Tag> { AlcoholBreweryConfig.ID };
 
             ComplexRecipe.RecipeElement[] beerIn =
             {
-                new ComplexRecipe.RecipeElement("ColdWheatSeed".ToTag(), 2f),
+                new ComplexRecipe.RecipeElement("ColdWheatSeed", 2f),
                 new ComplexRecipe.RecipeElement(sucroseTag, 1f),
                 new ComplexRecipe.RecipeElement(waterTag, 15f),
                 new ComplexRecipe.RecipeElement(ethanolTag, 3f)
@@ -36,7 +36,7 @@ namespace ControlledMorale
             {
                 new ComplexRecipe.RecipeElement(beerTag, 10f, ComplexRecipe.RecipeElement.TemperatureOperation.Melted, false)
             };
-            var beerRecipe = new ComplexRecipe(
+            _ = new ComplexRecipe(
                     ComplexRecipeManager.MakeRecipeID(AlcoholBreweryConfig.ID, beerIn, beerOut),
                     beerIn,
                     beerOut)
@@ -44,7 +44,7 @@ namespace ControlledMorale
                 time = 80f,
                 description = "Ferment sleet wheat into draft beer for the Water Cooler.",
                 nameDisplay = ComplexRecipe.RecipeNameDisplay.Result,
-                fabricators = new List<Tag> { fabricatorTag },
+                fabricators = fabricators,
                 sortOrder = 1
             };
 
@@ -64,7 +64,7 @@ namespace ControlledMorale
             {
                 new ComplexRecipe.RecipeElement(wineTag, 10f, ComplexRecipe.RecipeElement.TemperatureOperation.Melted, false)
             };
-            var wineRecipe = new ComplexRecipe(
+            _ = new ComplexRecipe(
                     ComplexRecipeManager.MakeRecipeID(AlcoholBreweryConfig.ID, wineIn, wineOut),
                     wineIn,
                     wineOut)
@@ -74,13 +74,13 @@ namespace ControlledMorale
                     ? "Ferment ovagro figs into wine for the Water Cooler."
                     : "Ferment bristle berries into wine for the Water Cooler.",
                 nameDisplay = ComplexRecipe.RecipeNameDisplay.Result,
-                fabricators = new List<Tag> { fabricatorTag },
+                fabricators = fabricators,
                 sortOrder = 2
             };
 
             ComplexRecipe.RecipeElement[] spiritsIn =
             {
-                new ComplexRecipe.RecipeElement("BeanPlantSeed".ToTag(), 2f),
+                new ComplexRecipe.RecipeElement("BeanPlantSeed", 2f),
                 new ComplexRecipe.RecipeElement(sucroseTag, 1f),
                 new ComplexRecipe.RecipeElement(waterTag, 12f),
                 new ComplexRecipe.RecipeElement(ethanolTag, 18f)
@@ -89,7 +89,7 @@ namespace ControlledMorale
             {
                 new ComplexRecipe.RecipeElement(spiritsTag, 10f, ComplexRecipe.RecipeElement.TemperatureOperation.Melted, false)
             };
-            var spiritsRecipe = new ComplexRecipe(
+            _ = new ComplexRecipe(
                     ComplexRecipeManager.MakeRecipeID(AlcoholBreweryConfig.ID, spiritsIn, spiritsOut),
                     spiritsIn,
                     spiritsOut)
@@ -97,9 +97,12 @@ namespace ControlledMorale
                 time = 130f,
                 description = "Distill nosh beans into spirits for the Water Cooler.",
                 nameDisplay = ComplexRecipe.RecipeNameDisplay.Result,
-                fabricators = new List<Tag> { fabricatorTag },
+                fabricators = fabricators,
                 sortOrder = 3
             };
+
+            // Only after constructors ran: ComplexRecipe adds to preProcessRecipes; PostProcess will promote to recipes.
+            registered = true;
         }
     }
 }
