@@ -65,6 +65,9 @@
     <Content Include="mod.yaml" CopyToOutputDirectory="Always" Condition="Exists('$(MSBuildProjectDirectory)\mod.yaml')" />
     <Content Include="mod_info.yaml" CopyToOutputDirectory="Always" Condition="Exists('$(MSBuildProjectDirectory)\mod_info.yaml')" />
     <Content Include="preview.png" CopyToOutputDirectory="PreserveNewest" Condition="Exists('$(MSBuildProjectDirectory)\preview.png')" />
+    <!-- YAML elements and kanim assets are required at runtime; dev-only deploy used to copy these — include in Release so Workshop zips from bin\ are complete. -->
+    <Content Include="elements\**\*.*" CopyToOutputDirectory="PreserveNewest" Condition="Exists('$(MSBuildProjectDirectory)\elements')" />
+    <Content Include="anim\**\*.*" CopyToOutputDirectory="PreserveNewest" Condition="Exists('$(MSBuildProjectDirectory)\anim')" />
   </ItemGroup>
 
 </Project>
