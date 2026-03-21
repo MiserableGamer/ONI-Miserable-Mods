@@ -35,7 +35,9 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" PrivateAssets="all" />
     <PackageReference Include="PLib" Version="4.19.0" PrivateAssets="all" />
   </ItemGroup>
-  <ItemGroup Condition="'$(UsingMicrosoftNETSdk)' == 'true' and '$(MSBuildRuntimeType)' != 'Core' and '$(MSBuildProjectName)' != 'SteamWorkshopUploader'">
+  <!-- Must run on Core MSBuild too (`dotnet build`); otherwise Publicize="true" is ignored and
+       overrides see protected base members while the IDE (Full MSBuild) publicizes → CS0507 mismatch. -->
+  <ItemGroup Condition="'$(UsingMicrosoftNETSdk)' == 'true' and '$(MSBuildProjectName)' != 'SteamWorkshopUploader'">
     <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2" PrivateAssets="all" />
   </ItemGroup>
 

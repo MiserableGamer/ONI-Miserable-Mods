@@ -72,6 +72,10 @@
       <AnimFiles Include="$(MSBuildProjectDirectory)\anim\**\*.*" Condition="Exists('$(MSBuildProjectDirectory)\anim')" />
     </ItemGroup>
     <Copy SourceFiles="@(AnimFiles)" DestinationFolder="$(LocalModFolder)anim\%(RecursiveDir)" Condition="'@(AnimFiles)' != ''" />
+    <ItemGroup>
+      <ModElementFiles Include="$(MSBuildProjectDirectory)\elements\**\*.*" Condition="Exists('$(MSBuildProjectDirectory)\elements')" />
+    </ItemGroup>
+    <Copy SourceFiles="@(ModElementFiles)" DestinationFolder="$(LocalModFolder)elements\%(RecursiveDir)" Condition="'@(ModElementFiles)' != ''" />
     
     <!-- Cleanup: Remove stray merged DLLs if they got copied -->
     <Delete Files="$(LocalModFolder)PLib.dll" Condition="Exists('$(LocalModFolder)PLib.dll')" />
