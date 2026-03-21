@@ -65,6 +65,10 @@ Mention **Controlled Morale** in the title when reporting on [GitHub Issues](htt
 
 ## Version History
 
+### 1.0.1
+
+- Release crash fix
+
 ### 1.0.0
 
 - Initial release

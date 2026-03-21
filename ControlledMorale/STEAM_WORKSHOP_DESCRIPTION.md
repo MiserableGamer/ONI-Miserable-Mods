@@ -59,5 +59,6 @@ Brew [b]beer[/b], [b]wine[/b], and [b]spirits[/b] from water, ethanol, sucrose, 
 
 [h2]Version History[/h2]
 [list]
+[*][b]1.0.1[/b]: Release crash fix
 [*][b]1.0.0[/b]: Initial release
 [/list]
