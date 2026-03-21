@@ -8,8 +8,7 @@
     <!-- Local mods folder for testing -->
     <LocalModsRoot>C:\Users\leomo\Documents\Klei\OxygenNotIncluded\mods\local\</LocalModsRoot>
     <LocalModFolder>$(LocalModsRoot)$(MSBuildProjectName)\</LocalModFolder>
-    <!-- Repo-root staging for Steam / zips (see .gitignore: release/*/ ignored, release/*.zip tracked) -->
-    <ReleaseModFolder>$(MSBuildThisFileDirectory)release\$(MSBuildProjectName)\</ReleaseModFolder>
+    <!-- ReleaseModFolder: set in Directory.Build.props (default) or override in .csproj — do not set here (targets run after csproj). -->
     <!-- Build/version scripts live outside the repo -->
     <ScriptsRoot>D:\mcp\oni-serena\scripts\</ScriptsRoot>
   </PropertyGroup>
@@ -64,7 +63,7 @@
     <Delete Files="@(MergeDll)" Condition="Exists('%(FullPath)')" />
   </Target>
 
-  <!-- Release: mirror mod folder to repo release/<ProjectName>/ for Steam uploader & zips (same payload as local deploy: DLL, yaml, preview, anim, elements). -->
+  <!-- Release: mirror mod folder to repo release/.../ for Steam uploader & zips. elements/anim use robocopy (MSBuild globs are unreliable for ** on some hosts). -->
   <Target Name="StageModInReleaseFolder" AfterTargets="ILRepackMerge" Condition="'$(Configuration)' == 'Release' and '$(MSBuildProjectName)' != 'SteamWorkshopUploader' and '$(MSBuildProjectName)' != 'MiserableUtils'">
     <Message Text="[Build] Staging release folder for Steam: $(ReleaseModFolder)" Importance="high" />
     <RemoveDir Directories="$(ReleaseModFolder)" Condition="Exists('$(ReleaseModFolder)')" />
@@ -74,12 +73,9 @@
     <Copy SourceFiles="$(MSBuildProjectDirectory)\mod_info.yaml" DestinationFolder="$(ReleaseModFolder)" Condition="Exists('$(MSBuildProjectDirectory)\mod_info.yaml')" />
     <Copy SourceFiles="$(MSBuildProjectDirectory)\preview.png" DestinationFolder="$(ReleaseModFolder)" Condition="Exists('$(MSBuildProjectDirectory)\preview.png')" />
     <Copy SourceFiles="$(MSBuildProjectDirectory)\preview.jpg" DestinationFolder="$(ReleaseModFolder)" Condition="Exists('$(MSBuildProjectDirectory)\preview.jpg')" />
-    <ItemGroup>
-      <_ReleaseAnim Include="$(MSBuildProjectDirectory)\anim\**\*.*" Condition="Exists('$(MSBuildProjectDirectory)\anim')" />
-      <_ReleaseElements Include="$(MSBuildProjectDirectory)\elements\**\*.*" Condition="Exists('$(MSBuildProjectDirectory)\elements')" />
-    </ItemGroup>
-    <Copy SourceFiles="@(_ReleaseAnim)" DestinationFolder="$(ReleaseModFolder)anim\%(RecursiveDir)" Condition="'@(_ReleaseAnim)' != ''" />
-    <Copy SourceFiles="@(_ReleaseElements)" DestinationFolder="$(ReleaseModFolder)elements\%(RecursiveDir)" Condition="'@(_ReleaseElements)' != ''" />
+    <!-- Folder trees: avoid MSBuild ** globs and robocopy exit codes (1 = success). Copy-Item is reliable. -->
+    <Exec Command="powershell -NoProfile -NonInteractive -Command &quot;Copy-Item -LiteralPath '$(MSBuildProjectDirectory)\elements' -Destination '$(ReleaseModFolder)' -Recurse -Force -ErrorAction Stop&quot;" Condition="Exists('$(MSBuildProjectDirectory)\elements')" />
+    <Exec Command="powershell -NoProfile -NonInteractive -Command &quot;Copy-Item -LiteralPath '$(MSBuildProjectDirectory)\anim' -Destination '$(ReleaseModFolder)' -Recurse -Force -ErrorAction Stop&quot;" Condition="Exists('$(MSBuildProjectDirectory)\anim')" />
   </Target>
 
   <!-- Post-build: Deploy to local mods folder for testing (development only; exclude SteamWorkshopUploader, MiserableUtils) -->

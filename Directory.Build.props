@@ -15,6 +15,8 @@
     <BaseOutputPath>$(MSBuildProjectDirectory)\bin\</BaseOutputPath>
     <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)\obj\</BaseIntermediateOutputPath>
     <MSBuildProjectExtensionsPath>$(BaseIntermediateOutputPath)</MSBuildProjectExtensionsPath>
+    <!-- Default Steam/GitHub staging dir under repo root; override in a .csproj if the folder name must differ (e.g. lowercase). -->
+    <ReleaseModFolder Condition="'$(ReleaseModFolder)' == ''">$(MSBuildThisFileDirectory)release\$(MSBuildProjectName)\</ReleaseModFolder>
   </PropertyGroup>
 
   <!-- Debug configuration -->
