@@ -3,4 +3,9 @@
     <AssemblyName>ControlledMorale</AssemblyName>
     <RootNamespace>ControlledMorale</RootNamespace>
   </PropertyGroup>
+  <!-- Runtime assets must sit beside the DLL (Steam/local). Explicit Content so copy works even if repo Directory.Build.targets is missing or MSBuild ordering differs. -->
+  <ItemGroup>
+    <Content Include="elements\**\*.*" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="anim\**\*.*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
