@@ -1,10 +1,9 @@
-# Steam upload metadata for GUI/script automation
-publishedFileId: 3689472481
+﻿# Steam upload metadata for GUI/script automation
+publishedFileId: 3689864363
 displayName: "Controlled Morale"
-visibility: public
+visibility: unlisted
 modType:
   - "new features"
-  - "tweaks"
 dlcCompatibility:
   - "Base Game"
   - "Spaced Out!"
