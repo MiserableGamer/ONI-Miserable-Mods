@@ -4,39 +4,32 @@ Brew [b]beer[/b], [b]wine[/b], and [b]spirits[/b] from water, ethanol, sucrose, 
 
 [h2]Features[/h2]
 [list]
-[*][b]Alcohol Brewery[/b] — Powered 3×3 [b]Refining[/b] building: automatic crafting, dual liquid inputs (water + ethanol), solids via delivery, piped liquid output.
+[*][b]Alcohol Brewery[/b] — Powered [b]Refining[/b] building: automatic crafting, dual liquid inputs (water + ethanol), solids via delivery.
 [*][b]Three drinks[/b] — Beer (sleet wheat), wine (bristle berry / ovagro with Frosty DLC), spirits (nosh bean seeds); distinct recipes and timings.
-[*][b]Pickup output[/b] — Finished liquid stays in the building until a dupe collects it (bottler-style). Queueing a [b]different recipe[/b] while product remains inside ejects the old batch so the new one can run.
 [*][b]Water Cooler[/b] — New drink options; timed Db effects (QoL up, Athletics down).
-[*][b]Fabricator UI[/b] — Ingredient tooltips use the building’s storage (pipes + manual), not only colony inventory.
 [/list]
 
 [h2]How to Use[/h2]
 [olist]
 [*]Research [b]Food Repurposing[/b].
-[*]Build the [b]Alcohol Brewery[/b] from [b]Refining[/b]; connect water and ethanol, feed sucrose and crops, route output to pipes or a [b]Water Cooler[/b].
-[*]Queue recipes; when a batch completes, send a dupe to pick up the bottle—or change recipe to eject leftover product.
-[*]On the cooler, assign the matching beverage once liquid is available.
+[*]Build the [b]Alcohol Brewery[/b] from [b]Refining[/b]; connect water and ethanol (or delivery manually), feed sucrose and crops, delivery to a [b]Water Cooler[/b].
+[*]On the water cooler, assign the desired beverage.
 [/olist]
 
 [h3]Tips[/h3]
 [list]
-[*]All recipes consume [b]ethanol[/b] — plan supply.
+[*]All recipes consume [b]ethanol[/b]
 [*]Athletics penalties affect physical jobs; adjust priorities if needed.
 [/list]
 
-[h2]Compatibility[/h2]
+[h3]Reporting Issues[/h3]
+Found a bug or have a feature request? Please report it on GitHub using our issue templates:
 [list]
-[*][b]Oxygen Not Included[/b] — Minimum build shown on the mod page / [b]mod_info.yaml[/b]
-[*][b]Mod API[/b] — Version 2
-[*][b]DLC[/b] — All content supported; wine fruit depends on Frosty DLC when present
+[*][b]Bug Reports[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=bug_report.yml]Report a Bug[/url] - Use this for crashes, errors, or unexpected behavior
+[*][b]Feature Requests[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=feature_request.yml]Suggest a Feature[/url] - Have an idea for a new feature or improvement?
+[*][b]Questions[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=question.yml]Ask a Question[/url] - Need help understanding how something works?
+[*][b]Other Issues[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=other.yml]Other Issue[/url] - Something else that doesn't fit the above categories
 [/list]
-
-[h2]Performance[/h2]
-[b]Minimal impact[/b] — Patches at startup; normal fabricator/piping at runtime.
-
-[h2]Support[/h2]
-[url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues]GitHub Issues[/url] — mention [b]Controlled Morale[/b] in the title.
 
 [h2]Community[/h2]
 [list]
