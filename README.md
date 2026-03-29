@@ -55,7 +55,7 @@ A framework for customizing and overriding settings from other mods via an in-ga
 ### 🍺 Controlled Morale
 Adds the **Alcohol Brewery** (Refining): brew **beer**, **wine**, and **spirits** from crops, sucrose, piped water and ethanol, then serve them at the **Water Cooler** for morale (Quality of Life) and Athletics tradeoffs.
 
-[📖 Read More](ControlledMorale/README.md) | [Latest Release v1.0.1](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledMorale-v1.0.1)
+[📖 Read More](ControlledMorale/README.md) | [Latest Release v1.2.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledMorale-v1.2.0)
 
 ### 🌡️ Controlled Overlay
 Adds a text input field to the Temperature Overlay's relative temperature slider, allowing you to type exact temperature values instead of struggling with the slider.
