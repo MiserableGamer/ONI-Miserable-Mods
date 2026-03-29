@@ -70,6 +70,10 @@ Found a bug or have a feature request? Please report it on GitHub using our issu
 
 ## Version History
 
+### 1.2.0
+
+- Added alcohol effects options; bugfixes
+
 ### 1.0.1
 
 - Release crash fix

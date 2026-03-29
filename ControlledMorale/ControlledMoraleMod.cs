@@ -1,6 +1,7 @@
 using HarmonyLib;
 using KMod;
 using PeterHan.PLib.Core;
+using PeterHan.PLib.Options;
 
 namespace ControlledMorale
 {
@@ -13,6 +14,7 @@ namespace ControlledMorale
             Instance = this;
             base.OnLoad(harmony);
             PUtil.InitLibrary();
+            new POptions().RegisterOptions(this, typeof(ControlledMoraleOptions));
             harmony.PatchAll();
         }
     }
