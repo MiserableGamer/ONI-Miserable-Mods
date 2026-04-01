@@ -5,7 +5,7 @@
   -->
 
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <LangVersion>latest</LangVersion>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
@@ -33,14 +33,14 @@
 
   <!-- NuGet Packages (shared across all projects). Exclude SteamWorkshopUploader (standalone tool). -->
   <ItemGroup Condition="'$(UsingMicrosoftNETSdk)' == 'true' and '$(MSBuildProjectName)' != 'SteamWorkshopUploader'">
-    <PackageReference Include="ILRepack" Version="2.0.34" PrivateAssets="all" ExcludeAssets="runtime" />
+    <PackageReference Include="ILRepack" Version="2.0.44" PrivateAssets="all" ExcludeAssets="runtime" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" PrivateAssets="all" />
-    <PackageReference Include="PLib" Version="4.19.0" PrivateAssets="all" />
+    <PackageReference Include="PLib" Version="4.21.0" PrivateAssets="all" />
   </ItemGroup>
   <!-- Must run on Core MSBuild too (`dotnet build`); otherwise Publicize="true" is ignored and
        overrides see protected base members while the IDE (Full MSBuild) publicizes → CS0507 mismatch. -->
   <ItemGroup Condition="'$(UsingMicrosoftNETSdk)' == 'true' and '$(MSBuildProjectName)' != 'SteamWorkshopUploader'">
-    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2" PrivateAssets="all" />
+    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.3" PrivateAssets="all" />
   </ItemGroup>
 
   <!-- Game References (shared). Exclude SteamWorkshopUploader (standalone tool, no game refs). -->

@@ -43,12 +43,18 @@
     <Message Text="[Build] Copied elements/anim to $(TargetDir)" Importance="high" Condition="'@(_ElementsForOutput)' != '' or '@(_AnimForOutput)' != ''" />
   </Target>
 
+  <!-- Pre-ILRepack: Copy PLib and MiserableUtils from NuGet cache to output dir so ILRepack can find them.
+    PrivateAssets="all" prevents NuGet from copying them automatically under netstandard2.1. -->
+  <Target Name="CopyMergeDllsToOutput" AfterTargets="Build" DependsOnTargets="CopyModAssetsToOutput" Condition="'$(MSBuildProjectName)' != 'MiserableUtils'">
+    <Copy SourceFiles="$(NuGetPackageRoot)plib\4.21.0\lib\netstandard2.1\PLib.dll" DestinationFolder="$(TargetDir)" Condition="Exists('$(NuGetPackageRoot)plib\4.21.0\lib\netstandard2.1\PLib.dll')" />
+  </Target>
+
   <!-- Post-build: ILRepack to merge PLib and MiserableUtils into main DLL.
     We output directly to $(TargetPath) using a copy of the primary so the merged assembly
     keeps AssemblyName (e.g. "ControlledMods"). PLib uses GetName().Name for the mod identity
     and config path; /out:...dll.merged was causing the .dll suffix.
     MiserableUtils is a library only - skip ILRepack when building it. -->
-  <Target Name="ILRepackMerge" AfterTargets="Build" DependsOnTargets="CopyModAssetsToOutput" Condition="'$(MSBuildProjectName)' != 'MiserableUtils'">
+  <Target Name="ILRepackMerge" AfterTargets="Build" DependsOnTargets="CopyMergeDllsToOutput" Condition="'$(MSBuildProjectName)' != 'MiserableUtils'">
     <ItemGroup>
       <MergeDll Include="$(TargetDir)PLib.dll" Condition="Exists('$(TargetDir)PLib.dll')" />
       <MergeDll Include="$(TargetDir)MiserableUtils.dll" Condition="Exists('$(TargetDir)MiserableUtils.dll') and '$(MSBuildProjectName)' != 'MiserableUtils'" />
@@ -58,7 +64,7 @@
     </PropertyGroup>
     <Message Text="[Build] Merging @(MergeDll) into $(TargetFileName)" Importance="high" Condition="'$(MergeDllList)' != ''" />
     <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(TargetDir)$(TargetName)_primary.dll" Condition="'$(MergeDllList)' != ''" />
-    <Exec Command="&quot;$(NuGetPackageRoot)ilrepack\2.0.34\tools\ILRepack.exe&quot; /ndebug /lib:&quot;$(MSBuildThisFileDirectory)lib&quot; /lib:&quot;$(NuGetPackageRoot)newtonsoft.json\13.0.4\lib\net45&quot; /out:&quot;$(TargetPath)&quot; &quot;$(TargetDir)$(TargetName)_primary.dll&quot; @(MergeDll->'&quot;%(FullPath)&quot;', ' ')" Condition="'$(MergeDllList)' != ''" ContinueOnError="true" />
+    <Exec Command="&quot;$(NuGetPackageRoot)ilrepack\2.0.44\tools\ILRepack.exe&quot; /ndebug /lib:&quot;$(MSBuildThisFileDirectory)lib&quot; /lib:&quot;$(NuGetPackageRoot)newtonsoft.json\13.0.4\lib\netstandard2.0&quot; /out:&quot;$(TargetPath)&quot; &quot;$(TargetDir)$(TargetName)_primary.dll&quot; @(MergeDll->'&quot;%(FullPath)&quot;', ' ')" Condition="'$(MergeDllList)' != ''" ContinueOnError="true" />
     <Delete Files="$(TargetDir)$(TargetName)_primary.dll" Condition="Exists('$(TargetDir)$(TargetName)_primary.dll')" />
     <Delete Files="@(MergeDll)" Condition="Exists('%(FullPath)')" />
   </Target>
