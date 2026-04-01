@@ -62,7 +62,7 @@ namespace ControlledMorale
         [HarmonyPatch(typeof(SelectToolHoverTextCard), nameof(SelectToolHoverTextCard.UpdateHoverElements))]
         public static class Patch_UpdateHoverElements
         {
-            public static void Prefix(SelectToolHoverTextCard __instance, List<KSelectable> __hoverObjects)
+            public static void Prefix(SelectToolHoverTextCard __instance, List<KSelectable> hoverObjects)
             {
                 s_tipText = null;
 

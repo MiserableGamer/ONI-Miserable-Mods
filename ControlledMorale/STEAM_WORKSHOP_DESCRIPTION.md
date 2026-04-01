@@ -52,6 +52,7 @@ Found a bug or have a feature request? Please report it on GitHub using our issu
 
 [h2]Version History[/h2]
 [list]
+[*][b]1.2.1[/b]: March 2026 update compatibility patch
 [*][b]1.2.0[/b]: Added alcohol effects options; bugfixes
 [*][b]1.0.1[/b]: Release crash fix
 [*][b]1.0.0[/b]: Initial release

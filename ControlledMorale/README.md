@@ -70,6 +70,10 @@ Found a bug or have a feature request? Please report it on GitHub using our issu
 
 ## Version History
 
+### 1.2.1
+
+- March 2026 update compatibility patch
+
 ### 1.2.0
 
 - Added alcohol effects options; bugfixes
