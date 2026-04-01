@@ -90,7 +90,7 @@ Enhanced alerts for critical situations. Adds left-side notifications when dupli
 ### 📋 Copy Materials Tool
 Extends the "Copy Settings" tool to also copy construction materials between buildings of the same type, with full support for conduits and bridges.
 
-[📖 Read More](CopyMaterials/README.md) | [Latest Release v2.0.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/CopyMaterialsTool-v2.0.0) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
+[📖 Read More](CopyMaterials/README.md) | [Latest Release v2.0.1](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/CopyMaterialsTool-v2.0.1) | [🔗 Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3627507304)
 
 ### 🧱 Copy Tile Tool
 Replace tiles in bulk by selecting a destination tile type, then a source tile type to replace, then drag-selecting an area. Only tiles matching the source type AND material will be replaced.
