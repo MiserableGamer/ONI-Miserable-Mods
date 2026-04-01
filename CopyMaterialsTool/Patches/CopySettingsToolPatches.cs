@@ -29,7 +29,7 @@ namespace CopyMaterials.Patches
 
         [HarmonyPatch("OnDragTool")]
         [HarmonyPostfix]
-        public static void OnDragTool_Postfix(CopySettingsTool __instance, int cell, int distFromOrigin)
+        public static void OnDragTool_Postfix(CopySettingsTool __instance, int cell, int _distFromOrigin)
         {
             GameObject sourceGO = (GameObject)sourceField.GetValue(__instance);
             if (sourceGO == null) return;
@@ -107,7 +107,13 @@ namespace CopyMaterials.Patches
                     GameObject sourceGOLocal = (GameObject)sourceField.GetValue(__instance);
                     if (sourceGOLocal != null)
                     {
-                        CopyBuildingSettings.ApplyCopy(cell, sourceGOLocal);
+                        var targetId = target.GetComponent<KPrefabID>();
+                        var sourceId = sourceGOLocal.GetComponent<KPrefabID>();
+                        var sourceSettings = sourceGOLocal.GetComponent<CopyBuildingSettings>();
+                        if (targetId != null && sourceId != null && sourceSettings != null)
+                        {
+                            CopyBuildingSettings.ApplyCopy(targetId, sourceGOLocal, sourceId, sourceSettings);
+                        }
                     }
 
                     return;  // Skip deconstruct

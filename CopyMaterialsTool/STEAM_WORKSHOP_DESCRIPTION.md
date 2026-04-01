@@ -36,6 +36,7 @@ A Quality of Life mod that extends the "Copy Settings" tool to also copy constru
 [h2]Compatibility[/h2]
 [list]
 [*][b]ExtendedBuildingWidth Mod[/b] - Fully supported - bridge widths are preserved when copying materials
+[*][b]TrueTiles[/b] - Fully functional, but the construction blueprint ghost may not be visible while a tile is being rebuilt. The errand and reconstruction work correctly.
 [*][b]Other Mods[/b] - Compatible with most mods. If you encounter issues, please report them.
 [*][b]Oxygen Not Included[/b] - Build 700386 or later
 [*][b]Mod API[/b] - Version 2
@@ -102,10 +103,12 @@ Found a bug or have a feature request? Please report it on GitHub using our issu
 [*][b]📝 Other Issues[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=other.yml]Other Issue[/url] - Something else that doesn't fit the above categories
 [/list]
 
-Please mention "Copy Materials Tool" in your issue title or description.
-
-[h2]Mod Collection[/h2]
-This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156]ONI 200+ Ultimate Mods collection[/url] on Steam Workshop, featuring over 200 tested and compatible mods for Oxygen Not Included.
+[h2]My Workshop & Collections[/h2]
+[list]
+[*][url=https://steamcommunity.com/id/miserablegamer/myworkshopfiles/?appid=457140]My Workshop[/url] – All my ONI mods on Steam
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3613749156]ONI 235+ Ultimate Mods collection[/url] – 235+ tested, compatible mods for Oxygen Not Included
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3672308653]The Controlled Series[/url] – Collection of Controlled mods
+[/list]
 
 [h2]Credits[/h2]
 [list]
@@ -116,10 +119,11 @@ This mod is part of the [url=https://steamcommunity.com/sharedfiles/filedetails/
 
 [h2]Version History[/h2]
 [list]
-[*][b]2.0.0.0[/b]: Major rewrite - Fixed "Priority Value Out Of Range: 0" error causing missing priority numbers
-[*][b]1.0.1.21[/b]: Bugfix - added icon to button
-[*][b]1.0.0.0[/b]: Initial release
-[*][b]0.1.1.11[/b]: Code cleaning
-[*][b]0.1.0.10[/b]: Test release
+[*][b]2.0.1[/b]: March 2026 update compatibility patch
+[*][b]2.0.0[/b]: Major rewrite - Fixed "Priority Value Out Of Range: 0" error causing missing priority numbers
+[*][b]1.0.1[/b]: Bugfix - added icon to button
+[*][b]1.0.0[/b]: Initial release
+[*][b]0.1.1[/b]: Code cleaning
+[*][b]0.1.0[/b]: Test release
 [/list]
 

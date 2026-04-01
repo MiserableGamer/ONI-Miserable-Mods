@@ -21,7 +21,22 @@
     <Optimize>true</Optimize>
   </PropertyGroup>
 
-  <!-- NuGet packages and game refs: Directory.Build.props -->
+  <!-- NuGet Packages inherited from Directory.Build.props -->
+
+  <!-- Game References -->
+  <ItemGroup>
+    <Reference Include="0Harmony" HintPath="..\lib\0Harmony.dll" Private="false" />
+    <Reference Include="Assembly-CSharp" HintPath="..\lib\Assembly-CSharp.dll" Private="false" Publicize="true" />
+    <Reference Include="Assembly-CSharp-firstpass" HintPath="..\lib\Assembly-CSharp-firstpass.dll" Private="false" />
+    <Reference Include="Unity.TextMeshPro" HintPath="..\lib\Unity.TextMeshPro.dll" Private="false" />
+    <Reference Include="UnityEngine" HintPath="..\lib\UnityEngine.dll" Private="false" />
+    <Reference Include="UnityEngine.CoreModule" HintPath="..\lib\UnityEngine.CoreModule.dll" Private="false" />
+    <Reference Include="UnityEngine.ImageConversionModule" HintPath="..\lib\UnityEngine.ImageConversionModule.dll" Private="false" />
+    <Reference Include="UnityEngine.UI" HintPath="..\lib\UnityEngine.UI.dll" Private="false" />
+    <Reference Include="UnityEngine.UIModule" HintPath="..\lib\UnityEngine.UIModule.dll" Private="false" />
+    <Reference Include="UnityEngine.InputLegacyModule" HintPath="..\lib\UnityEngine.InputLegacyModule.dll" Private="false" />
+  </ItemGroup>
+
 
   <!-- Content files -->
   <ItemGroup>
