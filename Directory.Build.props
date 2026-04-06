@@ -35,7 +35,7 @@
   <ItemGroup Condition="'$(UsingMicrosoftNETSdk)' == 'true' and '$(MSBuildProjectName)' != 'SteamWorkshopUploader'">
     <PackageReference Include="ILRepack" Version="2.0.44" PrivateAssets="all" ExcludeAssets="runtime" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" PrivateAssets="all" />
-    <PackageReference Include="PLib" Version="4.21.0" PrivateAssets="all" />
+    <PackageReference Include="PLib" Version="4.24.0" PrivateAssets="all" />
   </ItemGroup>
   <!-- Must run on Core MSBuild too (`dotnet build`); otherwise Publicize="true" is ignored and
        overrides see protected base members while the IDE (Full MSBuild) publicizes → CS0507 mismatch. -->
