@@ -17,6 +17,7 @@ using ControlledMods.Patches.UndergroundConduit;
 using ControlledMods.Patches.DuplicantRoomSensor;
 using ControlledMods.Patches.DarknessNotExcludedRelit;
 using ControlledMods.Patches.SignsTagsAndRibbons;
+using ControlledMods.Patches.DeliveryTemperatureLimit;
 
 namespace ControlledMods
 {
@@ -129,6 +130,9 @@ namespace ControlledMods
 
             if (SignsTagsAndRibbonsDetection.Loaded)
                 SignsTagsAndRibbonsPatches.ApplyPatches(harmony);
+
+            if (DeliveryTemperatureLimitDetection.Loaded && ControlledModsOptions.Instance.FixDeliveryTemperatureLimitSideScreen)
+                DeliveryTemperatureLimitPatches.ApplyPatches(harmony);
 
             if (EnableSaveFileFixes)
             {

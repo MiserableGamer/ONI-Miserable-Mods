@@ -86,8 +86,6 @@ Found a bug or have a feature request? Please report it on GitHub using our issu
 [*][b]Other Issues[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=other.yml]Other Issue[/url] - Something else that doesn't fit the above categories
 [/list]
 
-Please mention "ControlledMods" in your issue title or description.
-
 [h2]My Workshop & Collections[/h2]
 [list]
 [*][url=https://steamcommunity.com/id/miserablegamer/myworkshopfiles/?appid=457140]My Workshop[/url] – All my ONI mods on Steam
@@ -103,6 +101,7 @@ Please mention "ControlledMods" in your issue title or description.
 
 [h2]Version History[/h2]
 [list]
+[*][b]1.14.0[/b]: Added support for Delivery Temperature Limit [fixed]; prevents SideScreen crashes
 [*][b]1.13.1[/b]: Added a crash handler and filter for channels
 [*][b]1.12.1[/b]: Fixed Resource Sensor bug; added pause menu restart with auto resume save file facility
 [*][b]1.11.0[/b]: Performance improvements

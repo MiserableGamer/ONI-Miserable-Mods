@@ -19,6 +19,7 @@ namespace ControlledMods.ModDetection
             ShowRangeDetection.Detect();
             DarknessNotExcludedRelitDetection.Detect();
             SignsTagsAndRibbonsDetection.Detect();
+            DeliveryTemperatureLimitDetection.Detect();
 
             LogDetectionResults();
         }
@@ -67,6 +68,7 @@ namespace ControlledMods.ModDetection
             ControlledModsMod.Log($"  - {ShowRangeDetection.DisplayName}: {(ShowRangeDetection.Loaded ? "DETECTED" : "not found")}");
             ControlledModsMod.Log($"  - {DarknessNotExcludedRelitDetection.DisplayName}: {(DarknessNotExcludedRelitDetection.Loaded ? "DETECTED" : "not found")}");
             ControlledModsMod.Log($"  - {SignsTagsAndRibbonsDetection.DisplayName}: {(SignsTagsAndRibbonsDetection.Loaded ? "DETECTED" : "not found")}");
+            ControlledModsMod.Log($"  - {DeliveryTemperatureLimitDetection.DisplayName}: {(DeliveryTemperatureLimitDetection.Loaded ? "DETECTED" : "not found")}");
         }
     }
 }

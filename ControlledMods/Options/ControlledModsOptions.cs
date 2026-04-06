@@ -178,6 +178,16 @@ namespace ControlledMods.Options
         [JsonIgnore]
         public Action<object> OpenSignsTagsAndRibbonsWorkshop => _ => OpenSteamWorkshop(2883096049);
 
+        // ========== Delivery Temperature Limit (llunak / QoooLiO Fixed) ==========
+
+        [Option("Fix Delivery Temperature Limit sidescreen",
+            "When enabled and the Delivery Temperature Limit mod is loaded, replaces the broken sidescreen UI " +
+            "(which crashes due to an outdated bundled PLib) with a working version. " +
+            "The mod's core temperature filtering still works — only the UI needs this fix.",
+            "Delivery Temperature Limit")]
+        [JsonProperty]
+        public bool FixDeliveryTemperatureLimitSideScreen { get; set; } = true;
+
         // ========== Add more mod option sections here ==========
         // Save File Fixes section is in ControlledModsSaveFileFixOptions; that type is only registered when the feature is enabled.
 
