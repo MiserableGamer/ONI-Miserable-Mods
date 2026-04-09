@@ -46,7 +46,7 @@
   <!-- Pre-ILRepack: Copy PLib and MiserableUtils from NuGet cache to output dir so ILRepack can find them.
     PrivateAssets="all" prevents NuGet from copying them automatically under netstandard2.1. -->
   <Target Name="CopyMergeDllsToOutput" AfterTargets="Build" DependsOnTargets="CopyModAssetsToOutput" Condition="'$(MSBuildProjectName)' != 'MiserableUtils'">
-    <Copy SourceFiles="$(NuGetPackageRoot)plib\4.21.0\lib\netstandard2.1\PLib.dll" DestinationFolder="$(TargetDir)" Condition="Exists('$(NuGetPackageRoot)plib\4.21.0\lib\netstandard2.1\PLib.dll')" />
+    <Copy SourceFiles="$(NuGetPackageRoot)plib\4.24.0\lib\netstandard2.1\PLib.dll" DestinationFolder="$(TargetDir)" Condition="Exists('$(NuGetPackageRoot)plib\4.24.0\lib\netstandard2.1\PLib.dll')" />
   </Target>
 
   <!-- Post-build: ILRepack to merge PLib and MiserableUtils into main DLL.
