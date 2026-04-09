@@ -109,6 +109,7 @@ Please mention "ControlledMods" in your issue title or description.
 
 ## Version History
 
+- **1.14.1**: Bugfix for PLib merge
 - **1.14.0**: Added support for Delivery Temperature Limit [fixed]; prevents SideScreen crashes
 - **1.13.1**: Added a crash handler and filter for channels
 - **1.12.1**: Fixed Resource Sensor bug; added pause menu restart with auto resume save file facility

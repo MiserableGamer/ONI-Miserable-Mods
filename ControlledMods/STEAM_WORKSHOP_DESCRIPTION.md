@@ -101,6 +101,7 @@ Found a bug or have a feature request? Please report it on GitHub using our issu
 
 [h2]Version History[/h2]
 [list]
+[*][b]1.14.1[/b]: Bugfix for PLib merge
 [*][b]1.14.0[/b]: Added support for Delivery Temperature Limit [fixed]; prevents SideScreen crashes
 [*][b]1.13.1[/b]: Added a crash handler and filter for channels
 [*][b]1.12.1[/b]: Fixed Resource Sensor bug; added pause menu restart with auto resume save file facility
