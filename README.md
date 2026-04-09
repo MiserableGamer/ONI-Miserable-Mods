@@ -50,7 +50,7 @@ Adaptive game speed that automatically adjusts to maintain your target FPS. Buil
 ### 🎛️ Controlled Mods
 A framework for customizing and overriding settings from other mods via an in-game options menu. Currently in development - support for various mods will be added in future updates.
 
-[📖 Read More](ControlledMods/README.md) | [Latest Release v1.14.0](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledMods-v1.14.0)
+[📖 Read More](ControlledMods/README.md) | [Latest Release v1.14.1](https://github.com/MiserableGamer/ONI-Miserable-Mods/releases/tag/ControlledMods-v1.14.1)
 
 ### 🍺 Controlled Morale
 Adds the **Alcohol Brewery** (Refining): brew **beer**, **wine**, and **spirits** from crops, sucrose, piped water and ethanol, then serve them at the **Water Cooler** for morale (Quality of Life) and Athletics tradeoffs.
