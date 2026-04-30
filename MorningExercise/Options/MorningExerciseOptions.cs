@@ -96,8 +96,9 @@ namespace MorningExercise.Options
 
         // Visual Settings section
         [JsonProperty]
-        [Option("Animation Variant", "Which animation variant to use for the Manual Exerciser building", "Visual Settings")]
-        public AnimationVariant AnimationVariant { get; set; } = AnimationVariant.VariantA;
+        [Option("Animation Variant", "Which animation variant to use for the Manual Exerciser building. 0 = Standard, 1 = Variant A, 2 = Variant B.", "Visual Settings")]
+        [Limit(0, 2)]
+        public int AnimationVariant { get; set; } = 1;
 
         public MorningExerciseOptions()
         {
@@ -109,17 +110,8 @@ namespace MorningExercise.Options
             BionicMoraleBonus = 2;
             EnableExperienceGain = true;
             ExperienceMultiplier = 1;
-            AnimationVariant = AnimationVariant.VariantA;
+            AnimationVariant = 1;
         }
     }
 
-    public enum AnimationVariant
-    {
-        [Option("Standard", "Use the standard Manual Generator animation")]
-        Standard = 0,
-        [Option("Variant A", "Use Variant A of the Manual Generator animation")]
-        VariantA = 1,
-        [Option("Variant B", "Use Variant B of the Manual Generator animation")]
-        VariantB = 2
-    }
 }

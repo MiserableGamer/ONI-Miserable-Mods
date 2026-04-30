@@ -19,14 +19,10 @@ namespace MorningExercise
             var options = POptions.ReadSettings<Options.MorningExerciseOptions>() ?? new Options.MorningExerciseOptions();
             switch (options.AnimationVariant)
             {
-                case Options.AnimationVariant.Standard:
-                    return "generatormanual_kanim";
-                case Options.AnimationVariant.VariantA:
-                    return "generatormanual_a_kanim";
-                case Options.AnimationVariant.VariantB:
-                    return "generatormanual_b_kanim";
-                default:
-                    return "generatormanual_a_kanim";
+                case 0:  return "generatormanual_kanim";
+                case 1:  return "generatormanual_a_kanim";
+                case 2:  return "generatormanual_b_kanim";
+                default: return "generatormanual_a_kanim";
             }
         }
 

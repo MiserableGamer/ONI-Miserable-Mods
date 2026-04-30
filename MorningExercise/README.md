@@ -96,6 +96,7 @@ Please mention "Morning Exercise" in your issue title or description.
 
 ## Version History
 
+- **1.0.4**: PLib menu crash fix
 - **1.0.3**: Bugfix
 - **1.0.2**: Code cleaning
 - **1.0.1**: Dupes now go to relax after exercising or if already buffed

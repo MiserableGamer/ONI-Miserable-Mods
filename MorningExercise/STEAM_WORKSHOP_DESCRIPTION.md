@@ -78,8 +78,6 @@ Found a bug or have a feature request? Please report it on GitHub using our issu
 [*][b]📝 Other Issues[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=other.yml]Other Issue[/url] - Something else that doesn't fit the above categories
 [/list]
 
-Please mention "Morning Exercise" in your issue title or description.
-
 [h2]My Workshop & Collections[/h2]
 [list]
 [*][url=https://steamcommunity.com/id/miserablegamer/myworkshopfiles/?appid=457140]My Workshop[/url] – All my ONI mods on Steam
@@ -95,6 +93,7 @@ Please mention "Morning Exercise" in your issue title or description.
 
 [h2]Version History[/h2]
 [list]
+[*][b]1.0.4[/b]: PLib menu crash fix
 [*][b]1.0.3[/b]: Code cleaning
 [*][b]1.0.2[/b]: Code cleaning
 [*][b]1.0.1[/b]: Dupes now go to relax after exercising or if already buffed
