@@ -93,8 +93,6 @@ Found a bug or have a feature request? Please report it on GitHub using our issu
 [*] [b]Other Issues[/b]: [url=https://github.com/MiserableGamer/ONI-Miserable-Mods/issues/new?template=other.yml]Other Issue[/url] - Something else that doesn't fit the above categories
 [/list]
 
-Please mention "Controlled Framerate" in your issue title or description.
-
 [h2]My Workshop & Collections[/h2]
 [list]
 [*][url=https://steamcommunity.com/id/miserablegamer/myworkshopfiles/?appid=457140]My Workshop[/url] – All my ONI mods on Steam
@@ -110,6 +108,7 @@ Please mention "Controlled Framerate" in your issue title or description.
 
 [h2]Version History[/h2]
 [list]
+[*] [b]1.2.1[/b]: PLib menu crash fix
 [*] [b]1.2.0[/b]: Added more specific speed controls to the Speed Monitor
 [*] [b]1.1.0[/b]: Reworked the menu buttons; Monitor now available in fixed or adaptive modes
 [*] [b]1.0.0[/b]: Initial release — adaptive speed control, benchmark tool, per-save profiles, live speed monitor

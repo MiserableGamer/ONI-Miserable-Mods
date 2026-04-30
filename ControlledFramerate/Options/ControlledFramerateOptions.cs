@@ -6,16 +6,6 @@ using PeterHan.PLib.Options;
 
 namespace ControlledFramerate.Options
 {
-    public enum SmoothingLevel
-    {
-        [Option("Low", "Slow, gentle speed changes")]
-        Low,
-        [Option("Medium", "Balanced speed adjustment")]
-        Medium,
-        [Option("High", "Fast, responsive speed changes")]
-        High
-    }
-
     [JsonObject(MemberSerialization.OptIn)]
     public class SaveSpeedProfile
     {
@@ -201,9 +191,10 @@ namespace ControlledFramerate.Options
         [JsonProperty]
         public int AcceptableThreshold { get; set; } = 10;
 
-        [Option("Adjustment Smoothing", "How quickly adaptive mode changes speed.")]
+        [Option("Adjustment Smoothing", "How quickly adaptive mode changes speed. 0 = Low (gentle), 1 = Medium, 2 = High (responsive).")]
+        [Limit(0, 2)]
         [JsonProperty]
-        public SmoothingLevel AdjustmentSmoothing { get; set; } = SmoothingLevel.Medium;
+        public int AdjustmentSmoothing { get; set; } = 1;
 
         [Option("Save Ignore Window", "Seconds to freeze speed adjustments during and after autosave.")]
         [Limit(1, 10)]

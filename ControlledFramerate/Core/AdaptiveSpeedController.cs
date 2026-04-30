@@ -65,13 +65,13 @@ namespace ControlledFramerate.Core
             cooldownRemaining = 0;
         }
 
-        private static float GetRampRate(SmoothingLevel level)
+        private static float GetRampRate(int level)
         {
             switch (level)
             {
-                case SmoothingLevel.Low: return 0.01f;
-                case SmoothingLevel.Medium: return 0.03f;
-                case SmoothingLevel.High: return 0.06f;
+                case 0: return 0.01f;
+                case 1: return 0.03f;
+                case 2: return 0.06f;
                 default: return 0.03f;
             }
         }

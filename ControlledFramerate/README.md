@@ -89,6 +89,7 @@ Please mention "Controlled Framerate" in your issue title or description.
 
 ## Version History
 
+- **1.2.1**: PLib menu crash fix
 - **1.2.0**: Added more specific speed controls to the Speed Monitor
 - **1.1.0**: Reworked the menu buttons; Monitor now available in fixed or adaptive modes
 - **1.0.0**: Initial release — adaptive speed control, benchmark tool, per-save profiles, live speed monitor
